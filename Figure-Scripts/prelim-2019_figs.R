@@ -3,7 +3,6 @@
 
 # select the Hort Farm data
 farm_data = lake_conc %>%
-   filter(location=="ISU Hort Farm") %>%
    # add factor columns nutrient and fish additions
    mutate(add_nuts = c("control", "control", "control", "+ nuts", "+ nuts", "+ nuts"),
           add_fish = c("none", "high", "low", "none", "low", "high"))
@@ -13,7 +12,7 @@ farm_data = lake_conc %>%
 
 # regular
 
-png(file="Farm_data_CH4_prelim.png")
+png(file="Figures/Farm_data_CH4_prelim.png")
 # windows()
 
 ggplot(farm_data) +
@@ -58,7 +57,7 @@ ggplot(farm_data) +
 
 # Nitrous oxide
 
-png(file="Farm_data_N2O_prelim.png")
+png(file="Figures/Farm_data_N2O_prelim.png")
 # windows()
 
 ggplot(farm_data) +
