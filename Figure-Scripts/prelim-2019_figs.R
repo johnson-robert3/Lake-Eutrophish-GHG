@@ -4,7 +4,7 @@
 # select the Hort Farm data
 farm_data = lake_conc %>%
    # add factor columns nutrient and fish additions
-   mutate(add_nuts = c("control", "control", "control", "+ nuts", "+ nuts", "+ nuts"),
+   mutate(add_nuts = c("reference", "reference", "reference", "+ nuts", "+ nuts", "+ nuts"),
           add_fish = c("none", "high", "low", "none", "low", "high"))
 
 
@@ -20,11 +20,12 @@ ggplot(farm_data) +
                 y = ch4_lake,
                 fill = add_fish),
             position="dodge2") +
-   scale_x_discrete(limits = c("control", "+ nuts"),
-                    labels = c("Control", "+ Nutrients")) +
+   scale_x_discrete(limits = c("reference", "+ nuts"),
+                    labels = c("Reference", "+ Nutrients")) +
    scale_fill_manual(limits = c("none", "low", "high"),
                      values = c("gray60", "seagreen3", "seagreen4"),
-                     name = "Fish density") +
+                     name = "Fish density",
+                     labels = c("None", "Low", "High")) +
    xlab("") +
    ylab("Methane (uM)") +
    theme_classic() +
@@ -65,11 +66,12 @@ ggplot(farm_data) +
                 y = n2o_lake,
                 fill = add_fish),
             position="dodge2") +
-   scale_x_discrete(limits = c("control", "+ nuts"),
-                    labels = c("Control", "+ Nutrients")) +
+   scale_x_discrete(limits = c("reference", "+ nuts"),
+                    labels = c("Reference", "+ Nutrients")) +
    scale_fill_manual(limits = c("none", "low", "high"),
                      values = c("gray60", "seagreen3", "seagreen4"),
-                     name = "Fish density") +
+                     name = "Fish density",
+                     labels = c("None", "Low", "High")) +
    xlab("") +
    ylab("Nitrous Oxide (uM)") +
    theme_classic() +
