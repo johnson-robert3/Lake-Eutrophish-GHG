@@ -1,3 +1,3 @@
-# Food web structure and eutrophication as controls on lake greenhouse gas flux
+# 2020 Hort Farm Pond Experiment
 
-Hort Farm pond project
+Effects of food web structure and eutrophication on lake greenhouse gas fluxes
