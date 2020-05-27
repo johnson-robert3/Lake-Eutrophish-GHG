@@ -10,7 +10,7 @@ farm_data = lake_conc %>%
 
 # Methane
 
-png(file="Figures/Farm_data_CH4_prelim.png")
+png(file="Figures/2019_CH4-conc_prelim.png")
 # windows()
 
 ggplot(farm_data) +
@@ -36,7 +36,7 @@ dev.off()
 
 # Nitrous oxide
 
-png(file="Figures/Farm_data_N2O_prelim.png")
+png(file="Figures/2019_N2O-conc_prelim.png")
 # windows()
 
 ggplot(farm_data) +
