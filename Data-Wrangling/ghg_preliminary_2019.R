@@ -11,9 +11,9 @@ library(tidyverse)
 # Load the data
 
 # limnological data
-limno_raw = read_csv("Data/R-Data/limno_data_prelim.csv")
+limno_raw = read_csv("Data/R-Data/2019_limno_data.csv")
 # gas data
-ghg_raw = read_csv("Data/R-Data/ghg_data_prelim.csv")
+ghg_raw = read_csv("Data/R-Data/2019_ghg_data.csv")
 
 
 # Calculate mean value for each pond (from two syringe measurements)

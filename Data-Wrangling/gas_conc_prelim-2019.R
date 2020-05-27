@@ -9,9 +9,9 @@ library(tidyverse)
 
 
 # load the data
-site_raw = read_csv("Data/R-Data/site_data_prelim.csv")
-limno_raw = read_csv("Data/R-Data/limno_data_prelim.csv")
-ghg_raw = read_csv("Data/R-Data/ghg_data_prelim.csv")
+site_raw = read_csv("Data/R-Data/2019_site_data.csv")
+limno_raw = read_csv("Data/R-Data/2019_limno_data.csv")
+ghg_raw = read_csv("Data/R-Data/2019_ghg_data.csv")
 
 
 # Get mean values from individual syringe measurements for each site for GHG data
