@@ -1,0 +1,172 @@
+#~~~
+# Script for importing, processing, and combining data files
+# By: Robert Johnson
+#~~~
+
+
+library(tidyverse)
+library(lubridate)
+library(janitor)
+
+
+# GHG Concentration Data
+ghg_data_raw = read_csv("Data/R-Data/2020_ghg-data.csv")
+
+# Pond/Site Data
+pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
+
+
+
+#===
+# Limno Data
+#===
+
+#---
+# MiniDOT Temp-DO Data
+#---
+
+# Data
+mini_a = read_csv("Data/R-Data/2020_minidot_A.csv", skip=8) %>% remove_empty(which=c("rows", "cols"))
+mini_b = read_csv("Data/R-Data/2020_minidot_B.csv", skip=8) %>% remove_empty(which=c("rows", "cols"))
+mini_c = read_csv("Data/R-Data/2020_minidot_C.csv", skip=8) %>% remove_empty(which=c("rows", "cols"))
+mini_d = read_csv("Data/R-Data/2020_minidot_D.csv", skip=8) %>% remove_empty(which=c("rows", "cols"))
+mini_e = read_csv("Data/R-Data/2020_minidot_E.csv", skip=8) %>% remove_empty(which=c("rows", "cols"))
+mini_f = read_csv("Data/R-Data/2020_minidot_F.csv", skip=8) %>% remove_empty(which=c("rows", "cols"))
+
+
+# Add a pond identifier
+mini_a = mini_a %>% mutate(pond_id = rep("A", nrow(.)))
+mini_b = mini_b %>% mutate(pond_id = rep("B", nrow(.)))
+mini_c = mini_a %>% mutate(pond_id = rep("C", nrow(.)))
+mini_d = mini_a %>% mutate(pond_id = rep("D", nrow(.)))
+mini_e = mini_a %>% mutate(pond_id = rep("E", nrow(.)))
+mini_f = mini_a %>% mutate(pond_id = rep("F", nrow(.)))
+
+# combine files
+minidot_data = bind_rows(mini_a, mini_b, mini_c, mini_d, mini_e, mini_f)
+
+# Clean up file
+minidot_data = minidot_data %>%
+   clean_names() %>%
+   select(-unix_timestamp, -utc_date, -utc_time, -battery, -q) %>%
+   mutate(date_time = as.POSIXct(mdy(cst_date) + hms(cst_time)),
+          doy = yday(date_time)) %>%
+   relocate(pond_id, date_time, doy) %>%
+   select(-cst_date, -cst_time) %>%
+   rename(surface_temp = temperature,
+          surface_do = dissolved_oxygen,
+          surface_do_sat = dissolved_oxygen_saturation)
+
+
+   ## remove individual files
+   rm(mini_a, mini_b, mini_c, mini_d, mini_e, mini_f)
+   ##
+
+
+   
+#---
+# Lake Concentration GHG Samples
+#---
+
+# Sample meta data
+lake_sample_data = read_csv("Data/R-Data/2020_lake-sample-data.csv") %>%
+   # convert volumes from ml to L
+   mutate(across(starts_with("vol"), ~(./1000)))
+
+
+# Mean GHG concentration from syringes for lake samples (2 syringes per pond, 3 syringes for atmosphere)
+lake_samples = ghg_data_raw %>%
+   # remove methanogenesis and ebullition samples
+   filter(!(str_detect(sample_id, "R") | str_detect(sample_id, "P"))) %>%
+   # mean value from syringe replicates
+   group_by(sample_id) %>%
+   summarise(across(ends_with("ppm"), ~mean(., na.rm=T))) %>%
+   ungroup()
+
+
+# Add GHG concentration data to sample meta data
+lake_samples = left_join(lake_sample_data, lake_samples)
+
+# add DOY
+lake_samples = lake_samples %>%
+   mutate(date = mdy(date),
+          doy = yday(date)) %>%
+   relocate(doy, .after = date)
+
+
+# Calculate mean surface water temperature and DO between 10:00 and 11:00 am
+#  and add to lake GHG dataset
+lake_samples = lake_samples %>%
+   left_join(minidot_data %>%
+                mutate(hour = hour(date_time)) %>%
+                group_by(pond_id, doy) %>%
+                filter(hour==10) %>%
+                ungroup() %>%
+                group_by(pond_id, doy) %>%
+                summarise(across(starts_with("surface"), ~mean(., na.rm=T))) %>%
+                ungroup())
+
+
+
+#---
+# Methanogenesis Incubation GHG Samples
+#---
+
+# Sample meta data
+methano_sample_data = read_csv("Data/R-Data/2020_methano-sample-data.csv")
+
+
+# Add GHG concentration data to sample meta data
+methano_samples = left_join(methano_sample_data, ghg_data_raw)
+
+
+# Date and Time
+methano_samples = methano_samples %>%
+   mutate(datetime_start = as.POSIXct(mdy(date_start) + hms(time_start)),
+          datetime_end = as.POSIXct(mdy(date_end) + hms(time_end)),
+          doy = yday(datetime_start))
+
+
+# Calculate length of incubation period
+methano_samples = methano_samples %>%
+   mutate(incubation_length = difftime(datetime_end, datetime_start, units="mins"))
+
+
+
+#---
+# Ebullition Chamber GHG Samples
+#---
+
+# Sample meta data
+ebu_sample_data = read_csv("Data/R-Data/2020_ebullition-sample-data.csv")
+
+
+
+#---
+# Weather Data
+#---
+
+# Data
+weather_data_raw = read_csv("Data/R-Data/2020_weather-data.csv", skip=1)
+
+
+# Clean up variable names
+weather_data = weather_data_raw %>%
+   clean_names() %>%
+   select(-number) %>%
+   rename(date_time = date_time_gmt_05_00,
+          wind_speed = wind_speed_m_s_lgr_s_n_20849581_sen_s_n_20843154,
+          gust_speed = gust_speed_m_s_lgr_s_n_20849581_sen_s_n_20843154,
+          par = par_u_fffd_mol_m_u_fffd_s_lgr_s_n_20849581_sen_s_n_20856725)
+
+
+# Date and Time
+weather_data = weather_data %>%
+   mutate(date_time = mdy_hm(date_time),
+          doy = yday(date_time)) %>%
+   relocate(doy, .after = date_time)
+
+
+# Anemometer height
+
+

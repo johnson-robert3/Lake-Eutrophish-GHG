@@ -1,0 +1,103 @@
+#~~~
+# Script for calculating GHG concentrations and rates
+# By: Robert Johnson
+#~~~
+
+
+### Coefficients
+{
+# Ames = 0.97 atm
+
+#_Henry's Law Constants (KH) (units = M/atm)
+
+# KH = concentration / partial pressure
+KH_ch4 = 0.00142
+KH_co2 = 0.0344
+KH_n2o = 0.024
+
+# Temperature-dependence constants for KH (unitless)
+KH_td_ch4 = 1600
+KH_td_co2 = 2400
+KH_td_n2o = 2600
+}
+
+
+#---
+# Lake Dissolved GHG Concentrations
+#---
+
+# Partial Pressure of Gases (units = atm)
+#  convert measured syringe values from concentration (ppm) to partial pressure (atm)
+lake_samples = lake_samples %>%
+   mutate(pch4 = ch4_ppm / 10^6 * 0.97,
+          pco2 = co2_ppm / 10^6 * 0.97,
+          pn2o = n2o_ppm / 10^6 * 0.97)
+
+
+##__Calculate concentration of dissolved gases in equilibrated water sample (units = uM)
+
+lake_conc = lake_samples %>%
+   # select only pond samples, exclude atmosphere samples
+   filter(!(str_detect(sample_id, "Y"))) %>%
+   # temperature-corrected Henry's Law constants (KH) based on pond surface water temperatures
+   mutate(tKH_ch4 = KH_ch4 * exp(KH_td_ch4 * ((1 / (surface_temp + 273.15)) - (1 / 298.15))),
+          tKH_co2 = KH_co2 * exp(KH_td_co2 * ((1 / (surface_temp + 273.15)) - (1 / 298.15))),
+          tKH_n2o = KH_n2o * exp(KH_td_n2o * ((1 / (surface_temp + 273.15)) - (1 / 298.15))))
+
+
+#_Headspace concentration (units = uM)
+
+# Ideal Gas Law: [gas] = (P/RT)*(10^6 umol/mol)
+
+# convert measured gas headspace from atm to uM
+lake_conc = lake_conc %>%
+   mutate(ch4_head = (pch4 / (0.0821 * 298.15)) * 10^6,
+          co2_head = (pco2 / (0.0821 * 298.15)) * 10^6,
+          n2o_head = (pn2o / (0.0821 * 298.15)) * 10^6)
+
+
+#_Aqueous concentration (units = uM)
+
+# concentration = tKH * partial pressure
+lake_conc = lake_conc %>%
+   mutate(ch4_aq = tKH_ch4 * pch4 * 10^6,
+          co2_aq = tKH_co2 * pco2 * 10^6,
+          n2o_aq = tKH_n2o * pn2o * 10^6)
+
+
+##__Calculate original concentration of dissolved gases in water sample
+#  prior to equilibration with headspace
+#  units = uM
+
+# calculate total amount of gas in syringe (units = umol)
+lake_conc = lake_conc %>%
+   mutate(ch4_tot_umol = (ch4_aq * vol_water) + (ch4_head * vol_air),
+          co2_tot_umol = (co2_aq * vol_water) + (co2_head * vol_air),
+          n2o_tot_umol = (n2o_aq * vol_water) + (n2o_head * vol_air))
+
+#_Atmosphere concentration (units = uM)
+#  to correct for gas present in headspace prior to equilibration
+atm_conc = lake_samples %>%
+   # select only atmosphere samples
+   filter(str_detect(sample_id, "Y")) %>%
+   # Ideal Gas Law
+   mutate(ch4_atm = (pch4 / (0.0821 * 298.15)) * 10^6,
+          co2_atm = (pco2 / (0.0821 * 298.15)) * 10^6,
+          n2o_atm = (pn2o / (0.0821 * 298.15)) * 10^6) %>%
+   # rename partial pressure variables, to keep distinct from pp values of pond samples
+   rename(pch4_atm = pch4,
+          pco2_atm = pco2,
+          pn2o_atm = pn2o)
+
+# add atmospheric gas values to dataset
+lake_conc = lake_conc %>%
+   left_join(atm_conc %>% select(doy, ends_with("atm")))
+
+
+#_Original gas concentrations in lake water (units = uM)
+#  correct syringe values for gases contributed by atmosphere headspace
+lake_conc = lake_conc %>%
+   mutate(ch4_lake = (ch4_tot_umol - (ch4_atm * vol_air)) / vol_water,
+          co2_lake = (co2_tot_umol - (co2_atm * vol_air)) / vol_water,
+          n2o_lake = (n2o_tot_umol - (n2o_atm * vol_air)) / vol_water)
+
