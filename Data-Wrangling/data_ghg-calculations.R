@@ -4,10 +4,13 @@
 #~~~
 
 
-### Coefficients
+### Constants, Equations, and Functions
 {
-# Ames = 0.97 atm
 
+# Atmospheric Pressure at Hort Farm pond site
+# Ames, IA = 0.97 atm
+
+   
 #_Henry's Law Constants (KH) (units = M/atm)
 
 # KH = concentration / partial pressure
@@ -19,6 +22,20 @@ KH_n2o = 0.024
 KH_td_ch4 = 1600
 KH_td_co2 = 2400
 KH_td_n2o = 2600
+
+
+#_Ideal Gas Law
+
+# [gas] = (P/RT)*(10^6 umol/mol)
+
+ideal_gas_law = function(pp) {
+   
+   conc = (pp / (0.0821 * 298.15)) * 10^6
+   
+   return(conc)
+}
+
+
 }
 
 
@@ -47,13 +64,11 @@ lake_conc = lake_samples %>%
 
 #_Headspace concentration (units = uM)
 
-# Ideal Gas Law: [gas] = (P/RT)*(10^6 umol/mol)
-
 # convert measured gas headspace from atm to uM
 lake_conc = lake_conc %>%
-   mutate(ch4_head = (pch4 / (0.0821 * 298.15)) * 10^6,
-          co2_head = (pco2 / (0.0821 * 298.15)) * 10^6,
-          n2o_head = (pn2o / (0.0821 * 298.15)) * 10^6)
+   mutate(ch4_head = ideal_gas_law(pch4),
+          co2_head = ideal_gas_law(pco2),
+          n2o_head = ideal_gas_law(pn2o))
 
 
 #_Aqueous concentration (units = uM)
@@ -81,9 +96,9 @@ atm_conc = lake_samples %>%
    # select only atmosphere samples
    filter(str_detect(sample_id, "Y")) %>%
    # Ideal Gas Law
-   mutate(ch4_atm = (pch4 / (0.0821 * 298.15)) * 10^6,
-          co2_atm = (pco2 / (0.0821 * 298.15)) * 10^6,
-          n2o_atm = (pn2o / (0.0821 * 298.15)) * 10^6) %>%
+   mutate(ch4_atm = ideal_gas_law(pch4),
+          co2_atm = ideal_gas_law(pco2),
+          n2o_atm = ideal_gas_law(pn2o)) %>%
    # rename partial pressure variables, to keep distinct from pp values of pond samples
    rename(pch4_atm = pch4,
           pco2_atm = pco2,
