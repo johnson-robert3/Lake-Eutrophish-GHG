@@ -12,6 +12,8 @@
 
    
 #_Henry's Law Constants (KH) (units = M/atm)
+   
+### Used to calculate dissolved gas concentration in a liquid based on equilibrium with a gaseous headspace
 
 # KH = concentration / partial pressure
 KH_ch4 = 0.00142
@@ -25,6 +27,8 @@ KH_td_n2o = 2600
 
 
 #_Ideal Gas Law
+
+### Used to calculate concentration of a gas based on its partial pressure
 
 # [gas] = (P/RT)*(10^6 umol/mol)
 
@@ -44,7 +48,7 @@ ideal_gas_law = function(pp) {
 #---
 
 # Partial Pressure of Gases (units = atm)
-#  convert measured syringe values from concentration (ppm) to partial pressure (atm)
+#  convert measured syringe values from ppm to atm
 lake_samples = lake_samples %>%
    mutate(pch4 = ch4_ppm / 10^6 * 0.97,
           pco2 = co2_ppm / 10^6 * 0.97,
@@ -115,4 +119,42 @@ lake_conc = lake_conc %>%
    mutate(ch4_lake = (ch4_tot_umol - (ch4_atm * vol_air)) / vol_water,
           co2_lake = (co2_tot_umol - (co2_atm * vol_air)) / vol_water,
           n2o_lake = (n2o_tot_umol - (n2o_atm * vol_air)) / vol_water)
+
+
+#---
+# Methanogenesis Potential
+#---
+
+##__Gas concentration in bottle headspace
+
+#  measured from serum bottle headspace at end of incubation (ppm)
+
+methano_samples = methano_samples %>%
+   # partial pressure of gases (units = atm)
+   mutate(pch4 = ch4_ppm / 10^6 * 0.97,
+          pco2 = co2_ppm / 10^6 * 0.97,
+          pn2o = n2o_ppm / 10^6 * 0.97) %>%
+   # ideal gas law to get final concentration (units = uM)
+   mutate(ch4_head = ideal_gas_law(pch4),
+          co2_head = ideal_gas_law(pco2),
+          n2o_head = ideal_gas_law(pn2o))
+
+
+##__Gas concentration dissolved in water sample
+
+#  concentration of gases dissolved in water sample at end of incubation,
+#  in equilibrium with bottle headspace
+
+methano_samples = methano_samples %>%
+   # temperature-corrected Henry's Law constants (tKH)
+   mutate(tKH_ch4 = KH_ch4 * exp(KH_td_ch4 * ((1 / (incubation_temp + 273.15)) - (1 / 298.15))),
+          tKH_co2 = KH_co2 * exp(KH_td_co2 * ((1 / (incubation_temp + 273.15)) - (1 / 298.15))),
+          tKH_n2o = KH_n2o * exp(KH_td_n2o * ((1 / (incubation_temp + 273.15)) - (1 / 298.15)))) %>%
+   # concentration dissolved in water sample
+   mutate(ch4_aq = tKH_ch4 * pch4 * 10^6,
+          co2_aq = tKH_co2 * pco2 * 10^6,
+          n2o_aq = tKH_n2o * pn2o * 10^6)
+
+
+
 
