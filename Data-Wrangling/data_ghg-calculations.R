@@ -125,9 +125,10 @@ lake_conc = lake_conc %>%
 # Methanogenesis Potential
 #---
 
-##__Gas concentration in bottle headspace
+##__Gas concentrations at end of incubation
 
-#  measured from serum bottle headspace at end of incubation (ppm)
+#_HEADSPACE
+#  measured from vial collected from bottle headspace (ppm)
 
 methano_samples = methano_samples %>%
    # partial pressure of gases (units = atm)
@@ -140,8 +141,7 @@ methano_samples = methano_samples %>%
           n2o_head = ideal_gas_law(pn2o))
 
 
-##__Gas concentration dissolved in water sample
-
+#_AQUEOUS SAMPLE 
 #  concentration of gases dissolved in water sample at end of incubation,
 #  in equilibrium with bottle headspace
 
@@ -154,6 +154,16 @@ methano_samples = methano_samples %>%
    mutate(ch4_aq = tKH_ch4 * pch4 * 10^6,
           co2_aq = tKH_co2 * pco2 * 10^6,
           n2o_aq = tKH_n2o * pn2o * 10^6)
+
+
+##__Amount of gas produced by sediment + water sample
+
+methano_samples = methano_samples %>%
+   # total amount (umol) of gases in bottle at end of incubation
+   mutate(vol_headspace = vol_bottle - (vol_sediment + vol_water),
+          ch4_tot_umol = (ch4_aq * vol_water) + (ch4_head * vol_headspace),
+          co2_tot_umol = (co2_aq * vol_water) + (co2_head * vol_headspace),
+          n2o_tot_umol = (n2o_aq * vol_water) + (n2o_head * vol_headspace))
 
 
 
