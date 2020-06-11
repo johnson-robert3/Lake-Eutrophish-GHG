@@ -113,22 +113,22 @@ lake_samples = lake_samples %>%
 #---
 
 # Sample meta data
-methano_sample_data = read_csv("Data/R-Data/2020_methano-sample-data.csv")
+methano_sample_data = read_csv("Data/R-Data/2020_methano-sample-data.csv") %>%
+   # convert volumes from ml to L
+   mutate(across(starts_with("vol"), ~(./1000)))
 
 
 # Add GHG concentration data to sample meta data
 methano_samples = left_join(methano_sample_data, ghg_data_raw)
 
 
-# Date and Time
+# Additional variables
 methano_samples = methano_samples %>%
+   # date and time
    mutate(datetime_start = as.POSIXct(mdy(date_start) + hms(time_start)),
           datetime_end = as.POSIXct(mdy(date_end) + hms(time_end)),
-          doy = yday(datetime_start))
-
-
-# Calculate length of incubation period
-methano_samples = methano_samples %>%
+          doy = yday(datetime_start)) %>%
+   # length of incubation period
    mutate(incubation_length = difftime(datetime_end, datetime_start, units="mins"))
 
 
