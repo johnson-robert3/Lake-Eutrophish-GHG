@@ -159,19 +159,6 @@ lake_samples = lake_samples %>%
    relocate(doy, .after = date)
 
 
-# Calculate mean surface water temperature and DO between 10:00 and 11:00 am
-#  and add to lake GHG dataset
-lake_samples = lake_samples %>%
-   left_join(minidot_data %>%
-                mutate(hour = hour(date_time)) %>%
-                group_by(pond_id, doy) %>%
-                filter(hour==10) %>%
-                ungroup() %>%
-                group_by(pond_id, doy) %>%
-                summarise(across(starts_with("surface"), ~mean(., na.rm=T))) %>%
-                ungroup())
-
-
 # Add surface water temperature to the lake GHG dataset
 #  calculate mean temp between 5 - 10 cm depth from sonde profiles
 lake_samples = lake_samples %>%
