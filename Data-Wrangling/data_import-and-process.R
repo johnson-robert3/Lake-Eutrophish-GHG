@@ -21,10 +21,71 @@ pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
 # Limno Data
 #===
 
+
+#---
+# Daily Sonde Profiles
+#---
+
+# Function to wrangle each sonde profile datasheet as it is read in
+#  select only the desired columns and rename to match across files
+read_profile = function(.dat, .skip) {
+   read_csv(.dat, skip = .skip) %>%
+      clean_names() %>%
+      select(date, time, site, odo_percent_sat, odo_mg_l, p_h, contains("chlorophyll"), contains("cond"), pc_rfu, pc_ug_l, sal_psu,
+             pressure_psi_a, depth_m, vertical_position_m, -contains("n_lf_cond")) %>%
+      rename(pond_id = site,
+             do_sat = odo_percent_sat,
+             do = odo_mg_l,
+             ph = p_h,
+             chla = chlorophyll_u_fffd_g_l,
+             chla_rfu = chlorophyll_rfu,
+             phyco = pc_ug_l,
+             phyco_rfu = pc_rfu,
+             cond = cond_u_fffd_s_cm,
+             sp_cond = sp_cond_u_fffd_s_cm,
+             salinity = sal_psu)
+}
+
+
+# Profile Data
+
+# DOY 142-158
+#  files without extra header rows
+sonde_early = list.files(path = "./Data/R-Data/2020_sonde-profiles/142-158",
+                         pattern = "hortsonde*",
+                         full.names = T) %>%
+   map_dfr(~read_profile(., .skip=0))
+
+# DOY 159-present
+#  files with extra header rows at top
+sonde_main = list.files(path = "./Data/R-Data/2020_sonde-profiles",
+                        pattern = "hortsonde*",
+                        full.names = T) %>%
+   map_dfr(~read_profile(., .skip=5))
+
+
+# Combined profile data
+sonde_profiles = full_join(sonde_early, sonde_main)
+
+
+# Clean up profile dataset
+sonde_profiles = sonde_profiles %>%
+   mutate(pond_id = str_remove(pond_id, "Pond "),
+          date_time = as.POSIXct(mdy(date) + hms(time)),
+          doy = yday(date_time)) %>%
+   select(-date, -time) %>%
+   relocate(date_time, doy)
+
+
+   ## remove temporary objects
+   rm(sonde_early, sonde_main)
+   ##
+
+
 #---
 # MiniDOT Temp-DO Data
 #---
-
+{
 # Data
 mini_a = read_csv("Data/R-Data/2020_minidot_A.csv", skip=8) %>% remove_empty(which=c("rows", "cols"))
 mini_b = read_csv("Data/R-Data/2020_minidot_B.csv", skip=8) %>% remove_empty(which=c("rows", "cols"))
@@ -62,6 +123,7 @@ minidot_data = minidot_data %>%
    rm(mini_a, mini_b, mini_c, mini_d, mini_e, mini_f)
    ##
 
+}
 
    
 #---
