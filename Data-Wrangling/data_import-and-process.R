@@ -31,9 +31,10 @@ pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
 read_profile = function(.dat, .skip) {
    read_csv(.dat, skip = .skip) %>%
       clean_names() %>%
-      select(date, time, site, odo_percent_sat, odo_mg_l, p_h, contains("chlorophyll"), contains("cond"), pc_rfu, pc_ug_l, sal_psu,
-             pressure_psi_a, depth_m, vertical_position_m, -contains("n_lf_cond")) %>%
+      select(date, time, site, temp_u_fffd_f, odo_percent_sat, odo_mg_l, p_h, contains("chlorophyll"), contains("cond"), pc_rfu, pc_ug_l,
+             sal_psu, pressure_psi_a, depth_m, vertical_position_m, -contains("n_lf_cond")) %>%
       rename(pond_id = site,
+             temp = temp_u_fffd_f,
              do_sat = odo_percent_sat,
              do = odo_mg_l,
              ph = p_h,
@@ -73,6 +74,8 @@ sonde_profiles = sonde_profiles %>%
    mutate(pond_id = str_remove(pond_id, "Pond "),
           date_time = as.POSIXct(mdy(date) + hms(time)),
           doy = yday(date_time)) %>%
+   # change temp data to Celcius
+   mutate(temp = (temp - 32) / 1.8) %>%
    select(-date, -time) %>%
    relocate(date_time, doy)
 
@@ -81,7 +84,7 @@ sonde_profiles = sonde_profiles %>%
    rm(sonde_early, sonde_main)
    ##
 
-
+   
 #---
 # MiniDOT Temp-DO Data
 #---
@@ -168,6 +171,15 @@ lake_samples = lake_samples %>%
                 summarise(across(starts_with("surface"), ~mean(., na.rm=T))) %>%
                 ungroup())
 
+
+# Add surface water temperature to the lake GHG dataset
+#  calculate mean temp between 5 - 10 cm depth from sonde profiles
+lake_samples = lake_samples %>%
+   left_join(sonde_profiles %>%
+                group_by(pond_id, doy) %>%
+                filter(depth_m > 0.05 & depth_m < 0.10) %>%
+                summarise(surface_temp = mean(temp, na.rm=T)) %>%
+                ungroup())
 
 
 #---
