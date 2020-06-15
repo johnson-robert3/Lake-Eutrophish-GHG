@@ -156,14 +156,25 @@ methano_samples = methano_samples %>%
           n2o_aq = tKH_n2o * pn2o * 10^6)
 
 
-##__Amount of gas produced by sediment + water sample
+##__Methane Production Rate
 
 methano_samples = methano_samples %>%
    # total amount (umol) of gases in bottle at end of incubation
    mutate(vol_headspace = vol_bottle - (vol_sediment + vol_water),
           ch4_tot_umol = (ch4_aq * vol_water) + (ch4_head * vol_headspace),
           co2_tot_umol = (co2_aq * vol_water) + (co2_head * vol_headspace),
-          n2o_tot_umol = (n2o_aq * vol_water) + (n2o_head * vol_headspace))
+          n2o_tot_umol = (n2o_aq * vol_water) + (n2o_head * vol_headspace)) %>%
+   # hourly rate of production per "unit" of sample (1ml sed. + 1ml water)
+   mutate(ch4_rate = ch4_tot_umol / 20 / (incubation_length / 60),
+          co2_rate = co2_tot_umol / 20 / (incubation_length / 60),
+          n2o_rate = n2o_tot_umol / 20 / (incubation_length / 60))
+
+
+# mean rate per pond (from 3 bottle replicates)
+methano_rates = methano_samples %>%
+   group_by(pond_id, week, doy) %>%
+   summarise(across(ends_with("rate"), ~mean(., na.rm=T))) %>%
+   ungroup()
 
 
 
