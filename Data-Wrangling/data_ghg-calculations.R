@@ -150,7 +150,7 @@ methano_samples = methano_samples %>%
    mutate(tKH_ch4 = KH_ch4 * exp(KH_td_ch4 * ((1 / (incubation_temp + 273.15)) - (1 / 298.15))),
           tKH_co2 = KH_co2 * exp(KH_td_co2 * ((1 / (incubation_temp + 273.15)) - (1 / 298.15))),
           tKH_n2o = KH_n2o * exp(KH_td_n2o * ((1 / (incubation_temp + 273.15)) - (1 / 298.15)))) %>%
-   # concentration dissolved in water sample
+   # concentration dissolved in water sample (units = uM)
    mutate(ch4_aq = tKH_ch4 * pch4 * 10^6,
           co2_aq = tKH_co2 * pco2 * 10^6,
           n2o_aq = tKH_n2o * pn2o * 10^6)
@@ -159,12 +159,12 @@ methano_samples = methano_samples %>%
 ##__Methane Production Rate
 
 methano_samples = methano_samples %>%
-   # total amount (umol) of gases in bottle at end of incubation
+   # total amount of gases in bottle at end of incubation (units = umol)
    mutate(vol_headspace = vol_bottle - (vol_sediment + vol_water),
           ch4_tot_umol = (ch4_aq * vol_water) + (ch4_head * vol_headspace),
           co2_tot_umol = (co2_aq * vol_water) + (co2_head * vol_headspace),
           n2o_tot_umol = (n2o_aq * vol_water) + (n2o_head * vol_headspace)) %>%
-   # hourly rate of production per "unit" of sample (1ml sed. + 1ml water)
+   # hourly rate of production per "unit" of sample (1ml sed. + 1ml water) (units = umol per unit sample per hour)
    mutate(ch4_rate = ch4_tot_umol / 20 / (incubation_length / 60),
           co2_rate = co2_tot_umol / 20 / (incubation_length / 60),
           n2o_rate = n2o_tot_umol / 20 / (incubation_length / 60))
