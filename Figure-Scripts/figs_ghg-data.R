@@ -56,6 +56,9 @@ ggplot(methano_rates) +
    geom_point(aes(x = doy, y = ch4_rate), size=4, color="white") +
    geom_point(aes(x = doy, y = ch4_rate, alpha = pond_id), size=4, color="firebrick2") +
    # scales and axes
+   scale_alpha_manual(breaks = c("A", "B", "C", "D", "E", "F"),
+                      values = c(0.25, 0.4, 0.55, 0.7, 0.85, 1),
+                      name = "Pond") +
    scale_x_continuous(name = "DOY",
                       expand = expand_scale(mult=0.1)) +
    scale_y_continuous(name = expression(Methane~production~(mu*mol~ml^-1*(s+w)~h^-1)),
