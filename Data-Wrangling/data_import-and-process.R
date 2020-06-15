@@ -160,11 +160,11 @@ lake_samples = lake_samples %>%
 
 
 # Add surface water temperature to the lake GHG dataset
-#  calculate mean temp between 5 - 10 cm depth from sonde profiles
+#  calculate mean temp between 2 - 20 cm depth from sonde profiles
 lake_samples = lake_samples %>%
    left_join(sonde_profiles %>%
                 group_by(pond_id, doy) %>%
-                filter(depth_m > 0.05 & depth_m < 0.10) %>%
+                filter(depth_m > 0.02 & depth_m < 0.20) %>%
                 summarise(surface_temp = mean(temp, na.rm=T)) %>%
                 ungroup())
 
@@ -190,7 +190,8 @@ methano_samples = methano_samples %>%
           datetime_end = as.POSIXct(mdy(date_end) + hms(time_end)),
           doy = yday(datetime_start)) %>%
    # length of incubation period
-   mutate(incubation_length = difftime(datetime_end, datetime_start, units="mins"))
+   mutate(incubation_length = difftime(datetime_end, datetime_start, units="mins"),
+          incubation_length = as.numeric(incubation_length))
 
 
 
@@ -218,7 +219,7 @@ weather_data = weather_data_raw %>%
    rename(date_time = date_time_gmt_05_00,
           wind_speed = wind_speed_m_s_lgr_s_n_20849581_sen_s_n_20843154,
           gust_speed = gust_speed_m_s_lgr_s_n_20849581_sen_s_n_20843154,
-          par = par_u_fffd_mol_m_u_fffd_s_lgr_s_n_20849581_sen_s_n_20856725)
+          par = "par_mmol_m²s_lgr_s_n_20849581_sen_s_n_20856725")
 
 
 # Date and Time
