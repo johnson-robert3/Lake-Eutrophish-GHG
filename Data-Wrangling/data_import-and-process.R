@@ -47,15 +47,13 @@ read_profile = function(.dat, .skip) {
 
 # Profile Data
 
-# DOY 142-158
-#  files without extra header rows
-sonde_early = list.files(path = "./Data/R-Data/2020_sonde-profiles/142-158",
+# Files without extra header rows
+sonde_early = list.files(path = "./Data/R-Data/2020_sonde-profiles/without-extra-header-rows",
                          pattern = "hortsonde*",
                          full.names = T) %>%
    map_dfr(~read_profile(., .skip=0))
 
-# DOY 159-present
-#  files with extra header rows at top
+# Files with extra header rows at top
 sonde_main = list.files(path = "./Data/R-Data/2020_sonde-profiles",
                         pattern = "hortsonde*",
                         full.names = T) %>%
@@ -71,6 +69,7 @@ sonde_profiles = sonde_profiles %>%
    mutate(pond_id = str_remove(pond_id, "Pond "),
           date_time = as.POSIXct(mdy(date) + hms(time)),
           doy = yday(date_time)) %>%
+   arrange(doy, pond_id, date_time) %>%
    # change temp data to Celcius
    mutate(temp = (temp - 32) / 1.8) %>%
    select(-date, -time) %>%
