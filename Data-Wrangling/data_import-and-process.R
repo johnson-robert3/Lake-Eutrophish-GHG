@@ -9,9 +9,6 @@ library(lubridate)
 library(janitor)
 
 
-# GHG Concentration Data
-ghg_data_raw = read_csv("Data/R-Data/2020_ghg-data.csv")
-
 # Pond/Site Data
 pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
 
@@ -133,15 +130,18 @@ minidot_data = minidot_data %>%
 # Lake Concentration GHG Samples
 #---
 
+# GHG data
+ghg_lake_raw = read_csv("Data/R-Data/2020_ghgs_lake-conc.csv")
+
 # Sample meta data
-lake_sample_data = read_csv("Data/R-Data/2020_lake-sample-data.csv") %>%
+lake_sample_data = read_csv("Data/R-Data/2020_sample-metadata_lake-conc.csv") %>%
    # convert volumes from ml to L
    mutate(across(starts_with("vol"), ~(./1000)))
 
 
 # Mean GHG concentration from syringes for lake samples (2 syringes per pond, 3 syringes for atmosphere)
-lake_samples = ghg_data_raw %>%
-   # remove methanogenesis and ebullition samples
+lake_samples = ghg_lake_raw %>%
+   # remove any inadvertent methanogenesis or ebullition samples
    filter(!(str_detect(sample_id, "R") | str_detect(sample_id, "P"))) %>%
    # mean value from syringe replicates
    group_by(sample_id) %>%
@@ -173,14 +173,20 @@ lake_samples = lake_samples %>%
 # Methanogenesis Incubation GHG Samples
 #---
 
+# GHG data
+ghg_methano_raw = read_csv("Data/R-Data/2020_ghgs_methano-assay.csv")
+
 # Sample meta data
-methano_sample_data = read_csv("Data/R-Data/2020_methano-sample-data.csv") %>%
+methano_sample_data = read_csv("Data/R-Data/2020_sample-metadata_methano-assay.csv") %>%
    # convert volumes from ml to L
    mutate(across(starts_with("vol"), ~(./1000)))
 
 
 # Add GHG concentration data to sample meta data
-methano_samples = left_join(methano_sample_data, ghg_data_raw)
+methano_samples = methano_sample_data %>%
+   left_join(ghg_methano_raw %>%
+                # remove any inadvertent lake or ebullition samples
+                filter(str_detect(sample_id, "R")))
 
 
 # Additional variables
@@ -199,8 +205,11 @@ methano_samples = methano_samples %>%
 # Ebullition Chamber GHG Samples
 #---
 
+# GHG data
+ghg_ebu_raw = read_csv("Data/R-Data/2020_ghgs_ebullition.csv")
+
 # Sample meta data
-ebu_sample_data = read_csv("Data/R-Data/2020_ebullition-sample-data.csv")
+ebu_sample_data = read_csv("Data/R-Data/2020_sample-metadata_ebullition.csv")
 
 
 
@@ -219,7 +228,7 @@ weather_data = weather_data_raw %>%
    rename(date_time = date_time_gmt_05_00,
           wind_speed = wind_speed_m_s_lgr_s_n_20849581_sen_s_n_20843154,
           gust_speed = gust_speed_m_s_lgr_s_n_20849581_sen_s_n_20843154,
-          par = "par_mmol_m²s_lgr_s_n_20849581_sen_s_n_20856725")
+          par = par_u_fffd_mol_m_u_fffd_s_lgr_s_n_20849581_sen_s_n_20856725)
 
 
 # Date and Time
