@@ -7,11 +7,15 @@
 library(cowplot)
 library(patchwork)
 library(viridis)
+library(PNWColors)
 
 
 mycolors = c("high" = inferno(n=1, begin=0.25),
-            "medium" = inferno(n=1, begin=0.5),
-            "low" = magma(n=1, begin=0.8))
+             "medium" = inferno(n=1, begin=0.5),
+             "low" = magma(n=1, begin=0.8))
+
+# from PNWColors palette "Anemone"
+# mycolors = c("high" = "#009474", "medium" = "#72e1e1", "low" = "#dcbe9b")
 
 
 ##__Lake GHG Concentrations
@@ -45,6 +49,7 @@ ggplot(lake_conc %>%
    # data lines
    geom_line(aes(group = pond_id, color = trt_fish, alpha = trt_nutrients), 
              size=1.25) +
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
    # white points to cover lines
    geom_point(aes(shape = trt_nutrients), 
               size=4, color="white", fill="white") +
@@ -58,7 +63,7 @@ ggplot(lake_conc %>%
    scale_fill_manual(name = "Food Web",
                      breaks = c("high", "medium", "low"),
                      values = mycolors,
-                     guide = guide_legend(override.aes = list(shape=21))) +
+                     guide = guide_legend(override.aes = list(shape=21, alpha=0.7))) +
    scale_shape_manual(name = "Nutrients",
                       breaks = c("yes", "no"),
                       values = c("yes" = 22, "no" = 21),
@@ -107,6 +112,7 @@ ggplot(lake_conc %>%
    # data lines
    geom_line(aes(group = pond_id, color = trt_fish, alpha = trt_nutrients), 
              size=1.25) +
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
    # white points to cover lines
    geom_point(aes(shape = trt_nutrients), 
               size=4, color="white", fill="white") +
@@ -120,7 +126,7 @@ ggplot(lake_conc %>%
    scale_fill_manual(name = "Food Web",
                      breaks = c("high", "medium", "low"),
                      values = mycolors,
-                     guide = guide_legend(override.aes = list(shape=21))) +
+                     guide = guide_legend(override.aes = list(shape=21, alpha=0.7))) +
    scale_shape_manual(name = "Nutrients",
                       breaks = c("yes", "no"),
                       values = c("yes" = 22, "no" = 21),
@@ -189,6 +195,7 @@ ggplot(methano_rates %>%
              size=1.25) +
    geom_errorbar(aes(ymin = ch4_rate - sd_ch4_rate, ymax = ch4_rate + sd_ch4_rate), 
                  color="gray75", width=0) +
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
    # white points to cover lines
    geom_point(aes(shape = trt_nutrients), 
               size=4, color="white", fill="white") +
@@ -202,7 +209,7 @@ ggplot(methano_rates %>%
    scale_fill_manual(name = "Food Web",
                      breaks = c("high", "medium", "low"),
                      values = mycolors,
-                     guide = guide_legend(override.aes = list(shape=21))) +
+                     guide = guide_legend(override.aes = list(shape=21, alpha=0.7))) +
    scale_shape_manual(name = "Nutrients",
                       breaks = c("yes", "no"),
                       values = c("yes" = 22, "no" = 21),
