@@ -74,12 +74,59 @@ ggplot(lake_conc %>%
    scale_x_continuous(name = "DOY",
                       expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(Methane~(mu*M)),
-                      expand = expansion(mult=0.1)) +
+                      expand = expansion(mult=0.1)
+                      # set limits, instead of expansion
+                      # limits = c(0,20)
+                      ) +
    # aesthetics
    theme_classic()
 
 
 ggsave(filename = "Figures/2020_lake-dissolved-ch4.png", height=5, width=7, units="in")
+
+
+# log scale (to view dynamics in lower concentrations
+{
+windows(height=5, width=7)
+ggplot(lake_conc %>%
+          left_join(pond_data), 
+       aes(x = doy, y = ch4_lake)) +
+   # data lines
+   geom_line(aes(group = pond_id, color = trt_fish, alpha = trt_nutrients), 
+             size=1.25) +
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   # white points to cover lines
+   geom_point(aes(shape = trt_nutrients), 
+              size=4, color="white", fill="white") +
+   # data points
+   geom_point(aes(shape = trt_nutrients, fill = trt_fish, alpha = trt_nutrients), 
+              size=4) +
+   # scales
+   scale_color_manual(breaks = c("high", "medium", "low"),
+                      values = mycolors,
+                      guide=NULL) +
+   scale_fill_manual(name = "Food Web",
+                     breaks = c("high", "medium", "low"),
+                     values = mycolors,
+                     guide = guide_legend(override.aes = list(shape=21, alpha=0.7))) +
+   scale_shape_manual(name = "Nutrients",
+                      breaks = c("yes", "no"),
+                      values = c("yes" = 22, "no" = 21),
+                      guide = guide_legend(override.aes = list(size=3))) +
+   scale_alpha_manual(breaks = c("yes", "no"),
+                      values = c("yes" = 0.7, "no" = 0.5),
+                      guide=NULL) +
+   scale_x_continuous(name = "DOY",
+                      expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(Methane~(mu*M)),
+                      expand = expansion(mult=0.1),
+                      trans = "log10") +
+   # aesthetics
+   theme_classic()
+
+
+ggsave(filename = "Figures/2020_lake-dissolved-ch4_logY.png", height=5, width=7, units="in")
+}
 
 
 # NITROUS OXIDE
