@@ -175,5 +175,22 @@ methano_rates = methano_samples %>%
    ungroup()
 
 
+#---
+#### Ebullition ####
+#---
+
+# Gas concentrations in ebullition chambers
+ebu_samples = ebu_samples %>%
+   # partial pressure of gases (units = atm)
+   mutate(pch4 = ch4_ppm / 10^6 * 0.97,
+          pco2 = co2_ppm / 10^6 * 0.97,
+          pn2o = n2o_ppm / 10^6 * 0.97) %>%
+   # ideal gas law to get final concentration (units = uM)
+   mutate(ch4_chamber = ideal_gas_law(pch4),
+          co2_chamber = ideal_gas_law(pco2),
+          n2o_chamber = ideal_gas_law(pn2o))
+   
+
+
 
 
