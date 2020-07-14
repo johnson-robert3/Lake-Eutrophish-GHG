@@ -150,7 +150,7 @@ lake_samples = ghg_lake_raw %>%
 # Add GHG concentration data to sample meta data
 lake_samples = left_join(lake_sample_data, lake_samples)
 
-# add DOY
+# Add DOY
 lake_samples = lake_samples %>%
    mutate(date = mdy(date),
           doy = yday(date)) %>%
@@ -206,7 +206,41 @@ methano_samples = methano_samples %>%
 ghg_ebu_raw = read_csv("Data/R-Data/2020_ghgs_ebullition.csv")
 
 # Sample meta data
-ebu_sample_data = read_csv("Data/R-Data/2020_sample-metadata_ebullition.csv")
+ebu_sample_data = read_csv("Data/R-Data/2020_sample-metadata_ebullition.csv") %>%
+   # add a column for sample replicate
+   mutate(replicate = str_sub(sample_id, -2, -1)) %>%
+   relocate(replicate, .after = pond_id)
+
+
+# Add GHG concentration data to sample meta data
+ebu_samples = ebu_sample_data %>%
+   left_join(ghg_ebu_raw %>%
+                # remove any inadvertent lake or methano samples
+                filter(str_detect(sample_id, "P"))) %>%
+   # add DOY
+   mutate(date_time = as.POSIXct(mdy(date) + hms(time)),
+          doy = yday(date_time))
+
+
+# Calculate deployment length
+ebu_samples = ebu_samples %>%
+   group_by(week, pond_id, replicate) %>%
+   arrange(doy, .by_group=T) %>%
+   mutate(deployment_length = difftime(last(date_time), first(date_time), units="mins"),
+          deployment_length = as.numeric(deployment_length)) %>%
+   ungroup()
+
+
+# Create separate data frames for the start and end of the deployments
+# ebu_samples_start = ebu_samples %>%
+#    group_by(week, pond_id, replicate) %>%
+#    slice_min(order_by = doy) %>%
+#    ungroup()
+# 
+# ebu_samples_end = ebu_samples %>%
+#    group_by(week, pond_id, replicate) %>%
+#    slice_max(order_by = doy) %>%
+#    ungroup()
 
 
 #---
