@@ -13,14 +13,14 @@ library(janitor)
 pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
 
 
-#==
+#---
 #### Limno Data ####
-#==
+#---
 
 
-#--
+#---
 # Daily Sonde Profiles
-#--
+#---
 
 # Function to wrangle each sonde profile datasheet as it is read in
 #  select only the desired columns and rename to match across files
@@ -80,9 +80,9 @@ sonde_profiles = sonde_profiles %>%
    ##
 
    
-#--
+#---
 # MiniDOT Temp-DO Data
-#--
+#---
 {
 # Data
 mini_a = read_csv("Data/R-Data/2020_minidot_A.csv", skip=8) %>% remove_empty(which=c("rows", "cols"))
@@ -124,9 +124,9 @@ minidot_data = minidot_data %>%
 }
 
    
-#--
+#---
 #### Lake Concentration GHG Samples ####
-#--
+#---
 
 # GHG data
 ghg_lake_raw = read_csv("Data/R-Data/2020_ghgs_lake-conc.csv")
@@ -167,9 +167,9 @@ lake_samples = lake_samples %>%
                 ungroup())
 
 
-#--
+#---
 #### Methanogenesis GHG Samples ####
-#--
+#---
 
 # GHG data
 ghg_methano_raw = read_csv("Data/R-Data/2020_ghgs_methano-assay.csv")
@@ -198,9 +198,9 @@ methano_samples = methano_samples %>%
           incubation_length = as.numeric(incubation_length))
 
 
-#--
+#---
 #### Ebullition Chamber GHG Samples ####
-#--
+#---
 
 # GHG data
 ghg_ebu_raw = read_csv("Data/R-Data/2020_ghgs_ebullition.csv")
@@ -209,9 +209,9 @@ ghg_ebu_raw = read_csv("Data/R-Data/2020_ghgs_ebullition.csv")
 ebu_sample_data = read_csv("Data/R-Data/2020_sample-metadata_ebullition.csv")
 
 
-#--
+#---
 #### Weather Data ####
-#--
+#---
 
 # Data
 weather_data_raw = read_csv("Data/R-Data/2020_weather-data.csv", skip=1)
