@@ -4,8 +4,7 @@
 #~~~
 
 
-### Constants, Equations, and Functions
-{
+### Constants, Equations, and Functions ----
 
 # Atmospheric Pressure at Hort Farm pond site
 # Ames, IA = 0.97 atm
@@ -40,11 +39,9 @@ ideal_gas_law = function(pp) {
 }
 
 
-}
-
 
 #---
-# Lake Dissolved GHG Concentrations
+#### Lake Dissolved GHG Concentrations ####
 #---
 
 # Partial Pressure of Gases (units = atm)
@@ -122,7 +119,7 @@ lake_conc = lake_conc %>%
 
 
 #---
-# Methanogenesis Potential
+#### Methanogenesis Potential ####
 #---
 
 ##__Gas concentrations at end of incubation
