@@ -170,8 +170,11 @@ methano_samples = methano_samples %>%
 # mean rate per pond (from 3 bottle replicates)
 methano_rates = methano_samples %>%
    group_by(pond_id, week, doy) %>%
-   summarise(across(ends_with("rate"), ~sd(., na.rm=T), .names = "sd_{col}"),
-             across(ends_with("rate"), ~mean(., na.rm=T))) %>%
+   summarize(across(ends_with("rate"),
+                    list(mean = ~mean(., na.rm=T), sd = ~sd(., na.rm=T)),
+                    .names = "{fn}_{col}")) %>%
+   rename_with(.cols = starts_with("mean_"),
+               .fn = ~str_remove(., pattern = "mean_")) %>%
    ungroup()
 
 
