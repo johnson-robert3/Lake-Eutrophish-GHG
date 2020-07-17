@@ -207,7 +207,7 @@ ebu_sample_data = read_csv("Data/R-Data/2020_sample-metadata_ebullition.csv") %>
 
 
 # Add GHG concentration data to sample meta data
-ebu_data_all = ebu_sample_data %>%
+ebu_samples = ebu_sample_data %>%
    left_join(ghg_ebu_raw) %>%
    # add DOY
    mutate(date_time = as.POSIXct(mdy(date) + hms(time)),
@@ -217,7 +217,7 @@ ebu_data_all = ebu_sample_data %>%
 
 
 # Calculate deployment length
-ebu_data_all = ebu_data_all %>%
+ebu_samples = ebu_samples %>%
    group_by(week, pond_id, replicate) %>%
    arrange(doy, .by_group=T) %>%
    mutate(deployment_length = difftime(last(date_time), first(date_time), units="mins"),
@@ -226,12 +226,12 @@ ebu_data_all = ebu_data_all %>%
 
 
 # Create separate data frames for the start and end of the deployments
-ebu_start = ebu_data_all %>%
+ebu_start = ebu_samples %>%
    group_by(week, pond_id, replicate) %>%
    slice_min(order_by = doy) %>%
    ungroup()
 
-ebu_end = ebu_data_all %>%
+ebu_end = ebu_samples %>%
    group_by(week, pond_id, replicate) %>%
    slice_max(order_by = doy) %>%
    ungroup()
@@ -239,17 +239,26 @@ ebu_end = ebu_data_all %>%
 
 # Only need measured ppm values from start of deployment
 # So add these onto the end deployment data frame
-ebu_samples = ebu_end %>%
-   rename(ch4_ppm_t1 = ch4_ppm,
-          co2_ppm_t1 = co2_ppm,
-          n2o_ppm_t1 = n2o_ppm) %>%
-   left_join(ebu_start %>%
-                mutate(doy = doy + 1) %>%
-                rename(ch4_ppm_t0 = ch4_ppm,
-                       co2_ppm_t0 = co2_ppm,
-                       n2o_ppm_t0 = n2o_ppm) %>%
-                select(pond_id, replicate, week, doy, contains("ppm"))) %>%
-   relocate(ends_with("_t0"), .before = ch4_ppm_t1)
+# ebu_samples = ebu_end %>%
+#    rename(ch4_ppm_t1 = ch4_ppm,
+#           co2_ppm_t1 = co2_ppm,
+#           n2o_ppm_t1 = n2o_ppm) %>%
+#    left_join(ebu_start %>%
+#                 mutate(doy = doy + 1) %>%
+#                 rename(ch4_ppm_t0 = ch4_ppm,
+#                        co2_ppm_t0 = co2_ppm,
+#                        n2o_ppm_t0 = n2o_ppm) %>%
+#                 select(pond_id, replicate, week, doy, contains("ppm"))) %>%
+#    relocate(ends_with("_t0"), .before = ch4_ppm_t1)
+
+
+# Add deployment times to datasets for use in combining later
+ebu_start = ebu_start %>%
+   mutate(doy = doy + 1,
+          deployment_time = rep_len("t0", n()))
+
+ebu_end = ebu_end %>%
+   mutate(deployment_time = rep_len("t1", n()))
 
 
 #---
