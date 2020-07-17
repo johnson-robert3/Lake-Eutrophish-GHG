@@ -211,7 +211,9 @@ ebu_samples = ebu_sample_data %>%
    left_join(ghg_ebu_raw) %>%
    # add DOY
    mutate(date_time = as.POSIXct(mdy(date) + hms(time)),
-          doy = yday(date_time))
+          doy = yday(date_time)) %>%
+   select(-date, -time) %>%
+   relocate(date_time, doy, .after = week)
 
 
 # Calculate deployment length
@@ -224,15 +226,24 @@ ebu_samples = ebu_samples %>%
 
 
 # Create separate data frames for the start and end of the deployments
-# ebu_samples_start = ebu_samples %>%
-#    group_by(week, pond_id, replicate) %>%
-#    slice_min(order_by = doy) %>%
-#    ungroup()
-# 
-# ebu_samples_end = ebu_samples %>%
-#    group_by(week, pond_id, replicate) %>%
-#    slice_max(order_by = doy) %>%
-#    ungroup()
+ebu_start = ebu_samples %>%
+   group_by(week, pond_id, replicate) %>%
+   slice_min(order_by = doy) %>%
+   ungroup()
+
+ebu_end = ebu_samples %>%
+   group_by(week, pond_id, replicate) %>%
+   slice_max(order_by = doy) %>%
+   ungroup()
+
+
+# Add deployment time variables for use in combining later
+ebu_start = ebu_start %>%
+   mutate(doy = doy + 1,
+          deployment_time = rep_len("t0", n()))
+
+ebu_end = ebu_end %>%
+   mutate(deployment_time = rep_len("t1", n()))
 
 
 #---
