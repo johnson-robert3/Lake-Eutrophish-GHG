@@ -182,18 +182,12 @@ methano_sample_data = read_csv("Data/R-Data/2020_sample-metadata_methano-assay.c
 
 # Add GHG concentration data to sample meta data
 methano_samples = methano_sample_data %>%
-   left_join(ghg_methano_raw %>%
-                # remove any inadvertent lake or ebullition samples
-                filter(str_detect(sample_id, "R")))
-
-
-# Additional variables
-methano_samples = methano_samples %>%
-   # date and time
+   left_join(ghg_methano_raw) %>%
+   # add date and time
    mutate(datetime_start = as.POSIXct(mdy(date_start) + hms(time_start)),
           datetime_end = as.POSIXct(mdy(date_end) + hms(time_end)),
           doy = yday(datetime_start)) %>%
-   # length of incubation period
+   # add length of incubation period
    mutate(incubation_length = difftime(datetime_end, datetime_start, units="mins"),
           incubation_length = as.numeric(incubation_length))
 
@@ -214,9 +208,7 @@ ebu_sample_data = read_csv("Data/R-Data/2020_sample-metadata_ebullition.csv") %>
 
 # Add GHG concentration data to sample meta data
 ebu_samples = ebu_sample_data %>%
-   left_join(ghg_ebu_raw %>%
-                # remove any inadvertent lake or methano samples
-                filter(str_detect(sample_id, "P"))) %>%
+   left_join(ghg_ebu_raw) %>%
    # add DOY
    mutate(date_time = as.POSIXct(mdy(date) + hms(time)),
           doy = yday(date_time))
