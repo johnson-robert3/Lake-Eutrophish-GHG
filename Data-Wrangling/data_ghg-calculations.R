@@ -4,6 +4,9 @@
 #~~~
 
 
+library(LakeMetabolizer)
+
+
 ### Constants, Equations, and Functions ----
 
 # Atmospheric Pressure at Hort Farm pond site
@@ -182,18 +185,46 @@ methano_rates = methano_samples %>%
 #### Ebullition ####
 #---
 
-# Gas concentrations in ebullition chambers
-ebu_samples = ebu_samples %>%
-   # partial pressure of gases (units = atm)
+##__Start of deployment
+
+# gas partial pressures in chamber headspace (units = atm)
+ebu_start = ebu_start %>%
    mutate(pch4 = ch4_ppm / 10^6 * 0.97,
           pco2 = co2_ppm / 10^6 * 0.97,
-          pn2o = n2o_ppm / 10^6 * 0.97) %>%
-   # ideal gas law to get final concentration (units = uM)
-   mutate(ch4_chamber = ideal_gas_law(pch4),
-          co2_chamber = ideal_gas_law(pco2),
-          n2o_chamber = ideal_gas_law(pn2o))
-   
+          pn2o = n2o_ppm / 10^6 * 0.97)
 
+# add lake dissolved gas concentrations to the data set
+#  dissolved concentrations were measured at the end of the deployment, so need to assume 
+#  dissolved concentrations and water temp remained constant throughout deployment
+ebu_start = ebu_start %>%
+   left_join(lake_conc %>%
+                select(pond_id, doy, surface_temp, ends_with("lake"), starts_with("tKH_")))
+
+# calculate expected lake dissolved concentration if at equilibrium with chamber headspace (units = uM)
+ebu_start = ebu_start %>%
+   mutate(ch4_exp = tKH_ch4 * pch4 * 10^6,
+          co2_exp = tKH_co2 * pco2 * 10^6,
+          n2o_exp = tKH_n2o * pn2o * 10^6)
+
+
+##__End of deployment
+
+# gas partial pressures in chamber headspace (units = atm)
+ebu_end = ebu_end %>%
+   mutate(pch4 = ch4_ppm / 10^6 * 0.97,
+          pco2 = co2_ppm / 10^6 * 0.97,
+          pn2o = n2o_ppm / 10^6 * 0.97)
+
+# add lake dissolved gas concentrations to the data set
+ebu_end = ebu_end %>%
+   left_join(lake_conc %>%
+                select(pond_id, doy, surface_temp, ends_with("lake"), starts_with("tKH_")))
+
+# calculate expected lake dissolved concentration if at equilibrium with chamber headspace (units = uM)
+ebu_end = ebu_end %>%
+   mutate(ch4_exp = tKH_ch4 * pch4 * 10^6,
+          co2_exp = tKH_co2 * pco2 * 10^6,
+          n2o_exp = tKH_n2o * pn2o * 10^6)
 
 
 
