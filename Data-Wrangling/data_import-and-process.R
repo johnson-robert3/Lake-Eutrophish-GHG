@@ -289,3 +289,39 @@ weather_data = weather_data %>%
 # Anemometer height
 
 
+#---
+#### Sediment Data ####
+#---
+
+# Data
+bulk_density_raw = read_csv("Data/R-Data/2020_sediment_bulk-density.csv")
+
+organic_matter_raw = read_csv("Data/R-Data/20202_sediment_om.csv")
+
+
+# Clean up bulk density file and calculate Dry Bulk Density (DBD)
+bulk_density = bulk_density_raw %>%
+   mutate(date = mdy(date),
+          doy = yday(date)) %>%
+   # sample weights
+   mutate(mass_wet = mass_wet_tin.sample - mass_tin,
+          mass_dry = mass_dry_tin.sample - mass_tin) %>%
+   filter(!(sample_type=="nutrients")) %>%
+   # dry bulk density (units = g / cm3)
+   mutate(DBD = mass_dry / vol_sample,
+          porosity = (mass_wet - mass_dry) / vol_sample)
+
+
+# Clean up OM file and calculate organic matter content
+om_data = organic_matter_raw %>%
+   mutate(date = mdy(date),
+          doy = yday(date)) %>%
+   # sample weights
+   mutate(mass_dry = mass_dry_tin.sample - mass_tin,
+          mass_ash = mass_ash_tin.sample - mass_tin) %>%
+   # OM content
+   mutate(perc_om = (1 - (mass_ash / mass_dry)) * 100,
+          test = ((mass_dry - mass_ash) / mass_dry) * 100) # other way, same values?
+
+
+
