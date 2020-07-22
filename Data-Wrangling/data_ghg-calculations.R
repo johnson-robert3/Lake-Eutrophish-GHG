@@ -142,7 +142,7 @@ methano_samples = methano_samples %>%
 
 
 #_AQUEOUS SAMPLE 
-#  concentration of gases dissolved in water sample at end of incubation,
+#  concentration of gases dissolved in water at end of incubation,
 #  in equilibrium with bottle headspace
 
 methano_samples = methano_samples %>%
@@ -156,18 +156,31 @@ methano_samples = methano_samples %>%
           n2o_aq = tKH_n2o * pn2o * 10^6)
 
 
+#_Add sediment bulk density and porosity to Methano dataset
+
+methano_samples = methano_samples %>%
+   left_join(bulk_density %>% select(-week)) %>%
+   # calculate total aqueous volume in bottle using porosity data
+   # aqueous volume = water sample + aqueous portion of sediment sample
+   mutate(vol_aq = vol_water + (vol_sediment * porosity)) %>%
+   # calculate total sample mass in each assay bottle using sediment bulk density
+   # vol_aq = water mass (since 1 cm^3 = 1 g)
+   mutate(mass_aq = vol_aq,
+          mass_sed = vol_sediment * DBD,
+          mass_slurry = mass_aq + mass_sed)
+
+
 ##__Methane Production Rate
 
 methano_samples = methano_samples %>%
-   # total amount of gases in bottle at end of incubation (units = umol)
-   mutate(vol_headspace = vol_bottle - (vol_sediment + vol_water),
-          ch4_tot_umol = (ch4_aq * vol_water) + (ch4_head * vol_headspace),
-          co2_tot_umol = (co2_aq * vol_water) + (co2_head * vol_headspace),
-          n2o_tot_umol = (n2o_aq * vol_water) + (n2o_head * vol_headspace)) %>%
-   # hourly rate of production per "unit" of sample (1ml sed. + 1ml water) (units = umol per unit sample per hour)
-   mutate(ch4_rate = ch4_tot_umol / 20 / (incubation_length / 60),
-          co2_rate = co2_tot_umol / 20 / (incubation_length / 60),
-          n2o_rate = n2o_tot_umol / 20 / (incubation_length / 60))
+   # total amount of gases in bottle at end of incubation (headspace + dissolved) (units = umol)
+   mutate(ch4_tot_umol = (ch4_aq * vol_aq) + (ch4_head * vol_head),
+          co2_tot_umol = (co2_aq * vol_aq) + (co2_head * vol_head),
+          n2o_tot_umol = (n2o_aq * vol_aq) + (n2o_head * vol_head)) %>%
+   # hourly rate of production per gram of slurry mass (units = umol g-1 h-1)
+   mutate(ch4_rate = ch4_tot_umol / mass_slurry / (incubation_length / 60),
+          co2_rate = co2_tot_umol / mass_slurry / (incubation_length / 60),
+          n2o_rate = n2o_tot_umol / mass_slurry / (incubation_length / 60))
 
 
 # mean rate per pond (from 3 bottle replicates)
