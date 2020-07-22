@@ -81,50 +81,6 @@ sonde_profiles = sonde_profiles %>%
 
    
 #---
-# MiniDOT Temp-DO Data
-#---
-{
-# Data
-mini_a = read_csv("Data/R-Data/2020_minidot_A.csv", skip=8) %>% remove_empty(which=c("rows", "cols"))
-mini_b = read_csv("Data/R-Data/2020_minidot_B.csv", skip=8) %>% remove_empty(which=c("rows", "cols"))
-mini_c = read_csv("Data/R-Data/2020_minidot_C.csv", skip=8) %>% remove_empty(which=c("rows", "cols"))
-mini_d = read_csv("Data/R-Data/2020_minidot_D.csv", skip=8) %>% remove_empty(which=c("rows", "cols"))
-mini_e = read_csv("Data/R-Data/2020_minidot_E.csv", skip=8) %>% remove_empty(which=c("rows", "cols"))
-mini_f = read_csv("Data/R-Data/2020_minidot_F.csv", skip=8) %>% remove_empty(which=c("rows", "cols"))
-
-
-# Add a pond identifier
-mini_a = mini_a %>% mutate(pond_id = rep("A", nrow(.)))
-mini_b = mini_b %>% mutate(pond_id = rep("B", nrow(.)))
-mini_c = mini_a %>% mutate(pond_id = rep("C", nrow(.)))
-mini_d = mini_a %>% mutate(pond_id = rep("D", nrow(.)))
-mini_e = mini_a %>% mutate(pond_id = rep("E", nrow(.)))
-mini_f = mini_a %>% mutate(pond_id = rep("F", nrow(.)))
-
-# combine files
-minidot_data = bind_rows(mini_a, mini_b, mini_c, mini_d, mini_e, mini_f)
-
-# Clean up file
-minidot_data = minidot_data %>%
-   clean_names() %>%
-   select(-unix_timestamp, -utc_date, -utc_time, -battery, -q) %>%
-   mutate(date_time = as.POSIXct(mdy(cst_date) + hms(cst_time)),
-          doy = yday(date_time)) %>%
-   relocate(pond_id, date_time, doy) %>%
-   select(-cst_date, -cst_time) %>%
-   rename(surface_temp = temperature,
-          surface_do = dissolved_oxygen,
-          surface_do_sat = dissolved_oxygen_saturation)
-
-
-   ## remove individual files
-   rm(mini_a, mini_b, mini_c, mini_d, mini_e, mini_f)
-   ##
-
-}
-
-   
-#---
 #### Lake Concentration GHG Samples ####
 #---
 
