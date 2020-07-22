@@ -266,7 +266,7 @@ ggplot(methano_rates %>%
                       guide=NULL) +
    scale_x_continuous(name = "DOY",
                       expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(Methane~production~(mu*mol~ml^-1*(s+w)~h^-1)),
+   scale_y_continuous(name = expression(Methane~production~(mu*mol~g^-1~h^-1)),
                       expand = expansion(mult=0.1)) +
    expand_limits(y = 0) +
    # aesthetics
