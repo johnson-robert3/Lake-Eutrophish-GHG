@@ -176,6 +176,8 @@ ghg_methano_raw = read_csv("Data/R-Data/2020_ghgs_methano-assay.csv")
 
 # Sample meta data
 methano_sample_data = read_csv("Data/R-Data/2020_sample-metadata_methano-assay.csv") %>%
+   # add a bottle headspace variable
+   mutate(vol_head = vol_bottle - (vol_sediment + vol_water)) %>%
    # convert volumes from ml to L
    mutate(across(starts_with("vol"), ~(./1000)))
 
@@ -296,7 +298,7 @@ weather_data = weather_data %>%
 # Data
 bulk_density_raw = read_csv("Data/R-Data/2020_sediment_bulk-density.csv")
 
-organic_matter_raw = read_csv("Data/R-Data/20202_sediment_om.csv")
+organic_matter_raw = read_csv("Data/R-Data/2020_sediment_om.csv")
 
 
 # Clean up bulk density file and calculate Dry Bulk Density (DBD)
@@ -307,9 +309,17 @@ bulk_density = bulk_density_raw %>%
    mutate(mass_wet = mass_wet_tin.sample - mass_tin,
           mass_dry = mass_dry_tin.sample - mass_tin) %>%
    filter(!(sample_type=="nutrients")) %>%
-   # dry bulk density (units = g / cm3)
+   # dry bulk density and porosity (units = g / cm3)
    mutate(DBD = mass_dry / vol_sample,
           porosity = (mass_wet - mass_dry) / vol_sample)
+
+# calculate mean sediment bulk density and porosity for each pond
+bulk_density = bulk_density %>%
+   # mean of 3 replicates for each sampling event
+   group_by(pond_id, week) %>%
+   summarize(DBD = mean(DBD, na.rm=T),
+             porosity = mean(porosity, na.rm=T)) %>%
+   ungroup()
 
 
 # Clean up OM file and calculate organic matter content
@@ -319,9 +329,15 @@ om_data = organic_matter_raw %>%
    # sample weights
    mutate(mass_dry = mass_dry_tin.sample - mass_tin,
           mass_ash = mass_ash_tin.sample - mass_tin) %>%
-   # OM content
-   mutate(perc_om = (1 - (mass_ash / mass_dry)) * 100,
-          test = ((mass_dry - mass_ash) / mass_dry) * 100) # other way, same values?
+   # OM content (%)
+   mutate(perc_om = (1 - (mass_ash / mass_dry)) * 100)
+
+# calculate mean OM content for each pond
+om_data = om_data %>%
+   # mean of 3 replicates for each sampling event
+   group_by(pond_id, week) %>%
+   summarize(perc_om = mean(perc_om, na.rm=T)) %>%
+   ungroup()
 
 
 
