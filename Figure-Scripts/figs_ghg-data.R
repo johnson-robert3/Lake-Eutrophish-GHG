@@ -18,9 +18,9 @@ mycolors = c("high" = inferno(n=1, begin=0.25),
 # mycolors = c("high" = "#009474", "medium" = "#72e1e1", "low" = "#dcbe9b")
 
 
-##__Lake GHG Concentrations
-
-# METHANE
+#---
+#### Dissolved Methane Concentrations ####
+#---
 
 # ponds distinguished by alpha
 windows(height=5, width=7)
@@ -129,7 +129,60 @@ ggsave(filename = "Figures/2020_lake-dissolved-ch4_logY.png", height=5, width=7,
 }
 
 
-# NITROUS OXIDE
+##_Comparing Ambient vs Pulsed ponds by benthic-pelagic coupling
+
+# HIGH B-P
+windows()
+ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="high"),
+       aes(x = doy, y = ch4_lake)) +
+   geom_line(aes(group = trt_nutrients), size=0.5) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   scale_fill_manual(name = NULL,
+                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   labs(x = "DOY", y = expression(Methane~(mu*M)), title = "High") +
+   theme_classic()
+
+ggsave(filename = "Figures/methane_high-fish.png", height=5, width=7, units="in")
+
+
+# MEDIUM B-P
+windows()
+ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="medium"),
+       aes(x = doy, y = ch4_lake)) +
+   geom_line(aes(group = trt_nutrients), size=0.5) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   scale_fill_manual(name = NULL,
+                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   labs(x = "DOY", y = expression(Methane~(mu*M)), title = "Medium") +
+   theme_classic()
+
+ggsave(filename = "Figures/methane_med-fish.png", height=5, width=7, units="in")
+
+
+# LOW B-P
+windows()
+ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="low"),
+       aes(x = doy, y = ch4_lake)) +
+   geom_line(aes(group = trt_nutrients), size=0.5) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   scale_fill_manual(name = NULL,
+                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   labs(x = "DOY", y = expression(Methane~(mu*M)), title = "Low") +
+   theme_classic()
+
+ggsave(filename = "Figures/methane_low-fish.png", height=5, width=7, units="in")
+
+
+
+#---
+#### Dissolved Nitrous Oxide Concentrations ####
+#---
 
 # ponds distinguished by alpha
 windows(height=5, width=7)
@@ -193,9 +246,65 @@ ggplot(lake_conc %>%
 ggsave(filename = "Figures/2020_lake-dissolved-n2o.png", height=5, width=7, units="in")
 
 
-##__Methanogenesis Potential
+##_Comparing Ambient vs Pulsed ponds by benthic-pelagic coupling
 
-# METHANE
+# HIGH B-P
+windows()
+ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="high"),
+       aes(x = doy, y = n2o_lake)) +
+   geom_line(aes(group = trt_nutrients), size=0.5) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   scale_fill_manual(name = NULL,
+                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   labs(x = "DOY", y = expression(Nitrous~oxide~(mu*M)), title = "High") +
+   theme_classic()
+
+ggsave(filename = "Figures/n2o_high-fish.png", height=5, width=7, units="in")
+
+
+# MEDIUM B-P
+windows()
+ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="medium"),
+       aes(x = doy, y = n2o_lake)) +
+   geom_line(aes(group = trt_nutrients), size=0.5) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   scale_fill_manual(name = NULL,
+                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   labs(x = "DOY", y = expression(Nitrous~oxide~(mu*M)), title = "Medium") +
+   theme_classic()
+
+ggsave(filename = "Figures/n2o_med-fish.png", height=5, width=7, units="in")
+
+
+# LOW B-P
+windows()
+ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="low"),
+       aes(x = doy, y = n2o_lake)) +
+   geom_line(aes(group = trt_nutrients), size=0.5) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   scale_fill_manual(name = NULL,
+                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   labs(x = "DOY", y = expression(Nitrous~oxide~(mu*M)), title = "Low") +
+   theme_classic()
+
+ggsave(filename = "Figures/n2o_low-fish.png", height=5, width=7, units="in")
+
+
+
+#---
+#### Dissolved Carbon Dioxide Concentrations ####
+#---
+
+
+#---
+#### Methanogenesis Potential ####
+#---
 
 # ponds distinguished by alpha
 windows(height=5, width=7)
