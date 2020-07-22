@@ -187,12 +187,17 @@ ebu_samples = ebu_samples %>%
 ebu_start = ebu_samples %>%
    group_by(week, pond_id, replicate) %>%
    slice_min(order_by = doy) %>%
-   ungroup()
+   ungroup() %>%
+   # add deployment time to dataset
+   mutate(doy = doy + 1,
+          deployment_time = rep_len("t0", n()))
 
 ebu_end = ebu_samples %>%
    group_by(week, pond_id, replicate) %>%
    slice_max(order_by = doy) %>%
-   ungroup()
+   ungroup() %>%
+   # add deployment time to dataset
+   mutate(deployment_time = rep_len("t1", n()))
 
 
 # Only need measured ppm values from start of deployment
@@ -208,15 +213,6 @@ ebu_end = ebu_samples %>%
 #                        n2o_ppm_t0 = n2o_ppm) %>%
 #                 select(pond_id, replicate, week, doy, contains("ppm"))) %>%
 #    relocate(ends_with("_t0"), .before = ch4_ppm_t1)
-
-
-# Add deployment times to datasets for use in combining later
-ebu_start = ebu_start %>%
-   mutate(doy = doy + 1,
-          deployment_time = rep_len("t0", n()))
-
-ebu_end = ebu_end %>%
-   mutate(deployment_time = rep_len("t1", n()))
 
 
 #---
