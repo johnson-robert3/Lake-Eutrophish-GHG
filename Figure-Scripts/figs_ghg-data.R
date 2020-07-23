@@ -133,7 +133,8 @@ ggsave(filename = "Figures/lake-dissolved-ch4_logY.png", height=5, width=7, unit
 ##_Comparing Ambient vs Pulsed ponds by benthic-pelagic coupling
 
 # HIGH B-P
-windows()
+# windows()
+high =
 ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="high"),
        aes(x = doy, y = ch4_lake)) +
    geom_line(aes(group = trt_nutrients), size=0.5) +
@@ -142,14 +143,15 @@ ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="high"),
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Ambient", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-   labs(x = "DOY", y = expression(Methane~(mu*M)), title = "High") +
+   labs(x = "DOY", y = expression(Methane~(mu*M)), title = "High (C, E)") +
    theme_classic()
 
-ggsave(filename = "Figures/methane_high-fish.png", height=5, width=7, units="in")
+# ggsave(filename = "Figures/methane_high-fish.png", height=5, width=7, units="in")
 
 
 # MEDIUM B-P
-windows()
+# windows()
+med =
 ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = ch4_lake)) +
    geom_line(aes(group = trt_nutrients), size=0.5) +
@@ -158,14 +160,15 @@ ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="medium"),
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Ambient", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-   labs(x = "DOY", y = expression(Methane~(mu*M)), title = "Medium") +
+   labs(x = "DOY", y = expression(Methane~(mu*M)), title = "Medium (A, D)") +
    theme_classic()
 
-ggsave(filename = "Figures/methane_med-fish.png", height=5, width=7, units="in")
+# ggsave(filename = "Figures/methane_med-fish.png", height=5, width=7, units="in")
 
 
 # LOW B-P
-windows()
+# windows()
+low =
 ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="low"),
        aes(x = doy, y = ch4_lake)) +
    geom_line(aes(group = trt_nutrients), size=0.5) +
@@ -174,11 +177,18 @@ ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="low"),
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Ambient", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-   labs(x = "DOY", y = expression(Methane~(mu*M)), title = "Low") +
+   labs(x = "DOY", y = expression(Methane~(mu*M)), title = "Low (B, F)") +
    theme_classic()
 
-ggsave(filename = "Figures/methane_low-fish.png", height=5, width=7, units="in")
+# ggsave(filename = "Figures/methane_low-fish.png", height=5, width=7, units="in")
 
+
+# 3-panel
+windows(height=10, width=6)
+
+high / med / low
+
+ggsave(filename = "Figures/lake-ch4_3panel.png", height=10, width=6, units="in")
 
 
 #---
@@ -251,7 +261,8 @@ ggsave(filename = "Figures/lake-dissolved-n2o.png", height=5, width=7, units="in
 ##_Comparing Ambient vs Pulsed ponds by benthic-pelagic coupling
 
 # HIGH B-P
-windows()
+# windows()
+high =
 ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="high"),
        aes(x = doy, y = n2o_lake)) +
    geom_line(aes(group = trt_nutrients), size=0.5) +
@@ -260,14 +271,15 @@ ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="high"),
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Ambient", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-   labs(x = "DOY", y = expression(Nitrous~oxide~(mu*M)), title = "High") +
+   labs(x = "DOY", y = expression(Nitrous~oxide~(mu*M)), title = "High (C, E)") +
    theme_classic()
 
-ggsave(filename = "Figures/n2o_high-fish.png", height=5, width=7, units="in")
+# ggsave(filename = "Figures/n2o_high-fish.png", height=5, width=7, units="in")
 
 
 # MEDIUM B-P
-windows()
+# windows()
+med =
 ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = n2o_lake)) +
    geom_line(aes(group = trt_nutrients), size=0.5) +
@@ -276,14 +288,15 @@ ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="medium"),
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Ambient", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-   labs(x = "DOY", y = expression(Nitrous~oxide~(mu*M)), title = "Medium") +
+   labs(x = "DOY", y = expression(Nitrous~oxide~(mu*M)), title = "Medium (A, D)") +
    theme_classic()
 
-ggsave(filename = "Figures/n2o_med-fish.png", height=5, width=7, units="in")
+# ggsave(filename = "Figures/n2o_med-fish.png", height=5, width=7, units="in")
 
 
 # LOW B-P
-windows()
+# windows()
+low =
 ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="low"),
        aes(x = doy, y = n2o_lake)) +
    geom_line(aes(group = trt_nutrients), size=0.5) +
@@ -292,11 +305,18 @@ ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="low"),
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Ambient", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-   labs(x = "DOY", y = expression(Nitrous~oxide~(mu*M)), title = "Low") +
+   labs(x = "DOY", y = expression(Nitrous~oxide~(mu*M)), title = "Low (B, F)") +
    theme_classic()
 
-ggsave(filename = "Figures/n2o_low-fish.png", height=5, width=7, units="in")
+# ggsave(filename = "Figures/n2o_low-fish.png", height=5, width=7, units="in")
 
+
+# 3-panel
+windows(height=10, width=6)
+
+high / med / low
+
+ggsave(filename = "Figures/lake-n2o_3panel.png", height=10, width=6, units="in")
 
 
 #---
