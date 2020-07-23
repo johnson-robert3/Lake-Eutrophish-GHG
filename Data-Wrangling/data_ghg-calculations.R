@@ -34,9 +34,9 @@ KH_td_n2o = 2600
 
 # [gas] = (P/RT)*(10^6 umol/mol)
 
-ideal_gas_law = function(pp) {
+ideal_gas_law = function(pp, temp) {
    
-   conc = (pp / (0.0821 * 298.15)) * 10^6
+   conc = (pp / (0.0821 * (273.15 + temp))) * 10^6
    
    return(conc)
 }
@@ -70,9 +70,9 @@ lake_conc = lake_samples %>%
 
 # convert measured gas headspace from atm to uM
 lake_conc = lake_conc %>%
-   mutate(ch4_head = ideal_gas_law(pch4),
-          co2_head = ideal_gas_law(pco2),
-          n2o_head = ideal_gas_law(pn2o))
+   mutate(ch4_head = ideal_gas_law(pch4, surface_temp),
+          co2_head = ideal_gas_law(pco2, surface_temp),
+          n2o_head = ideal_gas_law(pn2o, surface_temp))
 
 
 #_Aqueous concentration (units = uM)
@@ -100,9 +100,9 @@ atm_conc = lake_samples %>%
    # select only atmosphere samples
    filter(str_detect(sample_id, "Y")) %>%
    # Ideal Gas Law
-   mutate(ch4_atm = ideal_gas_law(pch4),
-          co2_atm = ideal_gas_law(pco2),
-          n2o_atm = ideal_gas_law(pn2o)) %>%
+   mutate(ch4_atm = ideal_gas_law(pch4, 25),
+          co2_atm = ideal_gas_law(pco2, 25),
+          n2o_atm = ideal_gas_law(pn2o, 25)) %>%
    # rename partial pressure variables, to keep distinct from pp values of pond samples
    rename(pch4_atm = pch4,
           pco2_atm = pco2,
@@ -121,6 +121,12 @@ lake_conc = lake_conc %>%
           n2o_lake = (n2o_tot_umol - (n2o_atm * vol_air)) / vol_water)
 
 
+#_Flux rate across the gas-water interface
+
+#  instantaneous flux, using wind-based k
+
+
+
 #---
 #### Methanogenesis Potential ####
 #---
@@ -136,9 +142,9 @@ methano_samples = methano_samples %>%
           pco2 = co2_ppm / 10^6 * 0.97,
           pn2o = n2o_ppm / 10^6 * 0.97) %>%
    # ideal gas law to get final concentration (units = uM)
-   mutate(ch4_head = ideal_gas_law(pch4),
-          co2_head = ideal_gas_law(pco2),
-          n2o_head = ideal_gas_law(pn2o))
+   mutate(ch4_head = ideal_gas_law(pch4, incubation_temp),
+          co2_head = ideal_gas_law(pco2, incubation_temp),
+          n2o_head = ideal_gas_law(pn2o, incubation_temp))
 
 
 #_AQUEOUS SAMPLE 
@@ -238,6 +244,21 @@ ebu_end = ebu_end %>%
    mutate(ch4_exp = tKH_ch4 * pch4 * 10^6,
           co2_exp = tKH_co2 * pco2 * 10^6,
           n2o_exp = tKH_n2o * pn2o * 10^6)
+
+
+## test with beginning and end deployment data together
+test = full_join(ebu_end, ebu_start) %>%
+   arrange(week, pond_id, replicate, deployment_time)
+
+## what do I need?
+
+# chamber area
+# chamber volume
+# actual measured flux 
+# 
+
+
+
 
 
 
