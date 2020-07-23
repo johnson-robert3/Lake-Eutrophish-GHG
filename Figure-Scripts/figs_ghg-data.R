@@ -23,6 +23,7 @@ mycolors = c("high" = inferno(n=1, begin=0.25),
 #---
 
 # ponds distinguished by alpha
+{
 windows(height=5, width=7)
 ggplot(lake_conc, aes(x = doy, y = ch4_lake)) +
    # data
@@ -39,7 +40,7 @@ ggplot(lake_conc, aes(x = doy, y = ch4_lake)) +
                       expand = expansion(mult=0.1)) +
    # aesthetics
    theme_classic()
-
+}
 
 # ponds distinguished by treatments
 windows(height=5, width=7)
@@ -82,7 +83,7 @@ ggplot(lake_conc %>%
    theme_classic()
 
 
-ggsave(filename = "Figures/2020_lake-dissolved-ch4.png", height=5, width=7, units="in")
+ggsave(filename = "Figures/lake-dissolved-ch4.png", height=5, width=7, units="in")
 
 
 # log scale (to view dynamics in lower concentrations
@@ -125,7 +126,7 @@ ggplot(lake_conc %>%
    theme_classic()
 
 
-ggsave(filename = "Figures/2020_lake-dissolved-ch4_logY.png", height=5, width=7, units="in")
+ggsave(filename = "Figures/lake-dissolved-ch4_logY.png", height=5, width=7, units="in")
 }
 
 
@@ -185,6 +186,7 @@ ggsave(filename = "Figures/methane_low-fish.png", height=5, width=7, units="in")
 #---
 
 # ponds distinguished by alpha
+{
 windows(height=5, width=7)
 ggplot(lake_conc, aes(x = doy, y = n2o_lake)) +
    # data
@@ -202,7 +204,7 @@ ggplot(lake_conc, aes(x = doy, y = n2o_lake)) +
    expand_limits(y = 0) +
    # aesthetics
    theme_classic()
-
+}
 
 # ponds distinguished by treatment
 windows(height=5, width=7)
@@ -243,7 +245,7 @@ ggplot(lake_conc %>%
    theme_classic()
 
 
-ggsave(filename = "Figures/2020_lake-dissolved-n2o.png", height=5, width=7, units="in")
+ggsave(filename = "Figures/lake-dissolved-n2o.png", height=5, width=7, units="in")
 
 
 ##_Comparing Ambient vs Pulsed ponds by benthic-pelagic coupling
@@ -307,6 +309,7 @@ ggsave(filename = "Figures/n2o_low-fish.png", height=5, width=7, units="in")
 #---
 
 # ponds distinguished by alpha
+{
 windows(height=5, width=7)
 ggplot(methano_rates %>%
           mutate(doy = case_when(.$pond_id=="A" ~ doy-0.2,
@@ -333,7 +336,7 @@ ggplot(methano_rates %>%
    expand_limits(y = 0) +
    # aesthetics
    theme_classic()
-
+}
 
 # ponds distinguished by treatment
 windows(height=5, width=7)
@@ -382,6 +385,6 @@ ggplot(methano_rates %>%
    theme_classic()
 
 
-ggsave(filename = "Figures/2020_methano-rates.png", height=5, width=7, units="in")
+ggsave(filename = "Figures/methano-rates.png", height=5, width=7, units="in")
 
 
