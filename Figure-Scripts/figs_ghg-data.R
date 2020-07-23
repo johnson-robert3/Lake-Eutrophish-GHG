@@ -328,6 +328,8 @@ ggsave(filename = "Figures/lake-n2o_3panel.png", height=10, width=6, units="in")
 #### Methanogenesis Potential ####
 #---
 
+## METHANE
+
 # ponds distinguished by alpha
 {
 windows(height=5, width=7)
@@ -404,7 +406,56 @@ ggplot(methano_rates %>%
    # aesthetics
    theme_classic()
 
-
 ggsave(filename = "Figures/methano-rates.png", height=5, width=7, units="in")
 
+
+## CARBON DIOXIDE
+
+# ponds distinguished by treatment
+windows(height=5, width=7)
+ggplot(methano_rates %>%
+          mutate(doy = case_when(.$pond_id=="A" ~ doy-0.2,
+                                 .$pond_id=="B" ~ doy-0.1,
+                                 .$pond_id=="C" ~ doy,
+                                 .$pond_id=="D" ~ doy+0.1,
+                                 .$pond_id=="E" ~ doy+0.2,
+                                 .$pond_id=="F" ~ doy+0.3)) %>%
+          left_join(pond_data), 
+       aes(x = doy, y = co2_rate)) +
+   # data lines
+   geom_line(aes(group = pond_id, color = trt_fish, alpha = trt_nutrients), 
+             size=1.25) +
+   geom_errorbar(aes(ymin = co2_rate - sd_co2_rate, ymax = co2_rate + sd_co2_rate), 
+                 color="gray75", width=0) +
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   # white points to cover lines
+   geom_point(aes(shape = trt_nutrients), 
+              size=4, color="white", fill="white") +
+   # data points
+   geom_point(aes(shape = trt_nutrients, fill = trt_fish, alpha = trt_nutrients), 
+              size=4) +
+   # scales
+   scale_color_manual(breaks = c("high", "medium", "low"),
+                      values = mycolors,
+                      guide=NULL) +
+   scale_fill_manual(name = "Food Web",
+                     breaks = c("high", "medium", "low"),
+                     values = mycolors,
+                     guide = guide_legend(override.aes = list(shape=21, alpha=0.7))) +
+   scale_shape_manual(name = "Nutrients",
+                      breaks = c("yes", "no"),
+                      values = c("yes" = 22, "no" = 21),
+                      guide = guide_legend(override.aes = list(size=3))) +
+   scale_alpha_manual(breaks = c("yes", "no"),
+                      values = c("yes" = 0.7, "no" = 0.5),
+                      guide=NULL) +
+   scale_x_continuous(name = "DOY",
+                      expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CO[2]~production~(mu*mol~g^-1~h^-1)),
+                      expand = expansion(mult=0.1)) +
+   expand_limits(y = 0) +
+   # aesthetics
+   theme_classic()
+
+# ggsave(filename = "Figures/methano-rates_co2.png", height=5, width=7, units="in")
 
