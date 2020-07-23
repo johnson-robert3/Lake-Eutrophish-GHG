@@ -171,8 +171,9 @@ methano_samples = methano_samples %>%
    mutate(vol_aq = vol_water + (vol_sediment * porosity)) %>%
    # calculate total sample mass in each assay bottle using sediment bulk density
    # vol_aq = water mass (since 1 cm^3 = 1 g)
-   mutate(mass_aq = vol_aq,
-          mass_sed = vol_sediment * DBD,
+   # need to convert volumes back to ml (i.e. cm^3) to calculate mass
+   mutate(mass_aq = vol_aq * 1000,
+          mass_sed = vol_sediment * DBD * 1000,
           mass_slurry = mass_aq + mass_sed)
 
 
@@ -254,8 +255,9 @@ test = full_join(ebu_end, ebu_start) %>%
 
 # chamber area
 # chamber volume
-# actual measured flux 
-# 
+# actual measured flux (mass of gas into chamber per unit area over time)
+
+# chamber-specific k value (using headspace partial pressures from t0 and t1)
 
 
 
