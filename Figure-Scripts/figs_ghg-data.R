@@ -367,6 +367,166 @@ ggsave(filename = "Figures/lake-n2o_3panel.png", height=10, width=6, units="in")
 
 
 #---
+#### Diffusive Methane Flux ####
+#---
+
+##_Comparing Ambient vs Pulsed ponds by benthic-pelagic coupling
+
+# HIGH B-P
+# windows()
+high =
+ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="high"),
+       aes(x = doy, y = ch4_flux)) +
+   # pulse
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
+   # lake
+   geom_line(aes(group = trt_nutrients), size=0.5) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   scale_fill_manual(name = NULL,
+                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "High (C, E)") +
+   theme_classic()
+
+# ggsave(filename = "Figures/methane_high-fish.png", height=5, width=7, units="in")
+
+
+# MEDIUM B-P
+# windows()
+med =
+ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="medium"),
+       aes(x = doy, y = ch4_flux)) +
+   # pulse
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
+   # lake
+   geom_line(aes(group = trt_nutrients), size=0.5) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   scale_fill_manual(name = NULL,
+                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "Medium (A, D)") +
+   theme_classic()
+
+# ggsave(filename = "Figures/methane_med-fish.png", height=5, width=7, units="in")
+
+
+# LOW B-P
+# windows()
+low =
+ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="low"),
+       aes(x = doy, y = ch4_flux)) +
+   # pulse
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
+   # lake
+   geom_line(aes(group = trt_nutrients), size=0.5) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   scale_fill_manual(name = NULL,
+                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "Low (B, F)") +
+   theme_classic()
+
+# ggsave(filename = "Figures/methane_low-fish.png", height=5, width=7, units="in")
+
+
+# 3-panel
+windows(height=10, width=6)
+
+high / med / low
+
+ggsave(filename = "Figures/flux-ch4_3panel.png", height=10, width=6, units="in")
+
+
+#---
+#### Diffusive Nitrous Oxide Flux ####
+#---
+
+##_Comparing Ambient vs Pulsed ponds by benthic-pelagic coupling
+
+# HIGH B-P
+# windows()
+high =
+ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="high"),
+       aes(x = doy, y = n2o_flux)) +
+   # pulse
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
+   # lake
+   geom_line(aes(group = trt_nutrients), size=0.5) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   scale_fill_manual(name = NULL,
+                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "High (C, E)") +
+   theme_classic()
+
+# ggsave(filename = "Figures/methane_high-fish.png", height=5, width=7, units="in")
+
+
+# MEDIUM B-P
+# windows()
+med =
+ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="medium"),
+       aes(x = doy, y = n2o_flux)) +
+   # pulse
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
+   # lake
+   geom_line(aes(group = trt_nutrients), size=0.5) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   scale_fill_manual(name = NULL,
+                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "Medium (A, D)") +
+   theme_classic()
+
+# ggsave(filename = "Figures/methane_med-fish.png", height=5, width=7, units="in")
+
+
+# LOW B-P
+# windows()
+low =
+ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="low"),
+       aes(x = doy, y = n2o_flux)) +
+   # pulse
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
+   # lake
+   geom_line(aes(group = trt_nutrients), size=0.5) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   scale_fill_manual(name = NULL,
+                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "Low (B, F)") +
+   theme_classic()
+
+# ggsave(filename = "Figures/methane_low-fish.png", height=5, width=7, units="in")
+
+
+# 3-panel
+windows(height=10, width=6)
+
+high / med / low
+
+ggsave(filename = "Figures/flux-n2o_3panel.png", height=10, width=6, units="in")
+
+
+#---
 #### Methanogenesis Potential ####
 #---
 
