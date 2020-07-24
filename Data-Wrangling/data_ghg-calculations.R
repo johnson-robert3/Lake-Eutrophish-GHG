@@ -121,12 +121,15 @@ lake_conc = lake_conc %>%
           n2o_lake = (n2o_tot_umol - (n2o_atm * vol_air)) / vol_water)
 
 
-##__Flux rate across the gas-water interface
+#---
+#### Diffusive Flux ####
+#---
 
-#  instantaneous flux, using wind-based k
+# Flux rate across the gas-water interface
+# Instantaneous flux, using wind-based k
 
 ## Calculate wind-based k
-weather_data = weather_data %>%
+wind_k = weather_data %>%
    mutate(wnd.z = rep_len(3, n()),
           wnd = wind_speed,
           U10 = wnd * ((10 / wnd.z)^(1/7)),
@@ -138,7 +141,7 @@ weather_data = weather_data %>%
 
 
 # Add k to lake dataset
-lake_flux = left_join(lake_conc, weather_data) %>%
+lake_flux = left_join(lake_conc, wind_k) %>%
    # calculate gas-specific k600 values
    mutate(k_ch4 = k600.2.kGAS.base(k600 = k_cole, temperature = surface_temp, gas = "CH4"),
           k_co2 = k600.2.kGAS.base(k600 = k_cole, temperature = surface_temp, gas = "CO2"),
