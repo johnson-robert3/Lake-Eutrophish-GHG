@@ -121,10 +121,43 @@ lake_conc = lake_conc %>%
           n2o_lake = (n2o_tot_umol - (n2o_atm * vol_air)) / vol_water)
 
 
-#_Flux rate across the gas-water interface
+##__Flux rate across the gas-water interface
 
 #  instantaneous flux, using wind-based k
 
+## Calculate wind-based k
+weather_data = weather_data %>%
+   mutate(wnd.z = rep_len(3, n()),
+          wnd = wind_speed,
+          U10 = wnd * ((10 / wnd.z)^(1/7)),
+          k_cole = k.cole.base(U10)) %>%
+   # daily average k
+   group_by(doy) %>%
+   summarize(across(wnd.z:k_cole, ~mean(., na.rm=T))) %>%
+   ungroup()
+
+
+# Add k to lake dataset
+lake_flux = left_join(lake_conc, weather_data) %>%
+   # calculate gas-specific k600 values
+   mutate(k_ch4 = k600.2.kGAS.base(k600 = k_cole, temperature = surface_temp, gas = "CH4"),
+          k_co2 = k600.2.kGAS.base(k600 = k_cole, temperature = surface_temp, gas = "CO2"),
+          k_n2o = k600.2.kGAS.base(k600 = k_cole, temperature = surface_temp, gas = "N2O"))
+
+
+## Calculate estimated daily rates of diffusive flux
+
+# F = k(Cw - Ceq)
+
+lake_flux = lake_flux %>%
+   # calculate expected dissolved concentrations in equilibrium with atmosphere (units = uM)
+   mutate(ch4_exp = tKH_ch4 * pch4_atm * 10^6,
+          co2_exp = tKH_co2 * pco2_atm * 10^6,
+          n2o_exp = tKH_n2o * pn2o_atm * 10^6) %>%
+   # calculate diffusive flux (units = umol / m2 / d)
+   mutate(ch4_flux = k_ch4 * (ch4_lake - ch4_exp),
+          co2_flux = k_co2 * (co2_lake - co2_exp),
+          n2o_flux = k_n2o * (n2o_lake - n2o_exp))
 
 
 #---
