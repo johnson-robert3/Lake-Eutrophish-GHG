@@ -135,15 +135,22 @@ ggsave(filename = "Figures/lake-dissolved-ch4_logY.png", height=5, width=7, unit
 # HIGH B-P
 # windows()
 high =
-ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="high"),
+ggplot(lake_conc %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="high"),
        aes(x = doy, y = ch4_lake)) +
+   # pulse
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   # atm
+   geom_line(aes(x = doy, y = ch4_atm), linetype=2, color="gray0") +
+   geom_point(aes(x = doy, y = ch4_atm), size=1.5, shape=21, fill="gray70") +
+   # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
    geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
-   geom_vline(xintercept = 176, linetype=2, color="gray40") +
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Ambient", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-   labs(x = "DOY", y = expression(Methane~(mu*M)), title = "High (C, E)") +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(Methane~(mu*M)), expand = expansion(mult=0.1)) +
+   labs(title = "High (C, E)") +
    theme_classic()
 
 # ggsave(filename = "Figures/methane_high-fish.png", height=5, width=7, units="in")
@@ -152,15 +159,22 @@ ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="high"),
 # MEDIUM B-P
 # windows()
 med =
-ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="medium"),
+ggplot(lake_conc %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = ch4_lake)) +
+   # pulse
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   # atm
+   geom_line(aes(x = doy, y = ch4_atm), linetype=2, color="gray0") +
+   geom_point(aes(x = doy, y = ch4_atm), size=1.5, shape=21, fill="gray70") +
+   # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
    geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
-   geom_vline(xintercept = 176, linetype=2, color="gray40") +
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Ambient", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-   labs(x = "DOY", y = expression(Methane~(mu*M)), title = "Medium (A, D)") +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(Methane~(mu*M)), expand = expansion(mult=0.1)) +
+   labs(title = "Medium (A, D)") +
    theme_classic()
 
 # ggsave(filename = "Figures/methane_med-fish.png", height=5, width=7, units="in")
@@ -169,15 +183,22 @@ ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="medium"),
 # LOW B-P
 # windows()
 low =
-ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="low"),
+ggplot(lake_conc %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="low"),
        aes(x = doy, y = ch4_lake)) +
+   # pulse
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   # atm
+   geom_line(aes(x = doy, y = ch4_atm), linetype=2, color="gray0") +
+   geom_point(aes(x = doy, y = ch4_atm), size=1.5, shape=21, fill="gray70") +
+   # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
    geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
-   geom_vline(xintercept = 176, linetype=2, color="gray40") +
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Ambient", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-   labs(x = "DOY", y = expression(Methane~(mu*M)), title = "Low (B, F)") +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(Methane~(mu*M)), expand = expansion(mult=0.1)) +
+   labs(title = "Low (B, F)") +
    theme_classic()
 
 # ggsave(filename = "Figures/methane_low-fish.png", height=5, width=7, units="in")
@@ -263,15 +284,22 @@ ggsave(filename = "Figures/lake-dissolved-n2o.png", height=5, width=7, units="in
 # HIGH B-P
 # windows()
 high =
-ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="high"),
+ggplot(lake_conc %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="high"),
        aes(x = doy, y = n2o_lake)) +
+   # pulse
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   # atm
+   geom_line(aes(x = doy, y = n2o_atm), linetype=2, color="gray40") +
+   geom_point(aes(x = doy, y = n2o_atm), size=1.5, shape=21, fill="gray70") +
+   # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
    geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
-   geom_vline(xintercept = 176, linetype=2, color="gray40") +
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Ambient", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-   labs(x = "DOY", y = expression(Nitrous~oxide~(mu*M)), title = "High (C, E)") +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(Nitrous~oxide~(mu*M)), expand = expansion(mult=0.1)) +
+   labs(title = "High (C, E)") +
    theme_classic()
 
 # ggsave(filename = "Figures/n2o_high-fish.png", height=5, width=7, units="in")
@@ -280,15 +308,22 @@ ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="high"),
 # MEDIUM B-P
 # windows()
 med =
-ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="medium"),
+ggplot(lake_conc %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = n2o_lake)) +
+   # pulse
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   # atm
+   geom_line(aes(x = doy, y = n2o_atm), linetype=2, color="gray40") +
+   geom_point(aes(x = doy, y = n2o_atm), size=1.5, shape=21, fill="gray70") +
+   # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
    geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
-   geom_vline(xintercept = 176, linetype=2, color="gray40") +
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Ambient", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-   labs(x = "DOY", y = expression(Nitrous~oxide~(mu*M)), title = "Medium (A, D)") +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(Nitrous~oxide~(mu*M)), expand = expansion(mult=0.1)) +
+   labs(title = "Medium (A, D)") +
    theme_classic()
 
 # ggsave(filename = "Figures/n2o_med-fish.png", height=5, width=7, units="in")
@@ -297,15 +332,22 @@ ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="medium"),
 # LOW B-P
 # windows()
 low =
-ggplot(lake_conc %>% left_join(pond_data) %>% filter(trt_fish=="low"),
+ggplot(lake_conc %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="low"),
        aes(x = doy, y = n2o_lake)) +
+   # pulse
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   # atm
+   geom_line(aes(x = doy, y = n2o_atm), linetype=2, color="gray40") +
+   geom_point(aes(x = doy, y = n2o_atm), size=1.5, shape=21, fill="gray70") +
+   # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
    geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
-   geom_vline(xintercept = 176, linetype=2, color="gray40") +
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Ambient", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-   labs(x = "DOY", y = expression(Nitrous~oxide~(mu*M)), title = "Low (B, F)") +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(Nitrous~oxide~(mu*M)), expand = expansion(mult=0.1)) +
+   labs(title = "Low (B, F)") +
    theme_classic()
 
 # ggsave(filename = "Figures/n2o_low-fish.png", height=5, width=7, units="in")
