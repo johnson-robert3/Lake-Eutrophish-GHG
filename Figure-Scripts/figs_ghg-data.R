@@ -374,7 +374,7 @@ ggsave(filename = "Figures/lake-n2o_3panel.png", height=10, width=6, units="in")
 
 # HIGH B-P
 # windows()
-high =
+mhigh =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="high"),
        aes(x = doy, y = ch4_flux)) +
    # pulse
@@ -391,12 +391,10 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filt
    labs(title = "High (C, E)") +
    theme_classic()
 
-# ggsave(filename = "Figures/methane_high-fish.png", height=5, width=7, units="in")
-
 
 # MEDIUM B-P
 # windows()
-med =
+mmed =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = ch4_flux)) +
    # pulse
@@ -413,12 +411,10 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filt
    labs(title = "Medium (A, D)") +
    theme_classic()
 
-# ggsave(filename = "Figures/methane_med-fish.png", height=5, width=7, units="in")
-
 
 # LOW B-P
 # windows()
-low =
+mlow =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="low"),
        aes(x = doy, y = ch4_flux)) +
    # pulse
@@ -435,13 +431,11 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filt
    labs(title = "Low (B, F)") +
    theme_classic()
 
-# ggsave(filename = "Figures/methane_low-fish.png", height=5, width=7, units="in")
-
 
 # 3-panel
 windows(height=10, width=6)
 
-high / med / low
+mhigh / mmed / mlow
 
 ggsave(filename = "Figures/flux-ch4_3panel.png", height=10, width=6, units="in")
 
@@ -454,7 +448,7 @@ ggsave(filename = "Figures/flux-ch4_3panel.png", height=10, width=6, units="in")
 
 # HIGH B-P
 # windows()
-high =
+nhigh =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="high"),
        aes(x = doy, y = n2o_flux)) +
    # pulse
@@ -471,12 +465,10 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filt
    labs(title = "High (C, E)") +
    theme_classic()
 
-# ggsave(filename = "Figures/methane_high-fish.png", height=5, width=7, units="in")
-
 
 # MEDIUM B-P
 # windows()
-med =
+nmed =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = n2o_flux)) +
    # pulse
@@ -493,12 +485,10 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filt
    labs(title = "Medium (A, D)") +
    theme_classic()
 
-# ggsave(filename = "Figures/methane_med-fish.png", height=5, width=7, units="in")
-
 
 # LOW B-P
 # windows()
-low =
+nlow =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="low"),
        aes(x = doy, y = n2o_flux)) +
    # pulse
@@ -515,13 +505,11 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filt
    labs(title = "Low (B, F)") +
    theme_classic()
 
-# ggsave(filename = "Figures/methane_low-fish.png", height=5, width=7, units="in")
-
 
 # 3-panel
 windows(height=10, width=6)
 
-high / med / low
+nhigh / nmed / nlow
 
 ggsave(filename = "Figures/flux-n2o_3panel.png", height=10, width=6, units="in")
 
@@ -611,6 +599,79 @@ ggplot(methano_rates %>%
 ggsave(filename = "Figures/methano-rates.png", height=5, width=7, units="in")
 
 
+##_Comparing Ambient vs Pulsed ponds by benthic-pelagic coupling
+
+# HIGH B-P
+# windows()
+mhigh =
+ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>% filter(trt_fish=="high"),
+       aes(x = doy, y = ch4_rate)) +
+   # pulse
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   # lake
+   geom_line(aes(group = trt_nutrients), size=0.5) +
+   geom_errorbar(aes(ymin = ch4_rate - sd_ch4_rate, ymax = ch4_rate + sd_ch4_rate),
+                 color="gray75", width=0) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   scale_fill_manual(name = NULL,
+                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CH[4]~production~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "High (C, E)") +
+   theme_classic()
+
+
+# MEDIUM B-P
+# windows()
+mmed =
+ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>% filter(trt_fish=="medium"),
+       aes(x = doy, y = ch4_rate)) +
+   # pulse
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   # lake
+   geom_line(aes(group = trt_nutrients), size=0.5) +
+   geom_errorbar(aes(ymin = ch4_rate - sd_ch4_rate, ymax = ch4_rate + sd_ch4_rate),
+                 color="gray75", width=0) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   scale_fill_manual(name = NULL,
+                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CH[4]~production~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "Medium (A, D)") +
+   theme_classic()
+
+
+# LOW B-P
+# windows()
+mlow =
+ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>% filter(trt_fish=="low"),
+       aes(x = doy, y = ch4_rate)) +
+   # pulse
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   # lake
+   geom_line(aes(group = trt_nutrients), size=0.5) +
+   geom_errorbar(aes(ymin = ch4_rate - sd_ch4_rate, ymax = ch4_rate + sd_ch4_rate),
+                 color="gray75", width=0) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   scale_fill_manual(name = NULL,
+                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CH[4]~production~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "Low (B, F)") +
+   theme_classic()
+
+
+# 3-panel
+windows(height=10, width=6)
+
+mhigh / mmed / mlow
+
+ggsave(filename = "Figures/assay_ch4-rate_3panel.png", height=10, width=6, units="in")
+
+
 ## CARBON DIOXIDE
 
 # ponds distinguished by treatment
@@ -660,4 +721,78 @@ ggplot(methano_rates %>%
    theme_classic()
 
 # ggsave(filename = "Figures/methano-rates_co2.png", height=5, width=7, units="in")
+
+
+##_Comparing Ambient vs Pulsed ponds by benthic-pelagic coupling
+
+# HIGH B-P
+# windows()
+chigh =
+ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% filter(trt_fish=="high"),
+       aes(x = doy, y = co2_rate)) +
+   # pulse
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   # lake
+   geom_line(aes(group = trt_nutrients), size=0.5) +
+   geom_errorbar(aes(ymin = co2_rate - sd_co2_rate, ymax = co2_rate + sd_co2_rate),
+                 color="gray75", width=0) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   scale_fill_manual(name = NULL,
+                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CO[2]~production~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "High (C, E)") +
+   theme_classic()
+
+
+# MEDIUM B-P
+# windows()
+cmed =
+ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% filter(trt_fish=="medium"),
+       aes(x = doy, y = co2_rate)) +
+   # pulse
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   # lake
+   geom_line(aes(group = trt_nutrients), size=0.5) +
+   geom_errorbar(aes(ymin = co2_rate - sd_co2_rate, ymax = co2_rate + sd_co2_rate),
+                 color="gray75", width=0) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   scale_fill_manual(name = NULL,
+                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CO[2]~production~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "Medium (A, D)") +
+   theme_classic()
+
+
+# LOW B-P
+# windows()
+clow =
+ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% filter(trt_fish=="low"),
+       aes(x = doy, y = co2_rate)) +
+   # pulse
+   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   # lake
+   geom_line(aes(group = trt_nutrients), size=0.5) +
+   geom_errorbar(aes(ymin = co2_rate - sd_co2_rate, ymax = co2_rate + sd_co2_rate),
+                 color="gray75", width=0) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   scale_fill_manual(name = NULL,
+                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CO[2]~production~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "Low (B, F)") +
+   theme_classic()
+
+
+# 3-panel
+windows(height=10, width=6)
+
+chigh / cmed / clow
+
+ggsave(filename = "Figures/assay_co2-rate_3panel.png", height=10, width=6, units="in")
+
 
