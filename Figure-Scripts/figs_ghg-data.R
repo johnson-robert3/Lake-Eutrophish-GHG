@@ -22,7 +22,7 @@ mycolors = c("high" = inferno(n=1, begin=0.25),
 #### Dissolved Methane Concentrations ####
 #---
 
-# ponds distinguished by alpha
+# all ponds, distinguished by alpha
 {
 windows(height=5, width=7)
 ggplot(lake_conc, aes(x = doy, y = ch4_lake)) +
@@ -42,7 +42,8 @@ ggplot(lake_conc, aes(x = doy, y = ch4_lake)) +
    theme_classic()
 }
 
-# ponds distinguished by treatments
+# all ponds, distinguished by treatments
+{
 windows(height=5, width=7)
 ggplot(lake_conc %>%
           left_join(pond_data), 
@@ -84,9 +85,9 @@ ggplot(lake_conc %>%
 
 
 ggsave(filename = "Figures/lake-dissolved-ch4.png", height=5, width=7, units="in")
+}
 
-
-# log scale (to view dynamics in lower concentrations)
+# all ponds, by treatments, log scale (to view dynamics in lower concentrations)
 {
 windows(height=5, width=7)
 ggplot(lake_conc %>%
@@ -212,7 +213,7 @@ ggsave(filename = "Figures/lake-ch4_3panel.png", height=10, width=6, units="in")
 #### Dissolved Nitrous Oxide Concentrations ####
 #---
 
-# ponds distinguished by alpha
+# all ponds, distinguished by alpha
 {
 windows(height=5, width=7)
 ggplot(lake_conc, aes(x = doy, y = n2o_lake)) +
@@ -233,7 +234,8 @@ ggplot(lake_conc, aes(x = doy, y = n2o_lake)) +
    theme_classic()
 }
 
-# ponds distinguished by treatment
+# all ponds, distinguished by treatments
+{
 windows(height=5, width=7)
 ggplot(lake_conc %>%
           left_join(pond_data), 
@@ -273,6 +275,7 @@ ggplot(lake_conc %>%
 
 
 ggsave(filename = "Figures/lake-dissolved-n2o.png", height=5, width=7, units="in")
+}
 
 
 ##_Comparing between nutrient treatments (by fish); 3-panel
@@ -608,7 +611,7 @@ ggsave(filename = "Figures/flux-n2o_2panel.png", height=7, width=6, units="in")
 
 ## METHANE
 
-# ponds distinguished by alpha
+# all ponds, distinguished by alpha
 {
 windows(height=5, width=7)
 ggplot(methano_rates %>%
@@ -638,7 +641,8 @@ ggplot(methano_rates %>%
    theme_classic()
 }
 
-# ponds distinguished by treatment
+# all ponds, distinguished by treatments
+{
 windows(height=5, width=7)
 ggplot(methano_rates %>%
           mutate(doy = case_when(.$pond_id=="A" ~ doy-0.2,
@@ -685,6 +689,7 @@ ggplot(methano_rates %>%
    theme_classic()
 
 ggsave(filename = "Figures/methano-rates.png", height=5, width=7, units="in")
+}
 
 
 ##_Comparing between nutrient treatments (by fish); 3-panel
@@ -764,7 +769,8 @@ ggsave(filename = "Figures/methanogenesis-ch4_3panel.png", height=10, width=6, u
 
 ## CARBON DIOXIDE
 
-# ponds distinguished by treatment
+# all ponds, distinguished by treatments
+{
 windows(height=5, width=7)
 ggplot(methano_rates %>%
           mutate(doy = case_when(.$pond_id=="A" ~ doy-0.2,
@@ -811,6 +817,7 @@ ggplot(methano_rates %>%
    theme_classic()
 
 # ggsave(filename = "Figures/methano-rates_co2.png", height=5, width=7, units="in")
+}
 
 
 ##_Comparing between nutrient treatments (by fish); 3-panel
