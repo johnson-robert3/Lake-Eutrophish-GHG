@@ -16,10 +16,8 @@ mycolors = c("high" = inferno(n=1, begin=0.25),
 
 
 #---
-#### Methanogenesis Potential ####
+#### Methane ####
 #---
-
-## METHANE
 
 # all ponds, distinguished by alpha
 {
@@ -121,7 +119,7 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>%
                      labels = c("no" = "Ambient", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CH[4]~production~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
    labs(title = "High (C, E)") +
    theme_classic()
 
@@ -142,7 +140,7 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>%
                      labels = c("no" = "Ambient", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CH[4]~production~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
    labs(title = "Medium (A, D)") +
    theme_classic()
 
@@ -163,7 +161,7 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>%
                      labels = c("no" = "Ambient", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CH[4]~production~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
    labs(title = "Low (B, F)") +
    theme_classic()
 
@@ -181,16 +179,54 @@ ggsave(filename = "Figures/methanogenesis-ch4_3panel.png", height=10, width=6, u
 ## 2-panel: by nutrients ----
 {# Comparing between food web treatments within each nutrient treatment
 
-# AMBIENT
+# REFERENCE
+# windows()
+m.ref =
+ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>% filter(trt_nutrients=="no"),
+       aes(x = doy, y = ch4_rate)) +
+   geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
+   geom_point(size=4, color="white") +
+   geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="cornflowerblue", color="royalblue") +
+   #
+   scale_alpha_manual(name = "Fish",
+                      breaks = c("high", "medium", "low"),
+                      values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3)) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   theme_classic()
 
 
 # PULSED
+# windows()
+m.pul =
+ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>% filter(trt_nutrients=="yes"),
+       aes(x = doy, y = ch4_rate)) +
+   geom_vline(xintercept=176, color="gray40", linetype=2) +
+   geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3", show.legend=F) +
+   geom_point(size=4, color="white") +
+   geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="seagreen3", color="seagreen") +
+   #
+   scale_alpha_manual(name = "Fish",
+                      breaks = c("high", "medium", "low"),
+                      values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3)) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   theme_classic()
+
+
+# 2-panel
+windows(height=7, width=6)
+
+m.ref / m.pul
+
+ggsave(filename = "Figures/methanogenesis-ch4_2panel.png", height=7, width=6, units="in")
 
 }
 
 
-
-## CARBON DIOXIDE
+#---
+#### Carbon Dioxide ####
+#---
 
 # all ponds, distinguished by treatments
 {
@@ -317,4 +353,17 @@ c.high / c.int / c.low
 ggsave(filename = "Figures/methanogenesis-co2_3panel.png", height=10, width=6, units="in")
 
 }
+
+
+## 2-panel: by nutrients ----
+{# Comparing between food web treatments within each nutrient treatment
+
+# REFERENCE
+
+
+# PULSED
+
+
+}
+
 
