@@ -1,5 +1,5 @@
 #~~~
-# Script for Diffusive Gas Flux figures
+# Script for figures of Diffusive Gas Flux from lake dissolved GHG concentrations
 # By: Robert Johnson
 #~~~
 
@@ -19,8 +19,9 @@ mycolors = c("high" = inferno(n=1, begin=0.25),
 #### Methane ####
 #---
 
-##_Comparing between nutrient treatments (by fish); 3-panel
-{
+## 3-panel: by fish ----
+{# Comparing between nutrient treatments within each food web treatment
+
 # HIGH B-P
 # windows()
 m.high =
@@ -91,8 +92,9 @@ ggsave(filename = "Figures/flux-ch4_3panel.png", height=10, width=6, units="in")
 }
 
 
-##_Comparing among B-P fish treatments (by nutrients); 2-panel
-{
+## 2-panel: by nutrients ----
+{# Comparing between food web treatments within each nutrient treatment
+
 # AMBIENT
 # windows()
 m.amb = 
@@ -142,8 +144,9 @@ ggsave(filename = "Figures/flux-ch4_2panel.png", height=7, width=6, units="in")
 #### Nitrous Oxide ####
 #---
 
-##_Comparing between nutrient treatments (by fish); 3-panel
-{
+## 3-panel: by fish ----
+{# Comparing between nutrient treatments within each food web treatment
+
 # HIGH B-P
 # windows()
 n.high =
@@ -214,8 +217,9 @@ ggsave(filename = "Figures/flux-n2o_3panel.png", height=10, width=6, units="in")
 }
 
 
-##_Comparing among B-P fish treatments (by nutrients); 2-panel
-{
+## 2-panel: by nutrients ----
+{# Comparing between food web treatments within each nutrient treatment
+
 # AMBIENT
 # windows()
 n.amb = 
