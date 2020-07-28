@@ -1,5 +1,5 @@
 #~~~
-# Script for Methanogenesis Potential figures
+# Script for figures from Methanogenesis Potential laboratory assays
 # By: Robert Johnson
 #~~~
 
@@ -102,8 +102,9 @@ ggsave(filename = "Figures/methano-rates.png", height=5, width=7, units="in")
 }
 
 
-##_Comparing between nutrient treatments (by fish); 3-panel
-{
+## 3-panel: by fish ----
+{# Comparing between nutrient treatments within each food web treatment
+
 # HIGH B-P
 # windows()
 m.high =
@@ -177,6 +178,18 @@ ggsave(filename = "Figures/methanogenesis-ch4_3panel.png", height=10, width=6, u
 }
 
 
+## 2-panel: by nutrients ----
+{# Comparing between food web treatments within each nutrient treatment
+
+# AMBIENT
+
+
+# PULSED
+
+}
+
+
+
 ## CARBON DIOXIDE
 
 # all ponds, distinguished by treatments
@@ -230,8 +243,9 @@ ggplot(methano_rates %>%
 }
 
 
-##_Comparing between nutrient treatments (by fish); 3-panel
-{
+## 3-panel: by fish ----
+{# Comparing between nutrient treatments within each food web treatment
+
 # HIGH B-P
 # windows()
 c.high =
