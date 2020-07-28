@@ -19,7 +19,7 @@ mycolors = c("high" = inferno(n=1, begin=0.25),
 #### Methane ####
 #---
 
-## 3-panel: by fish ----
+## 3-panel: by food web ----
 {# Comparing between nutrient treatments within each food web treatment
 
 # HIGH B-P
@@ -34,7 +34,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filt
    geom_line(aes(group = trt_nutrients), size=0.5) +
    geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
    scale_fill_manual(name = NULL,
-                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     labels = c("no" = "Reference", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
@@ -42,9 +42,9 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filt
    theme_classic()
 
 
-# MEDIUM B-P
+# INTERMEDIATE B-P
 # windows()
-m.med =
+m.int =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = ch4_flux)) +
    # pulse
@@ -54,7 +54,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filt
    geom_line(aes(group = trt_nutrients), size=0.5) +
    geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
    scale_fill_manual(name = NULL,
-                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     labels = c("no" = "Reference", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
@@ -74,7 +74,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filt
    geom_line(aes(group = trt_nutrients), size=0.5) +
    geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
    scale_fill_manual(name = NULL,
-                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     labels = c("no" = "Reference", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
@@ -85,7 +85,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filt
 # 3-panel
 windows(height=10, width=6)
 
-m.high / m.med / m.low
+m.high / m.int / m.low
 
 ggsave(filename = "Figures/flux-ch4_3panel.png", height=10, width=6, units="in")
 
@@ -95,9 +95,9 @@ ggsave(filename = "Figures/flux-ch4_3panel.png", height=10, width=6, units="in")
 ## 2-panel: by nutrients ----
 {# Comparing between food web treatments within each nutrient treatment
 
-# AMBIENT
+# REFERENCE
 # windows()
-m.amb = 
+m.ref = 
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_nutrients=="no"),
        aes(x = doy, y = ch4_flux)) +
    geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
@@ -132,7 +132,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filt
 # 2-panel
 windows(height=7, width=6)
 
-m.amb / m.pul
+m.ref / m.pul
 
 ggsave(filename = "Figures/flux-ch4_2panel.png", height=7, width=6, units="in")
 
@@ -144,7 +144,7 @@ ggsave(filename = "Figures/flux-ch4_2panel.png", height=7, width=6, units="in")
 #### Nitrous Oxide ####
 #---
 
-## 3-panel: by fish ----
+## 3-panel: by food web ----
 {# Comparing between nutrient treatments within each food web treatment
 
 # HIGH B-P
@@ -159,7 +159,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filt
    geom_line(aes(group = trt_nutrients), size=0.5) +
    geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
    scale_fill_manual(name = NULL,
-                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     labels = c("no" = "Reference", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
@@ -167,9 +167,9 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filt
    theme_classic()
 
 
-# MEDIUM B-P
+# INTERMEDIATE B-P
 # windows()
-n.med =
+n.int =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = n2o_flux)) +
    # pulse
@@ -179,7 +179,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filt
    geom_line(aes(group = trt_nutrients), size=0.5) +
    geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
    scale_fill_manual(name = NULL,
-                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     labels = c("no" = "Reference", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
@@ -199,7 +199,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filt
    geom_line(aes(group = trt_nutrients), size=0.5) +
    geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
    scale_fill_manual(name = NULL,
-                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                     labels = c("no" = "Reference", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
@@ -210,7 +210,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filt
 # 3-panel
 windows(height=10, width=6)
 
-n.high / n.med / n.low
+n.high / n.int / n.low
 
 ggsave(filename = "Figures/flux-n2o_3panel.png", height=10, width=6, units="in")
 
@@ -220,9 +220,9 @@ ggsave(filename = "Figures/flux-n2o_3panel.png", height=10, width=6, units="in")
 ## 2-panel: by nutrients ----
 {# Comparing between food web treatments within each nutrient treatment
 
-# AMBIENT
+# REFERENCE
 # windows()
-n.amb = 
+n.ref = 
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_nutrients=="no"),
        aes(x = doy, y = n2o_flux)) +
    geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
@@ -257,7 +257,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filt
 # 2-panel
 windows(height=7, width=6)
 
-n.amb / n.pul
+n.ref / n.pul
 
 ggsave(filename = "Figures/flux-n2o_2panel.png", height=7, width=6, units="in")
 
@@ -269,7 +269,7 @@ ggsave(filename = "Figures/flux-n2o_2panel.png", height=7, width=6, units="in")
 #### Carbon Dioxide ####
 #---
 
-## 3-panel: by fish ----
+## 3-panel: by food web ----
 {# Comparing between nutrient treatments within each food web treatment
 
 # HIGH B-P
@@ -277,9 +277,9 @@ ggsave(filename = "Figures/flux-n2o_2panel.png", height=7, width=6, units="in")
 # c.high =
 
 
-# MEDIUM B-P
+# INTERMEDIATE B-P
 # windows()
-# c.med =
+# c.int =
 
 
 # LOW B-P
@@ -290,7 +290,7 @@ ggsave(filename = "Figures/flux-n2o_2panel.png", height=7, width=6, units="in")
 # 3-panel
 windows(height=10, width=6)
 
-c.high / c.med / c.low
+c.high / c.int / c.low
 
 ggsave(filename = "Figures/flux-co2_3panel.png", height=10, width=6, units="in")
 
@@ -300,9 +300,9 @@ ggsave(filename = "Figures/flux-co2_3panel.png", height=10, width=6, units="in")
 ## 2-panel: by nutrients ----
 {# Comparing between food web treatments within each nutrient treatment
 
-# AMBIENT
+# REFERENCE
 # windows()
-# c.amb = 
+# c.ref = 
 
 
 # PULSED
@@ -313,7 +313,7 @@ ggsave(filename = "Figures/flux-co2_3panel.png", height=10, width=6, units="in")
 # 2-panel
 windows(height=7, width=6)
 
-c.amb / c.pul
+c.ref / c.pul
 
 ggsave(filename = "Figures/flux-co2_2panel.png", height=7, width=6, units="in")
 
