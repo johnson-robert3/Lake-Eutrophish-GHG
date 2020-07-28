@@ -102,7 +102,7 @@ ggsave(filename = "Figures/methano-rates.png", height=5, width=7, units="in")
 }
 
 
-## 3-panel: by fish ----
+## 3-panel: by food web ----
 {# Comparing between nutrient treatments within each food web treatment
 
 # HIGH B-P
@@ -126,9 +126,9 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>%
    theme_classic()
 
 
-# MEDIUM B-P
+# INTERMEDIATE B-P
 # windows()
-m.med =
+m.int =
 ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = ch4_rate)) +
    # pulse
@@ -171,7 +171,7 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>%
 # 3-panel
 windows(height=10, width=6)
 
-m.high / m.med / m.low
+m.high / m.int / m.low
 
 ggsave(filename = "Figures/methanogenesis-ch4_3panel.png", height=10, width=6, units="in")
 
@@ -243,7 +243,7 @@ ggplot(methano_rates %>%
 }
 
 
-## 3-panel: by fish ----
+## 3-panel: by food web ----
 {# Comparing between nutrient treatments within each food web treatment
 
 # HIGH B-P
@@ -267,9 +267,9 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>%
    theme_classic()
 
 
-# MEDIUM B-P
+# INTERMEDIATE B-P
 # windows()
-c.med =
+c.int =
 ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = co2_rate)) +
    # pulse
@@ -312,7 +312,7 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>%
 # 3-panel
 windows(height=10, width=6)
 
-c.high / c.med / c.low
+c.high / c.int / c.low
 
 ggsave(filename = "Figures/methanogenesis-co2_3panel.png", height=10, width=6, units="in")
 
