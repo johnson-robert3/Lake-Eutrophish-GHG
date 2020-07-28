@@ -79,6 +79,83 @@ sonde_profiles = sonde_profiles %>%
    rm(sonde_early, sonde_main)
    ##
 
+
+#---
+# MiniDOT Surface Temp DO Time-Series Data
+#---
+
+# Function to pre-process each file as it is read in
+read_minidot = function(.dat, .skip=9) {
+   read_csv(.dat, skip = .skip,
+            col_names = c("unix", "UTC", "date_time", "battery", "temp", "do", "do_sat", "q")) %>%
+      remove_empty(which = c("rows", "cols")) %>%
+      select(-unix, -UTC, -battery, -q)
+}
+
+# Function to correct time-stamps from when loggers were downloaded and re-deployed
+fix_times = function(.dat) {
+   .dat %>%
+      mutate(date = date(date_time),
+             hour = hour(date_time),
+             minute = minute(date_time)) %>%
+      select(-date_time) %>%
+      mutate(new_min = case_when(.$minute %in% c(1:29) ~ 15,
+                                 .$minute %in% c(31:59) ~ 45),
+             new_dt = as.POSIXct(ymd(date) + hm(paste(hour, new_min, sep=" ")))) %>%
+      select(-date, -hour, -minute, -new_min) %>%
+      rename(date_time = new_dt) %>%
+      mutate(doy = yday(date_time)) %>%
+      relocate(pond_id, date_time, doy)
+}
+   
+# Pond A
+mini_a = list.files(path = "./Data/R-Data/2020_MiniDOTs",
+                    pattern = "*_A.csv",
+                    full.names = T) %>%
+   map_dfr(~read_minidot(.)) %>%
+   mutate(pond_id = rep("A", nrow(.))) %>%
+   fix_times()
+
+# Pond B
+mini_b = list.files(path = "./Data/R-Data/2020_MiniDOTs",
+                    pattern = "*_B.csv",
+                    full.names = T) %>%
+   map_dfr(~read_minidot(.)) %>%
+   mutate(pond_id = rep("B", nrow(.))) %>%
+   fix_times()
+
+# Pond C
+mini_c = list.files(path = "./Data/R-Data/2020_MiniDOTs",
+                    pattern = "*_C.csv",
+                    full.names = T) %>%
+   map_dfr(~read_minidot(.)) %>%
+   mutate(pond_id = rep("C", nrow(.))) %>%
+   fix_times()
+
+# Pond D
+mini_d = list.files(path = "./Data/R-Data/2020_MiniDOTs",
+                    pattern = "*_D.csv",
+                    full.names = T) %>%
+   map_dfr(~read_minidot(.)) %>%
+   mutate(pond_id = rep("D", nrow(.))) %>%
+   fix_times()
+
+# Pond E
+mini_e = list.files(path = "./Data/R-Data/2020_MiniDOTs",
+                    pattern = "*_E.csv",
+                    full.names = T) %>%
+   map_dfr(~read_minidot(.)) %>%
+   mutate(pond_id = rep("E", nrow(.))) %>%
+   fix_times()
+
+# Pond F
+mini_f = list.files(path = "./Data/R-Data/2020_MiniDOTs",
+                    pattern = "*_F.csv",
+                    full.names = T) %>%
+   map_dfr(~read_minidot(.)) %>%
+   mutate(pond_id = rep("F", nrow(.))) %>%
+   fix_times()
+
    
 #---
 #### Lake Concentration GHG Samples ####
