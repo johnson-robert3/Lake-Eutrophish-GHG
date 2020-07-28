@@ -264,3 +264,60 @@ ggsave(filename = "Figures/flux-n2o_2panel.png", height=7, width=6, units="in")
 }
 
 
+
+#---
+#### Carbon Dioxide ####
+#---
+
+## 3-panel: by fish ----
+{# Comparing between nutrient treatments within each food web treatment
+
+# HIGH B-P
+# windows()
+# c.high =
+
+
+# MEDIUM B-P
+# windows()
+# c.med =
+
+
+# LOW B-P
+# windows()
+# c.low =
+
+
+# 3-panel
+windows(height=10, width=6)
+
+c.high / c.med / c.low
+
+ggsave(filename = "Figures/flux-co2_3panel.png", height=10, width=6, units="in")
+
+}
+
+
+## 2-panel: by nutrients ----
+{# Comparing between food web treatments within each nutrient treatment
+
+# AMBIENT
+# windows()
+# c.amb = 
+
+
+# PULSED
+# windows()
+# c.pul = 
+
+
+# 2-panel
+windows(height=7, width=6)
+
+c.amb / c.pul
+
+ggsave(filename = "Figures/flux-co2_2panel.png", height=7, width=6, units="in")
+
+}
+
+
+
