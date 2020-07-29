@@ -79,6 +79,15 @@ sonde_profiles = sonde_profiles %>%
    rm(sonde_early, sonde_main)
    ##
 
+   
+# Calculate surface water means for variables 
+#  (between 2 - 20 cm depth)
+sonde_surface = sonde_profiles %>%
+   group_by(pond_id, doy) %>%
+   filter(depth_m > 0.02 & depth_m < 0.20) %>%
+   summarize(across(temp:salinity, ~mean(., na.rm=T))) %>%
+   ungroup()
+
 
 #---
 # MiniDOT Surface Temp DO Time-Series Data
@@ -155,6 +164,10 @@ mini_f = list.files(path = "./Data/R-Data/2020_MiniDOTs",
    map_dfr(~read_minidot(.)) %>%
    mutate(pond_id = rep("F", nrow(.))) %>%
    fix_times()
+
+
+# combine all
+minidot = bind_rows(mini_a, mini_b, mini_c, mini_d, mini_e, mini_f)
 
    
 #---
