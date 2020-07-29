@@ -189,7 +189,7 @@ lake_samples = ghg_lake_raw %>%
    filter(!(str_detect(sample_id, "R") | str_detect(sample_id, "P"))) %>%
    # mean value from syringe replicates
    group_by(sample_id) %>%
-   summarise(across(ends_with("ppm"), ~mean(., na.rm=T))) %>%
+   summarize(across(ends_with("ppm"), ~mean(., na.rm=T))) %>%
    ungroup()
 
 
@@ -204,13 +204,8 @@ lake_samples = lake_samples %>%
 
 
 # Add surface water temperature to the lake GHG dataset
-#  calculate mean temp between 2 - 20 cm depth from sonde profiles
 lake_samples = lake_samples %>%
-   left_join(sonde_profiles %>%
-                group_by(pond_id, doy) %>%
-                filter(depth_m > 0.02 & depth_m < 0.20) %>%
-                summarise(surface_temp = mean(temp, na.rm=T)) %>%
-                ungroup())
+   left_join(sonde_surface %>% select(pond_id, doy, surface_temp=temp))
 
 
 #---
