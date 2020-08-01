@@ -40,7 +40,8 @@ read_profile = function(.dat, .skip) {
              phyco_rfu = pc_rfu,
              cond = cond_u_fffd_s_cm,
              sp_cond = sp_cond_u_fffd_s_cm,
-             salinity = sal_psu)
+             salinity = sal_psu,
+             vert_m = vertical_position_m)
 }
 
 
@@ -69,11 +70,13 @@ sonde_profiles = sonde_profiles %>%
           date_time = as.POSIXct(mdy(date) + hms(time)),
           doy = yday(date_time)) %>%
    arrange(doy, pond_id, date_time) %>%
+   select(-date, -time) %>%
+   relocate(date_time, doy) %>%
    # change temp data to Celcius
    mutate(temp = (temp - 32) / 1.8) %>%
-   select(-date, -time) %>%
-   relocate(date_time, doy)
-
+   # remove measurements above water surface
+   filter(vert_m >= 0)
+   
 
    ## remove temporary objects
    rm(sonde_early, sonde_main)
@@ -84,7 +87,7 @@ sonde_profiles = sonde_profiles %>%
 #  (between 2 - 20 cm depth)
 sonde_surface = sonde_profiles %>%
    group_by(pond_id, doy) %>%
-   filter(depth_m > 0.02 & depth_m < 0.20) %>%
+   filter(vert_m > 0.02 & vert_m < 0.20) %>%
    summarize(across(temp:salinity, ~mean(., na.rm=T))) %>%
    ungroup()
 
