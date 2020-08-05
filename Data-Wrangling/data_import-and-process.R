@@ -229,7 +229,7 @@ n.diff = ghg_data %>%
    mutate(n2o_flag = if_else(n2o_diff > 20, 1, 0))
 
 
-# add % difference and flag columns back to dataset
+# add new columns for % difference and flag back to dataset
 ghg_data = ghg_data %>%
    left_join(m.diff) %>%
    # left_join(c.diff) %>%
@@ -383,14 +383,14 @@ weather_data = weather_data_raw %>%
           par = par_u_fffd_mol_m_u_fffd_s_lgr_s_n_20849581_sen_s_n_20856725)
 
 
-# Date and Time
+# Additional variables
 weather_data = weather_data %>%
+   # date and DOY
    mutate(date_time = mdy_hm(date_time),
           doy = yday(date_time)) %>%
-   relocate(doy, .after = date_time)
-
-
-# Anemometer height
+   relocate(doy, .after = date_time) %>%
+   # anemometer height (3 m)
+   mutate(wnd.z = rep_len(3, n()))
 
 
 #---
@@ -403,22 +403,22 @@ bulk_density_raw = read_csv("Data/R-Data/2020_sediment_bulk-density.csv")
 organic_matter_raw = read_csv("Data/R-Data/2020_sediment_om.csv")
 
 
-# Clean up bulk density file and calculate Dry Bulk Density (DBD)
+# Clean up bulk density file and calculate Dry Bulk Density (DBD) for each sample
 bulk_density = bulk_density_raw %>%
    mutate(date = mdy(date),
           doy = yday(date)) %>%
+   filter(!(sample_type=="nutrients")) %>%
    # sample weights
    mutate(mass_wet = mass_wet_tin.sample - mass_tin,
           mass_dry = mass_dry_tin.sample - mass_tin) %>%
-   filter(!(sample_type=="nutrients")) %>%
    # dry bulk density and porosity (units = g / cm3)
    mutate(DBD = mass_dry / vol_sample,
           porosity = (mass_wet - mass_dry) / vol_sample)
 
-# calculate mean sediment bulk density and porosity for each pond
+# calculate mean sediment bulk density and porosity for each pond (summer mean value)
 bulk_density = bulk_density %>%
    # mean of 3 replicates for each sampling event
-   group_by(pond_id, week) %>%
+   group_by(pond_id) %>%
    summarize(DBD = mean(DBD, na.rm=T),
              porosity = mean(porosity, na.rm=T)) %>%
    ungroup()
@@ -434,7 +434,7 @@ om_data = organic_matter_raw %>%
    # OM content (%)
    mutate(perc_om = (1 - (mass_ash / mass_dry)) * 100)
 
-# calculate mean OM content for each pond
+# calculate mean OM content for each pond (summer mean value)
 om_data = om_data %>%
    # mean of 3 replicates for each sampling event
    group_by(pond_id, week) %>%
