@@ -130,8 +130,7 @@ lake_conc = lake_conc %>%
 
 ## Calculate wind-based k
 wind_k = weather_data %>%
-   mutate(wnd.z = rep_len(3, n()),
-          wnd = wind_speed,
+   mutate(wnd = wind_speed,
           U10 = wnd * ((10 / wnd.z)^(1/7)),
           k_cole = k.cole.base(U10)) %>%
    # daily average k
@@ -201,7 +200,7 @@ methano_samples = methano_samples %>%
 #_Add sediment bulk density and porosity to Methano dataset
 
 methano_samples = methano_samples %>%
-   left_join(bulk_density %>% select(-week)) %>%
+   left_join(bulk_density) %>%
    # calculate total aqueous volume in bottle using porosity data
    # aqueous volume = water sample + aqueous portion of sediment sample
    mutate(vol_aq = vol_water + (vol_sediment * porosity)) %>%
@@ -291,7 +290,7 @@ test = full_join(ebu_end, ebu_start) %>%
 
 # chamber area
 # chamber volume
-# actual measured flux (mass of gas into chamber per unit area over time)
+# actual measured flux (mass of gas into chamber per unit area over time)  ## NOT SURE I ACTUALLY NEED THIS
 
 # chamber-specific k value (using headspace partial pressures from t0 and t1)
 
