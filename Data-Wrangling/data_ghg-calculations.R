@@ -240,95 +240,6 @@ methano_rates = methano_samples %>%
 #### Ebullition ####
 #---
 
-##__Start of deployment
-
-# add lake dissolved gas concentrations to the data set
-#  dissolved concentrations were measured at the end of the deployment, so need to assume 
-#  dissolved concentrations and water temp remained constant throughout deployment
-# ebu_start = ebu_start %>%
-#    left_join(lake_conc %>%
-#                 select(pond_id, doy, surface_temp, ends_with("lake"), starts_with("tKH_")))
-
-# gas value calculations for t0
-# test = ebu_start %>%
-#    # gas partial pressures measured in chamber headspace (units = atm)
-#    # < P[i] >
-#    mutate(pch4_ch = ch4_ppm / 10^6 * 0.97,
-#           pco2_ch = co2_ppm / 10^6 * 0.97,
-#           pn2o_ch = n2o_ppm / 10^6 * 0.97) %>%
-#    # calculate partial pressures of dissolved gases in lake surface water (units = atm?)
-#    # < P[w] >
-#    mutate(pch4_lake = ch4_lake / 10^6 / tKH_ch4,
-#           pco2_lake = co2_lake / 10^6 / tKH_co2,
-#           pn2o_lake = n2o_lake / 10^6 / tKH_n2o) %>%
-#    # calculate expected dissolved concentration if surface water at equilibrium with chamber headspace (units = uM)
-#    # < C[eq] >
-#    mutate(ch4_exp = tKH_ch4 * pch4_ch * 10^6,
-#           co2_exp = tKH_co2 * pco2_ch * 10^6,
-#           n2o_exp = tKH_n2o * pn2o_ch * 10^6)
-
-
-# gas partial pressures in chamber headspace (units = atm)
-# ebu_start = ebu_start %>%
-#    mutate(pch4_ch = ch4_ppm / 10^6 * 0.97,
-#           pco2_ch = co2_ppm / 10^6 * 0.97,
-#           pn2o_ch = n2o_ppm / 10^6 * 0.97)
-
-# calculate partial pressure of dissoved gases in lake water
-# test = ebu_start %>%
-#    mutate(pch4_lake = ch4_lake / 10^6 / tKH_ch4,
-#           pco2_lake = co2_lake / 10^6 / tKH_co2,
-#           pn2o_lake = n2o_lake / 10^6 / tKH_n2o)
-
-# calculate expected lake dissolved concentration if at equilibrium with chamber headspace (units = uM)
-# test1 = test %>%
-#    mutate(ch4_exp = tKH_ch4 * pch4_ch * 10^6,
-#           co2_exp = tKH_co2 * pco2_ch * 10^6,
-#           n2o_exp = tKH_n2o * pn2o_ch * 10^6)
-
-
-##__End of deployment
-{
-# gas partial pressures in chamber headspace (units = atm)
-ebu_end = ebu_end %>%
-   mutate(pch4_ch = ch4_ppm / 10^6 * 0.97,
-          pco2_ch = co2_ppm / 10^6 * 0.97,
-          pn2o_ch = n2o_ppm / 10^6 * 0.97)
-
-# add lake dissolved gas concentrations to the data set
-ebu_end = ebu_end %>%
-   left_join(lake_conc %>%
-                select(pond_id, doy, surface_temp, ends_with("lake"), starts_with("tKH_")))
-
-# calculate expected lake dissolved concentration if at equilibrium with chamber headspace (units = uM)
-ebu_end = ebu_end %>%
-   mutate(ch4_exp = tKH_ch4 * pch4_ch * 10^6,
-          co2_exp = tKH_co2 * pco2_ch * 10^6,
-          n2o_exp = tKH_n2o * pn2o_ch * 10^6)
-
-
-## test with beginning and end deployment data together
-test = full_join(ebu_end, ebu_start) %>%
-   arrange(week, doy, pond_id, replicate, deployment_time)
-}
-
-## what do I need?
-
-# chamber area <DONE>
-# chamber volume <DONE>
-# actual measured flux (mass of gas into chamber per unit area over time)  ## NOT SURE I ACTUALLY NEED THIS
-
-# chamber-specific k value (using headspace partial pressures from t0 and t1)
-
-# partial pressures of gases dissolved in lake water (need dissolved concentration and temp-corrected KH) <DONE>
-
-
-
-
-#---
-# New way of coding, using whole dataset
-
-
 # Convert measured chamber headspace to partial pressure (units = atm)
 
 ebu_samples = ebu_samples %>%
@@ -345,7 +256,7 @@ ebu_start = ebu_samples %>%
    ungroup() %>%
    # update doy
    mutate(doy = doy + 1) %>%
-   # rename ppm
+   # rename partial pressure
    rename(pch4_t0 = pch4,
           pco2_t0 = pco2,
           pn2o_t0 = pn2o) %>%
@@ -356,7 +267,7 @@ ebu_end = ebu_samples %>%
    group_by(week, pond_id, replicate) %>%
    slice_max(order_by = doy) %>%
    ungroup() %>%
-   # rename ppm
+   # rename partial pressure
    rename(pch4_t1 = pch4,
           pco2_t1 = pco2,
           pn2o_t1 = pn2o) %>%
@@ -367,7 +278,8 @@ ebu_end = ebu_samples %>%
 ebu_data = ebu_end %>%
    select(-sample_id) %>%
    left_join(ebu_start %>%
-                select(-sample_id, -date_time, -notes))
+                select(-sample_id, -date_time, -notes)) %>%
+   relocate(ends_with("_t0"), .before="pch4_t1")
 
 
 # Add lake surface water dissolved gas data to ebullition data set
@@ -412,8 +324,7 @@ ebu_data = ebu_data %>%
 #  the deployment. 
 #--
 
-
-test_k = test_f %>%
+ebu_data = ebu_data %>%
    mutate(k_ch4 = ((vol_chamber/1000) / (tKH_ch4 * 0.0821 * surface_temp * area_chamber)) * 
              log((pch4_lake - pch4_t0) / (pch4_lake - pch4_t1)) / 
              deployment_length,
@@ -427,5 +338,5 @@ test_k = test_f %>%
              deployment_length)
 
 
-   
+
 
