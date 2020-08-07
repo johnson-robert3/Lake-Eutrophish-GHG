@@ -58,7 +58,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filt
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
-   labs(title = "Medium (A, D)") +
+   labs(title = "Intermediate (A, D)") +
    theme_classic()
 
 
@@ -100,15 +100,18 @@ ggsave(filename = "Figures/flux-ch4_3panel.png", height=10, width=6, units="in")
 m.ref = 
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_nutrients=="no"),
        aes(x = doy, y = ch4_flux)) +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
    geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
    geom_point(size=4, color="white") +
    geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="cornflowerblue", color="royalblue") +
    #
-   scale_alpha_manual(name = "Fish",
+   scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
                       breaks = c("high", "medium", "low"),
-                      values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3)) +
+                      values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
+                      labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "Reference") +
    theme_classic()
 
 # PULSED
@@ -117,15 +120,18 @@ m.pul =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_nutrients=="yes"),
        aes(x = doy, y = ch4_flux)) +
    geom_vline(xintercept=176, color="gray40", linetype=2) +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
    geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3", show.legend=F) +
    geom_point(size=4, color="white") +
    geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="seagreen3", color="seagreen") +
    #
-   scale_alpha_manual(name = "Fish",
+   scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
                       breaks = c("high", "medium", "low"),
-                      values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3)) +
+                      values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
+                      labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "Pulsed") +
    theme_classic()
 
 
@@ -183,7 +189,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filt
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
-   labs(title = "Medium (A, D)") +
+   labs(title = "Intermediate (A, D)") +
    theme_classic()
 
 
@@ -225,15 +231,18 @@ ggsave(filename = "Figures/flux-n2o_3panel.png", height=10, width=6, units="in")
 n.ref = 
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_nutrients=="no"),
        aes(x = doy, y = n2o_flux)) +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
    geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
    geom_point(size=4, color="white") +
    geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="cornflowerblue", color="royalblue") +
    #
-   scale_alpha_manual(name = "Fish",
+   scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
                       breaks = c("high", "medium", "low"),
-                      values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3)) +
+                      values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
+                      labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "Reference") +
    theme_classic()
 
 # PULSED
@@ -242,15 +251,18 @@ n.pul =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_nutrients=="yes"),
        aes(x = doy, y = n2o_flux)) +
    geom_vline(xintercept=176, color="gray40", linetype=2) +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
    geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3", show.legend=F) +
    geom_point(size=4, color="white") +
    geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="seagreen3", color="seagreen") +
    #
-   scale_alpha_manual(name = "Fish",
+   scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
                       breaks = c("high", "medium", "low"),
-                      values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3)) +
+                      values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
+                      labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "Pulsed") +
    theme_classic()
 
 
