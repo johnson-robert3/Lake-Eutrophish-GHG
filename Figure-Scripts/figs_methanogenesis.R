@@ -141,7 +141,7 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>%
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
-   labs(title = "Medium (A, D)") +
+   labs(title = "Intermediate (A, D)") +
    theme_classic()
 
 
@@ -188,11 +188,13 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>%
    geom_point(size=4, color="white") +
    geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="cornflowerblue", color="royalblue") +
    #
-   scale_alpha_manual(name = "Fish",
+   scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
                       breaks = c("high", "medium", "low"),
-                      values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3)) +
+                      values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
+                      labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "Reference") +
    theme_classic()
 
 
@@ -206,11 +208,13 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>%
    geom_point(size=4, color="white") +
    geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="seagreen3", color="seagreen") +
    #
-   scale_alpha_manual(name = "Fish",
+   scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
                       breaks = c("high", "medium", "low"),
-                      values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3)) +
+                      values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
+                      labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "Pulsed") +
    theme_classic()
 
 
@@ -320,7 +324,7 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>%
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(CO[2]~production~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
-   labs(title = "Medium (A, D)") +
+   labs(title = "Intermediate (A, D)") +
    theme_classic()
 
 
