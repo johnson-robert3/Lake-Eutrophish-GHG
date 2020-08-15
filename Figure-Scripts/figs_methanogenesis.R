@@ -109,7 +109,7 @@ m.high =
 ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>% filter(trt_fish=="high"),
        aes(x = doy, y = ch4_rate)) +
    # pulse
-   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
    geom_errorbar(aes(ymin = ch4_rate - sd_ch4_rate, ymax = ch4_rate + sd_ch4_rate),
@@ -130,7 +130,7 @@ m.int =
 ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = ch4_rate)) +
    # pulse
-   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
    geom_errorbar(aes(ymin = ch4_rate - sd_ch4_rate, ymax = ch4_rate + sd_ch4_rate),
@@ -151,7 +151,7 @@ m.low =
 ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>% filter(trt_fish=="low"),
        aes(x = doy, y = ch4_rate)) +
    # pulse
-   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
    geom_errorbar(aes(ymin = ch4_rate - sd_ch4_rate, ymax = ch4_rate + sd_ch4_rate),
@@ -203,7 +203,7 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>%
 m.pul =
 ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>% filter(trt_nutrients=="yes"),
        aes(x = doy, y = ch4_rate)) +
-   geom_vline(xintercept=176, color="gray40", linetype=2) +
+   geom_vline(xintercept = 176, color="gray40", linetype=2) +
    geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3", show.legend=F) +
    geom_point(size=4, color="white") +
    geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="seagreen3", color="seagreen") +
