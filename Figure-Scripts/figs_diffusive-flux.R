@@ -28,7 +28,7 @@ m.high =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="high"),
        aes(x = doy, y = ch4_flux)) +
    # pulse
-   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
@@ -48,7 +48,7 @@ m.int =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = ch4_flux)) +
    # pulse
-   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
@@ -68,7 +68,7 @@ m.low =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="low"),
        aes(x = doy, y = ch4_flux)) +
    # pulse
-   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
@@ -119,7 +119,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filt
 m.pul = 
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_nutrients=="yes"),
        aes(x = doy, y = ch4_flux)) +
-   geom_vline(xintercept=176, color="gray40", linetype=2) +
+   geom_vline(xintercept = 176, color="gray40", linetype=2) +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3", show.legend=F) +
    geom_point(size=4, color="white") +
@@ -159,7 +159,7 @@ n.high =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="high"),
        aes(x = doy, y = n2o_flux)) +
    # pulse
-   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
@@ -179,7 +179,7 @@ n.int =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = n2o_flux)) +
    # pulse
-   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
@@ -199,7 +199,7 @@ n.low =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="low"),
        aes(x = doy, y = n2o_flux)) +
    # pulse
-   geom_vline(xintercept = 176, linetype=2, color="gray40") +
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
@@ -250,7 +250,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filt
 n.pul = 
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_nutrients=="yes"),
        aes(x = doy, y = n2o_flux)) +
-   geom_vline(xintercept=176, color="gray40", linetype=2) +
+   geom_vline(xintercept = 176, color="gray40", linetype=2) +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3", show.legend=F) +
    geom_point(size=4, color="white") +
