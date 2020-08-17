@@ -48,20 +48,20 @@ read_profile = function(.dat, .skip) {
 # Profile Data
 
 # Files without extra header rows
-sonde_early = list.files(path = "./Data/R-Data/2020_sonde-profiles/without-extra-header-rows",
+sonde_nohead = list.files(path = "./Data/R-Data/2020_sonde-profiles/without-extra-header-rows",
                          pattern = "hortsonde*",
                          full.names = T) %>%
    map_dfr(~read_profile(., .skip=0))
 
 # Files with extra header rows at top
-sonde_main = list.files(path = "./Data/R-Data/2020_sonde-profiles",
+sonde_head = list.files(path = "./Data/R-Data/2020_sonde-profiles",
                         pattern = "hortsonde*",
                         full.names = T) %>%
    map_dfr(~read_profile(., .skip=5))
 
 
 # Combined profile data
-sonde_profiles = full_join(sonde_early, sonde_main)
+sonde_profiles = full_join(sonde_nohead, sonde_head)
 
 
 # Clean up profile dataset
@@ -190,82 +190,91 @@ lake_sample_data = read_csv("Data/R-Data/2020_sample-metadata_lake-conc.csv") %>
    relocate(doy, .after = date)
 
 
-##__Remove GHG outliers
+##__Find and flag GHG outliers
 {
 # Determine the % difference between the two equilibrated syringes
-#  for each of the three gases for each sampling day
+#  for each of the three gases for each sampling day.
 #
-# Remove all instances when syringes differ by more than 20%
+# Flag all instances when syringes differ by more than 50% for any gas.
+#
+# Manually view these flagged data in the data sheet to determine 
+#  which syringe is the outlier.
+#
+# For most of these it is quite obvious which vial is the outlier, and most
+#  appear to be the result of one vial being contaminated with atmosphere. 
 
 
 # combine raw ghg values and some meta data for processing
-ghg_data = lake_sample_data %>%
+ghg_view = lake_sample_data %>%
    select(sample_id, pond_id, doy) %>%
    left_join(ghg_lake_raw)
 
 # CH4
-m.diff = ghg_data %>%
+m.diff = ghg_view %>%
    filter(!(pond_id=="Y")) %>%
    select(pond_id, doy, ch4_ppm) %>%
    group_by(pond_id, doy) %>%
    arrange(ch4_ppm, .by_group=T) %>%
    summarize(ch4_diff = (1 - (first(ch4_ppm) / last(ch4_ppm))) * 100) %>%
    ungroup() %>%
-   # flag all days differing by more than 20%
-   mutate(ch4_flag = if_else(ch4_diff > 20, 1, 0))
+   # flag all days differing by more than 50%
+   mutate(ch4_flag = if_else(ch4_diff > 50, 1, 0))
+
 
 # CO2
-# c.diff = 
+c.diff = ghg_view %>%
+   filter(!(pond_id=="Y")) %>%
+   select(pond_id, doy, co2_ppm) %>%
+   group_by(pond_id, doy) %>%
+   arrange(co2_ppm, .by_group=T) %>%
+   summarize(co2_diff = (1 - (first(co2_ppm) / last(co2_ppm))) * 100) %>%
+   ungroup() %>%
+   # flag all days differing by more than 50%
+   mutate(co2_flag = if_else(co2_diff > 50, 1, 0))
+
 
 # N2O
-n.diff = ghg_data %>%
+n.diff = ghg_view %>%
    filter(!(pond_id=="Y")) %>%
    select(pond_id, doy, n2o_ppm) %>%
    group_by(pond_id, doy) %>%
    arrange(n2o_ppm, .by_group=T) %>%
    summarize(n2o_diff = (1 - (first(n2o_ppm) / last(n2o_ppm))) * 100) %>%
    ungroup() %>%
-   # flag all days differing by more than 20%
-   mutate(n2o_flag = if_else(n2o_diff > 20, 1, 0))
+   # flag all days differing by more than 50%
+   mutate(n2o_flag = if_else(n2o_diff > 50, 1, 0))
 
 
-# add new columns for % difference and flag back to dataset
-ghg_data = ghg_data %>%
-   left_join(m.diff) %>%
-   # left_join(c.diff) %>%
-   left_join(n.diff) %>%
-   # fill in flagging code for atmosphere samples (i.e. 0, no flag)
-   mutate(across(ends_with("flag"), ~replace(., pond_id=="Y", 0)))
-
-
-# remove flagged GHG values
-ghg_clean = ghg_data %>%
-   # replace ppm data with an error code if flagged
-   mutate(ch4_ppm = if_else(ch4_flag==1, -9999, ch4_ppm),
-          n2o_ppm = if_else(n2o_flag==1, -9999, n2o_ppm)) %>%
-   # replace error code with NA
-   mutate(across(ends_with("ppm"), ~na_if(., -9999)))
+# View flagged pond-days and manually inspect the raw data
+m.diff %>% arrange(ch4_diff) %>% filter(ch4_flag==1) %>% View
+c.diff %>% arrange(co2_diff) %>% filter(co2_flag==1) %>% View
+n.diff %>% arrange(n2o_diff) %>% filter(n2o_flag==1) %>% View
 
 
    #- remove temporary cleaning datasets
-   rm(ghg_data, m.diff, c.diff, n.diff)
+   rm(ghg_view, m.diff, c.diff, n.diff)
    #-
 
 }
 
 
+# Remove flagged outlier GHG vials
+ghg_clean = ghg_lake_raw %>%
+   mutate(data_flag = if_else(is.na(data_flag), 0, data_flag)) %>%
+   filter(!(data_flag==1))
+
+
 # Mean GHG concentration from syringes for lake samples (2 syringes per pond, 3 syringes for atmosphere)
-lake_samples = ghg_clean %>%
+lake_ghg = ghg_clean %>%
    select(sample_id, ends_with("ppm")) %>%
    # mean value from syringe replicates
    group_by(sample_id) %>%
    summarize(across(ends_with("ppm"), ~mean(., na.rm=T))) %>%
-   ungroup() %>%
-   mutate(across(ends_with("ppm"), ~na_if(., "NaN")))
+   ungroup()
 
 
 # Add GHG concentration data to sample meta data
-lake_samples = left_join(lake_sample_data, lake_samples)
+lake_samples = left_join(lake_sample_data, lake_ghg)
 
 
 # Add surface water temperature to the lake GHG dataset
@@ -387,7 +396,6 @@ bulk_density = bulk_density_raw %>%
 
 # calculate mean sediment bulk density and porosity for each pond (summer mean value)
 bulk_density = bulk_density %>%
-   # mean of 3 replicates for each sampling event
    group_by(pond_id) %>%
    summarize(DBD = mean(DBD, na.rm=T),
              porosity = mean(porosity, na.rm=T)) %>%
@@ -406,8 +414,7 @@ om_data = organic_matter_raw %>%
 
 # calculate mean OM content for each pond (summer mean value)
 om_data = om_data %>%
-   # mean of 3 replicates for each sampling event
-   group_by(pond_id, week) %>%
+   group_by(pond_id) %>%
    summarize(perc_om = mean(perc_om, na.rm=T)) %>%
    ungroup()
 
