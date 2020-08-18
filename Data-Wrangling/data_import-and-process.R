@@ -79,7 +79,7 @@ sonde_profiles = sonde_profiles %>%
    
 
    ## remove temporary objects
-   rm(sonde_early, sonde_main)
+   rm(sonde_nohead, sonde_head)
    ##
 
    
