@@ -445,7 +445,7 @@ m.amb =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_nutrients=="no"),
        aes(x = doy, y = ch4_flux)) +
    geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
-   geom_point(size=3, color="white") +
+   geom_point(size=4, color="white") +
    geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="cornflowerblue", color="royalblue") +
    #
    scale_alpha_manual(name = "Fish",
@@ -462,7 +462,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filt
        aes(x = doy, y = ch4_flux)) +
    geom_vline(xintercept=176, color="gray40", linetype=2) +
    geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3", show.legend=F) +
-   geom_point(size=3, color="white") +
+   geom_point(size=4, color="white") +
    geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="seagreen3", color="seagreen") +
    #
    scale_alpha_manual(name = "Fish",
@@ -567,7 +567,7 @@ n.amb =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_nutrients=="no"),
        aes(x = doy, y = n2o_flux)) +
    geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
-   geom_point(size=3, color="white") +
+   geom_point(size=4, color="white") +
    geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="cornflowerblue", color="royalblue") +
    #
    scale_alpha_manual(name = "Fish",
@@ -584,7 +584,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filt
        aes(x = doy, y = n2o_flux)) +
    geom_vline(xintercept=176, color="gray40", linetype=2) +
    geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3", show.legend=F) +
-   geom_point(size=3, color="white") +
+   geom_point(size=4, color="white") +
    geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="seagreen3", color="seagreen") +
    #
    scale_alpha_manual(name = "Fish",
