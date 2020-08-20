@@ -118,7 +118,11 @@ lake_conc = lake_conc %>%
 lake_conc = lake_conc %>%
    mutate(ch4_lake = (ch4_tot_umol - (ch4_atm * vol_air)) / vol_water,
           co2_lake = (co2_tot_umol - (co2_atm * vol_air)) / vol_water,
-          n2o_lake = (n2o_tot_umol - (n2o_atm * vol_air)) / vol_water)
+          n2o_lake = (n2o_tot_umol - (n2o_atm * vol_air)) / vol_water) %>%
+   # high pH in the ponds results in erroneous dissolved CO2 concentrations at times
+   # as CO2 from the headspace was converted to HCO3 when equilibrated with the water
+   # correct for these times
+   mutate(co2_lake = if_else(co2_lake < 0, 0, co2_lake))
 
 
 #---
