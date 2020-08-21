@@ -145,6 +145,28 @@ ggsave(filename = "Figures/flux-ch4_2panel.png", height=7, width=6, units="in")
 }
 
 
+## 6-panel: by pond ----
+{# viewing all ponds
+
+windows(width=12, height=7)
+ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))),
+       aes(x = doy, y = ch4_flux)) +
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
+   geom_hline(yintercept = 0, linetype=3, color="gray60") +
+   # data
+   geom_line() +
+   geom_point(shape=19, size=3, color="white") +
+   geom_point(aes(fill = trt_nutrients, alpha = trt_fish), shape=21, size=3, show.legend=F) +
+   # scales
+   scale_fill_manual(values = c("yes" = "seagreen3", "no" = "cornflowerblue")) +
+   scale_alpha_manual(values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3)) +
+   scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   #
+   facet_wrap(facets = vars(pond_id), nrow=2) +
+   theme_classic()
+
+}
+
 
 #---
 #### Nitrous Oxide ####
@@ -276,6 +298,28 @@ ggsave(filename = "Figures/flux-n2o_2panel.png", height=7, width=6, units="in")
 }
 
 
+## 6-panel: by pond ----
+{# viewing all ponds
+
+windows(width=12, height=7)
+ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))),
+       aes(x = doy, y = n2o_flux)) +
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
+   geom_hline(yintercept = 0, linetype=3, color="gray60") +
+   # data
+   geom_line() +
+   geom_point(shape=19, size=3, color="white") +
+   geom_point(aes(fill = trt_nutrients, alpha = trt_fish), shape=21, size=3, show.legend=F) +
+   # scales
+   scale_fill_manual(values = c("yes" = "seagreen3", "no" = "cornflowerblue")) +
+   scale_alpha_manual(values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3)) +
+   scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   #
+   facet_wrap(facets = vars(pond_id), nrow=2) +
+   theme_classic()
+
+}
+
 
 #---
 #### Carbon Dioxide ####
@@ -406,4 +450,28 @@ c.ref / c.pul
 ggsave(filename = "Figures/flux-co2_2panel.png", height=7, width=6, units="in")
 
 }
+
+
+## 6-panel: by pond ----
+{# viewing all ponds
+
+windows(width=12, height=7)
+ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(co2_ppm))),
+       aes(x = doy, y = co2_flux)) +
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
+   geom_hline(yintercept = 0, linetype=3, color="gray60") +
+   # data
+   geom_line() +
+   geom_point(shape=19, size=3, color="white") +
+   geom_point(aes(fill = trt_nutrients, alpha = trt_fish), shape=21, size=3, show.legend=F) +
+   # scales
+   scale_fill_manual(values = c("yes" = "seagreen3", "no" = "cornflowerblue")) +
+   scale_alpha_manual(values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3)) +
+   scale_y_continuous(name = expression(CO[2]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   #
+   facet_wrap(facets = vars(pond_id), nrow=2) +
+   theme_classic()
+
+}
+
 
