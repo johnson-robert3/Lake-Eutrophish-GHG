@@ -275,13 +275,16 @@ lake_ghg = ghg_clean %>%
    ungroup()
 
 
-# Add GHG concentration data to sample meta data
-lake_samples = left_join(lake_sample_data, lake_ghg)
-
-
-# Add surface water temperature to the lake GHG dataset
-lake_samples = lake_samples %>%
-   left_join(sonde_surface %>% select(pond_id, doy, surface_temp=temp))
+# Add meta data to GHG values
+lake_samples = left_join(lake_sample_data, lake_ghg) %>%
+   # add surface water temperature
+   left_join(sonde_surface %>% select(pond_id, doy, surface_temp=temp)) %>%
+   # fill in a surface temperature for Pond C, DOY 231 (profile not recorded)
+   # linearly interpolate between prior and following measurements
+   group_by(pond_id) %>%
+   arrange(doy, .by_group=T) %>%
+   mutate(surface_temp = if_else(is.na(surface_temp), (lead(surface_temp) + lag(surface_temp)) / 2, surface_temp)) %>%
+   ungroup()
 
 
 #---
