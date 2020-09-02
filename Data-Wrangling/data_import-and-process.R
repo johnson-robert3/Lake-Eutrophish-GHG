@@ -74,15 +74,17 @@ sonde_profiles = sonde_profiles %>%
    relocate(date_time, doy) %>%
    # change temp data to Celcius
    mutate(temp = (temp - 32) / 1.8) %>%
-   # remove measurements above water surface
-   filter(vert_m >= 0)
+   # correct vertical position (depth sensor and probes not at same height)
+   # add 5 cm to all
+   mutate(vert_m = vert_m + 0.05,
+          vert_m = if_else(vert_m<0, 0, vert_m))
    
 
    ## remove temporary objects
    rm(sonde_nohead, sonde_head)
    ##
 
-   
+
 # Calculate surface water means for variables 
 #  (between 2 - 20 cm depth)
 sonde_surface = sonde_profiles %>%
@@ -246,9 +248,9 @@ n.diff = ghg_view %>%
 
 
 # View flagged pond-days and manually inspect the raw data
-m.diff %>% arrange(ch4_diff) %>% filter(ch4_flag==1) %>% View
-c.diff %>% arrange(co2_diff) %>% filter(co2_flag==1) %>% View
-n.diff %>% arrange(n2o_diff) %>% filter(n2o_flag==1) %>% View
+m.diff %>% arrange(doy) %>% filter(ch4_flag==1) %>% View
+c.diff %>% arrange(doy) %>% filter(co2_flag==1) %>% View
+n.diff %>% arrange(doy) %>% filter(n2o_flag==1) %>% View
 
 
    #- remove temporary cleaning datasets
@@ -307,6 +309,12 @@ methano_samples = methano_sample_data %>%
    # add length of incubation period
    mutate(incubation_length = difftime(datetime_end, datetime_start, units="mins"),
           incubation_length = as.numeric(incubation_length))
+
+
+# Remove flagged outlier GHG vials
+methano_samples = methano_samples %>%
+   mutate(data_flag = if_else(is.na(data_flag), 0, data_flag)) %>%
+   filter(!(data_flag==1))
 
 
 #---
@@ -368,8 +376,8 @@ weather_data = weather_data %>%
    mutate(date_time = mdy_hm(date_time),
           doy = yday(date_time)) %>%
    relocate(doy, .after = date_time) %>%
-   # anemometer height (3 m)
-   mutate(wnd.z = rep_len(3, n()))
+   # anemometer height (4 m)
+   mutate(wnd.z = rep_len(4, n()))
 
 
 #---
