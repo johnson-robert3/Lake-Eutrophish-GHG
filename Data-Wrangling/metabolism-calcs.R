@@ -25,6 +25,11 @@ library(LakeMetabolizer)
 
 
 
+#---
+# Data Prep
+#---
+
+
 # Combine data
 
 # Temp and DO from miniDOTs
@@ -33,7 +38,7 @@ metab_data = minidot %>%
    mutate(date_time = date_time - minutes(15)) %>%
    # add weather
    left_join(weather_data) %>%
-   # add salinity from sonde profiles
+   # add surface salinity from sonde profiles
    left_join(sonde_surface %>%
                 select(pond_id, doy, salinity)) %>%
    # remove unnecessary data
@@ -41,9 +46,7 @@ metab_data = minidot %>%
    select(-do_sat, -gust_speed)
 
 
-
-# initial parameters
-
+# Additional parameters for metabolism calcs
 metab_data = metab_data %>%
    mutate(U10 = wind_speed * ((10 / wnd.z)^(1/7)),
           k_cole = k.cole.base(U10),
@@ -53,6 +56,8 @@ metab_data = metab_data %>%
           o2_eq_sat = o2.at.sat.base(temp = temp, 
                                      baro = 982.85, 
                                      salinity = salinity)) %>%
+   # mixed-layer depth 
+   # (update after getting HOBO t-chain data)
    mutate(z_mix = rep_len(0.5, n())) %>%
    # day/night for bookkeep
    mutate(daynight = is.day(date_time, lat = 42.11),
@@ -63,8 +68,9 @@ metab_data = metab_data %>%
    add_count(pond_id, doy)  # doy 150 & 192 have n=47 for all ponds
 
 
-
-## Calculate Metabolism estimates
+#---
+# Metabolism Calculations
+#---
 
 
 # Bookkeeping method
@@ -89,8 +95,10 @@ metab_book = metab_data %>%
 
 # Maximum Likelihood Estimate method
 
-  # metab.mle retuns a list (not a data frame)
+  #--
+  # metab.mle() returns a list (not a data frame)
   # need to use a nested workflow
+  #--
 
 
 # pond a
@@ -233,9 +241,8 @@ mle.f = metab_data %>%
    mutate(pond_id = rep_len("F", n())) %>%
    relocate(pond_id)
 
+
 # all ponds
 metab_mle = bind_rows(mle.a, mle.b, mle.c, mle.d, mle.e, mle.f)
-
-
 
 
