@@ -115,9 +115,9 @@ mle.a = metab_data %>%
                                        wtr = .$temp,
                                        error.type = "OE",
                                        datetime = .$date_time)),
-          GPP = map(metab, ~.[[2]][["GPP"]]),
-          R = map(metab, ~.[[2]][["R"]]),
-          NEP = map(metab, ~.[[2]][["NEP"]])) %>%
+          GPP = map(metab, ~pluck(., 2, "GPP")),
+          R = map(metab, ~pluck(., 2, "R")),
+          NEP = map(metab, ~pluck(., 2, "NEP"))) %>%
    select(doy, GPP, R, NEP) %>%
    unnest(cols = c(GPP, R, NEP)) %>%
    ungroup() %>%
@@ -139,9 +139,9 @@ mle.b = metab_data %>%
                                        wtr = .$temp,
                                        error.type = "OE",
                                        datetime = .$date_time)),
-          GPP = map(metab, ~.[[2]][["GPP"]]),
-          R = map(metab, ~.[[2]][["R"]]),
-          NEP = map(metab, ~.[[2]][["NEP"]])) %>%
+          GPP = map(metab, ~pluck(., 2, "GPP")),
+          R = map(metab, ~pluck(., 2, "R")),
+          NEP = map(metab, ~pluck(., 2, "NEP"))) %>%
    select(doy, GPP, R, NEP) %>%
    unnest(cols = c(GPP, R, NEP)) %>%
    ungroup() %>%
@@ -163,9 +163,9 @@ mle.c = metab_data %>%
                                        wtr = .$temp,
                                        error.type = "OE",
                                        datetime = .$date_time)),
-          GPP = map(metab, ~.[[2]][["GPP"]]),
-          R = map(metab, ~.[[2]][["R"]]),
-          NEP = map(metab, ~.[[2]][["NEP"]])) %>%
+          GPP = map(metab, ~pluck(., 2, "GPP")),
+          R = map(metab, ~pluck(., 2, "R")),
+          NEP = map(metab, ~pluck(., 2, "NEP"))) %>%
    select(doy, GPP, R, NEP) %>%
    unnest(cols = c(GPP, R, NEP)) %>%
    ungroup() %>%
@@ -186,9 +186,9 @@ mle.d = metab_data %>%
                                        wtr = .$temp,
                                        error.type = "OE",
                                        datetime = .$date_time)),
-          GPP = map(metab, ~.[[2]][["GPP"]]),
-          R = map(metab, ~.[[2]][["R"]]),
-          NEP = map(metab, ~.[[2]][["NEP"]])) %>%
+          GPP = map(metab, ~pluck(., 2, "GPP")),
+          R = map(metab, ~pluck(., 2, "R")),
+          NEP = map(metab, ~pluck(., 2, "NEP"))) %>%
    select(doy, GPP, R, NEP) %>%
    unnest(cols = c(GPP, R, NEP)) %>%
    ungroup() %>%
@@ -209,9 +209,9 @@ mle.e = metab_data %>%
                                        wtr = .$temp,
                                        error.type = "OE",
                                        datetime = .$date_time)),
-          GPP = map(metab, ~.[[2]][["GPP"]]),
-          R = map(metab, ~.[[2]][["R"]]),
-          NEP = map(metab, ~.[[2]][["NEP"]])) %>%
+          GPP = map(metab, ~pluck(., 2, "GPP")),
+          R = map(metab, ~pluck(., 2, "R")),
+          NEP = map(metab, ~pluck(., 2, "NEP"))) %>%
    select(doy, GPP, R, NEP) %>%
    unnest(cols = c(GPP, R, NEP)) %>%
    ungroup() %>%
@@ -232,9 +232,9 @@ mle.f = metab_data %>%
                                        wtr = .$temp,
                                        error.type = "OE",
                                        datetime = .$date_time)),
-          GPP = map(metab, ~.[[2]][["GPP"]]),
-          R = map(metab, ~.[[2]][["R"]]),
-          NEP = map(metab, ~.[[2]][["NEP"]])) %>%
+          GPP = map(metab, ~pluck(., 2, "GPP")),
+          R = map(metab, ~pluck(., 2, "R")),
+          NEP = map(metab, ~pluck(., 2, "NEP"))) %>%
    select(doy, GPP, R, NEP) %>%
    unnest(cols = c(GPP, R, NEP)) %>%
    ungroup() %>%
