@@ -174,6 +174,11 @@ mini_f = list.files(path = "./Data/R-Data/2020_MiniDOTs",
 # combine all
 minidot = bind_rows(mini_a, mini_b, mini_c, mini_d, mini_e, mini_f)
 
+
+   ## remove temporary objects
+   rm(mini_a, mini_b, mini_c, mini_d, mini_e, mini_f)
+   ##
+
    
 #---
 #### Lake Concentration GHG Samples ####

@@ -246,3 +246,8 @@ mle.f = metab_data %>%
 metab_mle = bind_rows(mle.a, mle.b, mle.c, mle.d, mle.e, mle.f)
 
 
+   ## remove temporary objects
+   rm(mle.a, mle.b, mle.c, mle.d, mle.e, mle.f)
+   ##
+
+
