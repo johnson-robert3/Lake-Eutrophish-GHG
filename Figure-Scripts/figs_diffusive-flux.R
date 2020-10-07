@@ -32,7 +32,8 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filt
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
-   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   geom_point(color="white", fill="white", shape=21, size=3) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3, alpha=0.8) +
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Reference", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
@@ -52,7 +53,8 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filt
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
-   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   geom_point(color="white", fill="white", shape=21, size=3) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3, alpha=0.8) +
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Reference", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
@@ -72,7 +74,8 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filt
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
-   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   geom_point(color="white", fill="white", shape=21, size=3) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3, alpha=0.8) +
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Reference", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
@@ -185,7 +188,8 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filt
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
-   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   geom_point(color="white", fill="white", shape=21, size=3) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3, alpha=0.8) +
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Reference", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
@@ -205,7 +209,8 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filt
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
-   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   geom_point(color="white", fill="white", shape=21, size=3) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3, alpha=0.8) +
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Reference", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
@@ -225,7 +230,8 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filt
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
-   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   geom_point(color="white", fill="white", shape=21, size=3) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3, alpha=0.8) +
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Reference", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
@@ -338,7 +344,8 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(co2_ppm))) %>% filt
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
-   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   geom_point(color="white", fill="white", shape=21, size=3) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3, alpha=0.8) +
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Reference", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
@@ -358,7 +365,8 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(co2_ppm))) %>% filt
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
-   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   geom_point(color="white", fill="white", shape=21, size=3) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3, alpha=0.8) +
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Reference", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
@@ -378,7 +386,8 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(co2_ppm))) %>% filt
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
-   geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
+   geom_point(color="white", fill="white", shape=21, size=3) +
+   geom_point(aes(fill = trt_nutrients), shape=21, size=3, alpha=0.8) +
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Reference", "yes" = "Pulsed"),
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
