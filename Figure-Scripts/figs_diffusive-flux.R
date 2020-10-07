@@ -90,7 +90,126 @@ windows(height=10, width=6)
 
 m.high / m.int / m.low
 
-ggsave(filename = "Figures/flux-ch4_3panel.png", height=10, width=6, units="in")
+# ggsave(filename = "Figures/flux-ch4_3panel.png", height=10, width=6, units="in")
+
+}
+
+
+## 3-panel: colors by pulse
+{# test multi-panel figure with different colors for each step of the nutrient addition
+
+# test figure data
+tdat = lake_flux %>%
+   left_join(pond_data) %>%
+   mutate(pulse = case_when(.$trt_nutrients=="no" ~ "no",
+                            .$trt_nutrients=="yes" & .$doy<=176 ~ "no",
+                            .$trt_nutrients=="yes" & .$doy %in% c(177:211) ~ "p1",
+                            .$trt_nutrients=="yes" & .$doy>=212 ~ "p2"))
+
+
+# HIGH B-P
+# windows()
+m.high =
+ggplot(tdat %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="high"),
+       aes(x = doy, y = ch4_flux)) +
+   # pulse
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
+   # lake
+   geom_line(aes(group = trt_nutrients), size=0.5) +
+   geom_point(aes(shape = trt_nutrients, size = trt_nutrients), 
+              color="white", fill="white") +
+   geom_point(aes(shape = trt_nutrients, size = trt_nutrients, fill = pulse), 
+              alpha=0.7) +
+   # scales
+   scale_shape_manual(name = NULL,
+                      labels = c("no" = "Reference", "yes" = "Pulsed"),
+                      values = c("no" = 22, "yes" = 21)) +
+   scale_size_manual(name = NULL,
+                      labels = c("no" = "Reference", "yes" = "Pulsed"),
+                      values = c("no" = 3, "yes" = 4)) +
+   scale_fill_manual(name = NULL,
+                     labels = c("no" = "None", "p1" = "Pulse 1", "p2" = "Pulse 2"),
+                     values = c("no" = "cornflowerblue", "p1" = "seagreen3", "p2" = "seagreen4"),
+                     guide = guide_legend(override.aes = list(size=3, 
+                                                              shape=21, 
+                                                              fill=c("cornflowerblue", "seagreen3", "seagreen4")))) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "High (C, E)") +
+   theme_classic()
+
+
+# INTERMEDIATE B-P
+# windows()
+m.int =
+ggplot(tdat %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="medium"),
+       aes(x = doy, y = ch4_flux)) +
+   # pulse
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
+   # lake
+   geom_line(aes(group = trt_nutrients), size=0.5) +
+   geom_point(aes(shape = trt_nutrients, size = trt_nutrients), 
+              color="white", fill="white") +
+   geom_point(aes(shape = trt_nutrients, size = trt_nutrients, fill = pulse), 
+              alpha=0.7) +
+   # scales
+   scale_shape_manual(name = NULL,
+                      labels = c("no" = "Reference", "yes" = "Pulsed"),
+                      values = c("no" = 22, "yes" = 21)) +
+   scale_size_manual(name = NULL,
+                      labels = c("no" = "Reference", "yes" = "Pulsed"),
+                      values = c("no" = 3, "yes" = 4)) +
+   scale_fill_manual(name = NULL,
+                     labels = c("no" = "None", "p1" = "Pulse 1", "p2" = "Pulse 2"),
+                     values = c("no" = "cornflowerblue", "p1" = "seagreen3", "p2" = "seagreen4"),
+                     guide = guide_legend(override.aes = list(size=3, 
+                                                              shape=21, 
+                                                              fill=c("cornflowerblue", "seagreen3", "seagreen4")))) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "Intermediate (A, D)") +
+   theme_classic()
+
+
+# LOW B-P
+# windows()
+m.low =
+ggplot(tdat %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="low"),
+       aes(x = doy, y = ch4_flux)) +
+   # pulse
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
+   # lake
+   geom_line(aes(group = trt_nutrients), size=0.5) +
+   geom_point(aes(shape = trt_nutrients, size = trt_nutrients), 
+              color="white", fill="white") +
+   geom_point(aes(shape = trt_nutrients, size = trt_nutrients, fill = pulse), 
+              alpha=0.7) +
+   # scales
+   scale_shape_manual(name = NULL,
+                      labels = c("no" = "Reference", "yes" = "Pulsed"),
+                      values = c("no" = 22, "yes" = 21)) +
+   scale_size_manual(name = NULL,
+                      labels = c("no" = "Reference", "yes" = "Pulsed"),
+                      values = c("no" = 3, "yes" = 4)) +
+   scale_fill_manual(name = NULL,
+                     labels = c("no" = "None", "p1" = "Pulse 1", "p2" = "Pulse 2"),
+                     values = c("no" = "cornflowerblue", "p1" = "seagreen3", "p2" = "seagreen4"),
+                     guide = guide_legend(override.aes = list(size=3, 
+                                                              shape=21, 
+                                                              fill=c("cornflowerblue", "seagreen3", "seagreen4")))) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "Low (B, F)") +
+   theme_classic()
+
+
+# 3-panel
+windows(height=10, width=6)
+
+m.high / m.int / m.low
 
 }
 
