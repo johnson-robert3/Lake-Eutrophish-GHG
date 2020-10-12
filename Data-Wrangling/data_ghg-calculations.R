@@ -47,19 +47,20 @@ ideal_gas_law = function(pp, temp) {
 #### Lake Dissolved GHG Concentrations ####
 #---
 
-# Partial Pressure of Gases (units = atm)
-#  convert measured syringe values from ppm to atm
-lake_samples = lake_samples %>%
-   mutate(pch4 = ch4_ppm / 10^6 * 0.97,
-          pco2 = co2_ppm / 10^6 * 0.97,
-          pn2o = n2o_ppm / 10^6 * 0.97)
 
+#-
+# Methane and Nitrous Oxide
+#- 
 
 ##__Calculate concentration of dissolved gases in equilibrated water sample (units = uM)
 
 lake_conc = lake_samples %>%
    # select only pond samples, exclude atmosphere samples
    filter(!(str_detect(sample_id, "Y"))) %>%
+   # calculate partial pressures of gases in headspace (units = atmosphere)
+   # convert measured syringe values from ppm to atm
+   mutate(pch4_head = ch4_ppm / 10^6 * 0.97,
+          pn2o_head = n2o_ppm / 10^6 * 0.97) %>%
    # temperature-corrected Henry's Law constants (KH) based on pond surface water temperatures
    mutate(tKH_ch4 = KH_ch4 * exp(KH_td_ch4 * ((1 / (surface_temp + 273.15)) - (1 / 298.15))),
           tKH_co2 = KH_co2 * exp(KH_td_co2 * ((1 / (surface_temp + 273.15)) - (1 / 298.15))),
@@ -70,18 +71,16 @@ lake_conc = lake_samples %>%
 
 # convert measured gas headspace from atm to uM
 lake_conc = lake_conc %>%
-   mutate(ch4_head = ideal_gas_law(pch4, surface_temp),
-          co2_head = ideal_gas_law(pco2, surface_temp),
-          n2o_head = ideal_gas_law(pn2o, surface_temp))
+   mutate(ch4_head = ideal_gas_law(pch4_head, surface_temp),
+          n2o_head = ideal_gas_law(pn2o_head, surface_temp))
 
 
 #_Aqueous concentration (units = uM)
 
 # concentration = tKH * partial pressure
 lake_conc = lake_conc %>%
-   mutate(ch4_aq = tKH_ch4 * pch4 * 10^6,
-          co2_aq = tKH_co2 * pco2 * 10^6,
-          n2o_aq = tKH_n2o * pn2o * 10^6)
+   mutate(ch4_aq = tKH_ch4 * pch4_head * 10^6,
+          n2o_aq = tKH_n2o * pn2o_head * 10^6)
 
 
 ##__Calculate original concentration of dissolved gases in water sample
@@ -91,38 +90,103 @@ lake_conc = lake_conc %>%
 # calculate total amount of gas in syringe (units = umol)
 lake_conc = lake_conc %>%
    mutate(ch4_tot_umol = (ch4_aq * vol_water) + (ch4_head * vol_air),
-          co2_tot_umol = (co2_aq * vol_water) + (co2_head * vol_air),
           n2o_tot_umol = (n2o_aq * vol_water) + (n2o_head * vol_air))
+
 
 #_Atmosphere concentration (units = uM)
 #  to correct for gas present in headspace prior to equilibration
 atm_conc = lake_samples %>%
    # select only atmosphere samples
    filter(str_detect(sample_id, "Y")) %>%
+   # calculate partial pressures of gases in headspace (units = atmosphere)
+   # convert measured syringe values from ppm to atm
+   mutate(pch4_atmo = ch4_ppm / 10^6 * 0.97,
+          pco2_atmo = co2_ppm / 10^6 * 0.97,
+          pn2o_atmo = n2o_ppm / 10^6 * 0.97) %>%
    # Ideal Gas Law
-   mutate(ch4_atm = ideal_gas_law(pch4, 25),
-          co2_atm = ideal_gas_law(pco2, 25),
-          n2o_atm = ideal_gas_law(pn2o, 25)) %>%
-   # rename partial pressure variables, to keep distinct from pp values of pond samples
-   rename(pch4_atm = pch4,
-          pco2_atm = pco2,
-          pn2o_atm = pn2o)
+   mutate(ch4_atmo = ideal_gas_law(pch4_atmo, 25),
+          co2_atmo = ideal_gas_law(pco2_atmo, 25),
+          n2o_atmo = ideal_gas_law(pn2o_atmo, 25))
 
 # add atmospheric gas values to dataset
 lake_conc = lake_conc %>%
-   left_join(atm_conc %>% select(doy, ends_with("atm")))
+   left_join(atm_conc %>% select(doy, ends_with("atmo")))
 
 
-#_Original gas concentrations in lake water (units = uM)
+#_Original concentrations of gases dissolved in lake water (units = uM)
 #  correct syringe values for gases contributed by atmosphere headspace
 lake_conc = lake_conc %>%
-   mutate(ch4_lake = (ch4_tot_umol - (ch4_atm * vol_air)) / vol_water,
-          co2_lake = (co2_tot_umol - (co2_atm * vol_air)) / vol_water,
-          n2o_lake = (n2o_tot_umol - (n2o_atm * vol_air)) / vol_water) %>%
-   # high pH in the ponds results in erroneous dissolved CO2 concentrations at times
-   # as CO2 from the headspace was converted to HCO3 when equilibrated with the water
-   # correct for these times
-   mutate(co2_lake = if_else(co2_lake < 0, 0, co2_lake))
+   mutate(ch4_lake = (ch4_tot_umol - (ch4_atmo * vol_air)) / vol_water,
+          n2o_lake = (n2o_tot_umol - (n2o_atmo * vol_air)) / vol_water)
+
+
+#-
+# Carbon Dioxide
+#- 
+
+# The original concentration of CO2 (or pCO2) in the lakes cannot be calculated directly from
+#  the syringe headspace equilibration method to due carbonate buffering of CO2.
+
+# Koschorreck et al. 2020 (Biogeosciences) provides a method to correctly calculate the original
+#  pCO2 in an aqueous sample from a gaseous headspace accounting for the carbonate chemistry of
+#  the aqueous sample by also using the alkalinity of the sample water. 
+
+
+# Load the equation for calculating dissolved pCO2
+source("Data-Wrangling/Rheadspace.R")
+
+
+# Make a data frame with the necessary data
+df_co2 = lake_samples %>%
+   # pond sample data, measured equilibrated headspace pCO2 in ppm
+   filter(!(pond_id=="Y")) %>%
+   select(sample_id:vol_air, surface_temp, co2_ppm) %>%
+   rename(head_co2_ppm = co2_ppm) %>%
+   # add atmosphere pCO2, i.e. headspace ppm prior to equilibration
+   left_join(lake_samples %>%
+                filter(pond_id=="Y") %>%
+                select(doy, co2_ppm) %>%
+                rename(atmo_co2_ppm = co2_ppm)) %>%
+   # add alkalinity data
+   left_join(alk_data %>%
+                select(-sample_id, -ph, -notes))
+
+# Rename columns for use in equation
+df_co2 = df_co2 %>%
+   transmute(Sample.ID = sample_id,
+             HS.pCO2.before = atmo_co2_ppm,
+             HS.pCO2.after = head_co2_ppm,
+             Temp.insitu = surface_temp,
+             Temp.equil = surface_temp,
+             Alkalinity.measured = alkalinity,
+             Volume.gas = vol_air * 1000,
+             Volume.water = vol_water * 1000,
+             Bar.pressure = rep_len(98.285, n()),
+             Constants = rep_len(1, n()),
+             Salinity = rep_len(0, n()))
+
+# Calculate original pCO2 in water sample (prior to equilibration)
+lake_co2 = Rheadspace(df_co2)
+
+
+# Convert original pCO2 to dissolved concentration (units = uM)
+lake_co2 = lake_co2 %>%
+   clean_names() %>%
+   transmute(sample_id = sample_id,
+             # convert ppm to partial pressure in atm
+             pco2_aq = p_co2_complete_headspace_ppmv / 10^6 * 0.97) %>%
+   # add temp-corrected Hentry's Law constant
+   left_join(lake_conc %>%
+                select(sample_id, tKH_co2)) %>%
+   # original dissolved CO2 concentration in lakes
+   mutate(co2_lake = tKH_co2 * pco2_aq * 10^6)
+
+
+##__Combine CH4, N2O, and CO2 data
+
+lake_conc = lake_conc %>%
+   left_join(lake_co2 %>%
+                select(-tKH_co2))
 
 
 #---
