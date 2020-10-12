@@ -389,6 +389,19 @@ weather_data = weather_data %>%
 
 
 #---
+#### Alkalinity ####
+#---
+
+# Data
+alk_data = read_csv("Data/R-Data/2020_alkalinity-data.csv") %>%
+   rename(sample_id = SampleID,
+          doy = DOY,
+          pond_id = Pond,
+          alkalinity = Alkalinity,
+          ph = pH)
+
+
+#---
 #### Sediment Data ####
 #---
 
