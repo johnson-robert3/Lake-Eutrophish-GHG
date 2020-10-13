@@ -221,9 +221,9 @@ lake_flux = left_join(lake_conc, wind_k) %>%
 
 lake_flux = lake_flux %>%
    # calculate expected dissolved surface water concentrations if in equilibrium with atmosphere (units = uM)
-   mutate(ch4_exp = tKH_ch4 * pch4_atm * 10^6,
-          co2_exp = tKH_co2 * pco2_atm * 10^6,
-          n2o_exp = tKH_n2o * pn2o_atm * 10^6) %>%
+   mutate(ch4_exp = tKH_ch4 * pch4_atmo * 10^6,
+          co2_exp = tKH_co2 * pco2_atmo * 10^6,
+          n2o_exp = tKH_n2o * pn2o_atmo * 10^6) %>%
    # calculate diffusive flux (units = umol / m2 / d)
    mutate(ch4_flux = k_ch4 * (ch4_lake - ch4_exp),
           co2_flux = k_co2 * (co2_lake - co2_exp),
