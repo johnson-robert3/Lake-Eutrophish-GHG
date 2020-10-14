@@ -31,8 +31,8 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>%
    geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
-   geom_errorbar(aes(ymin = ch4_rate - sd_ch4_rate, ymax = ch4_rate + sd_ch4_rate),
-                 color="gray75", width=0) +
+   # geom_errorbar(aes(ymin = ch4_rate - sd_ch4_rate, ymax = ch4_rate + sd_ch4_rate),
+   #               color="gray75", width=0) +
    geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Ambient", "yes" = "Pulsed"),
@@ -52,8 +52,8 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>%
    geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
-   geom_errorbar(aes(ymin = ch4_rate - sd_ch4_rate, ymax = ch4_rate + sd_ch4_rate),
-                 color="gray75", width=0) +
+   # geom_errorbar(aes(ymin = ch4_rate - sd_ch4_rate, ymax = ch4_rate + sd_ch4_rate),
+   #               color="gray75", width=0) +
    geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Ambient", "yes" = "Pulsed"),
@@ -73,8 +73,8 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>%
    geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
-   geom_errorbar(aes(ymin = ch4_rate - sd_ch4_rate, ymax = ch4_rate + sd_ch4_rate),
-                 color="gray75", width=0) +
+   # geom_errorbar(aes(ymin = ch4_rate - sd_ch4_rate, ymax = ch4_rate + sd_ch4_rate),
+   #               color="gray75", width=0) +
    geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Ambient", "yes" = "Pulsed"),
@@ -163,8 +163,8 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>%
    geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
-   geom_errorbar(aes(ymin = co2_rate - sd_co2_rate, ymax = co2_rate + sd_co2_rate),
-                 color="gray75", width=0) +
+   # geom_errorbar(aes(ymin = co2_rate - sd_co2_rate, ymax = co2_rate + sd_co2_rate),
+   #               color="gray75", width=0) +
    geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Ambient", "yes" = "Pulsed"),
@@ -184,8 +184,8 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>%
    geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
-   geom_errorbar(aes(ymin = co2_rate - sd_co2_rate, ymax = co2_rate + sd_co2_rate),
-                 color="gray75", width=0) +
+   # geom_errorbar(aes(ymin = co2_rate - sd_co2_rate, ymax = co2_rate + sd_co2_rate),
+   #               color="gray75", width=0) +
    geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Ambient", "yes" = "Pulsed"),
@@ -205,8 +205,8 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>%
    geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
    # lake
    geom_line(aes(group = trt_nutrients), size=0.5) +
-   geom_errorbar(aes(ymin = co2_rate - sd_co2_rate, ymax = co2_rate + sd_co2_rate),
-                 color="gray75", width=0) +
+   # geom_errorbar(aes(ymin = co2_rate - sd_co2_rate, ymax = co2_rate + sd_co2_rate),
+   #               color="gray75", width=0) +
    geom_point(aes(fill = trt_nutrients), shape=21, size=3) +
    scale_fill_manual(name = NULL,
                      labels = c("no" = "Ambient", "yes" = "Pulsed"),
