@@ -54,7 +54,7 @@ ideal_gas_law = function(pp, temp) {
 
 ##__Calculate concentration of dissolved gases in equilibrated water sample (units = uM)
 
-ghg_conc = lake_samples %>%
+syr_conc = lake_samples %>%
    # select only pond samples, exclude atmosphere samples
    filter(!(str_detect(sample_id, "Y"))) %>%
    # calculate partial pressures of gases in headspace (units = atmosphere)
@@ -93,16 +93,14 @@ atm_conc = lake_samples %>%
           n2o_atmo = ideal_gas_law(pn2o_atmo, 25))
 
 
-#_Add atmosphere concentrations to syringe concentrations
-ghg_conc = ghg_conc %>%
-   left_join(atm_conc %>% select(doy, ends_with("atmo")))
-
-
 ##__Calculate original concentration of dissolved gases in water sample (units = uM)
 #  prior to equilibration with headspace
 #  correct syringe values for gases contributed by atmosphere headspace
 
-lake_conc = ghg_conc %>%
+lake_conc = syr_conc %>%
+   # add atmosphere concentrations to syringe concentrations
+   left_join(atm_conc %>% select(doy, ends_with("atmo"))) %>%
+   # original dissolved concentration
    mutate(ch4_lake = (ch4_tot_umol - (ch4_atmo * vol_air)) / vol_water,
           n2o_lake = (n2o_tot_umol - (n2o_atmo * vol_air)) / vol_water)
 
