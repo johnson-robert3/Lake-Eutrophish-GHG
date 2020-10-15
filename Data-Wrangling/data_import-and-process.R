@@ -22,7 +22,7 @@ pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
 # Daily Sonde Profiles
 #---
 
-# Function to wrangle each sonde profile datasheet as it is read in
+# Function to wrangle each sonde profile data sheet as it is read in
 #  select only the desired columns and rename to match across files
 read_profile = function(.dat, .skip) {
    read_csv(.dat, skip = .skip) %>%
@@ -92,6 +92,44 @@ sonde_surface = sonde_profiles %>%
    filter(vert_m > 0.02 & vert_m < 0.20) %>%
    summarize(across(temp:salinity, ~mean(., na.rm=T))) %>%
    ungroup()
+
+
+#---
+# HOBO T-chains
+#---
+
+# Function to wrangle each hobo file as it is read in
+#  Keep only date-time and temp columns and match across files
+read_hobo = function(.dat) {
+   read_csv(.dat, skip=1) %>%
+      clean_names() %>%
+      select(starts_with("date"), starts_with("temp")) %>%
+      rename(date_time = starts_with("date"), 
+             temp = starts_with("temp")) %>%
+      filter(!(is.na(temp)))
+}
+
+
+# Read in all Hobo t-chain files
+#  extract pond ID and depth from file name
+
+hobo_files = list.files(path = "./Data/R-Data/2020_hobo-tchains",
+                        pattern = "*.csv",
+                        full.names = T)
+
+
+hobo_temp = tibble(file_name = hobo_files) %>%
+   # run the read_hobo() function over all files
+   mutate(file_contents = map(file_name, ~read_hobo(.))) %>%
+   # unpack the files into a data frame
+   unnest(cols = c(file_contents)) %>%
+   # extract pond and depth from file name
+   mutate(file_name = str_remove(file_name, "./Data/R-Data/2020_hobo-tchains/"),
+          file_name = str_remove(file_name, ".csv")) %>%
+   separate(col = file_name, into = c("pond_id", "depth"), sep="_") %>%
+   mutate(pond_id = str_remove(pond_id, "Pond")) %>%
+   # update formats
+   mutate(date_time = mdy_hms(date_time))
 
 
 #---
