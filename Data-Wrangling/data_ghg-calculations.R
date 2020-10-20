@@ -265,7 +265,7 @@ methano_samples = methano_samples %>%
           mass_slurry = mass_aq + mass_sed)
 
 
-##__Methane Production Rate
+##__Methane Production Rate (units = umol g-1 h-1)
 
 methano_samples = methano_samples %>%
    # total amount of gases in bottle at end of incubation (headspace + dissolved) (units = umol)
@@ -339,7 +339,7 @@ dea_samples = dea_samples %>%
           mass_slurry = mass_aq + mass_sed)
 
 
-##__Denitrification Enzyme Activity (N2O production rate)
+##__Denitrification Enzyme Activity (N2O production rate) (units = umol g-1 h-1)
 
 dea_samples = dea_samples %>%
    # total amount of gases in bottle at end of incubation (headspace + dissolved) (units = umol)
@@ -351,8 +351,8 @@ dea_samples = dea_samples %>%
           co2_rate = co2_tot_umol / mass_slurry / (incubation_length / 60),
           n2o_rate = n2o_tot_umol / mass_slurry / (incubation_length / 60))
 
-# Mean rate per pond
-dea_rate = dea_samples %>%
+# Mean rate per pond (from 3 bottle replicates)
+dea_rates = dea_samples %>%
    group_by(pond_id, week, doy) %>%
    summarize(across(ends_with("rate"),
                     list(mean = ~mean(., na.rm=T), sd = ~sd(., na.rm=T)),
