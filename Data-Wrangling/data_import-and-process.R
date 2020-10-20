@@ -219,6 +219,32 @@ minidot = bind_rows(mini_a, mini_b, mini_c, mini_d, mini_e, mini_f)
 
    
 #---
+# Alkalinity
+#---
+
+# Data
+alk_data = read_csv("Data/R-Data/2020_alkalinity-data.csv") %>%
+   rename(sample_id = SampleID,
+          doy = DOY,
+          pond_id = Pond,
+          alkalinity = Alkalinity,
+          ph = pH)
+
+
+#---
+# Field Samples
+#---
+
+# Field data
+limno_field_data = read_csv("Data/R-Data/2020_limno-field-data.csv") %>%
+   rename(pond_id = pond,
+          chla_rfu = chl,
+          phyco_rfu = phyco,
+          chla_filter = chlfil,
+          phyco_filter = phycofil)
+
+
+#---
 #### Lake Concentration GHG Samples ####
 #---
 
@@ -424,19 +450,6 @@ weather_data = weather_data %>%
    relocate(doy, .after = date_time) %>%
    # anemometer height (4 m)
    mutate(wnd.z = rep_len(4, n()))
-
-
-#---
-#### Alkalinity ####
-#---
-
-# Data
-alk_data = read_csv("Data/R-Data/2020_alkalinity-data.csv") %>%
-   rename(sample_id = SampleID,
-          doy = DOY,
-          pond_id = Pond,
-          alkalinity = Alkalinity,
-          ph = pH)
 
 
 #---
