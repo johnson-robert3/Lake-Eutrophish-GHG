@@ -290,6 +290,79 @@ methano_rates = methano_samples %>%
 
 
 #---
+#### DEA ####
+#---
+
+##__Gas concentrations at end of incubation
+
+#_HEADSPACE
+#  measured from vial collected from bottle headspace
+
+dea_samples = dea_samples %>%
+   # partial pressure of gases (units = atm)
+   mutate(pch4 = ch4_ppm / 10^6 * 0.97,
+          pco2 = co2_ppm / 10^6 * 0.97,
+          pn2o = n2o_ppm / 10^6 * 0.97) %>%
+   # headspace concentration (units = uM)
+   mutate(ch4_head = ideal_gas_law(pch4, incubation_temp),
+          co2_head = ideal_gas_law(pco2, incubation_temp),
+          n2o_head = ideal_gas_law(pn2o, incubation_temp))
+
+
+#_AQUEOUS SAMPLE 
+#  concentration of gases dissolved in water at end of incubation,
+#  in equilibrium with bottle headspace
+
+dea_samples = dea_samples %>%
+   # temperature-corrected Henry's Law constants (tKH)
+   mutate(tKH_ch4 = KH_ch4 * exp(KH_td_ch4 * ((1 / (incubation_temp + 273.15)) - (1 / 298.15))),
+          tKH_co2 = KH_co2 * exp(KH_td_co2 * ((1 / (incubation_temp + 273.15)) - (1 / 298.15))),
+          tKH_n2o = KH_n2o * exp(KH_td_n2o * ((1 / (incubation_temp + 273.15)) - (1 / 298.15)))) %>%
+   # aqueous concentration (units = uM)
+   mutate(ch4_aq = tKH_ch4 * pch4 * 10^6,
+          co2_aq = tKH_co2 * pco2 * 10^6,
+          n2o_aq = tKH_n2o * pn2o * 10^6)
+
+
+#_Add sediment bulk density and porosity to Methano dataset
+
+dea_samples = dea_samples %>%
+   left_join(bulk_density) %>%
+   # calculate total aqueous volume in bottle using porosity data
+   # aqueous volume = water sample + aqueous portion of sediment sample
+   mutate(vol_aq = vol_water + vol_media + (vol_sediment * porosity)) %>%
+   # calculate total sample mass in each assay bottle using sediment bulk density
+   # vol_aq = water mass (since 1 cm^3 = 1 g)
+   # need to convert volumes back to ml (i.e. cm^3) to calculate mass
+   mutate(mass_aq = vol_aq * 1000,
+          mass_sed = vol_sediment * DBD * 1000,
+          mass_slurry = mass_aq + mass_sed)
+
+
+##__Denitrification Enzyme Activity (N2O production rate)
+
+dea_samples = dea_samples %>%
+   # total amount of gases in bottle at end of incubation (headspace + dissolved) (units = umol)
+   mutate(ch4_tot_umol = (ch4_aq * vol_aq) + (ch4_head * vol_head),
+          co2_tot_umol = (co2_aq * vol_aq) + (co2_head * vol_head),
+          n2o_tot_umol = (n2o_aq * vol_aq) + (n2o_head * vol_head)) %>%
+   # hourly rate of production per gram of slurry mass (units = umol g-1 h-1)
+   mutate(ch4_rate = ch4_tot_umol / mass_slurry / (incubation_length / 60),
+          co2_rate = co2_tot_umol / mass_slurry / (incubation_length / 60),
+          n2o_rate = n2o_tot_umol / mass_slurry / (incubation_length / 60))
+
+# Mean rate per pond
+dea_rate = dea_samples %>%
+   group_by(pond_id, week, doy) %>%
+   summarize(across(ends_with("rate"),
+                    list(mean = ~mean(., na.rm=T), sd = ~sd(., na.rm=T)),
+                    .names = "{fn}_{col}")) %>%
+   rename_with(.cols = starts_with("mean_"),
+               .fn = ~str_remove(., pattern = "mean_")) %>%
+   ungroup()
+
+
+#---
 #### Ebullition ####
 #---
 
