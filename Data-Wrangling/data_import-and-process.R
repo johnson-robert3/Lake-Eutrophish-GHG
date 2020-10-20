@@ -390,6 +390,39 @@ methano_samples = methano_samples %>%
 
 
 #---
+#### Denitrification Enzyme Activity GHG Samples ####
+#---
+
+# GHG data
+ghg_dea_raw = read_csv("Data/R-Data/2020_ghgs_dea-assay.csv")
+
+# Sample meta data
+dea_sample_data = read_csv("Data/R-Data/2020_sample-metadata_dea-assay.csv") %>%
+   # add bottle headspace variable
+   mutate(vol_head = vol_bottle - (vol_sediment + vol_water + vol_media)) %>%
+   # convert volumns from ml to L
+   mutate(across(starts_with("vol"), ~(./1000)))
+
+
+# Add GHG concentration data to sample meta data
+dea_samples = dea_sample_data %>%
+   left_join(ghg_dea_raw) %>%
+   # date and time
+   filter(!(is.na(time_start))) %>%
+   mutate(date_collect = mdy(date_collect),
+          doy = yday(date_collect)) %>%
+   # add length of incubation period
+   mutate(incubation_length = difftime(time_end, time_start, units="mins"),
+          incubation_length = as.numeric(incubation_length))
+
+
+# Remove flagged outlier GHG vials
+dea_samples = dea_samples %>%
+   mutate(data_flag = if_else(is.na(data_flag), 0, data_flag)) %>%
+   filter(!(data_flag==1))
+
+
+#---
 #### Ebullition Chamber GHG Samples ####
 #---
 
