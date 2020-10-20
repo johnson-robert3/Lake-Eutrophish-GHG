@@ -64,7 +64,7 @@ hobo_mld = hobo_nest %>%
           buoy_freq = n2)
 
 
-# Combine data
+##__Combine data
 
 # Temp and DO from miniDOTs
 metab_data = minidot %>%
@@ -80,6 +80,28 @@ metab_data = minidot %>%
    select(-do_sat, -gust_speed)
 
 
+# Add mixed-layer depth
+metab_data = hobo_mld %>%
+   # use thermocline for the mld
+   select(pond_id, datetime, thermocline) %>%
+   # add treatment ID; data for B and F will be used for all ponds in a treatment
+   mutate(trt = case_when(.$pond_id=="B" ~ "pulse",
+                          .$pond_id=="F" ~ "ref")) %>%
+   select(-pond_id) %>%
+   rename(date_time = datetime,
+          z_mix = thermocline) %>%
+   # set NaN's (times of turnover) to a depth of 1.75
+   mutate(z_mix = replace(z_mix, .$z_mix=="NaN", 1.75)) %>%
+   right_join(metab_data %>%
+                 # treatment ID for combining
+                 mutate(trt = case_when(.$pond_id %in% c("A", "B", "C") ~ "pulse",
+                                        .$pond_id %in% c("D", "E", "F") ~ "ref"))) %>%
+   relocate(pond_id) %>%
+   relocate(z_mix, .after = salinity) %>%
+   select(-trt) %>%
+   arrange(pond_id, doy)
+
+
 # Additional parameters for metabolism calcs
 metab_data = metab_data %>%
    mutate(U10 = wind_speed * ((10 / wnd.z)^(1/7)),
@@ -90,9 +112,6 @@ metab_data = metab_data %>%
           o2_eq_sat = o2.at.sat.base(temp = temp, 
                                      baro = 982.85, 
                                      salinity = salinity)) %>%
-   # mixed-layer depth 
-   # (update after getting HOBO t-chain data)
-   mutate(z_mix = rep_len(0.5, n())) %>%
    # day/night for bookkeep
    mutate(daynight = is.day(date_time, lat = 42.11),
           daynight = as.character(daynight)) %>%
