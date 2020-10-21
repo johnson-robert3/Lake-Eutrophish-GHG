@@ -90,6 +90,60 @@ ggsave(filename = "Figures/DEA-n2o_3panel.png", height=10, width=6, units="in")
 }
 
 
+## 2-panel: by nutrients ----
+{# Comparing between food web treatments within each nutrient treatment
+
+# REFERENCE
+# windows()
+n.ref =
+ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(n2o_rate))) %>% filter(trt_nutrients=="no") %>%
+          mutate(across(ends_with("rate"), ~(.*1000))),
+       aes(x = doy, y = n2o_rate)) +
+   geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
+   geom_point(size=4, color="white") +
+   geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="cornflowerblue", color="royalblue") +
+   #
+   scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
+                      breaks = c("high", "medium", "low"),
+                      values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
+                      labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "Reference") +
+   theme_classic()
+
+
+# PULSED
+# windows()
+n.pul =
+ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(n2o_rate))) %>% filter(trt_nutrients=="yes") %>%
+          mutate(across(ends_with("rate"), ~(.*1000))),
+       aes(x = doy, y = n2o_rate)) +
+   geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
+   geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3", show.legend=F) +
+   geom_point(size=4, color="white") +
+   geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="seagreen3", color="seagreen") +
+   #
+   scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
+                      breaks = c("high", "medium", "low"),
+                      values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
+                      labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "Pulsed") +
+   theme_classic()
+
+
+# 2-panel
+windows(height=7, width=6)
+
+n.ref / n.pul
+
+ggsave(filename = "Figures/DEA-n2o_2panel.png", height=7, width=6, units="in")
+
+}
+
+
 #---
 #### Carbon Dioxide ####
 #---
@@ -169,4 +223,57 @@ c.high / c.int / c.low
 
 }
 
+
+## 2-panel: by nutrients ----
+{# Comparing between food web treatments within each nutrient treatment
+
+# REFERENCE
+# windows()
+c.ref =
+ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% filter(trt_nutrients=="no") %>%
+          mutate(across(ends_with("rate"), ~(.*1000))),
+       aes(x = doy, y = co2_rate)) +
+   geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
+   geom_point(size=4, color="white") +
+   geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="cornflowerblue", color="royalblue") +
+   #
+   scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
+                      breaks = c("high", "medium", "low"),
+                      values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
+                      labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CO[2]~production~(nmol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "Reference") +
+   theme_classic()
+
+
+# PULSED
+# windows()
+c.pul =
+ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% filter(trt_nutrients=="yes") %>%
+          mutate(across(ends_with("rate"), ~(.*1000))),
+       aes(x = doy, y = co2_rate)) +
+   geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
+   geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3", show.legend=F) +
+   geom_point(size=4, color="white") +
+   geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="seagreen3", color="seagreen") +
+   #
+   scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
+                      breaks = c("high", "medium", "low"),
+                      values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
+                      labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CO[2]~production~(nmol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   labs(title = "Pulsed") +
+   theme_classic()
+
+
+# 2-panel
+windows(height=7, width=6)
+
+c.ref / c.pul
+
+# ggsave(filename = "Figures/DEA-co2_2panel.png", height=7, width=6, units="in")
+
+}
 
