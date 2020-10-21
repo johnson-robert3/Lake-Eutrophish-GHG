@@ -36,7 +36,7 @@ flux_3panel = function(.fig) {
                          values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
       ##
       scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-      scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+      scale_y_continuous(expand = expansion(mult=0.1)) +
       theme_classic()
    
 }
@@ -55,7 +55,9 @@ m.high =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="high"),
        aes(x = doy, y = ch4_flux)) %>%
    flux_3panel() +
-   labs(title = "High (C, E)")
+   scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1))) +
+   labs(title = "High (C, E)",
+        y = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)))
 
 
 # INTERMEDIATE B-P
@@ -64,7 +66,8 @@ m.int =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = ch4_flux)) %>%
    flux_3panel() +
-   labs(title = "Intermediate (A, D)")
+   labs(title = "Intermediate (A, D)",
+        y = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)))
 
 
 # LOW B-P
@@ -73,7 +76,8 @@ m.low =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="low"),
        aes(x = doy, y = ch4_flux)) %>%
    flux_3panel() +
-   labs(title = "Low (B, F)")
+   labs(title = "Low (B, F)",
+        y = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)))
 
 
 # 3-panel
@@ -294,7 +298,8 @@ n.high =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="high"),
        aes(x = doy, y = n2o_flux)) %>%
    flux_3panel() +
-   labs(title = "High (C, E)")
+   labs(title = "High (C, E)",
+        y = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)))
 
 
 # INTERMEDIATE B-P
@@ -303,7 +308,8 @@ n.int =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = n2o_flux)) %>%
    flux_3panel() +
-   labs(title = "Intermediate (A, D)")
+   labs(title = "Intermediate (A, D)",
+        y = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)))
 
 
 # LOW B-P
@@ -312,7 +318,8 @@ n.low =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="low"),
        aes(x = doy, y = n2o_flux)) %>%
    flux_3panel() +
-   labs(title = "Low (B, F)")
+   labs(title = "Low (B, F)",
+        y = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)))
 
 
 # 3-panel
@@ -414,7 +421,8 @@ c.high =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(co2_ppm))) %>% filter(trt_fish=="high"),
        aes(x = doy, y = co2_flux)) %>%
    flux_3panel() +
-   labs(title = "High (C, E)")
+   labs(title = "High (C, E)",
+        y = expression(CO[2]~flux~(mu*mol~m^-2~d^-1)))
 
 
 # INTERMEDIATE B-P
@@ -423,7 +431,8 @@ c.int =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(co2_ppm))) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = co2_flux)) %>%
    flux_3panel() +
-   labs(title = "Intermediate (A, D)")
+   labs(title = "Intermediate (A, D)",
+        y = expression(CO[2]~flux~(mu*mol~m^-2~d^-1)))
 
 
 # LOW B-P
@@ -432,7 +441,8 @@ c.low =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(co2_ppm))) %>% filter(trt_fish=="low"),
        aes(x = doy, y = co2_flux)) %>%
    flux_3panel() +
-   labs(title = "Low (B, F)")
+   labs(title = "Low (B, F)",
+        y = expression(CO[2]~flux~(mu*mol~m^-2~d^-1)))
 
 
 # 3-panel
