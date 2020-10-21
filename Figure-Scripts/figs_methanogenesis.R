@@ -15,6 +15,28 @@ mycolors = c("high" = inferno(n=1, begin=0.25),
              "low" = magma(n=1, begin=0.8))
 
 
+# Function to set aesthetics for each panel in 3-panel food web figs
+methano_3panel = function(.fig) {
+   
+   .fig +
+         # pulse
+         geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
+         # lake
+         geom_line(aes(group = trt_nutrients), size=0.5) +
+         # geom_errorbar(aes(ymin = ch4_rate - sd_ch4_rate, ymax = ch4_rate + sd_ch4_rate),
+         #               color="gray75", width=0) +
+         geom_point(color="white", fill="white", shape=21, size=3) +
+         geom_point(aes(fill = trt_nutrients), shape=21, size=3, alpha=0.8) +
+         scale_fill_manual(name = NULL,
+                           labels = c("no" = "Ambient", "yes" = "Pulsed"),
+                           values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+         scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+         scale_y_continuous(expand = expansion(mult=0.1)) +
+         theme_classic()
+   
+}
+
+
 #---
 #### Methane ####
 #---
@@ -26,66 +48,30 @@ mycolors = c("high" = inferno(n=1, begin=0.25),
 # windows()
 m.high =
 ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>% filter(trt_fish=="high"),
-       aes(x = doy, y = ch4_rate)) +
-   # pulse
-   geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
-   # lake
-   geom_line(aes(group = trt_nutrients), size=0.5) +
-   # geom_errorbar(aes(ymin = ch4_rate - sd_ch4_rate, ymax = ch4_rate + sd_ch4_rate),
-   #               color="gray75", width=0) +
-   geom_point(color="white", fill="white", shape=21, size=3) +
-   geom_point(aes(fill = trt_nutrients), shape=21, size=3, alpha=0.8) +
-   scale_fill_manual(name = NULL,
-                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
-                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
-   labs(title = "High (C, E)") +
-   theme_classic()
+       aes(x = doy, y = ch4_rate)) %>%
+   methano_3panel() +
+   labs(title = "High (C, E)",
+        y = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)))
 
 
 # INTERMEDIATE B-P
 # windows()
 m.int =
 ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>% filter(trt_fish=="medium"),
-       aes(x = doy, y = ch4_rate)) +
-   # pulse
-   geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
-   # lake
-   geom_line(aes(group = trt_nutrients), size=0.5) +
-   # geom_errorbar(aes(ymin = ch4_rate - sd_ch4_rate, ymax = ch4_rate + sd_ch4_rate),
-   #               color="gray75", width=0) +
-   geom_point(color="white", fill="white", shape=21, size=3) +
-   geom_point(aes(fill = trt_nutrients), shape=21, size=3, alpha=0.8) +
-   scale_fill_manual(name = NULL,
-                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
-                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
-   labs(title = "Intermediate (A, D)") +
-   theme_classic()
+       aes(x = doy, y = ch4_rate)) %>%
+   methano_3panel() +
+   labs(title = "Intermediate (A, D)",
+        y = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)))
 
 
 # LOW B-P
 # windows()
 m.low =
 ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>% filter(trt_fish=="low"),
-       aes(x = doy, y = ch4_rate)) +
-   # pulse
-   geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
-   # lake
-   geom_line(aes(group = trt_nutrients), size=0.5) +
-   # geom_errorbar(aes(ymin = ch4_rate - sd_ch4_rate, ymax = ch4_rate + sd_ch4_rate),
-   #               color="gray75", width=0) +
-   geom_point(color="white", fill="white", shape=21, size=3) +
-   geom_point(aes(fill = trt_nutrients), shape=21, size=3, alpha=0.8) +
-   scale_fill_manual(name = NULL,
-                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
-                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
-   labs(title = "Low (B, F)") +
-   theme_classic()
+       aes(x = doy, y = ch4_rate)) %>%
+   methano_3panel() +
+   labs(title = "Low (B, F)",
+        y = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)))
 
 
 # 3-panel
@@ -161,66 +147,30 @@ ggsave(filename = "Figures/methanogenesis-ch4_2panel.png", height=7, width=6, un
 # windows()
 c.high =
 ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% filter(trt_fish=="high"),
-       aes(x = doy, y = co2_rate)) +
-   # pulse
-   geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
-   # lake
-   geom_line(aes(group = trt_nutrients), size=0.5) +
-   # geom_errorbar(aes(ymin = co2_rate - sd_co2_rate, ymax = co2_rate + sd_co2_rate),
-   #               color="gray75", width=0) +
-   geom_point(color="white", fill="white", shape=21, size=3) +
-   geom_point(aes(fill = trt_nutrients), shape=21, size=3, alpha=0.8) +
-   scale_fill_manual(name = NULL,
-                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
-                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CO[2]~production~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
-   labs(title = "High (C, E)") +
-   theme_classic()
+       aes(x = doy, y = co2_rate)) %>%
+   methano_3panel() +
+   labs(title = "High (C, E)",
+        y = expression(CO[2]~production~(mu*mol~g^-1~h^-1)))
 
 
 # INTERMEDIATE B-P
 # windows()
 c.int =
 ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% filter(trt_fish=="medium"),
-       aes(x = doy, y = co2_rate)) +
-   # pulse
-   geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
-   # lake
-   geom_line(aes(group = trt_nutrients), size=0.5) +
-   # geom_errorbar(aes(ymin = co2_rate - sd_co2_rate, ymax = co2_rate + sd_co2_rate),
-   #               color="gray75", width=0) +
-   geom_point(color="white", fill="white", shape=21, size=3) +
-   geom_point(aes(fill = trt_nutrients), shape=21, size=3, alpha=0.8) +
-   scale_fill_manual(name = NULL,
-                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
-                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CO[2]~production~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
-   labs(title = "Intermediate (A, D)") +
-   theme_classic()
+       aes(x = doy, y = co2_rate)) %>%
+   methano_3panel() +
+   labs(title = "Intermediate (A, D)",
+        y = expression(CO[2]~production~(mu*mol~g^-1~h^-1)))
 
 
 # LOW B-P
 # windows()
 c.low =
 ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% filter(trt_fish=="low"),
-       aes(x = doy, y = co2_rate)) +
-   # pulse
-   geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
-   # lake
-   geom_line(aes(group = trt_nutrients), size=0.5) +
-   # geom_errorbar(aes(ymin = co2_rate - sd_co2_rate, ymax = co2_rate + sd_co2_rate),
-   #               color="gray75", width=0) +
-   geom_point(color="white", fill="white", shape=21, size=3) +
-   geom_point(aes(fill = trt_nutrients), shape=21, size=3, alpha=0.8) +
-   scale_fill_manual(name = NULL,
-                     labels = c("no" = "Ambient", "yes" = "Pulsed"),
-                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CO[2]~production~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
-   labs(title = "Low (B, F)") +
-   theme_classic()
+       aes(x = doy, y = co2_rate)) %>%
+   methano_3panel() +
+   labs(title = "Low (B, F)",
+        y = expression(CO[2]~production~(mu*mol~g^-1~h^-1)))
 
 
 # 3-panel
