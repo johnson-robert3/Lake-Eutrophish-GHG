@@ -34,6 +34,7 @@ ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(n2o_rate))) %>% fil
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   expand_limits(y = 0) +
    labs(title = "High (C, E)") +
    theme_classic()
 
@@ -55,6 +56,7 @@ ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(n2o_rate))) %>% fil
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   expand_limits(y = 0) +
    labs(title = "Intermediate (A, D)") +
    theme_classic()
 
@@ -76,6 +78,7 @@ ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(n2o_rate))) %>% fil
                      values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   expand_limits(y = 0) +
    labs(title = "Low (B, F)") +
    theme_classic()
 
@@ -109,6 +112,7 @@ ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(n2o_rate))) %>% fil
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   expand_limits(y = 0) +
    labs(title = "Reference") +
    theme_classic()
 
@@ -130,6 +134,7 @@ ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(n2o_rate))) %>% fil
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   expand_limits(y = 0) +
    labs(title = "Pulsed") +
    theme_classic()
 
