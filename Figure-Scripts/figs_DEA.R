@@ -29,7 +29,6 @@ dea_3panel = function(.fig) {
                          labels = c("no" = "Reference", "yes" = "Pulsed"),
                          values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
       scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-      scale_y_continuous(expand = expansion(mult=0.1)) +
       expand_limits(y = 0) +
       theme_classic()
    
@@ -50,9 +49,9 @@ ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(n2o_rate))) %>% fil
           mutate(across(ends_with("rate"), ~(.*1000))),
        aes(x = doy, y = n2o_rate)) %>%
    dea_3panel() +
-   lims(y = c(0, 1)) +
-   labs(title = "High (C, E)",
-        y = expression(N[2]*O~production~(nmol~g^-1~h^-1)))
+   scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)),
+                      limits = c(0, 1.2)) +
+   labs(title = "High (C, E)")
 
 
 # INTERMEDIATE B-P
@@ -62,9 +61,9 @@ ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(n2o_rate))) %>% fil
           mutate(across(ends_with("rate"), ~(.*1000))),
        aes(x = doy, y = n2o_rate)) %>%
    dea_3panel() +
-   lims(y = c(0, 1)) +
-   labs(title = "Intermediate (A, D)",
-        y = expression(N[2]*O~production~(nmol~g^-1~h^-1)))
+   scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)),
+                      limits = c(0, 1.2)) +
+   labs(title = "Intermediate (A, D)")
 
 
 # LOW B-P
@@ -74,9 +73,9 @@ ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(n2o_rate))) %>% fil
           mutate(across(ends_with("rate"), ~(.*1000))),
        aes(x = doy, y = n2o_rate)) %>%
    dea_3panel() +
-   lims(y = c(0, 1)) +
-   labs(title = "Low (B, F)",
-        y = expression(N[2]*O~production~(nmol~g^-1~h^-1)))
+   scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)),
+                      limits = c(0, 1.2)) +
+   labs(title = "Low (B, F)")
 
 
 # 3-panel
@@ -109,9 +108,8 @@ ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(n2o_rate))) %>% fil
                       values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   # scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)), limits = c(0, 1)) +
-   expand_limits(y = 0) +
+   scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)), limits = c(0, 1.2)) +
+   # expand_limits(y = 0) +
    labs(title = "Reference") +
    theme_classic()
 
@@ -133,9 +131,8 @@ ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(n2o_rate))) %>% fil
                       values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   # scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)), limits = c(0, 1)) +
-   expand_limits(y = 0) +
+   scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)), limits = c(0, 1.2)) +
+   # expand_limits(y = 0) +
    labs(title = "Pulsed") +
    theme_classic()
 
@@ -165,8 +162,10 @@ ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% fil
           mutate(across(ends_with("rate"), ~(.*1000))),
        aes(x = doy, y = co2_rate)) %>%
    dea_3panel() +
-   labs(title = "High (C, E)",
-        y = expression(CO[2]~production~(nmol~g^-1~h^-1)))
+   scale_y_continuous(name = expression(CO[2]~production~(nmol~g^-1~h^-1)),
+                      limits = c(0, 550),
+                      breaks = seq(0, 500, 100)) +
+   labs(title = "High (C, E)")
 
 
 # INTERMEDIATE B-P
@@ -176,8 +175,10 @@ ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% fil
           mutate(across(ends_with("rate"), ~(.*1000))),
        aes(x = doy, y = co2_rate)) %>%
    dea_3panel() +
-   labs(title = "Intermediate (A, D)",
-        y = expression(CO[2]~production~(nmol~g^-1~h^-1)))
+   scale_y_continuous(name = expression(CO[2]~production~(nmol~g^-1~h^-1)),
+                      limits = c(0, 550),
+                      breaks = seq(0, 500, 100)) +
+   labs(title = "Intermediate (A, D)")
 
 
 # LOW B-P
@@ -187,8 +188,10 @@ ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% fil
           mutate(across(ends_with("rate"), ~(.*1000))),
        aes(x = doy, y = co2_rate)) %>%
    dea_3panel() +
-   labs(title = "Low (B, F)",
-        y = expression(CO[2]~production~(nmol~g^-1~h^-1)))
+   scale_y_continuous(name = expression(CO[2]~production~(nmol~g^-1~h^-1)),
+                      limits = c(0, 550),
+                      breaks = seq(0, 500, 100)) +
+   labs(title = "Low (B, F)")
 
 
 # 3-panel
@@ -197,6 +200,7 @@ windows(height=10, width=6)
 c.high / c.int / c.low
 
 # ggsave(filename = "Figures/DEA-co2_3panel.png", height=10, width=6, units="in")
+ggsave(filename = "Figures/new-figs/DEA-co2_fw-trt.png", height=10, width=6, units="in")
 
 }
 
@@ -210,16 +214,17 @@ c.ref =
 ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% filter(trt_nutrients=="no") %>%
           mutate(across(ends_with("rate"), ~(.*1000))),
        aes(x = doy, y = co2_rate)) +
-   geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
-   geom_point(size=4, color="white") +
-   geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="cornflowerblue", color="royalblue") +
+   geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue") +
+   # geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
+   # geom_point(size=4, color="white") +
+   # geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="cornflowerblue", color="royalblue") +
    #
    scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
                       breaks = c("high", "medium", "low"),
                       values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CO[2]~production~(nmol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CO[2]~production~(nmol~g^-1~h^-1)), limits = c(0, 550), breaks = seq(0, 500, 100)) +
    labs(title = "Reference") +
    theme_classic()
 
@@ -231,16 +236,17 @@ ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% fil
           mutate(across(ends_with("rate"), ~(.*1000))),
        aes(x = doy, y = co2_rate)) +
    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
-   geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3", show.legend=F) +
-   geom_point(size=4, color="white") +
-   geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="seagreen3", color="seagreen") +
+   geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3") +
+   # geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3", show.legend=F) +
+   # geom_point(size=4, color="white") +
+   # geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="seagreen3", color="seagreen") +
    #
    scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
                       breaks = c("high", "medium", "low"),
                       values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CO[2]~production~(nmol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CO[2]~production~(nmol~g^-1~h^-1)), limits = c(0, 550), breaks = seq(0, 500, 100)) +
    labs(title = "Pulsed") +
    theme_classic()
 
@@ -251,6 +257,7 @@ windows(height=7, width=6)
 c.ref / c.pul
 
 # ggsave(filename = "Figures/DEA-co2_2panel.png", height=7, width=6, units="in")
+ggsave(filename = "Figures/new-figs/DEA-co2_np-trt.png", height=7, width=6, units="in")
 
 }
 
