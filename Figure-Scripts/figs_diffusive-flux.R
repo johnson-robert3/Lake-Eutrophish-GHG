@@ -55,7 +55,7 @@ m.high =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="high"),
        aes(x = doy, y = ch4_flux)) %>%
    flux_3panel() +
-   scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1))) +
+   scale_y_continuous(limits = c(0, 60)) +
    labs(title = "High (C, E)",
         y = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)))
 
@@ -66,6 +66,7 @@ m.int =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = ch4_flux)) %>%
    flux_3panel() +
+   scale_y_continuous(limits = c(0, 60)) +
    labs(title = "Intermediate (A, D)",
         y = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)))
 
@@ -76,6 +77,7 @@ m.low =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="low"),
        aes(x = doy, y = ch4_flux)) %>%
    flux_3panel() +
+   scale_y_continuous(limits = c(0, 60)) +
    labs(title = "Low (B, F)",
         y = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)))
 
@@ -85,7 +87,8 @@ windows(height=10, width=6)
 
 m.high / m.int / m.low
 
-ggsave(filename = "Figures/flux-ch4_3panel.png", height=10, width=6, units="in")
+# ggsave(filename = "Figures/flux-ch4_3panel.png", height=10, width=6, units="in")
+ggsave(filename = "Figures/new-figs/flux-ch4_fw-trt.png", height=10, width=6, units="in")
 
 }
 
@@ -218,16 +221,18 @@ m.ref =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_nutrients=="no"),
        aes(x = doy, y = ch4_flux)) +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
-   geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
-   geom_point(size=4, color="white") +
-   geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="cornflowerblue", color="royalblue") +
+   geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue") +
+   # geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
+   # geom_point(size=4, color="white") +
+   # geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="cornflowerblue", color="royalblue") +
    #
    scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
                       breaks = c("high", "medium", "low"),
                       values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   # scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), limits = c(0, 60)) +
    labs(title = "Reference") +
    theme_classic()
 
@@ -238,16 +243,18 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filt
        aes(x = doy, y = ch4_flux)) +
    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
-   geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3", show.legend=F) +
-   geom_point(size=4, color="white") +
-   geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="seagreen3", color="seagreen") +
+   geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3") +
+   # geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3", show.legend=F) +
+   # geom_point(size=4, color="white") +
+   # geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="seagreen3", color="seagreen") +
    #
    scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
                       breaks = c("high", "medium", "low"),
                       values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   # scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), limits = c(0, 60)) +
    labs(title = "Pulsed") +
    theme_classic()
 
@@ -257,7 +264,8 @@ windows(height=7, width=6)
 
 m.ref / m.pul
 
-ggsave(filename = "Figures/flux-ch4_2panel.png", height=7, width=6, units="in")
+# ggsave(filename = "Figures/flux-ch4_2panel.png", height=7, width=6, units="in")
+ggsave(filename = "Figures/new-figs/flux-ch4_np-trt.png", height=7, width=6, units="in")
 
 }
 
@@ -295,31 +303,37 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))),
 # HIGH B-P
 # windows()
 n.high =
-ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="high"),
+ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="high") %>%
+          mutate(n2o_flux = n2o_flux * 1000),
        aes(x = doy, y = n2o_flux)) %>%
    flux_3panel() +
+   lims(y = c(-4, 4)) +
    labs(title = "High (C, E)",
-        y = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)))
+        y = expression(N[2]*O~flux~(nmol~m^-2~d^-1)))
 
 
 # INTERMEDIATE B-P
 # windows()
 n.int =
-ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="medium"),
+ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="medium") %>%
+          mutate(n2o_flux = n2o_flux * 1000),
        aes(x = doy, y = n2o_flux)) %>%
    flux_3panel() +
+   lims(y = c(-4, 4)) +
    labs(title = "Intermediate (A, D)",
-        y = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)))
+        y = expression(N[2]*O~flux~(nmol~m^-2~d^-1)))
 
 
 # LOW B-P
 # windows()
 n.low =
-ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="low"),
+ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_fish=="low") %>%
+          mutate(n2o_flux = n2o_flux * 1000),
        aes(x = doy, y = n2o_flux)) %>%
    flux_3panel() +
+   lims(y = c(-4, 4)) +
    labs(title = "Low (B, F)",
-        y = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)))
+        y = expression(N[2]*O~flux~(nmol~m^-2~d^-1)))
 
 
 # 3-panel
@@ -327,7 +341,8 @@ windows(height=10, width=6)
 
 n.high / n.int / n.low
 
-ggsave(filename = "Figures/flux-n2o_3panel.png", height=10, width=6, units="in")
+# ggsave(filename = "Figures/flux-n2o_3panel.png", height=10, width=6, units="in")
+ggsave(filename = "Figures/new-figs/flux-n2o_fw-trt.png", height=10, width=6, units="in")
 
 }
 
@@ -338,39 +353,45 @@ ggsave(filename = "Figures/flux-n2o_3panel.png", height=10, width=6, units="in")
 # REFERENCE
 # windows()
 n.ref = 
-ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_nutrients=="no"),
+ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_nutrients=="no") %>%
+          mutate(n2o_flux = n2o_flux * 1000),
        aes(x = doy, y = n2o_flux)) +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
-   geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
-   geom_point(size=4, color="white") +
-   geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="cornflowerblue", color="royalblue") +
+   geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue") +
+   # geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
+   # geom_point(size=4, color="white") +
+   # geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="cornflowerblue", color="royalblue") +
    #
    scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
                       breaks = c("high", "medium", "low"),
                       values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   # scale_y_continuous(name = expression(N[2]*O~flux~(nmol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(N[2]*O~flux~(nmol~m^-2~d^-1)), limits = c(-4, 4)) +
    labs(title = "Reference") +
    theme_classic()
 
 # PULSED
 # windows()
 n.pul = 
-ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_nutrients=="yes"),
+ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_nutrients=="yes") %>%
+          mutate(n2o_flux = n2o_flux * 1000),
        aes(x = doy, y = n2o_flux)) +
    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
-   geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3", show.legend=F) +
-   geom_point(size=4, color="white") +
-   geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="seagreen3", color="seagreen") +
+   geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3") +
+   # geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3", show.legend=F) +
+   # geom_point(size=4, color="white") +
+   # geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="seagreen3", color="seagreen") +
    #
    scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
                       breaks = c("high", "medium", "low"),
                       values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   # scale_y_continuous(name = expression(N[2]*O~flux~(nmol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(N[2]*O~flux~(nmol~m^-2~d^-1)), limits = c(-4, 4)) +
    labs(title = "Pulsed") +
    theme_classic()
 
@@ -380,7 +401,8 @@ windows(height=7, width=6)
 
 n.ref / n.pul
 
-ggsave(filename = "Figures/flux-n2o_2panel.png", height=7, width=6, units="in")
+# ggsave(filename = "Figures/flux-n2o_2panel.png", height=7, width=6, units="in")
+ggsave(filename = "Figures/new-figs/flux-n2o_np-trt.png", height=7, width=6, units="in")
 
 }
 
@@ -421,6 +443,7 @@ c.high =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(co2_ppm))) %>% filter(trt_fish=="high"),
        aes(x = doy, y = co2_flux)) %>%
    flux_3panel() +
+   lims(y = c(-25, 250)) +
    labs(title = "High (C, E)",
         y = expression(CO[2]~flux~(mu*mol~m^-2~d^-1)))
 
@@ -431,6 +454,7 @@ c.int =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(co2_ppm))) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = co2_flux)) %>%
    flux_3panel() +
+   lims(y = c(-25, 250)) +
    labs(title = "Intermediate (A, D)",
         y = expression(CO[2]~flux~(mu*mol~m^-2~d^-1)))
 
@@ -441,6 +465,7 @@ c.low =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(co2_ppm))) %>% filter(trt_fish=="low"),
        aes(x = doy, y = co2_flux)) %>%
    flux_3panel() +
+   lims(y = c(-25, 250)) +
    labs(title = "Low (B, F)",
         y = expression(CO[2]~flux~(mu*mol~m^-2~d^-1)))
 
@@ -450,7 +475,8 @@ windows(height=10, width=6)
 
 c.high / c.int / c.low
 
-ggsave(filename = "Figures/flux-co2_3panel.png", height=10, width=6, units="in")
+# ggsave(filename = "Figures/flux-co2_3panel.png", height=10, width=6, units="in")
+ggsave(filename = "Figures/new-figs/flux-co2_fw-trt.png", height=10, width=6, units="in")
 
 }
 
@@ -464,16 +490,18 @@ c.ref =
 ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(co2_ppm))) %>% filter(trt_nutrients=="no"),
        aes(x = doy, y = co2_flux)) +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
-   geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
-   geom_point(size=4, color="white") +
-   geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="cornflowerblue", color="royalblue") +
+   geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue") +
+   # geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
+   # geom_point(size=4, color="white") +
+   # geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="cornflowerblue", color="royalblue") +
    #
    scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
                       breaks = c("high", "medium", "low"),
                       values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CO[2]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   # scale_y_continuous(name = expression(CO[2]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CO[2]~flux~(mu*mol~m^-2~d^-1)), limits = c(-25, 250)) +
    labs(title = "Reference") +
    theme_classic()
 
@@ -485,16 +513,18 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(co2_ppm))) %>% filt
        aes(x = doy, y = co2_flux)) +
    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
-   geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3", show.legend=F) +
-   geom_point(size=4, color="white") +
-   geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="seagreen3", color="seagreen") +
+   geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3") +
+   # geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3", show.legend=F) +
+   # geom_point(size=4, color="white") +
+   # geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="seagreen3", color="seagreen") +
    #
    scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
                       breaks = c("high", "medium", "low"),
                       values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CO[2]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   # scale_y_continuous(name = expression(CO[2]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CO[2]~flux~(mu*mol~m^-2~d^-1)), limits = c(-25, 250)) +
    labs(title = "Pulsed") +
    theme_classic()
 
@@ -504,7 +534,8 @@ windows(height=7, width=6)
 
 c.ref / c.pul
 
-ggsave(filename = "Figures/flux-co2_2panel.png", height=7, width=6, units="in")
+# ggsave(filename = "Figures/flux-co2_2panel.png", height=7, width=6, units="in")
+ggsave(filename = "Figures/new-figs/flux-co2_np-trt.png", height=7, width=6, units="in")
 
 }
 
