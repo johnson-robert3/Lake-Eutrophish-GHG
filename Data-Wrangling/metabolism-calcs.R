@@ -18,11 +18,8 @@ library(LakeMetabolizer)
 # Salinity time-series
 # Irradiance (PAR) time-series (can use PAR data for metab.mle, or day/night for metab.bookkeep)
 # Number of time-series measurements in each day
-
-# STILL NEED #
-# Mixed layer depth (z_mix)
-   # need HOBO "t-chain" time-series data to calculate
-
+# HOBO t-chain time-series data
+# Mixed-layer depth (zmix)
 
 
 #---
