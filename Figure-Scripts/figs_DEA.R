@@ -9,30 +9,7 @@ library(patchwork)
 library(viridis)
 library(PNWColors)
 
-
-# Function to set aesthetics for each panel in 3-panel food web figs
-dea_3panel = function(.fig) {
-   
-   .fig +
-      # pulse
-      geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
-      # data as points
-      # geom_line(aes(group = trt_nutrients), size=0.5) +
-      # geom_point(color="white", fill="white", shape=21, size=3) +
-      # geom_point(aes(fill = trt_nutrients), shape=21, size=3, alpha=0.8) +
-      # scale_fill_manual(name = NULL,
-      #                   labels = c("no" = "Ambient", "yes" = "Pulsed"),
-      #                   values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-      # data as lines
-      geom_line(aes(group = trt_nutrients, color = trt_nutrients), size=1.2, alpha=0.7) +
-      scale_color_manual(name = NULL,
-                         labels = c("no" = "Reference", "yes" = "Pulsed"),
-                         values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-      scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-      expand_limits(y = 0) +
-      theme_classic()
-   
-}
+source("Figure-Scripts/figs_functions.R")
 
 
 #---
@@ -48,7 +25,7 @@ n.high =
 ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(n2o_rate))) %>% filter(trt_fish=="high") %>%
           mutate(across(ends_with("rate"), ~(.*1000))),
        aes(x = doy, y = n2o_rate)) %>%
-   dea_3panel() +
+   fig_aes_fw() +
    scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)),
                       limits = c(0, 1.2)) +
    labs(title = "High (C, E)")
@@ -60,7 +37,7 @@ n.int =
 ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(n2o_rate))) %>% filter(trt_fish=="medium") %>%
           mutate(across(ends_with("rate"), ~(.*1000))),
        aes(x = doy, y = n2o_rate)) %>%
-   dea_3panel() +
+   fig_aes_fw() +
    scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)),
                       limits = c(0, 1.2)) +
    labs(title = "Intermediate (A, D)")
@@ -72,7 +49,7 @@ n.low =
 ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(n2o_rate))) %>% filter(trt_fish=="low") %>%
           mutate(across(ends_with("rate"), ~(.*1000))),
        aes(x = doy, y = n2o_rate)) %>%
-   dea_3panel() +
+   fig_aes_fw() +
    scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)),
                       limits = c(0, 1.2)) +
    labs(title = "Low (B, F)")
@@ -161,7 +138,7 @@ c.high =
 ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% filter(trt_fish=="high") %>%
           mutate(across(ends_with("rate"), ~(.*1000))),
        aes(x = doy, y = co2_rate)) %>%
-   dea_3panel() +
+   fig_aes_fw() +
    scale_y_continuous(name = expression(CO[2]~production~(nmol~g^-1~h^-1)),
                       limits = c(0, 550),
                       breaks = seq(0, 500, 100)) +
@@ -174,7 +151,7 @@ c.int =
 ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% filter(trt_fish=="medium") %>%
           mutate(across(ends_with("rate"), ~(.*1000))),
        aes(x = doy, y = co2_rate)) %>%
-   dea_3panel() +
+   fig_aes_fw() +
    scale_y_continuous(name = expression(CO[2]~production~(nmol~g^-1~h^-1)),
                       limits = c(0, 550),
                       breaks = seq(0, 500, 100)) +
@@ -187,7 +164,7 @@ c.low =
 ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% filter(trt_fish=="low") %>%
           mutate(across(ends_with("rate"), ~(.*1000))),
        aes(x = doy, y = co2_rate)) %>%
-   dea_3panel() +
+   fig_aes_fw() +
    scale_y_continuous(name = expression(CO[2]~production~(nmol~g^-1~h^-1)),
                       limits = c(0, 550),
                       breaks = seq(0, 500, 100)) +

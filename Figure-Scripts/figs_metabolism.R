@@ -7,30 +7,7 @@
 library(cowplot)
 library(patchwork)
 
-
-# Function for 3-panel aesthetics
-metab_3panel = function(.fig) {
-   
-   .fig +
-      # pulse
-      geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
-      geom_hline(yintercept = 0, linetype=3, color="gray40") +
-      # data as points
-      # geom_line(aes(group = trt_nutrients), size=0.5) +
-      # geom_point(color="white", fill="white", shape=21, size=3) +
-      # geom_point(aes(fill = trt_nutrients), shape=21, size=3, alpha=0.8) +
-      # scale_fill_manual(name = NULL,
-      #                   labels = c("no" = "Ambient", "yes" = "Pulsed"),
-      #                   values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-      # data as lines
-      geom_line(aes(group = trt_nutrients, color = trt_nutrients), size=1.2, alpha=0.7) +
-      scale_color_manual(name = NULL,
-                         labels = c("no" = "Reference", "yes" = "Pulsed"),
-                         values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-      scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-      theme_classic()
-   
-}
+source("Figure-Scripts/figs_functions.R")
 
 
 #--
@@ -45,7 +22,8 @@ metab_3panel = function(.fig) {
 n.high =
 ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt_fish=="high"),
        aes(x = doy, y = NEP)) %>%
-   metab_3panel() +
+   fig_aes_fw() +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
    scale_y_continuous(name = expression(NEP~(mg~O[2]~L^-1~d^-1)),
                       limits = c(-12, 15),
                       breaks = seq(-10, 15, 5)) +
@@ -57,7 +35,8 @@ ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt
 n.int =
 ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = NEP)) %>%
-   metab_3panel() +
+   fig_aes_fw() +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
    scale_y_continuous(name = expression(NEP~(mg~O[2]~L^-1~d^-1)),
                       limits = c(-12, 15),
                       breaks = seq(-10, 15, 5)) +
@@ -69,7 +48,8 @@ ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt
 n.low =
 ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt_fish=="low"),
        aes(x = doy, y = NEP)) %>%
-   metab_3panel() +
+   fig_aes_fw() +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
    scale_y_continuous(name = expression(NEP~(mg~O[2]~L^-1~d^-1)),
                       limits = c(-12, 15),
                       breaks = seq(-10, 15, 5)) +
@@ -106,7 +86,6 @@ ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt
                       values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   # scale_y_continuous(name = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(NEP~(mg~O[2]~L^-1~d^-1)),
                       limits = c(-12, 15),
                       breaks = seq(-10, 15, 5)) +
@@ -131,7 +110,6 @@ ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt
                       values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   # scale_y_continuous(name = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(NEP~(mg~O[2]~L^-1~d^-1)),
                       limits = c(-12, 15),
                       breaks = seq(-10, 15, 5)) +
@@ -162,7 +140,8 @@ ggsave(filename = "Figures/new-figs/NEP_np-trt.png", height=7, width=6, units="i
 r.high =
 ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt_fish=="high"),
        aes(x = doy, y = R)) %>%
-   metab_3panel() +
+   fig_aes_fw() +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
    scale_y_continuous(name = expression(R~(mg~O[2]~L^-1~d^-1)),
                       limits = c(-25, 0)) +
    labs(title = "High (C, E)")
@@ -173,7 +152,8 @@ ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt
 r.int =
 ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = R)) %>%
-   metab_3panel() +
+   fig_aes_fw() +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
    scale_y_continuous(name = expression(R~(mg~O[2]~L^-1~d^-1)),
                       limits = c(-25, 0)) +
    labs(title = "Intermediate (A, D)")
@@ -184,7 +164,8 @@ ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt
 r.low =
 ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt_fish=="low"),
        aes(x = doy, y = R)) %>%
-   metab_3panel() +
+   fig_aes_fw() +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
    scale_y_continuous(name = expression(R~(mg~O[2]~L^-1~d^-1)),
                       limits = c(-25, 0)) +
    labs(title = "Low (B, F)")
@@ -220,7 +201,6 @@ ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt
                       values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   # scale_y_continuous(name = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(R~(mg~O[2]~L^-1~d^-1)),
                       limits = c(-25, 0)) +
    labs(title = "Reference") +
@@ -244,7 +224,6 @@ ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt
                       values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   # scale_y_continuous(name = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(R~(mg~O[2]~L^-1~d^-1)),
                       limits = c(-25, 0)) +
    labs(title = "Pulsed") +

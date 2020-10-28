@@ -9,34 +9,7 @@ library(patchwork)
 library(viridis)
 library(PNWColors)
 
-
-mycolors = c("high" = inferno(n=1, begin=0.25),
-             "medium" = inferno(n=1, begin=0.5),
-             "low" = magma(n=1, begin=0.8))
-
-
-# Function to set aesthetics for each panel in 3-panel food web figs
-methano_3panel = function(.fig) {
-   
-   .fig +
-      # pulse
-      geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
-      # data as points
-      # geom_line(aes(group = trt_nutrients), size=0.5) +
-      # geom_point(color="white", fill="white", shape=21, size=3) +
-      # geom_point(aes(fill = trt_nutrients), shape=21, size=3, alpha=0.8) +
-      # scale_fill_manual(name = NULL,
-      #                   labels = c("no" = "Ambient", "yes" = "Pulsed"),
-      #                   values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-      # data as lines
-      geom_line(aes(group = trt_nutrients, color = trt_nutrients), size=1.2, alpha=0.7) +
-      scale_color_manual(name = NULL,
-                         labels = c("no" = "Reference", "yes" = "Pulsed"),
-                         values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-      scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-      theme_classic()
-   
-}
+source("Figure-Scripts/figs_functions.R")
 
 
 #---
@@ -51,7 +24,7 @@ methano_3panel = function(.fig) {
 m.high =
 ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>% filter(trt_fish=="high"),
        aes(x = doy, y = ch4_rate)) %>%
-   methano_3panel() +
+   fig_aes_fw() +
    scale_y_continuous(name = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)),
                       limits = c(0, 0.016)) +
    labs(title = "High (C, E)")
@@ -62,7 +35,7 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>%
 m.int =
 ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = ch4_rate)) %>%
-   methano_3panel() +
+   fig_aes_fw() +
    scale_y_continuous(name = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)),
                       limits = c(0, 0.016)) +
    labs(title = "Intermediate (A, D)")
@@ -73,7 +46,7 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>%
 m.low =
 ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>% filter(trt_fish=="low"),
        aes(x = doy, y = ch4_rate)) %>%
-   methano_3panel() +
+   fig_aes_fw() +
    scale_y_continuous(name = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)),
                       limits = c(0, 0.016)) +
    labs(title = "Low (B, F)")
@@ -159,7 +132,7 @@ ggsave(filename = "Figures/new-figs/methanogenesis-ch4_np-trt.png", height=7, wi
 c.high =
 ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% filter(trt_fish=="high"),
        aes(x = doy, y = co2_rate)) %>%
-   methano_3panel() +
+   fig_aes_fw() +
    scale_y_continuous(name = expression(CO[2]~production~(mu*mol~g^-1~h^-1)),
                       limits = c(0, 0.1)) +
    labs(title = "High (C, E)")
@@ -170,7 +143,7 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>%
 c.int =
 ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% filter(trt_fish=="medium"),
        aes(x = doy, y = co2_rate)) %>%
-   methano_3panel() +
+   fig_aes_fw() +
    scale_y_continuous(name = expression(CO[2]~production~(mu*mol~g^-1~h^-1)),
                       limits = c(0, 0.1)) +
    labs(title = "Intermediate (A, D)")
@@ -181,7 +154,7 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>%
 c.low =
 ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% filter(trt_fish=="low"),
        aes(x = doy, y = co2_rate)) %>%
-   methano_3panel() +
+   fig_aes_fw() +
    scale_y_continuous(name = expression(CO[2]~production~(mu*mol~g^-1~h^-1)),
                       limits = c(0, 0.1)) +
    labs(title = "Low (B, F)")
