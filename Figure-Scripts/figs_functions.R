@@ -34,11 +34,6 @@ fig_aes_fw = function(.fig) {
 
 
 
-# 2-panel figures (by nutrient treatment)
-
-
-
-
 # Buoyancy Frequency function for non-time-series data
 profile_bf = function(.dat) {
    
