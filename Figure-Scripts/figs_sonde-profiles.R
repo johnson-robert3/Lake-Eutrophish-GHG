@@ -6,6 +6,8 @@
 
 library(viridis)
 
+source("Figure-Scripts/figs_functions.R")
+
 
 #---
 # Profiles over time
@@ -23,11 +25,9 @@ myfill = magma(n=10)
 # Should I instead exclude when the "vertical_position_m" values are negative?
 
 
-
-# need to assign depth intervals to data for plotting (10cm increments)
-
-test = sonde_profiles %>%
-   filter(doy > 140) %>%
+# Assign depth intervals to data for plotting 
+sonde_int = sonde_profiles %>%
+   # 10cm depth intervals
    mutate(depth_int = case_when(.$vert_m >= 0.0 & vert_m <= 0.1 ~ 0.1,
                                 .$vert_m > 0.1 & vert_m <= 0.2 ~ 0.2,
                                 .$vert_m > 0.2 & vert_m <= 0.3 ~ 0.3,
@@ -48,11 +48,8 @@ test = sonde_profiles %>%
                                 .$vert_m > 1.7 & vert_m <= 1.8 ~ 1.8,
                                 .$vert_m > 1.8 & vert_m <= 1.9 ~ 1.9,
                                 .$vert_m > 1.9 & vert_m <= 2.0 ~ 2.0,
-                                .$vert_m > 2 ~ 2.1))
-
-# mean values per depth interval
-
-test = test %>%
+                                .$vert_m > 2 ~ 2.1)) %>%
+   # mean values within each depth interval
    group_by(pond_id, doy, depth_int) %>%
    summarize(across(temp:salinity, mean, na.rm=T)) %>%
    ungroup() 
@@ -62,7 +59,7 @@ test = test %>%
 # Temperature
 
 windows(height=6, width=10)
-ggplot(test) + 
+ggplot(sonde_int) + 
    geom_tile(aes(x = doy, y = depth_int, fill = temp)) +
    scale_fill_gradientn(colors = myfill, 
                         name = "Temp") +
@@ -74,10 +71,21 @@ ggplot(test) +
 # DO saturation
 
 windows(height=6, width=10)
-ggplot(test) + 
+ggplot(sonde_int) + 
    geom_tile(aes(x = doy, y = depth_int, fill = do_sat)) +
    scale_fill_gradientn(colors = myfill, 
                         name = "DO Sat") +
+   scale_y_reverse(name = "Depth (m)") + 
+   facet_wrap(facets = vars(pond_id), nrow=2) +
+   theme_classic()
+
+# DO concentration
+
+windows(height=6, width=10)
+ggplot(sonde_int) + 
+   geom_tile(aes(x = doy, y = depth_int, fill = do)) +
+   scale_fill_gradientn(colors = myfill, 
+                        name = "DO (mg/L)") +
    scale_y_reverse(name = "Depth (m)") + 
    facet_wrap(facets = vars(pond_id), nrow=2) +
    theme_classic()
@@ -86,7 +94,7 @@ ggplot(test) +
 # pH
 
 windows(height=6, width=10)
-ggplot(test) + 
+ggplot(sonde_int) + 
    geom_tile(aes(x = doy, y = depth_int, fill = ph)) +
    scale_fill_gradientn(colors = myfill, 
                         name = "pH") +
@@ -98,7 +106,7 @@ ggplot(test) +
 # Chlorophyll
 
 windows(height=6, width=10)
-ggplot(test) + 
+ggplot(sonde_int) + 
    geom_tile(aes(x = doy, y = depth_int, fill = log(chla))) +
    scale_fill_gradientn(colors = myfill, 
                         name = "Log Chl-a") +
@@ -212,6 +220,63 @@ ggplot(sonde_surface) +
    geom_line(aes(x = doy, y = do_sat)) +
    facet_wrap(facets = vars(pond_id), nrow=2) +
    theme_classic()
+
+
+# DO concentration
+
+a = 
+ggplot(sonde_surface %>% left_join(pond_data) %>% filter(trt_fish=="high"),
+       aes(x = doy, y = do)) %>%
+   fig_aes_fw()
+
+b = 
+ggplot(sonde_surface %>% left_join(pond_data) %>% filter(trt_fish=="medium"),
+       aes(x = doy, y = do)) %>%
+   fig_aes_fw()
+
+c = 
+ggplot(sonde_surface %>% left_join(pond_data) %>% filter(trt_fish=="low"),
+       aes(x = doy, y = do)) %>%
+   fig_aes_fw()
+
+
+windows(height=10, width=6)
+a / b / c
+
+
+#--
+# Bottom water values over time
+#--
+
+# Mean values from bottom 30cm of water
+sonde_bottom = sonde_int %>%
+   group_by(pond_id, doy) %>%
+   arrange(depth_int, .by_group=T) %>%
+   slice_tail(n=3) %>%
+   summarize(across(temp:salinity, ~mean(., na.rm=T))) %>%
+   ungroup()
+
+
+# DO concentration
+
+a = 
+ggplot(sonde_bottom %>% left_join(pond_data) %>% filter(trt_fish=="high"),
+       aes(x = doy, y = do_sat)) %>%
+   fig_aes_fw()
+
+b = 
+ggplot(sonde_bottom %>% left_join(pond_data) %>% filter(trt_fish=="medium"),
+       aes(x = doy, y = do_sat)) %>%
+   fig_aes_fw()
+
+c = 
+ggplot(sonde_bottom %>% left_join(pond_data) %>% filter(trt_fish=="low"),
+       aes(x = doy, y = do_sat)) %>%
+   fig_aes_fw()
+
+
+windows(height=10, width=6)
+a / b / c
 
 
 
