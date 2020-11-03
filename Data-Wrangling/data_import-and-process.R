@@ -77,7 +77,9 @@ sonde_profiles = sonde_profiles %>%
    # correct vertical position (depth sensor and probes not at same height)
    # add 5 cm to all
    mutate(vert_m = vert_m + 0.05,
-          vert_m = if_else(vert_m<0, 0, vert_m))
+          vert_m = if_else(vert_m<0, 0, vert_m)) %>%
+   # remove errant measurements recorded as 1970-01-01
+   filter(!(doy==1))
    
 
    ## remove temporary objects

@@ -7,21 +7,6 @@
 library(LakeMetabolizer)
 
 
-## Data needed for metabolism calculations ##
-
-# HAVE #
-# DO (mg/L) time-series 
-# Water temperature time-series 
-# Wind speed time-series
-# Anemometer height
-# Barometric pressure at ponds
-# Salinity time-series
-# Irradiance (PAR) time-series (can use PAR data for metab.mle, or day/night for metab.bookkeep)
-# Number of time-series measurements in each day
-# HOBO t-chain time-series data
-# Mixed-layer depth (zmix)
-
-
 #---
 # Data Prep
 #---
@@ -123,7 +108,7 @@ metab_data = metab_data %>%
 #---
 
 
-# Bookkeeping method
+##__Bookkeeping method
 
 metab_book = metab_data %>%
    # exclude days missing sonde profiles
@@ -143,7 +128,7 @@ metab_book = metab_data %>%
 
 
 
-# Maximum Likelihood Estimate method
+##__Maximum Likelihood Estimate method
 
   #--
   # metab.mle() returns a list (not a data frame)
