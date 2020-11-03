@@ -75,7 +75,9 @@ n.ref =
 ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(n2o_rate))) %>% filter(trt_nutrients=="no") %>%
           mutate(across(ends_with("rate"), ~(.*1000))),
        aes(x = doy, y = n2o_rate)) +
+   #
    geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue") +
+   #
    # geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
    # geom_point(size=4, color="white") +
    # geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="cornflowerblue", color="royalblue") +
@@ -86,7 +88,6 @@ ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(n2o_rate))) %>% fil
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)), limits = c(0, 1.2)) +
-   # expand_limits(y = 0) +
    labs(title = "Reference") +
    theme_classic()
 
@@ -98,7 +99,9 @@ ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(n2o_rate))) %>% fil
           mutate(across(ends_with("rate"), ~(.*1000))),
        aes(x = doy, y = n2o_rate)) +
    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
+   #
    geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3") +
+   #
    # geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3", show.legend=F) +
    # geom_point(size=4, color="white") +
    # geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="seagreen3", color="seagreen") +
@@ -109,7 +112,6 @@ ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(n2o_rate))) %>% fil
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)), limits = c(0, 1.2)) +
-   # expand_limits(y = 0) +
    labs(title = "Pulsed") +
    theme_classic()
 
@@ -191,7 +193,9 @@ c.ref =
 ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% filter(trt_nutrients=="no") %>%
           mutate(across(ends_with("rate"), ~(.*1000))),
        aes(x = doy, y = co2_rate)) +
+   #
    geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue") +
+   #
    # geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
    # geom_point(size=4, color="white") +
    # geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="cornflowerblue", color="royalblue") +
@@ -213,7 +217,9 @@ ggplot(dea_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% fil
           mutate(across(ends_with("rate"), ~(.*1000))),
        aes(x = doy, y = co2_rate)) +
    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
+   #
    geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3") +
+   #
    # geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3", show.legend=F) +
    # geom_point(size=4, color="white") +
    # geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="seagreen3", color="seagreen") +
