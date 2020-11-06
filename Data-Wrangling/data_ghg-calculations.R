@@ -268,14 +268,11 @@ methano_samples = methano_samples %>%
           n2o_rate = n2o_tot_umol / mass_slurry / (incubation_length / 60))
 
 
-# mean rate per pond (from 3 bottle replicates)
+# Mean rate per pond (from 3 bottle replicates)
+#  SD not needed, all 3 bottle replicates came from the same sample
 methano_rates = methano_samples %>%
    group_by(pond_id, week, doy) %>%
-   summarize(across(ends_with("rate"),
-                    list(mean = ~mean(., na.rm=T), sd = ~sd(., na.rm=T)),
-                    .names = "{fn}_{col}")) %>%
-   rename_with(.cols = starts_with("mean_"),
-               .fn = ~str_remove(., pattern = "mean_")) %>%
+   summarize(across(ends_with("rate"), ~mean(., na.rm=T))) %>%
    ungroup()
 
 
@@ -341,14 +338,12 @@ dea_samples = dea_samples %>%
           co2_rate = co2_tot_umol / mass_slurry / (incubation_length / 60),
           n2o_rate = n2o_tot_umol / mass_slurry / (incubation_length / 60))
 
+
 # Mean rate per pond (from 3 bottle replicates)
+#  SD not needed, all 3 bottle replicates came from the same sample
 dea_rates = dea_samples %>%
    group_by(pond_id, week, doy) %>%
-   summarize(across(ends_with("rate"),
-                    list(mean = ~mean(., na.rm=T), sd = ~sd(., na.rm=T)),
-                    .names = "{fn}_{col}")) %>%
-   rename_with(.cols = starts_with("mean_"),
-               .fn = ~str_remove(., pattern = "mean_")) %>%
+   summarize(across(ends_with("rate"), ~mean(., na.rm=T))) %>%
    ungroup()
 
 
