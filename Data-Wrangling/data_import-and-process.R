@@ -96,6 +96,46 @@ sonde_surface = sonde_profiles %>%
    ungroup()
 
 
+# Assign depth intervals to data for plotting 
+sonde_int = sonde_profiles %>%
+   # 10cm depth intervals
+   mutate(depth_int = case_when(.$vert_m >= 0.0 & vert_m <= 0.1 ~ 0.1,
+                                .$vert_m > 0.1 & vert_m <= 0.2 ~ 0.2,
+                                .$vert_m > 0.2 & vert_m <= 0.3 ~ 0.3,
+                                .$vert_m > 0.3 & vert_m <= 0.4 ~ 0.4,
+                                .$vert_m > 0.4 & vert_m <= 0.5 ~ 0.5,
+                                .$vert_m > 0.5 & vert_m <= 0.6 ~ 0.6,
+                                .$vert_m > 0.6 & vert_m <= 0.7 ~ 0.7,
+                                .$vert_m > 0.7 & vert_m <= 0.8 ~ 0.8,
+                                .$vert_m > 0.8 & vert_m <= 0.9 ~ 0.9,
+                                .$vert_m > 0.9 & vert_m <= 1.0 ~ 1.0,
+                                .$vert_m > 1.0 & vert_m <= 1.1 ~ 1.1,
+                                .$vert_m > 1.1 & vert_m <= 1.2 ~ 1.2,
+                                .$vert_m > 1.2 & vert_m <= 1.3 ~ 1.3,
+                                .$vert_m > 1.3 & vert_m <= 1.4 ~ 1.4,
+                                .$vert_m > 1.4 & vert_m <= 1.5 ~ 1.5,
+                                .$vert_m > 1.5 & vert_m <= 1.6 ~ 1.6,
+                                .$vert_m > 1.6 & vert_m <= 1.7 ~ 1.7,
+                                .$vert_m > 1.7 & vert_m <= 1.8 ~ 1.8,
+                                .$vert_m > 1.8 & vert_m <= 1.9 ~ 1.9,
+                                .$vert_m > 1.9 & vert_m <= 2.0 ~ 2.0,
+                                .$vert_m > 2 ~ 2.1)) %>%
+   # mean values within each depth interval
+   group_by(pond_id, doy, depth_int) %>%
+   summarize(across(temp:salinity, mean, na.rm=T)) %>%
+   ungroup() 
+
+
+# Calculate bottom water means for variables
+#  (bottom 30 cm)
+sonde_bottom = sonde_int %>%
+   group_by(pond_id, doy) %>%
+   arrange(depth_int, .by_group=T) %>%
+   slice_tail(n=3) %>%
+   summarize(across(temp:salinity, ~mean(., na.rm=T))) %>%
+   ungroup()
+
+
 #---
 # HOBO T-chains
 #---
