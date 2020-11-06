@@ -16,46 +16,6 @@ source("Figure-Scripts/figs_functions.R")
 myfill = magma(n=10)
 
 
-# Is the sonde position in the water column determined by the "depth_m" column or the "vertical_position_m" column?
-# Why don't these match up?
-# At what point does the sonde enter the water?
-# Which is the first data point in the pond?
-#
-# Currently I exclude data if the "depth_m" column values are negative?
-# Should I instead exclude when the "vertical_position_m" values are negative?
-
-
-# Assign depth intervals to data for plotting 
-sonde_int = sonde_profiles %>%
-   # 10cm depth intervals
-   mutate(depth_int = case_when(.$vert_m >= 0.0 & vert_m <= 0.1 ~ 0.1,
-                                .$vert_m > 0.1 & vert_m <= 0.2 ~ 0.2,
-                                .$vert_m > 0.2 & vert_m <= 0.3 ~ 0.3,
-                                .$vert_m > 0.3 & vert_m <= 0.4 ~ 0.4,
-                                .$vert_m > 0.4 & vert_m <= 0.5 ~ 0.5,
-                                .$vert_m > 0.5 & vert_m <= 0.6 ~ 0.6,
-                                .$vert_m > 0.6 & vert_m <= 0.7 ~ 0.7,
-                                .$vert_m > 0.7 & vert_m <= 0.8 ~ 0.8,
-                                .$vert_m > 0.8 & vert_m <= 0.9 ~ 0.9,
-                                .$vert_m > 0.9 & vert_m <= 1.0 ~ 1.0,
-                                .$vert_m > 1.0 & vert_m <= 1.1 ~ 1.1,
-                                .$vert_m > 1.1 & vert_m <= 1.2 ~ 1.2,
-                                .$vert_m > 1.2 & vert_m <= 1.3 ~ 1.3,
-                                .$vert_m > 1.3 & vert_m <= 1.4 ~ 1.4,
-                                .$vert_m > 1.4 & vert_m <= 1.5 ~ 1.5,
-                                .$vert_m > 1.5 & vert_m <= 1.6 ~ 1.6,
-                                .$vert_m > 1.6 & vert_m <= 1.7 ~ 1.7,
-                                .$vert_m > 1.7 & vert_m <= 1.8 ~ 1.8,
-                                .$vert_m > 1.8 & vert_m <= 1.9 ~ 1.9,
-                                .$vert_m > 1.9 & vert_m <= 2.0 ~ 2.0,
-                                .$vert_m > 2 ~ 2.1)) %>%
-   # mean values within each depth interval
-   group_by(pond_id, doy, depth_int) %>%
-   summarize(across(temp:salinity, mean, na.rm=T)) %>%
-   ungroup() 
-
-
-
 # Temperature
 
 windows(height=6, width=10)
@@ -247,15 +207,6 @@ a / b / c
 #--
 # Bottom water values over time
 #--
-
-# Mean values from bottom 30cm of water
-sonde_bottom = sonde_int %>%
-   group_by(pond_id, doy) %>%
-   arrange(depth_int, .by_group=T) %>%
-   slice_tail(n=3) %>%
-   summarize(across(temp:salinity, ~mean(., na.rm=T))) %>%
-   ungroup()
-
 
 # DO concentration
 
