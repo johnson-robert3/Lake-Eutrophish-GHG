@@ -69,7 +69,7 @@ ggsave(filename = "Figures/new-figs/methanogenesis-ch4_fw-trt.png", height=10, w
 # REFERENCE
 # windows()
 m.ref =
-ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>% filter(trt_nutrients=="no"),
+ggplot(methano_rates %>% left_join(pond_data) %>% filter(trt_nutrients=="no"),
        aes(x = doy, y = ch4_rate)) +
    #
    geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue") +
@@ -91,7 +91,7 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>%
 # PULSED
 # windows()
 m.pul =
-ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>% filter(trt_nutrients=="yes"),
+ggplot(methano_rates %>% left_join(pond_data) %>% filter(trt_nutrients=="yes"),
        aes(x = doy, y = ch4_rate)) +
    #
    geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3") +
@@ -120,6 +120,24 @@ m.ref / m.pul
 ggsave(filename = "Figures/new-figs/methanogenesis-ch4_np-trt.png", height=7, width=6, units="in")
 
 }
+
+
+# Mean + CI by nutrient treatment
+windows(height=4, width=6)
+ggplot(methano_rates %>% left_join(pond_data),
+       aes(x = doy, y = ch4_rate)) +
+   geom_smooth(aes(group = trt_nutrients,
+                   color = trt_nutrients),
+               method = "loess", se = T, span = 0.5) +
+   #
+   scale_color_manual(name = "Treatment",
+                      breaks = c("no", "yes"),
+                      values = c("no" = "royalblue", "yes" = "seagreen"),
+                      labels = c("no" = "Reference", "yes" = "Pulsed"),
+                      guide = guide_legend(override.aes = list(fill = NA))) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   theme_classic()
 
 
 #---
@@ -179,7 +197,7 @@ ggsave(filename = "Figures/new-figs/methanogenesis-co2_fw-trt.png", height=10, w
 # REFERENCE
 # windows()
 c.ref =
-ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% filter(trt_nutrients=="no"),
+ggplot(methano_rates %>% left_join(pond_data) %>% filter(trt_nutrients=="no"),
        aes(x = doy, y = co2_rate)) +
    #
    geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue") +
@@ -201,7 +219,7 @@ ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>%
 # PULSED
 # windows()
 c.pul =
-ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(co2_rate))) %>% filter(trt_nutrients=="yes"),
+ggplot(methano_rates %>% left_join(pond_data) %>% filter(trt_nutrients=="yes"),
        aes(x = doy, y = co2_rate)) +
    #
    geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3") +
@@ -230,5 +248,23 @@ c.ref / c.pul
 ggsave(filename = "Figures/new-figs/methanogenesis-co2_np-trt.png", height=7, width=6, units="in")
 
 }
+
+
+# Mean + CI by nutrient treatment
+windows(height=4, width=6)
+ggplot(methano_rates %>% left_join(pond_data),
+       aes(x = doy, y = co2_rate)) +
+   geom_smooth(aes(group = trt_nutrients,
+                   color = trt_nutrients),
+               method = "loess", se = T, span = 0.5) +
+   #
+   scale_color_manual(name = "Treatment",
+                      breaks = c("no", "yes"),
+                      values = c("no" = "royalblue", "yes" = "seagreen"),
+                      labels = c("no" = "Reference", "yes" = "Pulsed"),
+                      guide = guide_legend(override.aes = list(fill = NA))) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CO[2]~production~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   theme_classic()
 
 

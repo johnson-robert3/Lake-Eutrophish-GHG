@@ -191,7 +191,7 @@ m.high / m.int / m.low
 # REFERENCE
 # windows()
 m.ref = 
-ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_nutrients=="no"),
+ggplot(lake_flux %>% left_join(pond_data) %>% filter(trt_nutrients=="no"),
        aes(x = doy, y = ch4_flux)) +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    #
@@ -213,7 +213,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filt
 # PULSED
 # windows()
 m.pul = 
-ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_nutrients=="yes"),
+ggplot(lake_flux %>% left_join(pond_data) %>% filter(trt_nutrients=="yes"),
        aes(x = doy, y = ch4_flux)) +
    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
@@ -266,6 +266,28 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))),
    theme_classic()
 
 }
+
+
+## Mean + CI by nutrient treatment
+windows(height=4, width=6)
+
+ggplot(lake_flux %>% left_join(pond_data),
+       aes(x = doy, y = ch4_flux)) +
+   geom_smooth(aes(group = trt_nutrients,
+                   color = trt_nutrients),
+               method = "loess", se = T, span = 0.5) +
+   #
+   scale_color_manual(name = "Treatment",
+                      breaks = c("no", "yes"),
+                      values = c("no" = "royalblue", "yes" = "seagreen"),
+                      labels = c("no" = "Reference", "yes" = "Pulsed"),
+                      guide = guide_legend(override.aes = list(fill = NA))) +
+   geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
+   #
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   theme_classic()
 
 
 #---
@@ -331,7 +353,7 @@ ggsave(filename = "Figures/new-figs/flux-n2o_fw-trt.png", height=10, width=6, un
 # REFERENCE
 # windows()
 n.ref = 
-ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_nutrients=="no") %>%
+ggplot(lake_flux %>% left_join(pond_data) %>% filter(trt_nutrients=="no") %>%
           mutate(n2o_flux = n2o_flux * 1000),
        aes(x = doy, y = n2o_flux)) +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
@@ -354,7 +376,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filt
 # PULSED
 # windows()
 n.pul = 
-ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))) %>% filter(trt_nutrients=="yes") %>%
+ggplot(lake_flux %>% left_join(pond_data) %>% filter(trt_nutrients=="yes") %>%
           mutate(n2o_flux = n2o_flux * 1000),
        aes(x = doy, y = n2o_flux)) +
    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
@@ -408,6 +430,28 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))),
    theme_classic()
 
 }
+
+
+## Mean + CI by nutrient treatment
+windows(height=4, width=6)
+
+ggplot(lake_flux %>% left_join(pond_data)%>% mutate(n2o_flux = n2o_flux * 1000),
+       aes(x = doy, y = n2o_flux)) +
+   geom_smooth(aes(group = trt_nutrients,
+                   color = trt_nutrients),
+               method = "loess", se = T, span = 0.5) +
+   #
+   scale_color_manual(name = "Treatment",
+                      breaks = c("no", "yes"),
+                      values = c("no" = "royalblue", "yes" = "seagreen"),
+                      labels = c("no" = "Reference", "yes" = "Pulsed"),
+                      guide = guide_legend(override.aes = list(fill = NA))) +
+   geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
+   #
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(N[2]*O~flux~(nmol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   theme_classic()
 
 
 #---
@@ -470,7 +514,7 @@ ggsave(filename = "Figures/new-figs/flux-co2_fw-trt.png", height=10, width=6, un
 # REFERENCE
 # windows()
 c.ref =
-ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(co2_ppm))) %>% filter(trt_nutrients=="no"),
+ggplot(lake_flux %>% left_join(pond_data) %>% filter(trt_nutrients=="no"),
        aes(x = doy, y = co2_flux)) +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    #
@@ -493,7 +537,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(co2_ppm))) %>% filt
 # PULSED
 # windows()
 c.pul =
-ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(co2_ppm))) %>% filter(trt_nutrients=="yes"),
+ggplot(lake_flux %>% left_join(pond_data) %>% filter(trt_nutrients=="yes"),
        aes(x = doy, y = co2_flux)) +
    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
@@ -546,5 +590,29 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(co2_ppm))),
    theme_classic()
 
 }
+
+
+## Mean + CI by nutrient treatment
+
+windows(height=4, width=6)
+
+ggplot(lake_flux %>% left_join(pond_data),
+       aes(x = doy, y = co2_flux)) +
+   geom_smooth(aes(group = trt_nutrients,
+                   color = trt_nutrients),
+               method = "loess", se = T, span = 0.5) +
+   #
+   scale_color_manual(name = "Treatment",
+                      breaks = c("no", "yes"),
+                      values = c("no" = "royalblue", "yes" = "seagreen"),
+                      labels = c("no" = "Reference", "yes" = "Pulsed"),
+                      guide = guide_legend(override.aes = list(fill = NA))) +
+   geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
+   #
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CO[2]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1), breaks = seq(-25, 100, 25)) +
+   theme_classic()
+
 
 
