@@ -7,6 +7,10 @@
 library(slider)
 
 
+#===
+# Sonde Profile Data
+#===
+
 # daily surface limno values from sonde profiles
 ldat = left_join(sonde_surface, pond_data)
 
@@ -15,7 +19,6 @@ ldat = left_join(sonde_surface, pond_data)
 rdat = sonde_surface %>%
    mutate(across(temp:salinity, ~slide_dbl(., mean, .before=2, .complete=T))) %>%
    left_join(pond_data)
-
 
 
 #--
@@ -169,5 +172,96 @@ l.high / l.int / l.low
 
 
 
+#===
+# Field Samples
+#===
+
+
+#--
+# Nitrogen
+#--
+
+## TN
+
+ggplot(limno_field_data %>% filter(!(is.na(tn))) %>% left_join(pond_data) %>%
+          group_by(trt_nutrients, doy) %>%
+          summarize(tn = mean(tn, na.rm=T)) %>%
+          ungroup(),
+       aes(x = doy, y = tn)) +
+   geom_line(aes(color = trt_nutrients, group = trt_nutrients), size=1.25) +
+   geom_point(aes(color = trt_nutrients), shape=16, size=2) +
+   scale_color_manual(values = c("no" = "cornflowerblue", "yes" = "seagreen3"),
+                      labels = c("no" = "Ref", "yes" = "Pulse")) +
+   scale_x_continuous(limits = c(140, 242)) +
+   geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
+   theme_classic()
+
+
+## NOx
+
+ggplot(limno_field_data %>% filter(!(is.na(nox))) %>% left_join(pond_data) %>%
+          group_by(trt_nutrients, doy) %>%
+          summarize(nox = mean(nox, na.rm=T)) %>%
+          ungroup(),
+       aes(x = doy, y = nox)) +
+   geom_line(aes(color = trt_nutrients, group = trt_nutrients), size=1.25) +
+   geom_point(aes(color = trt_nutrients), shape=16, size=2) +
+   scale_color_manual(values = c("no" = "cornflowerblue", "yes" = "seagreen3"),
+                      labels = c("no" = "Ref", "yes" = "Pulse")) +
+   scale_x_continuous(limits = c(140, 242)) +
+   geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
+   theme_classic()
+
+
+## NHx
+
+ggplot(limno_field_data %>% filter(!(is.na(nhx))) %>% left_join(pond_data) %>%
+          group_by(trt_nutrients, doy) %>%
+          summarize(nhx = mean(nhx, na.rm=T)) %>%
+          ungroup(),
+       aes(x = doy, y = nhx)) +
+   geom_line(aes(color = trt_nutrients, group = trt_nutrients), size=1.25) +
+   geom_point(aes(color = trt_nutrients), shape=16, size=2) +
+   scale_color_manual(values = c("no" = "cornflowerblue", "yes" = "seagreen3"),
+                      labels = c("no" = "Ref", "yes" = "Pulse")) +
+   scale_x_continuous(limits = c(140, 242)) +
+   geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
+   theme_classic()
+
+
+#--
+# Phosphorus
+#--
+
+## TP
+
+ggplot(limno_field_data %>% filter(!(is.na(tp))) %>% left_join(pond_data) %>%
+          group_by(trt_nutrients, doy) %>%
+          summarize(tp = mean(tp, na.rm=T)) %>%
+          ungroup(),
+       aes(x = doy, y = tp)) +
+   geom_line(aes(color = trt_nutrients, group = trt_nutrients), size=1.25) +
+   geom_point(aes(color = trt_nutrients), shape=16, size=2) +
+   scale_color_manual(values = c("no" = "cornflowerblue", "yes" = "seagreen3"),
+                      labels = c("no" = "Ref", "yes" = "Pulse")) +
+   scale_x_continuous(limits = c(140, 242)) +
+   geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
+   theme_classic()
+
+
+## SRP
+
+ggplot(limno_field_data %>% filter(!(is.na(srp))) %>% left_join(pond_data) %>%
+          group_by(trt_nutrients, doy) %>%
+          summarize(srp = mean(srp, na.rm=T)) %>%
+          ungroup(),
+       aes(x = doy, y = srp)) +
+   geom_line(aes(color = trt_nutrients, group = trt_nutrients), size=1.25) +
+   geom_point(aes(color = trt_nutrients), shape=16, size=2) +
+   scale_color_manual(values = c("no" = "cornflowerblue", "yes" = "seagreen3"),
+                      labels = c("no" = "Ref", "yes" = "Pulse")) +
+   scale_x_continuous(limits = c(140, 242)) +
+   geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
+   theme_classic()
 
 
