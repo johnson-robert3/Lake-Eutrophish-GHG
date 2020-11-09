@@ -211,19 +211,25 @@ a / b / c
 # DO concentration
 
 a = 
-ggplot(sonde_bottom %>% left_join(pond_data) %>% filter(trt_fish=="high"),
-       aes(x = doy, y = do_sat)) %>%
-   fig_aes_fw()
+ggplot(sonde_bottom %>% left_join(pond_data) %>% filter(trt_fish=="high") %>%
+          mutate(roll_sat = slide_dbl(do_sat, mean, .before=7)),
+       aes(x = doy, y = roll_sat)) %>%
+   fig_aes_fw() +
+   scale_y_continuous(name = "DO sat (%) (8-day window)", limits = c(0, 210))
 
 b = 
-ggplot(sonde_bottom %>% left_join(pond_data) %>% filter(trt_fish=="medium"),
-       aes(x = doy, y = do_sat)) %>%
-   fig_aes_fw()
+ggplot(sonde_bottom %>% left_join(pond_data) %>% filter(trt_fish=="medium") %>%
+          mutate(roll_sat = slide_dbl(do_sat, mean, .before=7)),
+       aes(x = doy, y = roll_sat)) %>%
+   fig_aes_fw() +
+   scale_y_continuous(name = "DO sat (%) (8-day window)", limits = c(0, 210))
 
 c = 
-ggplot(sonde_bottom %>% left_join(pond_data) %>% filter(trt_fish=="low"),
-       aes(x = doy, y = do_sat)) %>%
-   fig_aes_fw()
+ggplot(sonde_bottom %>% left_join(pond_data) %>% filter(trt_fish=="low") %>%
+          mutate(roll_sat = slide_dbl(do_sat, mean, .before=7)),
+       aes(x = doy, y = roll_sat)) %>%
+   fig_aes_fw() +
+   scale_y_continuous(name = "DO sat (%) (8-day window)", limits = c(0, 210))
 
 
 windows(height=10, width=6)
