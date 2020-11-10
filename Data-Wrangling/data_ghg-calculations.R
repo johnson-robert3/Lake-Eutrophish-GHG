@@ -646,17 +646,39 @@ test4d = test4c %>%
    # convert diffusive k600 to gas specific k
    mutate(k_diff_ch4 = k600.2.kGAS.base(k600 = k_diffusion, temperature = surface_temp, gas = "CH4")) %>%
    # expected diffusive flux with chamber-specific k
-   mutate(exp_diff_flux = k_diff_ch4 * (ch4_lake - ch4_eq_t0))
+   mutate(ch4_exp_diff_flux = k_diff_ch4 * (ch4_lake - ch4_eq_t0))
 
 
 ##__STEP 5
 
-# mass of gas moving into chamber during deployment via diffusion
+# mass of gas moving into chamber during deployment via diffusion (units = umol)
+
+test5 = test4d %>%
+   mutate(ch4_exp_diff_mass = ch4_exp_diff_flux * area_chamber * (deployment_length/1440))
 
 
+##__STEP 6
+
+# actual mass flux into chamber
+
+test6 = test5 %>%
+   mutate(
+      # initial chamber concentration (units = uM)
+      ch4_t0 = ideal_gas_law(pch4_t0, surface_temp),
+      # final chamber concentration (units = uM)
+      ch4_t1 = ideal_gas_law(pch4_t1, surface_temp),
+      # actual measured mass flux (units = umol)
+      ch4_total_mass = (ch4_t1 * vol_chamber) - (ch4_t0 * vol_chamber))
 
 
+##__STEP 7
 
+ebu_flux = test6 %>%
+   mutate(
+      # mass of gas in chamber due to ebullition (units = umol)
+      ch4_ebu_mass = ch4_total_mass - ch4_exp_diff_mass,
+      # ebullitive flux rate (units = umol / m2 / d)
+      ch4_ebullition = ch4_ebu_mass / area_chamber / (deployment_length/1440))
 
 
 
