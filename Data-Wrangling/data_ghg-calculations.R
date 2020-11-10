@@ -428,6 +428,20 @@ ebu_data = ebu_data %>%
 
 # k = ( V / (Kh*R*T*A)) * ln((Pw - Pi)/(Pw - Pf)) / (tf - ti)
 
+# units of R (gas constant): L atm / K / mol
+
+#--
+# NOTE:
+# Only one chamber-specific k value needs to be calculated per chamber (i.e. not for each gas individually).
+#  This k value can then be converted to a k600 value which is standardized, and can be used to calculate a
+#  gas-specific k value for the desired gas at the given temperature. 
+#
+# Previous work has demonstrated that CH4 is the preferable gas to use when calculating k using the floating 
+#  chamber method. (e.g. Cole et al. 2010. L&O Methods; Galfalk et al. 2013. JGR Biogeosciences). 
+#
+# Only use methane data for calculating ebullition.
+#--
+
 #--
 # NOTE:
 # A chamber-specific k value cannot be calculated if the partial pressure in the chamber headspace at the end 
@@ -442,26 +456,17 @@ ebu_data = ebu_data %>%
 #--
 
 ebu_data = ebu_data %>%
-   mutate(k_ch4 = ((vol_chamber/1000) / (tKH_ch4 * 0.0821 * surface_temp * area_chamber)) * 
-             log((pch4_lake - pch4_t0) / (pch4_lake - pch4_t1)) / 
-             # convert deployment from minutes to days (so units of k are m/d)
-             (deployment_length / 1440),
-          #
-          k_co2 = ((vol_chamber/1000) / (tKH_co2 * 0.0821 * surface_temp * area_chamber)) * 
-             log((pco2_lake - pco2_t0) / (pco2_lake - pco2_t1)) / 
-             (deployment_length / 1440),
-          #
-          k_n2o = ((vol_chamber/1000) / (tKH_n2o * 0.0821 * surface_temp * area_chamber)) * 
-             log((pn2o_lake - pn2o_t0) / (pn2o_lake - pn2o_t1)) / 
-             (deployment_length / 1440))
+   mutate(k_chamber = 
+             (vol_chamber / (tKH_ch4 * 0.0821 * (surface_temp + 273.15) * area_chamber)) 
+          * 
+             log((pch4_lake - pch4_t0) / (pch4_lake - pch4_t1)) 
+          / 
+             deployment_length)
 
 
 #--
 # Calculate ebullitive flux rate
 #-- 
-
-## chamber-specific k values are not calculated correctly for either CO2 or N2O
-## use only CH4 (methane) for ebullition going forward
 
 ebu_data = ebu_data %>%
    # remove unnecessary columns
@@ -470,17 +475,20 @@ ebu_data = ebu_data %>%
    # remove the chamber for which data are missing
    filter(!(is.na(deployment_length))) %>%
    # change "NaN" to NA
-   mutate(k_ch4 = na_if(k_ch4, "NaN")) %>%
-   rename(k_chamber = k_ch4)
+   mutate(k_chamber = na_if(k_chamber, "NaN")) %>%
+   # convert chamber-specific k to k600 for comparisons
+   mutate(Sc_ch4 = getSchmidt(temperature = surface_temp, gas = "CH4"),
+          k600 = ((600 / Sc_ch4)^(-0.5)) * k_chamber)
+
 
 
 ## STEPS
 
-# 1. find minimum k values (chamber specific) for each pond that could represent diffusive flux only
-# 2. divide chamber k values by minimum k value 
+# 1. find minimum k600 values (chamber specific) for each pond that could represent diffusive flux only
+# 2. divide chamber k600 by minimum k600 to get k ratio for each chamber
 # 3. find the cutoff k ratio for each pond suggesting ebullition 
 
-# 4. use mean chamber-specific k value from all chambers (on a given pond for a given day) below the cutoff k ratio to calculate expected 
+# 4. use mean chamber-specific k600 from all chambers (on a given pond for a given day) below the cutoff k ratio to calculate expected 
 #     diffusive flux rate (based upon expected lake surface concentration at T0, e.g. ch4_eq_t0)
 #     - for chambers with a k ratio above the cutoff or for which a chamber-specific k could not be calculated due to ebullition
 
@@ -494,12 +502,13 @@ ebu_data = ebu_data %>%
 
 test1 = ebu_data %>%
    # set pond to work with
-   filter(pond_id=="F") %>%
+   filter(pond_id=="A") %>%
    ##
    filter(!(is.na(k_chamber))) %>%
    ##
    group_by(pond_id, doy) %>%
-   mutate(ratio = k_chamber / min(k_chamber)) %>%
+   mutate(ratio = k_chamber / min(k_chamber),
+          ratio_600 = k600 / min(k600)) %>%
    ungroup() %>%
    ##
    arrange(ratio) %>%
@@ -512,6 +521,9 @@ plot(test1 %>% pull(doy),
 # view ranked k ratios to determine cutoff
 plot(test1 %>% pull(n),
      test1 %>% pull(ratio))
+
+plot(test1 %>% pull(n),
+     test1 %>% pull(ratio_600))
 
 
 # Ebullition cutoff ratios
@@ -528,13 +540,13 @@ cutoff_f = 2.0
 # calculate k ratio for each chamber
 test4 = ebu_data %>%
    # remove NAs (k not calculated due to ebullition)
-   filter(!(is.na(k_chamber))) %>%
+   filter(!(is.na(k600))) %>%
    # ratio of each chamber specific k value to the minimum chamber k value for each pond-day
    group_by(pond_id, doy) %>%
-   mutate(k_ratio = k_chamber / min(k_chamber)) %>%
+   mutate(k_ratio = k600 / min(k600)) %>%
    ungroup()
 
-# calculate mean k value for chambers below cutoff k ratio for each pond
+# calculate mean k600 value for chambers below cutoff k ratio for each pond
 test41 = test4 %>%
    # remove all chambers with a k ratio above the pond-specific cutoff ratio
    filter(!(pond_id=="A" & k_ratio > cutoff_a)) %>%
@@ -543,10 +555,10 @@ test41 = test4 %>%
    filter(!(pond_id=="D" & k_ratio > cutoff_d)) %>%
    filter(!(pond_id=="E" & k_ratio > cutoff_e)) %>%
    filter(!(pond_id=="F" & k_ratio > cutoff_f)) %>%
-   # mean k value from all chambers below the pond-specific cutoff k ratio
-   # this is the k value representing diffusive flux only within chambers
+   # mean k600 value from all chambers below the pond-specific cutoff k ratio
+   # this is the k600 representing diffusive flux only within chambers
    group_by(pond_id, doy) %>%
-   summarize(k_diffusion = mean(k_chamber, na.rm=T)) %>%
+   summarize(k_diffusion = mean(k600, na.rm=T)) %>%
    ungroup()
 
 
@@ -572,26 +584,26 @@ test43 = test42 %>%
 
 # Pond B (DOY 174, 180, 189)
 #  linearly interpolate between DOY 167 and 195
-#  ((0.032216514 - 0.001681095) / (195 - 167)) * (days_since)
+#  ((2.5118013 - 0.1242225) / (195 - 167)) * (days_since)
 btest = test43 %>%
    filter(pond_id=="B") %>%
-   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.001090551 * .$days_since) + lag(.$k_diffusion),
+   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.08527067 * .$days_since) + lag(.$k_diffusion),
                             TRUE ~ as.numeric(k_diffusion))) %>%
-   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.001090551 * .$days_since) + lag(.$k_diffusion),
+   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.08527067 * .$days_since) + lag(.$k_diffusion),
                             TRUE ~ as.numeric(k_diffusion))) %>%
-   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.001090551 * .$days_since) + lag(.$k_diffusion),
+   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.08527067 * .$days_since) + lag(.$k_diffusion),
                             TRUE ~ as.numeric(k_diffusion)))
 
 # Pond F (DOY 174, 180, 189)
 #  linearly interpolate between DOY 167 and 195
-#  ((0.035907374 - 0.020451697) / (195 - 167)) * (days_since)
+#  ((2.7847750 - 1.5360542) / (195 - 167)) * (days_since)
 ftest = test43 %>%
    filter(pond_id=="F") %>%
-   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.0005519885 * .$days_since) + lag(.$k_diffusion),
+   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.04459717 * .$days_since) + lag(.$k_diffusion),
                             TRUE ~ as.numeric(k_diffusion))) %>%
-   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.0005519885 * .$days_since) + lag(.$k_diffusion),
+   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.04459717 * .$days_since) + lag(.$k_diffusion),
                             TRUE ~ as.numeric(k_diffusion))) %>%
-   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.0005519885 * .$days_since) + lag(.$k_diffusion),
+   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.04459717 * .$days_since) + lag(.$k_diffusion),
                             TRUE ~ as.numeric(k_diffusion)))
 
 
@@ -609,7 +621,7 @@ test44 = test43 %>%
 
 # all chambers for which k could not be calculated due to receiving ebullition
 test4a = ebu_data %>%
-   filter(is.na(k_chamber))
+   filter(is.na(k600))
 
 # all chambers for which k was above the pond-specific cutoff k ratio
 test4b = test4 %>%
@@ -626,12 +638,15 @@ test4c = bind_rows(test4a, test4b %>% select(-k_ratio)) %>%
    arrange(pond_id, doy, replicate)
 
 
-# Calculate expected diffusive flux rate using chamber-specific k values from chambers only receiving diffusion (units = umol / m2 / d)
+# Calculate expected diffusive flux rate using chamber-specific k values from chambers receiving only diffusion (units = umol / m2 / d)
 
 #  F = k(Cw - Ceq)
 
 test4d = test4c %>%
-   mutate(exp_diff_flux = k_diffusion * (ch4_lake - ch4_eq_t0))
+   # convert diffusive k600 to gas specific k
+   mutate(k_diff_ch4 = k600.2.kGAS.base(k600 = k_diffusion, temperature = surface_temp, gas = "CH4")) %>%
+   # expected diffusive flux with chamber-specific k
+   mutate(exp_diff_flux = k_diff_ch4 * (ch4_lake - ch4_eq_t0))
 
 
 ##__STEP 5
