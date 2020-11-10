@@ -465,7 +465,7 @@ ebu_data = ebu_data %>%
 
 
 #--
-# Calculate ebullitive flux rate
+# Calculate chamber ebullitive flux rates
 #-- 
 
 ebu_data = ebu_data %>%
@@ -607,6 +607,7 @@ ftest = test43 %>%
                             TRUE ~ as.numeric(k_diffusion)))
 
 
+# complete, interpolated, data set of calculated diffusive flux k values
 # add the interpolated B and F pond data back to the others
 test44 = test43 %>%
    filter(!(pond_id=="B")) %>%
@@ -632,8 +633,9 @@ test4b = test4 %>%
    filter(!(pond_id=="E" & k_ratio < cutoff_e)) %>%
    filter(!(pond_id=="F" & k_ratio < cutoff_f))
 
+# All chambers receiving ebullition
 # add k_diffusion to all chambers having received ebullition
-test4c = bind_rows(test4a, test4b %>% select(-k_ratio)) %>%
+ebullition_chambers = bind_rows(test4a, test4b %>% select(-k_ratio)) %>%
    left_join(test44) %>%
    arrange(pond_id, doy, replicate)
 
@@ -642,26 +644,26 @@ test4c = bind_rows(test4a, test4b %>% select(-k_ratio)) %>%
 
 #  F = k(Cw - Ceq)
 
-test4d = test4c %>%
+ebullition_chambers = ebullition_chambers %>%
    # convert diffusive k600 to gas specific k
-   mutate(k_diff_ch4 = k600.2.kGAS.base(k600 = k_diffusion, temperature = surface_temp, gas = "CH4")) %>%
+   mutate(k_dif_ch4 = k600.2.kGAS.base(k600 = k_diffusion, temperature = surface_temp, gas = "CH4")) %>%
    # expected diffusive flux with chamber-specific k
-   mutate(ch4_exp_diff_flux = k_diff_ch4 * (ch4_lake - ch4_eq_t0))
+   mutate(ch4_exp_dif_flux = k_dif_ch4 * (ch4_lake - ch4_eq_t0))
 
 
 ##__STEP 5
 
 # mass of gas moving into chamber during deployment via diffusion (units = umol)
 
-test5 = test4d %>%
-   mutate(ch4_exp_diff_mass = ch4_exp_diff_flux * area_chamber * (deployment_length/1440))
+ebullition_chambers = ebullition_chambers %>%
+   mutate(ch4_exp_dif_mass = ch4_exp_dif_flux * area_chamber * (deployment_length/1440))
 
 
 ##__STEP 6
 
 # actual mass flux into chamber
 
-test6 = test5 %>%
+ebullition_chambers = ebullition_chambers %>%
    mutate(
       # initial chamber concentration (units = uM)
       ch4_t0 = ideal_gas_law(pch4_t0, surface_temp),
@@ -673,12 +675,53 @@ test6 = test5 %>%
 
 ##__STEP 7
 
-ebu_flux = test6 %>%
+ebullition_chambers = ebullition_chambers %>%
    mutate(
       # mass of gas in chamber due to ebullition (units = umol)
-      ch4_ebu_mass = ch4_total_mass - ch4_exp_diff_mass,
+      ch4_ebu_mass = ch4_total_mass - ch4_exp_dif_mass,
       # ebullitive flux rate (units = umol / m2 / d)
-      ch4_ebullition = ch4_ebu_mass / area_chamber / (deployment_length/1440))
+      ch4_ebullition = ch4_ebu_mass / area_chamber / (deployment_length/1440),
+      # identify chambers as having received ebullition
+      received_ebu = rep_len(1, n()))
+
+
+#--
+# Calculate ebullition across ponds
+#--
+
+## need to add ebullitive flux data back to the full data set (including chambers that did not receive ebullition)
+## need all chambers from a pond to calculate a mean ebullition rate (including 0's)
+
+diffusion_chambers = test4 %>%
+   # remove all chambers with a k ratio above the pond-specific cutoff ratio
+   filter(!(pond_id=="A" & k_ratio > cutoff_a)) %>%
+   filter(!(pond_id=="B" & k_ratio > cutoff_b)) %>%
+   filter(!(pond_id=="C" & k_ratio > cutoff_c)) %>%
+   filter(!(pond_id=="D" & k_ratio > cutoff_d)) %>%
+   filter(!(pond_id=="E" & k_ratio > cutoff_e)) %>%
+   filter(!(pond_id=="F" & k_ratio > cutoff_f)) %>%
+   # identify chambers as having not received ebullition
+   mutate(received_ebu = rep_len(0, n()))
+
+
+# add additional k and flux variables for diffusion-only chambers here if needed
+# diffusion_chambers = diffusion_chambers %>%
+#    # add k_diffusion
+#    left_join(test44)
+   
+
+ebu_flux = full_join(ebullition_chambers, diffusion_chambers) %>%
+   # change ebullition from NA to 0
+   mutate(ch4_ebullition = if_else(received_ebu==0, 0, ch4_ebullition))
+
+
+
+
+
+
+
+
+
 
 
 
