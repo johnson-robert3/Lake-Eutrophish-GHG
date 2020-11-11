@@ -645,9 +645,9 @@ ebullition_chambers = bind_rows(test4a, test4b %>% select(-k_ratio)) %>%
 #  F = k(Cw - Ceq)
 
 ebullition_chambers = ebullition_chambers %>%
-   # convert diffusive k600 to gas specific k
+   # convert diffusive k600 to gas specific k (units = m / d)
    mutate(k_dif_ch4 = k600.2.kGAS.base(k600 = k_diffusion, temperature = surface_temp, gas = "CH4")) %>%
-   # expected diffusive flux with chamber-specific k
+   # expected diffusive flux with chamber-specific k (units = umol / m2 / d)
    mutate(ch4_exp_dif_flux = k_dif_ch4 * (ch4_lake - ch4_eq_t0))
 
 
@@ -680,7 +680,7 @@ ebullition_chambers = ebullition_chambers %>%
       # mass of gas in chamber due to ebullition (units = umol)
       ch4_ebu_mass = ch4_total_mass - ch4_exp_dif_mass,
       # ebullitive flux rate (units = umol / m2 / d)
-      ch4_ebullition = ch4_ebu_mass / area_chamber / (deployment_length/1440),
+      ch4_ebu_flux = ch4_ebu_mass / area_chamber / (deployment_length/1440),
       # identify chambers as having received ebullition
       received_ebu = rep_len(1, n()))
 
@@ -692,7 +692,13 @@ ebullition_chambers = ebullition_chambers %>%
 ## need to add ebullitive flux data back to the full data set (including chambers that did not receive ebullition)
 ## need all chambers from a pond to calculate a mean ebullition rate (including 0's)
 
-diffusion_chambers = test4 %>%
+diffusion_chambers = ebu_data %>%
+   # remove NAs (k not calculated due to ebullition)
+   filter(!(is.na(k600))) %>%
+   # ratio of each chamber specific k value to the minimum chamber k value for each pond-day
+   group_by(pond_id, doy) %>%
+   mutate(k_ratio = k600 / min(k600)) %>%
+   ungroup() %>%
    # remove all chambers with a k ratio above the pond-specific cutoff ratio
    filter(!(pond_id=="A" & k_ratio > cutoff_a)) %>%
    filter(!(pond_id=="B" & k_ratio > cutoff_b)) %>%
@@ -705,6 +711,7 @@ diffusion_chambers = test4 %>%
 
 
 # add additional k and flux variables for diffusion-only chambers here if needed
+
 # diffusion_chambers = diffusion_chambers %>%
 #    # add k_diffusion
 #    left_join(test44)
@@ -712,17 +719,13 @@ diffusion_chambers = test4 %>%
 
 ebu_flux = full_join(ebullition_chambers, diffusion_chambers) %>%
    # change ebullition from NA to 0
-   mutate(ch4_ebullition = if_else(received_ebu==0, 0, ch4_ebullition))
+   mutate(ch4_ebu_flux = if_else(received_ebu==0, 0, ch4_ebu_flux)) %>%
+   arrange(pond_id, doy, replicate)
 
 
-
-
-
-
-
-
-
-
-
-
+# mean ebullitive flux rate from all chambers for each pond
+ebu_flux_pond = ebu_flux %>%
+   group_by(pond_id, week, doy) %>%
+   summarize(ch4_ebu_flux = mean(ch4_ebu_flux)) %>%
+   ungroup()
 
