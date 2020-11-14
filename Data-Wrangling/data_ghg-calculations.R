@@ -194,11 +194,17 @@ lake_flux = left_join(lake_conc, wind_k) %>%
 
 # F = k(Cw - Ceq)
 
+# To get a flux (F) in units of umol / m2 / d, with k in untis of m / d,
+#  concentrations (Cw and Ceq) need to be in units of umol / m3
+
 lake_flux = lake_flux %>%
    # calculate expected dissolved surface water concentrations if in equilibrium with atmosphere (units = uM)
    mutate(ch4_exp = tKH_ch4 * pch4_atmo * 10^6,
           co2_exp = tKH_co2 * pco2_atmo * 10^6,
           n2o_exp = tKH_n2o * pn2o_atmo * 10^6) %>%
+   # convert concentrations from units of (umol / L) to (umol / m3)
+   mutate(across(ends_with("_lake"), ~.*1000)) %>%
+   mutate(across(ends_with("_exp"), ~.*1000)) %>%
    # calculate diffusive flux (units = umol / m2 / d)
    mutate(ch4_flux = k_ch4 * (ch4_lake - ch4_exp),
           co2_flux = k_co2 * (co2_lake - co2_exp),
