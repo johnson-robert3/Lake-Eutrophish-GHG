@@ -13,7 +13,7 @@ library(LakeMetabolizer)
 # Ames, IA = 0.97 atm
 
    
-#_Henry's Law Constants (KH) (units = M/atm)
+#_Henry's Law Constants (KH) (units = M/atm) (units = mol / L / atm)
    
 ### Used to calculate dissolved gas concentration in a liquid based on equilibrium with a gaseous headspace
 
@@ -171,12 +171,12 @@ lake_conc = syr_conc %>%
 # Flux rate across the gas-water interface
 # Instantaneous flux, using wind-based k
 
-## Calculate wind-based k
+## Calculate wind-based k (units = m / d)
 wind_k = weather_data %>%
    mutate(wnd = wind_speed,
           U10 = wnd * ((10 / wnd.z)^(1/7)),
           k_cole = k.cole.base(U10)) %>%
-   # daily average k
+   # daily average k (units = m / d)
    group_by(doy) %>%
    summarize(across(wnd.z:k_cole, ~mean(., na.rm=T))) %>%
    ungroup()
@@ -184,7 +184,7 @@ wind_k = weather_data %>%
 
 # Add k to lake dataset
 lake_flux = left_join(lake_conc, wind_k) %>%
-   # calculate gas-specific k600 values
+   # calculate gas-specific k600 values (units = m / d)
    mutate(k_ch4 = k600.2.kGAS.base(k600 = k_cole, temperature = surface_temp, gas = "CH4"),
           k_co2 = k600.2.kGAS.base(k600 = k_cole, temperature = surface_temp, gas = "CO2"),
           k_n2o = k600.2.kGAS.base(k600 = k_cole, temperature = surface_temp, gas = "N2O"))
