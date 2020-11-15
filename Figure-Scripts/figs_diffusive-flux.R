@@ -28,7 +28,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(trt_fish=="high"),
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    scale_y_continuous(limits = c(0, 60)) +
    labs(title = "High (C, E)",
-        y = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)))
+        y = expression(CH[4]~flux~(mmol~m^-2~d^-1)))
 
 
 # INTERMEDIATE B-P
@@ -40,7 +40,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(trt_fish=="medium"),
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    scale_y_continuous(limits = c(0, 60)) +
    labs(title = "Intermediate (A, D)",
-        y = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)))
+        y = expression(CH[4]~flux~(mmol~m^-2~d^-1)))
 
 
 # LOW B-P
@@ -52,7 +52,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(trt_fish=="low"),
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    scale_y_continuous(limits = c(0, 60)) +
    labs(title = "Low (B, F)",
-        y = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)))
+        y = expression(CH[4]~flux~(mmol~m^-2~d^-1)))
 
 
 # 3-panel
@@ -106,7 +106,7 @@ ggplot(tdat %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="high"),
                                                               shape=21, 
                                                               fill=c("cornflowerblue", "seagreen3", "seagreen4")))) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
    labs(title = "High (C, E)") +
    theme_classic()
 
@@ -139,7 +139,7 @@ ggplot(tdat %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="medium"),
                                                               shape=21, 
                                                               fill=c("cornflowerblue", "seagreen3", "seagreen4")))) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
    labs(title = "Intermediate (A, D)") +
    theme_classic()
 
@@ -172,7 +172,7 @@ ggplot(tdat %>% filter(!(is.na(ch4_ppm))) %>% filter(trt_fish=="low"),
                                                               shape=21, 
                                                               fill=c("cornflowerblue", "seagreen3", "seagreen4")))) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
    labs(title = "Low (B, F)") +
    theme_classic()
 
@@ -206,7 +206,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(trt_nutrients=="no"),
                       values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), limits = c(0, 60)) +
+   scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^-1)), limits = c(0, 60)) +
    labs(title = "Reference") +
    theme_classic()
 
@@ -229,7 +229,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(trt_nutrients=="yes"),
                       values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), limits = c(0, 60)) +
+   scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^-1)), limits = c(0, 60)) +
    labs(title = "Pulsed") +
    theme_classic()
 
@@ -260,7 +260,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))),
    # scales
    scale_fill_manual(values = c("yes" = "seagreen3", "no" = "cornflowerblue")) +
    scale_alpha_manual(values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3)) +
-   scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
    #
    facet_wrap(facets = vars(pond_id), nrow=2) +
    theme_classic()
@@ -294,7 +294,7 @@ ggplot(lake_flux %>% left_join(pond_data),
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    #
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CH[4]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
    theme_classic()
 
 
@@ -315,7 +315,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(trt_fish=="high") %>%
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    lims(y = c(-4, 4)) +
    labs(title = "High (C, E)",
-        y = expression(N[2]*O~flux~(nmol~m^-2~d^-1)))
+        y = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)))
 
 
 # INTERMEDIATE B-P
@@ -328,7 +328,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(trt_fish=="medium") %>%
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    lims(y = c(-4, 4)) +
    labs(title = "Intermediate (A, D)",
-        y = expression(N[2]*O~flux~(nmol~m^-2~d^-1)))
+        y = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)))
 
 
 # LOW B-P
@@ -341,7 +341,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(trt_fish=="low") %>%
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    lims(y = c(-4, 4)) +
    labs(title = "Low (B, F)",
-        y = expression(N[2]*O~flux~(nmol~m^-2~d^-1)))
+        y = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)))
 
 
 # 3-panel
@@ -377,7 +377,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(trt_nutrients=="no") %>%
                       values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(N[2]*O~flux~(nmol~m^-2~d^-1)), limits = c(-4, 4)) +
+   scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), limits = c(-4, 4)) +
    labs(title = "Reference") +
    theme_classic()
 
@@ -401,7 +401,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(trt_nutrients=="yes") %>%
                       values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(N[2]*O~flux~(nmol~m^-2~d^-1)), limits = c(-4, 4)) +
+   scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), limits = c(-4, 4)) +
    labs(title = "Pulsed") +
    theme_classic()
 
@@ -466,7 +466,7 @@ ggplot(lake_flux %>% left_join(pond_data)%>% mutate(n2o_flux = n2o_flux * 1000),
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    #
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(N[2]*O~flux~(nmol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
    theme_classic()
 
 
@@ -486,7 +486,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(trt_fish=="high"),
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    lims(y = c(-25, 250)) +
    labs(title = "High (C, E)",
-        y = expression(CO[2]~flux~(mu*mol~m^-2~d^-1)))
+        y = expression(CO[2]~flux~(mmol~m^-2~d^-1)))
 
 
 # INTERMEDIATE B-P
@@ -498,7 +498,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(trt_fish=="medium"),
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    lims(y = c(-25, 250)) +
    labs(title = "Intermediate (A, D)",
-        y = expression(CO[2]~flux~(mu*mol~m^-2~d^-1)))
+        y = expression(CO[2]~flux~(mmol~m^-2~d^-1)))
 
 
 # LOW B-P
@@ -510,7 +510,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(trt_fish=="low"),
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    lims(y = c(-25, 250)) +
    labs(title = "Low (B, F)",
-        y = expression(CO[2]~flux~(mu*mol~m^-2~d^-1)))
+        y = expression(CO[2]~flux~(mmol~m^-2~d^-1)))
 
 
 # 3-panel
@@ -545,7 +545,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(trt_nutrients=="no"),
                       values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CO[2]~flux~(mu*mol~m^-2~d^-1)), limits = c(-25, 250)) +
+   scale_y_continuous(name = expression(CO[2]~flux~(mmol~m^-2~d^-1)), limits = c(-25, 250)) +
    labs(title = "Reference") +
    theme_classic()
 
@@ -569,7 +569,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(trt_nutrients=="yes"),
                       values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
                       labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CO[2]~flux~(mu*mol~m^-2~d^-1)), limits = c(-25, 250)) +
+   scale_y_continuous(name = expression(CO[2]~flux~(mmol~m^-2~d^-1)), limits = c(-25, 250)) +
    labs(title = "Pulsed") +
    theme_classic()
 
@@ -600,7 +600,7 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(co2_ppm))),
    # scales
    scale_fill_manual(values = c("yes" = "seagreen3", "no" = "cornflowerblue")) +
    scale_alpha_manual(values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3)) +
-   scale_y_continuous(name = expression(CO[2]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CO[2]~flux~(mmol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
    #
    facet_wrap(facets = vars(pond_id), nrow=2) +
    theme_classic()
@@ -633,7 +633,7 @@ ggplot(lake_flux %>% left_join(pond_data),
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    #
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CO[2]~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1), breaks = seq(-25, 100, 25)) +
+   scale_y_continuous(name = expression(CO[2]~flux~(mmol~m^-2~d^-1)), expand = expansion(mult=0.1), breaks = seq(-25, 100, 25)) +
    theme_classic()
 
 
