@@ -87,8 +87,9 @@ sonde_profiles = sonde_profiles %>%
    ##
 
 
-# Calculate surface water means for variables 
-#  (between 2 - 20 cm depth)
+##__Surface water means 
+#  Depth: 2-20 cm
+
 sonde_surface = sonde_profiles %>%
    group_by(pond_id, doy) %>%
    filter(vert_m > 0.02 & vert_m < 0.20) %>%
@@ -126,8 +127,9 @@ sonde_int = sonde_profiles %>%
    ungroup() 
 
 
-# Calculate bottom water means for variables
-#  (bottom 30 cm)
+##__Bottom water means
+#  Depth: bottom 30 cm
+
 sonde_bottom = sonde_int %>%
    group_by(pond_id, doy) %>%
    arrange(depth_int, .by_group=T) %>%
@@ -494,7 +496,7 @@ ebu_samples = ebu_sample_data %>%
 ebu_samples = ebu_samples %>%
    group_by(week, pond_id, replicate) %>%
    arrange(doy, .by_group=T) %>%
-   mutate(deployment_length = difftime(last(date_time), first(date_time), units="mins"),
+   mutate(deployment_length = difftime(last(date_time), first(date_time), units="days"),
           deployment_length = as.numeric(deployment_length)) %>%
    ungroup()
 
