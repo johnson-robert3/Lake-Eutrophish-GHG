@@ -71,7 +71,7 @@ syr_conc = lake_samples %>%
    # concentration of dissolved gases in equilibrated aqueous sample (units = uM)
    mutate(ch4_aq = tKH_ch4 * pch4_head * 10^6,
           n2o_aq = tKH_n2o * pn2o_head * 10^6) %>%
-   # total amount of gas in syringe
+   # total amount of gas in syringe (units = umol)
    mutate(ch4_tot_umol = (ch4_aq * vol_water) + (ch4_head * vol_air),
           n2o_tot_umol = (n2o_aq * vol_water) + (n2o_head * vol_air))
 
@@ -87,7 +87,7 @@ atm_conc = lake_samples %>%
    mutate(pch4_atmo = ch4_ppm / 10^6 * 0.97,
           pco2_atmo = co2_ppm / 10^6 * 0.97,
           pn2o_atmo = n2o_ppm / 10^6 * 0.97) %>%
-   # Ideal Gas Law
+   # Ideal Gas Law (units = uM)
    mutate(ch4_atmo = ideal_gas_law(pch4_atmo, 25),
           co2_atmo = ideal_gas_law(pco2_atmo, 25),
           n2o_atmo = ideal_gas_law(pn2o_atmo, 25))
@@ -156,7 +156,7 @@ lake_conc = syr_conc %>%
    left_join(atm_conc %>% select(doy, ends_with("atmo"))) %>%
    # add original lake water partial pressure from above 
    left_join(lake_co2) %>%
-   # original gas concentration dissolved in lake water
+   # original gas concentration dissolved in lake water (units = uM)
    mutate(ch4_lake = (ch4_tot_umol - (ch4_atmo * vol_air)) / vol_water,
           n2o_lake = (n2o_tot_umol - (n2o_atmo * vol_air)) / vol_water,
           co2_lake = tKH_co2 * pco2_aq * 10^6) %>%
@@ -194,18 +194,16 @@ lake_flux = left_join(lake_conc, wind_k) %>%
 
 # F = k(Cw - Ceq)
 
-# To get a flux (F) in units of umol / m2 / d, with k in untis of m / d,
-#  concentrations (Cw and Ceq) need to be in units of umol / m3
+# To get a flux (F) in units of mmol / m2 / d, with k in units of m / d,
+#  concentrations (Cw and Ceq) need to be in units of mmol / m3
 
 lake_flux = lake_flux %>%
    # calculate expected dissolved surface water concentrations if in equilibrium with atmosphere (units = uM)
    mutate(ch4_exp = tKH_ch4 * pch4_atmo * 10^6,
           co2_exp = tKH_co2 * pco2_atmo * 10^6,
           n2o_exp = tKH_n2o * pn2o_atmo * 10^6) %>%
-   # convert concentrations from units of (umol / L) to (umol / m3)
-   mutate(across(ends_with("_lake"), ~.*1000)) %>%
-   mutate(across(ends_with("_exp"), ~.*1000)) %>%
-   # calculate diffusive flux (units = umol / m2 / d)
+   # concentration data are in units of (umol / L), this is the same as (mmol / m3), so no conversion needed
+   # calculate diffusive flux (units = mmol / m2 / d)
    mutate(ch4_flux = k_ch4 * (ch4_lake - ch4_exp),
           co2_flux = k_co2 * (co2_lake - co2_exp),
           n2o_flux = k_n2o * (n2o_lake - n2o_exp))
@@ -362,7 +360,6 @@ dea_rates = dea_samples %>%
 #--
 
 # Convert measured chamber headspace to partial pressure (units = atm)
-
 ebu_samples = ebu_samples %>%
    mutate(pch4 = ch4_ppm / 10^6 * 0.97,
           pco2 = co2_ppm / 10^6 * 0.97,
@@ -412,15 +409,15 @@ ebu_data = ebu_data %>%
 #_Calculate additional dissolved gas variables for lake surface water
 
 ebu_data = ebu_data %>%
-   # partial pressure of gases dissolved in lake surface water
+   # partial pressure of gases dissolved in lake surface water (units = atm)
    mutate(pch4_lake = ch4_lake / 10^6 / tKH_ch4,
           pco2_lake = co2_lake / 10^6 / tKH_co2,
           pn2o_lake = n2o_lake / 10^6 / tKH_n2o) %>%
-   # expected lake concentration if surface water at equilibrium with chamber headspace at deployment start
+   # expected lake concentration if surface water at equilibrium with chamber headspace at deployment start (units = uM)
    mutate(ch4_eq_t0 = tKH_ch4 * pch4_t0 * 10^6,
           co2_eq_t0 = tKH_co2 * pco2_t0 * 10^6,
           n2o_eq_t0 = tKH_n2o * pn2o_t0 * 10^6) %>%
-   # expected lake concentration if surface water at equilibrium with chamber headspace at deployment end
+   # expected lake concentration if surface water at equilibrium with chamber headspace at deployment end (units = uM)
    mutate(ch4_eq_t1 = tKH_ch4 * pch4_t1 * 10^6,
           co2_eq_t1 = tKH_co2 * pco2_t1 * 10^6,
           n2o_eq_t1 = tKH_n2o * pn2o_t1 * 10^6)
@@ -461,13 +458,38 @@ ebu_data = ebu_data %>%
 #  the deployment. 
 #--
 
+#--
+# UNITS:
+#
+# V - volumne {L}
+# tKH - temp-corrected Henry's Law constant {mol / L / atm}
+# R - universal gas constant {L atm / K / mol}
+# T - temperature {K}
+# A - area {m2}
+# Pw, Pi, Pf - partial pressure {atm}
+# tf, ti - time {days}
+#
+#_Unit conversions to get units of k in {m / d}
+#
+# ({L} / ({mol / L / atm} * {L atm / K / mol} * {K} * {m2})) * log({atm} / {atm}) / {days}
+# =
+# {L} / {m2} / {days}     ### 1000 L in 1 m3
+# = 
+# ({m3} / 1000{L}) / {m2} / {days}
+# =
+# {m} / 1000{days}
+#
+#--
+
+
 ebu_data = ebu_data %>%
+   # k (units = m / d)
    mutate(k_chamber = 
              (vol_chamber / (tKH_ch4 * 0.0821 * (surface_temp + 273.15) * area_chamber)) 
           * 
              log((pch4_lake - pch4_t0) / (pch4_lake - pch4_t1)) 
           / 
-             deployment_length)
+             (deployment_length * 1000))
 
 
 #--
@@ -482,7 +504,7 @@ ebu_data = ebu_data %>%
    filter(!(is.na(deployment_length))) %>%
    # change "NaN" to NA
    mutate(k_chamber = na_if(k_chamber, "NaN")) %>%
-   # convert chamber-specific k to k600 for comparisons
+   # convert chamber-specific k to k600 for comparisons (units = m / d)
    mutate(Sc_ch4 = getSchmidt(temperature = surface_temp, gas = "CH4"),
           k600 = ((600 / Sc_ch4)^(-0.5)) * k_chamber)
 
@@ -561,7 +583,7 @@ test41 = test4 %>%
    filter(!(pond_id=="D" & k_ratio > cutoff_d)) %>%
    filter(!(pond_id=="E" & k_ratio > cutoff_e)) %>%
    filter(!(pond_id=="F" & k_ratio > cutoff_f)) %>%
-   # mean k600 value from all chambers below the pond-specific cutoff k ratio
+   # mean k600 value from all chambers below the pond-specific cutoff k ratio (units = m / d)
    # this is the k600 representing diffusive flux only within chambers
    group_by(pond_id, doy) %>%
    summarize(k_diffusion = mean(k600, na.rm=T)) %>%
@@ -573,7 +595,7 @@ test42 = ebu_data %>%
 
 
 test43 = test42 %>%
-   # mean diffusive flux k value for each pond-day (leaving NAs in)
+   # mean diffusive flux k value for each pond-day (leaving NAs in) (units = m / d)
    group_by(pond_id, doy) %>%
    summarize(k_diffusion = mean(k_diffusion)) %>%
    ungroup() %>%
@@ -590,26 +612,26 @@ test43 = test42 %>%
 
 # Pond B (DOY 174, 180, 189)
 #  linearly interpolate between DOY 167 and 195
-#  ((2.5118013 - 0.1242225) / (195 - 167)) * (days_since)
+#  ((3.6169939 - 0.1788804) / (195 - 167)) * (days_since)
 btest = test43 %>%
    filter(pond_id=="B") %>%
-   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.08527067 * .$days_since) + lag(.$k_diffusion),
+   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.1227898 * .$days_since) + lag(.$k_diffusion),
                             TRUE ~ as.numeric(k_diffusion))) %>%
-   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.08527067 * .$days_since) + lag(.$k_diffusion),
+   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.1227898 * .$days_since) + lag(.$k_diffusion),
                             TRUE ~ as.numeric(k_diffusion))) %>%
-   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.08527067 * .$days_since) + lag(.$k_diffusion),
+   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.1227898 * .$days_since) + lag(.$k_diffusion),
                             TRUE ~ as.numeric(k_diffusion)))
 
 # Pond F (DOY 174, 180, 189)
 #  linearly interpolate between DOY 167 and 195
-#  ((2.7847750 - 1.5360542) / (195 - 167)) * (days_since)
+#  ((4.0100759 - 2.2119181) / (195 - 167)) * (days_since)
 ftest = test43 %>%
    filter(pond_id=="F") %>%
-   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.04459717 * .$days_since) + lag(.$k_diffusion),
+   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.06421992 * .$days_since) + lag(.$k_diffusion),
                             TRUE ~ as.numeric(k_diffusion))) %>%
-   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.04459717 * .$days_since) + lag(.$k_diffusion),
+   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.06421992 * .$days_since) + lag(.$k_diffusion),
                             TRUE ~ as.numeric(k_diffusion))) %>%
-   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.04459717 * .$days_since) + lag(.$k_diffusion),
+   mutate(k_diffusion = case_when(is.na(.$k_diffusion) ~ (0.06421992 * .$days_since) + lag(.$k_diffusion),
                             TRUE ~ as.numeric(k_diffusion)))
 
 
@@ -646,23 +668,26 @@ ebullition_chambers = bind_rows(test4a, test4b %>% select(-k_ratio)) %>%
    arrange(pond_id, doy, replicate)
 
 
-# Calculate expected diffusive flux rate using chamber-specific k values from chambers receiving only diffusion (units = umol / m2 / d)
+# Calculate expected diffusive flux rate using chamber-specific k values from chambers receiving only diffusion (units = mmol / m2 / d)
 
 #  F = k(Cw - Ceq)
+
+# k units {m/d}
+# Cw & Ceq units {mmol/m3} (same as umol/L)
 
 ebullition_chambers = ebullition_chambers %>%
    # convert diffusive k600 to gas specific k (units = m / d)
    mutate(k_dif_ch4 = k600.2.kGAS.base(k600 = k_diffusion, temperature = surface_temp, gas = "CH4")) %>%
-   # expected diffusive flux with chamber-specific k (units = umol / m2 / d)
+   # expected diffusive flux with chamber-specific k (units = mmol / m2 / d)
    mutate(ch4_exp_dif_flux = k_dif_ch4 * (ch4_lake - ch4_eq_t0))
 
 
 ##__STEP 5
 
-# mass of gas moving into chamber during deployment via diffusion (units = umol)
+# mass of gas moving into chamber during deployment via diffusion (units = mmol)
 
 ebullition_chambers = ebullition_chambers %>%
-   mutate(ch4_exp_dif_mass = ch4_exp_dif_flux * area_chamber * (deployment_length/1440))
+   mutate(ch4_exp_dif_mass = ch4_exp_dif_flux * area_chamber * deployment_length)
 
 
 ##__STEP 6
@@ -683,10 +708,10 @@ ebullition_chambers = ebullition_chambers %>%
 
 ebullition_chambers = ebullition_chambers %>%
    mutate(
-      # mass of gas in chamber due to ebullition (units = umol)
-      ch4_ebu_mass = ch4_total_mass - ch4_exp_dif_mass,
-      # ebullitive flux rate (units = umol / m2 / d)
-      ch4_ebu_flux = ch4_ebu_mass / area_chamber / (deployment_length/1440),
+      # mass of gas in chamber due to ebullition (units = mmol)
+      ch4_ebu_mass = (ch4_total_mass / 1000) - ch4_exp_dif_mass,
+      # ebullitive flux rate (units = mmol / m2 / d)
+      ch4_ebu_flux = ch4_ebu_mass / area_chamber / deployment_length,
       # identify chambers as having received ebullition
       received_ebu = rep_len(1, n()))
 
