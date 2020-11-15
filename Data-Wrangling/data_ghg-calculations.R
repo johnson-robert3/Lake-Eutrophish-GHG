@@ -34,6 +34,8 @@ KH_td_n2o = 2600
 
 # [gas] = (P/RT)*(10^6 umol/mol)
 
+# units = umol/L
+
 ideal_gas_law = function(pp, temp) {
    
    conc = (pp / (0.0821 * (273.15 + temp))) * 10^6
@@ -749,9 +751,12 @@ diffusion_chambers = ebu_data %>%
    
 
 ebu_flux = full_join(ebullition_chambers, diffusion_chambers) %>%
-   # change ebullition from NA to 0
+   # change ebullition from NA to 0 for diffusion chambers
    mutate(ch4_ebu_flux = if_else(received_ebu==0, 0, ch4_ebu_flux)) %>%
-   arrange(pond_id, doy, replicate)
+   arrange(pond_id, doy, replicate) %>%
+   # remove chambers with a negative ebullition rate
+   #  from when estimated diffusive mass flux into chamber was greater than actual mass flux into chamber
+   filter(!(ch4_ebu_flux < 0))
 
 
 # mean ebullitive flux rate from all chambers for each pond
