@@ -7,7 +7,7 @@
 library(cowplot)
 library(patchwork)
 library(viridis)
-library(PNWColors)
+library(slider)
 
 source("Figure-Scripts/figs_functions.R")
 
@@ -267,4 +267,98 @@ ggplot(methano_rates %>% left_join(pond_data),
    scale_y_continuous(name = expression(CO[2]~production~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
    theme_classic()
 
+
+#---
+#### CH4 vs Buoyancy Frequency ####
+#---
+
+# REFERENCE
+# windows()
+m.ref =
+ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>% filter(trt_nutrients=="no"),
+       aes(x = doy, y = ch4_rate)) +
+   # geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue") +
+   geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
+   geom_point(size=4, color="white") +
+   geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="cornflowerblue", color="royalblue", show.legend=F) +
+   # buoy freq
+   geom_line(data = test_hobo %>%
+                filter(pond_id=="F") %>%
+                group_by(doy) %>%
+                summarize(buoy_freq = median(buoy_freq, na.rm=T)) %>%
+                ungroup() %>%
+                mutate(
+                   # regular
+                   buoy_freq = buoy_freq / 10,
+                   # 7-day lag
+                   # buoy_freq = lag(buoy_freq, n=7),
+                   # rolling window
+                   roll_buoy = slide_dbl(buoy_freq, mean, .before=7)),
+             aes(x = doy, y = roll_buoy), color="black", size=1) +
+   #
+   scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
+                      breaks = c("high", "medium", "low"),
+                      values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
+                      labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)), limits = c(0, 0.016), 
+                      sec.axis = sec_axis(~(.*10), name = "Buoyancy Frequency \n(8-day rolling window)")) +
+   labs(title = "Reference") +
+   theme_classic() + 
+   theme(axis.title.y.right = element_text(margin = margin(l=1, unit="line"))) +
+   
+   geom_smooth(method = "loess",
+               se = T,
+               span = 0.5,
+               color = "royalblue")
+
+
+# PULSED
+# windows()
+m.pul =
+ggplot(methano_rates %>% left_join(pond_data) %>% filter(!(is.na(ch4_rate))) %>% filter(trt_nutrients=="yes"),
+       aes(x = doy, y = ch4_rate)) +
+   geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
+   # geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3") +
+   geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3", show.legend=F) +
+   geom_point(size=4, color="white") +
+   geom_point(aes(alpha = trt_fish), shape=21, size=4, fill="seagreen3", color="seagreen", show.legend=F) +
+   # buoy freq
+   geom_line(data = test_hobo %>%
+                filter(pond_id=="B") %>%
+                group_by(doy) %>%
+                summarize(buoy_freq = median(buoy_freq, na.rm=T)) %>%
+                ungroup() %>%
+                mutate(
+                   # regular
+                   buoy_freq = buoy_freq / 10,
+                   # 7-day lag
+                   # buoy_freq = lag(buoy_freq, n=7),
+                   # rolling window
+                   roll_buoy = slide_dbl(buoy_freq, mean, .before=7)),
+             aes(x = doy, y = roll_buoy), color="black", size=1) +
+   #
+   scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
+                      breaks = c("high", "medium", "low"),
+                      values = c("high" = 0.9, "medium" = 0.6, "low" = 0.3),
+                      labels = c("high" = "High", "medium" = "Intermediate", "low" = "Low")) +
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(Methanogenesis~potential~(mu*mol~g^-1~h^-1)), limits = c(0, 0.016),
+                      sec.axis = sec_axis(~(.*10), name = "Buoyancy Frequency \n(8-day rolling window)")) +
+   labs(title = "Pulsed") +
+   theme_classic() + 
+   theme(axis.title.y.right = element_text(margin = margin(l=1, unit="line"))) +
+   
+   geom_smooth(method = "loess",
+               se = T,
+               span = 0.5,
+               color = "seagreen")
+
+
+# 2-panel
+windows(height=7, width=6)
+
+m.ref / m.pul
+
+# ggsave(filename = "Figures/new-figs/methanogenesis_vs_buoy-freq.png", height=7, width=6, units="in")
 
