@@ -7,7 +7,6 @@
 library(cowplot)
 library(patchwork)
 library(viridis)
-library(PNWColors)
 
 source("Figure-Scripts/figs_functions.R")
 
@@ -277,7 +276,7 @@ ggplot(lake_flux %>% left_join(pond_data),
    # CI
    geom_smooth(aes(group = trt_nutrients,
                    fill = trt_nutrients),
-               method = "loess", se = T, span = 0.5, alpha = 0.25, show.legend=F) +
+               method = "loess", se = T, span = 0.5, alpha = 0.15, show.legend=F) +
    # mean
    geom_smooth(aes(group = trt_nutrients,
                    color = trt_nutrients),
@@ -449,7 +448,7 @@ ggplot(lake_flux %>% left_join(pond_data)%>% mutate(n2o_flux = n2o_flux * 1000),
    # CI
    geom_smooth(aes(group = trt_nutrients,
                    fill = trt_nutrients),
-               method = "loess", se = T, span = 0.5, alpha = 0.25, show.legend=F) +
+               method = "loess", se = T, span = 0.5, alpha = 0.15, show.legend=F) +
    # mean
    geom_smooth(aes(group = trt_nutrients,
                    color = trt_nutrients),
@@ -617,7 +616,7 @@ ggplot(lake_flux %>% left_join(pond_data),
    # CI
    geom_smooth(aes(group = trt_nutrients,
                    fill = trt_nutrients),
-               method = "loess", se = T, span = 0.5, alpha = 0.25, show.legend=F) +
+               method = "loess", se = T, span = 0.5, alpha = 0.15, show.legend=F) +
    # mean
    geom_smooth(aes(group = trt_nutrients,
                    color = trt_nutrients),
@@ -645,4 +644,7 @@ ggplot(lake_flux %>% left_join(pond_data),
 windows(height=10, width=6)
 
 a / b / c
+
+ggsave(filename = "Figures/new-figs/diffusive-flux_all.png", height=10, width=6, units="in")
+
 

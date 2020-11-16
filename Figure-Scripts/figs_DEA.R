@@ -127,24 +127,6 @@ ggsave(filename = "Figures/new-figs/DEA-n2o_np-trt.png", height=7, width=6, unit
 }
 
 
-# Mean + CI by nutrient treatment
-windows(height=4, width=6)
-ggplot(dea_rates %>% left_join(pond_data) %>% mutate(n2o_rate = n2o_rate * 1000),
-       aes(x = doy, y = n2o_rate)) +
-   geom_smooth(aes(group = trt_nutrients,
-                   color = trt_nutrients),
-               method = "loess", se = T, span = 0.5) +
-   #
-   scale_color_manual(name = "Treatment",
-                      breaks = c("no", "yes"),
-                      values = c("no" = "royalblue", "yes" = "seagreen"),
-                      labels = c("no" = "Reference", "yes" = "Pulsed"),
-                      guide = guide_legend(override.aes = list(fill = NA))) +
-   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(N[2]*O~production~(nmol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
-   theme_classic()
-
-
 #---
 #### Carbon Dioxide ####
 #---
@@ -263,24 +245,6 @@ ggsave(filename = "Figures/new-figs/DEA-co2_np-trt.png", height=7, width=6, unit
 }
 
 
-# Mean + CI by nutrient treatment
-windows(height=4, width=6)
-ggplot(dea_rates %>% left_join(pond_data) %>% mutate(co2_rate = co2_rate * 1000),
-       aes(x = doy, y = co2_rate)) +
-   geom_smooth(aes(group = trt_nutrients,
-                   color = trt_nutrients),
-               method = "loess", se = T, span = 0.5) +
-   #
-   scale_color_manual(name = "Treatment",
-                      breaks = c("no", "yes"),
-                      values = c("no" = "royalblue", "yes" = "seagreen"),
-                      labels = c("no" = "Reference", "yes" = "Pulsed"),
-                      guide = guide_legend(override.aes = list(fill = NA))) +
-   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CO[2]~production~(nmol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
-   theme_classic()
-
-
 #---
 #### N2O vs Buoyancy Frequency ####
 #---
@@ -382,5 +346,69 @@ windows(height=7, width=6)
 n.ref / n.pul
 
 # ggsave(filename = "Figures/new-figs/DEA_vs_buoy-freq.png", height=7, width=6, units="in")
+
+
+#---
+#### Mean + CI ####
+#---
+
+## Nitrous Oxide
+# windows(height=4, width=6)
+
+a = 
+ggplot(dea_rates %>% left_join(pond_data) %>% mutate(n2o_rate = n2o_rate * 1000),
+       aes(x = doy, y = n2o_rate)) +
+   # CI
+   geom_smooth(aes(group = trt_nutrients,
+                   fill = trt_nutrients),
+               method = "loess", se = T, span = 0.5, alpha = 0.15, show.legend=F) +
+   # mean
+   geom_smooth(aes(group = trt_nutrients,
+                   color = trt_nutrients),
+               method = "loess", se = F, span = 0.5) +
+   #
+   scale_color_manual(name = NULL,
+                      values = c("no" = "royalblue", "yes" = "seagreen"),
+                      labels = c("no" = "Reference", "yes" = "Pulsed")) +
+   scale_fill_manual(values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
+   #
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(DEA~N[2]*O~(nmol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   theme_classic()
+
+
+## Carbon Dioxide
+# windows(height=4, width=6)
+
+b = 
+ggplot(dea_rates %>% left_join(pond_data) %>% mutate(co2_rate = co2_rate * 1000),
+       aes(x = doy, y = co2_rate)) +
+   # CI
+   geom_smooth(aes(group = trt_nutrients,
+                   fill = trt_nutrients),
+               method = "loess", se = T, span = 0.5, alpha = 0.15, show.legend=F) +
+   # mean
+   geom_smooth(aes(group = trt_nutrients,
+                   color = trt_nutrients),
+               method = "loess", se = F, span = 0.5) +
+   #
+   scale_color_manual(name = NULL,
+                      values = c("no" = "royalblue", "yes" = "seagreen"),
+                      labels = c("no" = "Reference", "yes" = "Pulsed")) +
+   scale_fill_manual(values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
+   #
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(DEA~CO[2]~(nmol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   theme_classic()
+
+
+# Figure
+windows(height=6.5, width=6)
+
+a / b
+
+ggsave(filename = "Figures/new-figs/DEA_all.png", height=6.5, width=6, units="in")
 
 
