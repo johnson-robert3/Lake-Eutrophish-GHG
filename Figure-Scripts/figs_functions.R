@@ -33,7 +33,6 @@ fig_aes_fw = function(.fig) {
 }
 
 
-
 # Buoyancy Frequency function for non-time-series data
 profile_bf = function(.dat) {
    
@@ -49,5 +48,19 @@ profile_bf = function(.dat) {
    return(table)
    
 }
+
+
+# Commonly used values/vectors for figures
+
+# Nutrient treatment
+nut_breaks = c("no", "yes")
+nut_color = c("no" = "cornflowerblue", "yes" = "seagreen3")
+nut_labs = c("no" = "Reference", "yes" = "Pulsed")
+
+
+# Food web treatment
+fish_breaks = c("high", "medium", "low")
+fish_alpha = c("high" = 0.9, "medium" = 0.6, "low" = 0.3)
+fish_labs = c("high" = "High", "medium" = "Intermediate", "low" = "Low")
 
 
