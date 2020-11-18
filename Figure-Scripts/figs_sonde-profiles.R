@@ -5,6 +5,7 @@
 
 
 library(viridis)
+library(slider)
 
 source("Figure-Scripts/figs_functions.R")
 
@@ -213,28 +214,31 @@ a / b / c
 a = 
 ggplot(sonde_bottom %>% left_join(pond_data) %>% filter(trt_fish=="high") %>%
           mutate(roll_sat = slide_dbl(do_sat, mean, .before=7)),
-       aes(x = doy, y = roll_sat)) %>%
+       aes(x = doy, y = do_sat)) %>%
    fig_aes_fw() +
-   scale_y_continuous(name = "DO sat (%) (8-day window)", limits = c(0, 210))
+   scale_y_continuous(name = "DO sat (%)", limits = c(0, 210)) +
+   ggtitle("High")
 
 b = 
 ggplot(sonde_bottom %>% left_join(pond_data) %>% filter(trt_fish=="medium") %>%
           mutate(roll_sat = slide_dbl(do_sat, mean, .before=7)),
-       aes(x = doy, y = roll_sat)) %>%
+       aes(x = doy, y = do_sat)) %>%
    fig_aes_fw() +
-   scale_y_continuous(name = "DO sat (%) (8-day window)", limits = c(0, 210))
+   scale_y_continuous(name = "DO sat (%)", limits = c(0, 210)) +
+   ggtitle("Intermediate")
 
 c = 
 ggplot(sonde_bottom %>% left_join(pond_data) %>% filter(trt_fish=="low") %>%
           mutate(roll_sat = slide_dbl(do_sat, mean, .before=7)),
-       aes(x = doy, y = roll_sat)) %>%
+       aes(x = doy, y = do_sat)) %>%
    fig_aes_fw() +
-   scale_y_continuous(name = "DO sat (%) (8-day window)", limits = c(0, 210))
+   scale_y_continuous(name = "DO sat (%)", limits = c(0, 210)) +
+   ggtitle("Low")
 
 
 windows(height=10, width=6)
 a / b / c
 
-
+ggsave(filename = "Figures/new-figs/bottom-water-DO.png", height=10, width=6, units="in")
 
 
