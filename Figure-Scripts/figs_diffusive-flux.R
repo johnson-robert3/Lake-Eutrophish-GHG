@@ -276,11 +276,11 @@ ggplot(lake_flux %>% left_join(pond_data),
    # CI
    geom_smooth(aes(group = trt_nutrients,
                    fill = trt_nutrients),
-               method = "loess", se = T, span = 0.5, alpha = 0.15, show.legend=F) +
+               method = "loess", se = T, span = 0.2, alpha = 0.15, show.legend=F) +
    # mean
    geom_smooth(aes(group = trt_nutrients,
                    color = trt_nutrients),
-               method = "loess", se = F, span = 0.5) +
+               method = "loess", se = F, span = 0.2) +
    #
    scale_color_manual(name = NULL,
                       breaks = c("no", "yes"),
@@ -448,11 +448,11 @@ ggplot(lake_flux %>% left_join(pond_data)%>% mutate(n2o_flux = n2o_flux * 1000),
    # CI
    geom_smooth(aes(group = trt_nutrients,
                    fill = trt_nutrients),
-               method = "loess", se = T, span = 0.5, alpha = 0.15, show.legend=F) +
+               method = "loess", se = T, span = 0.2, alpha = 0.15, show.legend=F) +
    # mean
    geom_smooth(aes(group = trt_nutrients,
                    color = trt_nutrients),
-               method = "loess", se = F, span = 0.5) +
+               method = "loess", se = F, span = 0.2) +
    #
    scale_color_manual(name = NULL,
                       breaks = c("no", "yes"),
@@ -616,11 +616,13 @@ ggplot(lake_flux %>% left_join(pond_data),
    # CI
    geom_smooth(aes(group = trt_nutrients,
                    fill = trt_nutrients),
-               method = "loess", se = T, span = 0.5, alpha = 0.15, show.legend=F) +
+               method = "loess", se = T, span = 0.2, alpha = 0.15, show.legend=F) +
    # mean
    geom_smooth(aes(group = trt_nutrients,
                    color = trt_nutrients),
-               method = "loess", se = F, span = 0.5) +
+               method = "loess", se = F, span = 0.2) +
+   # points
+   # geom_point(aes(color = trt_nutrients), shape=16, size=1.5, alpha=0.3) +
    #
    scale_color_manual(name = NULL,
                       breaks = c("no", "yes"),
