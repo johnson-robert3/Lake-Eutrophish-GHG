@@ -6,6 +6,7 @@
 
 library(cowplot)
 library(patchwork)
+library(slider)
 
 source("Figure-Scripts/figs_functions.R")
 
@@ -73,8 +74,11 @@ ggsave(filename = "Figures/new-figs/NEP_fw-trt.png", height=10, width=6, units="
 # REFERENCE
 # windows()
 n.ref =
-ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt_nutrients=="no"),
-       aes(x = doy, y = NEP)) +
+ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt_nutrients=="no") %>%
+          group_by(pond_id) %>%
+          mutate(roll_nep = slide_dbl(NEP, mean, .before=2)) %>%
+          ungroup(),
+       aes(x = doy, y = roll_nep)) +
    geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue") +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    # geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
@@ -96,8 +100,11 @@ ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt
 # PULSED
 # windows()
 n.pul =
-ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt_nutrients=="yes"),
-       aes(x = doy, y = NEP)) +
+ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt_nutrients=="yes") %>%
+          group_by(pond_id) %>%
+          mutate(roll_nep = slide_dbl(NEP, mean, .before=2)) %>%
+          ungroup(),
+       aes(x = doy, y = roll_nep)) +
    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3") +
@@ -123,7 +130,7 @@ windows(height=7, width=6)
 n.ref / n.pul
 
 # ggsave(filename = "Figures/NEP_2panel.png", height=7, width=6, units="in")
-ggsave(filename = "Figures/new-figs/NEP_np-trt.png", height=7, width=6, units="in")
+ggsave(filename = "Figures/new-figs/roll-NEP_np-trt.png", height=7, width=6, units="in")
 
 }
 
@@ -188,8 +195,11 @@ ggsave(filename = "Figures/new-figs/R_fw-trt.png", height=10, width=6, units="in
 # REFERENCE
 # windows()
 r.ref =
-ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt_nutrients=="no"),
-       aes(x = doy, y = R)) +
+ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt_nutrients=="no") %>%
+          group_by(pond_id) %>%
+          mutate(roll_re = slide_dbl(R, mean, .before=2)) %>%
+          ungroup(),
+       aes(x = doy, y = roll_re)) +
    geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue") +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    # geom_line(aes(alpha = trt_fish), size=1.25, color="cornflowerblue", show.legend=F) +
@@ -210,8 +220,11 @@ ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt
 # PULSED
 # windows()
 r.pul =
-ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt_nutrients=="yes"),
-       aes(x = doy, y = R)) +
+ggplot(metab_mle %>% left_join(pond_data) %>% filter(GPP>0 & R<0) %>% filter(trt_nutrients=="yes") %>%
+          group_by(pond_id) %>%
+          mutate(roll_re = slide_dbl(R, mean, .before=2)) %>%
+          ungroup(),
+       aes(x = doy, y = roll_re)) +
    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
    geom_hline(yintercept = 0, linetype=3, color="gray40") +
    geom_line(aes(alpha = trt_fish), size=1.25, color="seagreen3") +
@@ -236,7 +249,7 @@ windows(height=7, width=6)
 r.ref / r.pul
 
 # ggsave(filename = "Figures/R_2panel.png", height=7, width=6, units="in")
-ggsave(filename = "Figures/new-figs/R_np-trt.png", height=7, width=6, units="in")
+ggsave(filename = "Figures/new-figs/roll-R_np-trt.png", height=7, width=6, units="in")
 
 }
 
