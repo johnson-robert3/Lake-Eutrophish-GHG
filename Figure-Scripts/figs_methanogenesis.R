@@ -386,60 +386,76 @@ m.ref / m.pul
 ## Methane
 # windows(height=4, width=6)
 
-a = 
-ggplot(methano_rates %>% left_join(pond_data),
-       aes(x = doy, y = ch4_rate)) +
+a =
+ggplot(methano_rates %>% left_join(pond_data) %>%
+          group_by(trt_nutrients, doy) %>%
+          summarize(mean = mean(ch4_rate),
+                    se = sd(ch4_rate)/sqrt(n())) %>%
+          ungroup(),
+       aes(x = doy, y = mean)) +
    # CI
-   geom_smooth(aes(group = trt_nutrients,
-                   fill = trt_nutrients),
-               method = "loess", se = T, span = 0.5, alpha = 0.15, show.legend=F) +
+   # geom_smooth(aes(group = trt_nutrients,
+   #                 fill = trt_nutrients),
+   #             method = "loess", se = T, span = 0.5, alpha = 0.15, show.legend=F) +
    # mean
-   geom_smooth(aes(group = trt_nutrients,
-                   color = trt_nutrients),
-               method = "loess", se = F, span = 0.5) +
+   # geom_smooth(aes(group = trt_nutrients,
+   #                 color = trt_nutrients),
+   #             method = "loess", se = F, span = 0.5) +
+   # mean+se
+   geom_errorbar(aes(x = doy, ymin = mean - se, ymax = mean + se), width=1, color="gray60") +
+   geom_line(aes(color = trt_nutrients), size=1.5, alpha=0.7) +
    #
    scale_color_manual(name = NULL,
-                      values = c("no" = "royalblue", "yes" = "seagreen"),
+                      values = nut_color,
                       labels = c("no" = "Reference", "yes" = "Pulsed")) +
-   scale_fill_manual(values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   # scale_fill_manual(values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
    #
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(methanogenesis~CH[4]~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.05)) +
+   scale_y_continuous(name = expression(methanogenesis~CH[4]~(mu*mol~g^-1~h^-1)), limits = c(0, 0.0127)) +
+   ggtitle("Methane") +
    theme_classic()
 
 
 ## Carbon Dioxide
 # windows(height=4, width=6)
 
-b = 
-ggplot(methano_rates %>% left_join(pond_data),
-       aes(x = doy, y = co2_rate)) +
+b =
+ggplot(methano_rates %>% left_join(pond_data) %>%
+          group_by(trt_nutrients, doy) %>%
+          summarize(mean = mean(co2_rate),
+                    se = sd(co2_rate)/sqrt(n())) %>%
+          ungroup(),
+       aes(x = doy, y = mean)) +
    # CI
-   geom_smooth(aes(group = trt_nutrients,
-                   fill = trt_nutrients),
-               method = "loess", se = T, span = 0.5, alpha = 0.15, show.legend=F) +
+   # geom_smooth(aes(group = trt_nutrients,
+   #                 fill = trt_nutrients),
+   #             method = "loess", se = T, span = 0.5, alpha = 0.15, show.legend=F) +
    # mean
-   geom_smooth(aes(group = trt_nutrients,
-                   color = trt_nutrients),
-               method = "loess", se = F, span = 0.5) +
+   # geom_smooth(aes(group = trt_nutrients,
+   #                 color = trt_nutrients),
+   #             method = "loess", se = F, span = 0.5) +
+   # mean+se
+   geom_errorbar(aes(x = doy, ymin = mean - se, ymax = mean + se), width=1, color="gray60") +
+   geom_line(aes(color = trt_nutrients), size=1.5, alpha=0.7) +
    #
    scale_color_manual(name = NULL,
-                      values = c("no" = "royalblue", "yes" = "seagreen"),
+                      values = nut_color,
                       labels = c("no" = "Reference", "yes" = "Pulsed")) +
-   scale_fill_manual(values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   # scale_fill_manual(values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
    #
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(methanogenesis~CO[2]~(mu*mol~g^-1~h^-1)), expand = expansion(mult=0.05)) +
+   scale_y_continuous(name = expression(methanogenesis~CO[2]~(mu*mol~g^-1~h^-1)), limits = c(0, 0.09)) +
+   ggtitle("Carbon Dioxide") +
    theme_classic()
 
 
 # Figure
-windows(height=6.5, width=6)
+windows(height=7, width=6)
 
 a / b
 
-ggsave(filename = "Figures/new-figs/methanogenesis_all.png", height=6.5, width=6, units="in")
+ggsave(filename = "Figures/new-figs/methanogenesis_all.png", height=7, width=6, units="in")
 
 
