@@ -53,9 +53,9 @@ profile_bf = function(.dat) {
 # Commonly used values/vectors for figures
 
 # Nutrient treatment
-nut_breaks = c("no", "yes")
-nut_color = c("no" = "cornflowerblue", "yes" = "seagreen3")
-nut_labs = c("no" = "Reference", "yes" = "Pulsed")
+nut_breaks = c("yes", "no")
+nut_color = c("yes" = "seagreen3", "no" = "cornflowerblue")
+nut_labs = c("yes" = "Pulsed", "no" = "Reference")
 
 
 # Food web treatment
