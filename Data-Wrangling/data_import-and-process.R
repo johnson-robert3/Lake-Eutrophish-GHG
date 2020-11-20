@@ -76,8 +76,8 @@ sonde_profiles = sonde_profiles %>%
    mutate(temp = (temp - 32) / 1.8) %>%
    # correct vertical position (depth sensor and probes not at same height)
    # add 5 cm to all
-   mutate(vert_m = vert_m + 0.05,
-          vert_m = if_else(vert_m<0, 0, vert_m)) %>%
+   # mutate(vert_m = vert_m + 0.05,
+   #        vert_m = if_else(vert_m<0, 0, vert_m)) %>%
    # remove errant measurements recorded as 1970-01-01
    filter(!(doy==1))
    
@@ -88,11 +88,11 @@ sonde_profiles = sonde_profiles %>%
 
 
 ##__Surface water means 
-#  Depth: 2-20 cm
+#  Depth: 10-30 cm
 
 sonde_surface = sonde_profiles %>%
    group_by(pond_id, doy) %>%
-   filter(vert_m > 0.02 & vert_m < 0.20) %>%
+   filter(vert_m >= 0.1 & vert_m <= 0.30) %>%
    summarize(across(temp:salinity, ~mean(., na.rm=T))) %>%
    ungroup()
 
