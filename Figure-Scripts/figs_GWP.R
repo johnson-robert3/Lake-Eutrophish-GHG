@@ -128,26 +128,26 @@ a =
 ggplot(gdat %>%
           left_join(pond_data) %>%
           mutate(co2_flux_eqv = co2_flux_eqv / 1000) %>%
-          group_by(trt_nutrients, doy) %>%
-          summarize(mean = mean(co2_flux_eqv),
-                    se = sd(co2_flux_eqv)/sqrt(n())) %>%
-          ungroup() %>%
-          group_by(trt_nutrients) %>%
-          mutate(cumm = slide_dbl(mean, ~sum(.), .before=Inf)) %>%
+          # group_by(trt_nutrients, doy) %>%
+          # summarize(mean = mean(co2_flux_eqv),
+          #           se = sd(co2_flux_eqv)/sqrt(n())) %>%
+          # ungroup() %>%
+          group_by(pond_id) %>%
+          mutate(cumm = slide_dbl(co2_flux_eqv, ~sum(.), .before=Inf)) %>%
           ungroup(),
        aes(x = doy, y = cumm)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
    #
-   geom_line(aes(color = trt_nutrients), alpha=0.7, size=1.5) +
-   geom_point(aes(color = trt_nutrients), size=2) +
+   geom_line(aes(color = trt_nutrients, group=pond_id), alpha=0.6, size=1.25) +
+   geom_point(aes(color = trt_nutrients), size=1.5, alpha=0.6) +
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
    scale_x_continuous(name = "DOY") +
    scale_y_continuous(name = expression(Cumulative~flux~(g~CO[2]*"-eq"~m^-2))) +
    #
-   ggtitle("Carbon Dioxide") +
+   ggtitle(expression(CO[2])) +
    theme_classic()
 
 
@@ -157,26 +157,26 @@ b =
 ggplot(gdat %>%
           left_join(pond_data) %>%
           mutate(ch4_flux_eqv = ch4_flux_eqv / 1000) %>%
-          group_by(trt_nutrients, doy) %>%
-          summarize(mean = mean(ch4_flux_eqv),
-                    se = sd(ch4_flux_eqv)/sqrt(n())) %>%
-          ungroup() %>%
-          group_by(trt_nutrients) %>%
-          mutate(cumm = slide_dbl(mean, ~sum(.), .before=Inf)) %>%
+          # group_by(trt_nutrients, doy) %>%
+          # summarize(mean = mean(ch4_flux_eqv),
+          #           se = sd(ch4_flux_eqv)/sqrt(n())) %>%
+          # ungroup() %>%
+          group_by(pond_id) %>%
+          mutate(cumm = slide_dbl(ch4_flux_eqv, ~sum(.), .before=Inf)) %>%
           ungroup(),
        aes(x = doy, y = cumm)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
    #
-   geom_line(aes(color = trt_nutrients), alpha=0.7, size=1.5) +
-   geom_point(aes(color = trt_nutrients), size=2) +
+   geom_line(aes(color = trt_nutrients, group=pond_id), alpha=0.6, size=1.25) +
+   geom_point(aes(color = trt_nutrients), size=1.5, alpha=0.6) +
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
    scale_x_continuous(name = "DOY") +
    scale_y_continuous(name = expression(Cumulative~flux~(g~CO[2]*"-eq"~m^-2))) +
    #
-   ggtitle("Methane") +
+   ggtitle(expression(CH[4])) +
    theme_classic()
 
 
@@ -185,26 +185,26 @@ windows()
 c =
 ggplot(gdat %>%
           left_join(pond_data) %>%
-          group_by(trt_nutrients, doy) %>%
-          summarize(mean = mean(n2o_flux_eqv),
-                    se = sd(n2o_flux_eqv)/sqrt(n())) %>%
-          ungroup() %>%
-          group_by(trt_nutrients) %>%
-          mutate(cumm = slide_dbl(mean, ~sum(.), .before=Inf)) %>%
+          # group_by(trt_nutrients, doy) %>%
+          # summarize(mean = mean(n2o_flux_eqv),
+          #           se = sd(n2o_flux_eqv)/sqrt(n())) %>%
+          # ungroup() %>%
+          group_by(pond_id) %>%
+          mutate(cumm = slide_dbl(n2o_flux_eqv, ~sum(.), .before=Inf)) %>%
           ungroup(),
        aes(x = doy, y = cumm)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
    #
-   geom_line(aes(color = trt_nutrients), alpha=0.7, size=1.5) +
-   geom_point(aes(color = trt_nutrients), size=2.5) +
+   geom_line(aes(color = trt_nutrients, group=pond_id), alpha=0.6, size=1.25) +
+   geom_point(aes(color = trt_nutrients), size=1.5, alpha=0.6) +
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
    scale_x_continuous(name = "DOY") +
    scale_y_continuous(name = expression(Cumulative~flux~(mg~CO[2]*"-eq"~m^-2))) +
    #
-   ggtitle("Nitrous Oxide") +
+   ggtitle(expression(N[2]*O)) +
    theme_classic()
 
 
@@ -257,20 +257,20 @@ windows(height=4, width=6)
 ggplot(gdat %>%
           left_join(pond_data) %>%
           mutate(gwp = gwp / 1000) %>%
-          group_by(trt_nutrients, doy) %>%
-          summarize(mean = mean(gwp),
-                    se = sd(gwp)/sqrt(n())) %>%
-          ungroup() %>%
-          group_by(trt_nutrients) %>%
-          mutate(cumm = slide_dbl(mean, ~sum(.), .before=Inf)) %>%
+          # group_by(trt_nutrients, doy) %>%
+          # summarize(mean = mean(gwp),
+          #           se = sd(gwp)/sqrt(n())) %>%
+          # ungroup() %>%
+          group_by(pond_id) %>%
+          mutate(cumm = slide_dbl(gwp, ~sum(.), .before=Inf)) %>%
           ungroup(),
        aes(x = doy, y = cumm)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
    #
-   geom_line(aes(color = trt_nutrients), alpha=0.7, size=1.5) +
-   geom_point(aes(color = trt_nutrients), size=2) +
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.6, size=1.25) +
+   geom_point(aes(color = trt_nutrients), size=1.5, alpha=0.6) +
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
    scale_x_continuous(name = "DOY") +
