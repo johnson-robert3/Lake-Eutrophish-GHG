@@ -54,7 +54,8 @@ profile_bf = function(.dat) {
 
 # Nutrient treatment
 nut_breaks = c("yes", "no")
-nut_color = c("yes" = "seagreen3", "no" = "cornflowerblue")
+# nut_color = c("yes" = "seagreen3", "no" = "cornflowerblue")
+nut_color = c("yes" = "#e94560", "no" = "#0f3460")
 nut_labs = c("yes" = "Pulsed", "no" = "Reference")
 
 
