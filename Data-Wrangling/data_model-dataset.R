@@ -19,7 +19,11 @@
 ## Prep the individual data sets
 
 t1 = lake_flux %>%
-   select(pond_id, doy, ends_with("flux"))
+   select(pond_id, doy, week, ends_with("flux"))
+
+
+t10 = lake_conc %>%
+   select(pond_id, doy, ends_with("lake"))
 
 
 t2 = metab_mle %>%
@@ -69,7 +73,8 @@ t9 = hobo_mld %>%
 
 # combined
 
-test = full_join(t1, t2) %>%
+test = full_join(t1, t10) %>%
+   full_join(t2) %>%
    full_join(t3) %>%
    full_join(t4) %>%
    full_join(t5) %>%
