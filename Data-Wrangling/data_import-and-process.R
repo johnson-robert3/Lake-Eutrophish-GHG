@@ -27,18 +27,18 @@ pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
 read_profile = function(.dat, .skip) {
    read_csv(.dat, skip = .skip) %>%
       clean_names() %>%
-      select(date, time, site, temp_u_fffd_f, odo_percent_sat, odo_mg_l, p_h, contains("chlorophyll"), contains("cond"), pc_rfu, pc_ug_l,
+      select(date, time, site, temp_f, odo_percent_sat, odo_mg_l, p_h, contains("chlorophyll"), contains("cond"), pc_rfu, pc_ug_l,
              sal_psu, pressure_psi_a, depth_m, vertical_position_m, -contains("n_lf_cond")) %>%
       rename(pond_id = site,
-             temp = temp_u_fffd_f,
+             temp = temp_f,
              do_sat = odo_percent_sat,
              do = odo_mg_l,
              ph = p_h,
-             chla = chlorophyll_u_fffd_g_l,
+             chla = chlorophyll_g_l,         # units are actually ug/L; new clean_names() drops this for some reason
              chla_rfu = chlorophyll_rfu,
              phyco = pc_ug_l,
              phyco_rfu = pc_rfu,
-             cond = cond_u_fffd_s_cm,
+             cond = cond_s_cm,               # units are actually uS/cm; new clean_names() drops this for some reason
              sp_cond = sp_cond_u_fffd_s_cm,
              salinity = sal_psu,
              vert_m = vertical_position_m)
@@ -66,6 +66,9 @@ sonde_profiles = full_join(sonde_nohead, sonde_head)
 
 # Clean up profile dataset
 sonde_profiles = sonde_profiles %>%
+   # remove the times (n=3) when a duplicate profile appears in the data set, but with no data
+   # DOY 162 Pond C; DOY 185 Pond F; DOY 210 Pond D
+   filter(!(is.na(temp) & is.na(do) & is.na(chla) & is.na(vert_m))) %>%
    mutate(pond_id = str_remove(pond_id, "Pond "),
           date_time = as.POSIXct(mdy(date) + hms(time)),
           doy = yday(date_time)) %>%
@@ -516,7 +519,7 @@ weather_data = weather_data_raw %>%
    rename(date_time = date_time_gmt_05_00,
           wind_speed = wind_speed_m_s_lgr_s_n_20849581_sen_s_n_20843154,
           gust_speed = gust_speed_m_s_lgr_s_n_20849581_sen_s_n_20843154,
-          par = par_u_fffd_mol_m_u_fffd_s_lgr_s_n_20849581_sen_s_n_20856725)
+          par = par_mol_m_u_fffd_s_lgr_s_n_20849581_sen_s_n_20856725)
 
 
 # Additional variables
