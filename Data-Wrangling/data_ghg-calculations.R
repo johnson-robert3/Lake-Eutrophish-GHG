@@ -175,12 +175,11 @@ lake_conc = syr_conc %>%
 
 ## Calculate wind-based k (units = m / d)
 wind_k = weather_data %>%
-   mutate(wnd = wind_speed,
-          U10 = wnd * ((10 / wnd.z)^(1/7)),
+   mutate(U10 = wind_speed * ((10 / wind_z)^(1/7)),
           k_cole = k.cole.base(U10)) %>%
    # daily average k (units = m / d)
    group_by(doy) %>%
-   summarize(across(wnd.z:k_cole, ~mean(., na.rm=T))) %>%
+   summarize(across(wind_z:k_cole, ~mean(., na.rm=T))) %>%
    ungroup()
 
 
@@ -764,4 +763,9 @@ ebu_flux_pond = ebu_flux %>%
    group_by(pond_id, week, doy) %>%
    summarize(ch4_ebu_flux = mean(ch4_ebu_flux)) %>%
    ungroup()
+
+
+   ## remove all temporary data sets from ebullition calculations
+   rm(list=ls(pattern="test"))
+   ##
 

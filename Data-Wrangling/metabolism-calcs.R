@@ -86,7 +86,7 @@ metab_data = hobo_mld %>%
 
 # Additional parameters for metabolism calcs
 metab_data = metab_data %>%
-   mutate(U10 = wind_speed * ((10 / wnd.z)^(1/7)),
+   mutate(U10 = wind_speed * ((10 / wind_z)^(1/7)),
           k_cole = k.cole.base(U10),
           k_gas = k600.2.kGAS.base(k600 = k_cole, 
                                    temperature = temp, 

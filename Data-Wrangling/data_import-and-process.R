@@ -529,7 +529,7 @@ weather_data = weather_data %>%
           doy = yday(date_time)) %>%
    relocate(doy, .after = date_time) %>%
    # anemometer height (4 m)
-   mutate(wnd.z = rep_len(4, n()))
+   mutate(wind_z = rep_len(4, n()))
 
 
 #---
