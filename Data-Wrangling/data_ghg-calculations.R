@@ -102,7 +102,7 @@ atm_conc = lake_samples %>%
 # The original concentration of CO2 (or pCO2) in the lakes cannot be calculated directly from
 #  the syringe headspace equilibration method to due carbonate buffering of CO2.
 
-# Koschorreck et al. 2020 (Biogeosciences) provides a method to correctly calculate the original
+# Koschorreck et al. 2021 (Biogeosciences) provides a method to correctly calculate the original
 #  pCO2 in an aqueous sample from a gaseous headspace accounting for the carbonate chemistry of
 #  the aqueous sample by also using the alkalinity of the sample water. 
 
@@ -129,8 +129,8 @@ df_co2 = lake_samples %>%
 # Rename columns for use in equation
 df_co2 = df_co2 %>%
    transmute(Sample.ID = sample_id,
-             HS.pCO2.before = atmo_co2_ppm,
-             HS.pCO2.after = head_co2_ppm,
+             HS.mCO2.before = atmo_co2_ppm,
+             HS.mCO2.after = head_co2_ppm,
              Temp.insitu = surface_temp,
              Temp.equil = surface_temp,
              Alkalinity.measured = alkalinity,
@@ -143,12 +143,12 @@ df_co2 = df_co2 %>%
 # Calculate original pCO2 in water sample (prior to equilibration)
 lake_co2 = Rheadspace(df_co2)
 
-# Convert original pCO2 to dissolved concentration (units = uM)
+# Convert original pCO2 to atmospheres (units = atm)
 lake_co2 = lake_co2 %>%
    clean_names() %>%
    transmute(sample_id = sample_id,
              # convert ppm to partial pressure in atm
-             pco2_aq = p_co2_complete_headspace_ppmv / 10^6 * 0.97)
+             pco2_aq = m_co2_complete_headspace_ppmv / 10^6 * 0.97)
 
 
 ##__Combine CH4, N2O, and CO2 data and calculate original concentration dissolved in lake water (units = uM)
