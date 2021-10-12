@@ -1,0 +1,421 @@
+sample_id,pond_id,site_id,week,date,time,diam_chamber,vol_chamber,notes
+E20A152P1,A,deep,2,5/31/2020,14:58,23,4.5,
+E20B152P1,B,deep,2,5/31/2020,14:51,23,4.5,
+E20B152P2,B,deep,2,5/31/2020,15:52,23,4.5,
+E20B152P3,B,deep,2,5/31/2020,14:54,23,4.5,
+E20C152P1,C,deep,2,5/31/2020,14:47,23,4.5,
+E20D152P1,D,deep,2,5/31/2020,14:43,23,4.5,
+E20E152P1,E,deep,2,5/31/2020,14:40,23,4.5,
+E20F152P1,F,deep,2,5/31/2020,14:31,23,4.5,
+E20F152P2,F,deep,2,5/31/2020,14:33,23,4.5,
+E20F152P3,F,deep,2,5/31/2020,14:35,23,4.5,
+E20A153P1,A,deep,2,6/1/2020,13:21,23,4.5,under dock at end
+E20B153P1,B,deep,2,6/1/2020,13:13,23,4.5,
+E20B153P2,B,deep,2,6/1/2020,13:15,23,4.5,
+E20B153P3,B,deep,2,6/1/2020,13:17,23,4.5,
+E20C153P1,C,deep,2,6/1/2020,13:10,23,4.5,
+E20D153P1,D,deep,2,6/1/2020,13:07,23,4.5,
+E20E153P1,E,deep,2,6/1/2020,13:04,23,4.5,
+E20F153P1,F,deep,2,6/1/2020,12:59,23,4.5,
+E20F153P2,F,deep,2,6/1/2020,13:00,23,4.5,
+E20F153P3,F,deep,2,6/1/2020,13:01,23,4.5,
+E20A159P1,A,deep,3,6/7/2020,13:11,23,4.5,
+E20B159P1,B,deep,3,6/7/2020,13:17,23,4.5,
+E20B159P2,B,deep,3,6/7/2020,13:18,23,4.5,
+E20B159P3,B,deep,3,6/7/2020,13:19,23,4.5,
+E20C159P1,C,deep,3,6/7/2020,13:23,23,4.5,
+E20D159P1,D,deep,3,6/7/2020,13:25,23,4.5,
+E20E159P1,E,deep,3,6/7/2020,13:28,23,4.5,
+E20F159P1,F,deep,3,6/7/2020,13:31,23,4.5,
+E20F159P2,F,deep,3,6/7/2020,13:32,23,4.5,
+E20F159P3,F,deep,3,6/7/2020,13:34,23,4.5,
+E20A160P1,A,deep,3,6/8/2020,12:10,23,4.5,
+E20B160P1,B,deep,3,6/8/2020,12:03,23,4.5,
+E20B160P2,B,deep,3,6/8/2020,12:04,23,4.5,
+E20B160P3,B,deep,3,6/8/2020,12:05,23,4.5,
+E20C160P1,C,deep,3,6/8/2020,12:00,23,4.5,
+E20D160P1,D,deep,3,6/8/2020,11:54,23,4.5,
+E20E160P1,E,deep,3,6/8/2020,11:51,23,4.5,
+E20F160P1,F,deep,3,6/8/2020,11:45,23,4.5,
+E20F160P2,F,deep,3,6/8/2020,11:47,23,4.5,
+E20F160P3,F,deep,3,6/8/2020,11:48,23,4.5,
+E20A166P1,A,deep,4,6/14/2020,13:47,23,4.5,
+E20B166P1,B,deep,4,6/14/2020,13:42,23,4.5,
+E20B166P2,B,deep,4,6/14/2020,13:43,23,4.5,
+E20B166P3,B,deep,4,6/14/2020,13:45,23,4.5,
+E20C166P1,C,deep,4,6/14/2020,13:38,23,4.5,
+E20D166P1,D,deep,4,6/14/2020,13:35,23,4.5,
+E20E166P1,E,deep,4,6/14/2020,13:31,23,4.5,
+E20F166P1,F,deep,4,6/14/2020,13:24,23,4.5,
+E20F166P2,F,deep,4,6/14/2020,13:26,23,4.5,
+E20F166P3,F,deep,4,6/14/2020,13:29,23,4.5,
+E20A167P1,A,deep,4,6/15/2020,12:44,23,4.5,
+E20B167P1,B,deep,4,6/15/2020,12:33,23,4.5,
+E20B167P2,B,deep,4,6/15/2020,12:40,23,4.5,under dock at end
+E20B167P3,B,deep,4,6/15/2020,12:38,23,4.5,
+E20C167P1,C,deep,4,6/15/2020,12:27,23,4.5,
+E20D167P1,D,deep,4,6/15/2020,12:24,23,4.5,
+E20E167P1,E,deep,4,6/15/2020,12:21,23,4.5,
+E20F167P1,F,deep,4,6/15/2020,12:16,23,4.5,
+E20F167P2,F,deep,4,6/15/2020,12:17,23,4.5,
+E20F167P3,F,deep,4,6/15/2020,12:18,23,4.5,
+E20A173P1,A,deep,5,6/21/2020,11:33,23,4.5,
+E20A173P2,A,deep,5,6/21/2020,11:34,23,4.5,
+E20A173P3,A,deep,5,6/21/2020,11:35,23,4.5,
+E20B173P1,B,deep,5,6/21/2020,11:38,23,4.5,
+E20B173P2,B,deep,5,6/21/2020,11:40,23,4.5,
+E20B173P3,B,deep,5,6/21/2020,11:41,23,4.5,
+E20C173P1,C,deep,5,6/21/2020,11:44,23,4.5,
+E20C173P2,C,deep,5,6/21/2020,11:45,23,4.5,
+E20C173P3,C,deep,5,6/21/2020,11:46,23,4.5,
+E20D173P1,D,deep,5,6/21/2020,11:49,23,4.5,
+E20D173P2,D,deep,5,6/21/2020,11:50,23,4.5,
+E20D173P3,D,deep,5,6/21/2020,11:51,23,4.5,
+E20E173P1,E,deep,5,6/21/2020,11:54,23,4.5,
+E20E173P2,E,deep,5,6/21/2020,11:56,23,4.5,
+E20E173P3,E,deep,5,6/21/2020,11:57,23,4.5,
+E20F173P1,F,deep,5,6/21/2020,12:00,23,4.5,
+E20F173P2,F,deep,5,6/21/2020,12:01,23,4.5,
+E20F173P3,F,deep,5,6/21/2020,12:02,23,4.5,
+E20A174P1,A,deep,5,6/22/2020,15:13,23,4.5,
+E20A174P2,A,deep,5,6/22/2020,15:15,23,4.5,
+E20A174P3,A,deep,5,6/22/2020,15:16,23,4.5,
+E20B174P1,B,deep,5,6/22/2020,15:20,23,4.5,
+E20B174P2,B,deep,5,6/22/2020,15:22,23,4.5,
+E20B174P3,B,deep,5,6/22/2020,15:23,23,4.5,
+E20C174P1,C,deep,5,6/22/2020,15:27,23,4.5,
+E20C174P2,C,deep,5,6/22/2020,,23,4.5,sample not collected; chamber accidentally opened to atmosphere before sampling
+E20C174P3,C,deep,5,6/22/2020,15:29,23,4.5,
+E20D174P1,D,deep,5,6/22/2020,15:34,23,4.5,
+E20D174P2,D,deep,5,6/22/2020,15:36,23,4.5,
+E20D174P3,D,deep,5,6/22/2020,15:37,23,4.5,
+E20E174P1,E,deep,5,6/22/2020,15:40,23,4.5,
+E20E174P2,E,deep,5,6/22/2020,15:42,23,4.5,
+E20E174P3,E,deep,5,6/22/2020,15:43,23,4.5,
+E20F174P1,F,deep,5,6/22/2020,15:46,23,4.5,
+E20F174P2,F,deep,5,6/22/2020,15:47,23,4.5,under dock at end
+E20F174P3,F,deep,5,6/22/2020,15:48,23,4.5,under dock at end
+E20A180P1,A,deep,6,6/27/2020,12:50,23,4.5,"label says DOY 180, but sample collected on DOY 179"
+E20A180P2,A,deep,6,6/27/2020,12:51,23,4.5,"label says DOY 180, but sample collected on DOY 179"
+E20A180P3,A,deep,6,6/27/2020,12:52,23,4.5,"label says DOY 180, but sample collected on DOY 179"
+E20B180P1,B,deep,6,6/27/2020,12:54,23,4.5,"label says DOY 180, but sample collected on DOY 179"
+E20B180P2,B,deep,6,6/27/2020,12:55,23,4.5,"label says DOY 180, but sample collected on DOY 179"
+E20B180P3,B,deep,6,6/27/2020,12:56,23,4.5,"label says DOY 180, but sample collected on DOY 179"
+E20C180P1,C,deep,6,6/27/2020,13:00,23,4.5,"label says DOY 180, but sample collected on DOY 179"
+E20C180P2,C,deep,6,6/27/2020,13:01,23,4.5,"label says DOY 180, but sample collected on DOY 179"
+E20C180P3,C,deep,6,6/27/2020,13:02,23,4.5,"label says DOY 180, but sample collected on DOY 179"
+E20D180P1,D,deep,6,6/27/2020,13:06,23,4.5,"label says DOY 180, but sample collected on DOY 179"
+E20D180P2,D,deep,6,6/27/2020,13:07,23,4.5,"label says DOY 180, but sample collected on DOY 179"
+E20D180P3,D,deep,6,6/27/2020,13:08,23,4.5,"label says DOY 180, but sample collected on DOY 179"
+E20E180P1,E,deep,6,6/27/2020,13:11,23,4.5,"label says DOY 180, but sample collected on DOY 179"
+E20E180P2,E,deep,6,6/27/2020,13:13,23,4.5,"label says DOY 180, but sample collected on DOY 179"
+E20E180P3,E,deep,6,6/27/2020,13:14,23,4.5,"label says DOY 180, but sample collected on DOY 179"
+E20F180P1,F,deep,6,6/27/2020,13:16,23,4.5,"label says DOY 180, but sample collected on DOY 179"
+E20F180P2,F,deep,6,6/27/2020,13:17,23,4.5,"label says DOY 180, but sample collected on DOY 179"
+E20F180P3,F,deep,6,6/27/2020,13:18,23,4.5,"label says DOY 180, but sample collected on DOY 179"
+E20A181P1,A,deep,6,6/28/2020,10:14,23,4.5,"label says DOY 181, but sample collected on DOY 180"
+E20A181P2,A,deep,6,6/28/2020,10:15,23,4.5,"label says DOY 181, but sample collected on DOY 180"
+E20A181P3,A,deep,6,6/28/2020,10:16,23,4.5,"label says DOY 181, but sample collected on DOY 180"
+E20B181P1,B,deep,6,6/28/2020,10:10,23,4.5,"label says DOY 181, but sample collected on DOY 180"
+E20B181P2,B,deep,6,6/28/2020,10:10,23,4.5,"label says DOY 181, but sample collected on DOY 180"
+E20B181P3,B,deep,6,6/28/2020,10:11,23,4.5,"label says DOY 181, but sample collected on DOY 180"
+E20C181P1,C,deep,6,6/28/2020,9:59,23,4.5,"label says DOY 181, but sample collected on DOY 180"
+E20C181P2,C,deep,6,6/28/2020,10:00,23,4.5,"label says DOY 181, but sample collected on DOY 180"
+E20C181P3,C,deep,6,6/28/2020,10:00,23,4.5,"label says DOY 181, but sample collected on DOY 180"
+E20D181P1,D,deep,6,6/28/2020,9:54,23,4.5,"label says DOY 181, but sample collected on DOY 180"
+E20D181P2,D,deep,6,6/28/2020,9:55,23,4.5,"label says DOY 181, but sample collected on DOY 180"
+E20D181P3,D,deep,6,6/28/2020,9:56,23,4.5,"label says DOY 181, but sample collected on DOY 180"
+E20E181P1,E,deep,6,6/28/2020,9:50,23,4.5,"label says DOY 181, but sample collected on DOY 180"
+E20E181P2,E,deep,6,6/28/2020,9:51,23,4.5,"label says DOY 181, but sample collected on DOY 180"
+E20E181P3,E,deep,6,6/28/2020,9:51,23,4.5,"label says DOY 181, but sample collected on DOY 180"
+E20F181P1,F,deep,6,6/28/2020,9:45,23,4.5,"label says DOY 181, but sample collected on DOY 180"
+E20F181P2,F,deep,6,6/28/2020,9:46,23,4.5,"label says DOY 181, but sample collected on DOY 180"
+E20F181P3,F,deep,6,6/28/2020,9:47,23,4.5,"label says DOY 181, but sample collected on DOY 180"
+E20A187P1,A,deep,7,7/6/2020,11:43,23,4.5,"label says DOY 187, but sample collected on DOY 188"
+E20A187P2,A,deep,7,7/6/2020,11:44,23,4.5,"label says DOY 187, but sample collected on DOY 188"
+E20A187P3,A,deep,7,7/6/2020,11:45,23,4.5,"label says DOY 187, but sample collected on DOY 188"
+E20B187P1,B,deep,7,7/6/2020,11:49,23,4.5,"label says DOY 187, but sample collected on DOY 188"
+E20B187P2,B,deep,7,7/6/2020,11:50,23,4.5,"label says DOY 187, but sample collected on DOY 188"
+E20B187P3,B,deep,7,7/6/2020,11:51,23,4.5,"label says DOY 187, but sample collected on DOY 188"
+E20C187P1,C,deep,7,7/6/2020,11:53,23,4.5,"label says DOY 187, but sample collected on DOY 188"
+E20C187P2,C,deep,7,7/6/2020,11:54,23,4.5,"label says DOY 187, but sample collected on DOY 188"
+E20C187P3,C,deep,7,7/6/2020,11:55,23,4.5,"label says DOY 187, but sample collected on DOY 188; syringe not fully evacuated??"
+E20D187P1,D,deep,7,7/6/2020,12:03,23,4.5,"label says DOY 187, but sample collected on DOY 188"
+E20D187P2,D,deep,7,7/6/2020,12:04,23,4.5,"label says DOY 187, but sample collected on DOY 188"
+E20D187P3,D,deep,7,7/6/2020,12:05,23,4.5,"label says DOY 187, but sample collected on DOY 188"
+E20E187P1,E,deep,7,7/6/2020,12:08,23,4.5,"label says DOY 187, but sample collected on DOY 188"
+E20E187P2,E,deep,7,7/6/2020,12:09,23,4.5,"label says DOY 187, but sample collected on DOY 188"
+E20E187P3,E,deep,7,7/6/2020,12:10,23,4.5,"label says DOY 187, but sample collected on DOY 188"
+E20F187P1,F,deep,7,7/6/2020,12:13,23,4.5,"label says DOY 187, but sample collected on DOY 188"
+E20F187P2,F,deep,7,7/6/2020,12:14,23,4.5,"label says DOY 187, but sample collected on DOY 188"
+E20F187P3,F,deep,7,7/6/2020,12:15,23,4.5,"label says DOY 187, but sample collected on DOY 188"
+E20A188P1,A,deep,7,7/7/2020,10:57,23,4.5,"label says DOY 188, but sample collected on DOY 189"
+E20A188P2,A,deep,7,7/7/2020,10:58,23,4.5,"label says DOY 188, but sample collected on DOY 189"
+E20A188P3,A,deep,7,7/7/2020,10:59,23,4.5,"label says DOY 188, but sample collected on DOY 189"
+E20B188P1,B,deep,7,7/7/2020,11:02,23,4.5,"label says DOY 188, but sample collected on DOY 189"
+E20B188P2,B,deep,7,7/7/2020,11:03,23,4.5,"label says DOY 188, but sample collected on DOY 189"
+E20B188P3,B,deep,7,7/7/2020,11:04,23,4.5,"label says DOY 188, but sample collected on DOY 189"
+E20C188P1,C,deep,7,7/7/2020,11:07,23,4.5,"label says DOY 188, but sample collected on DOY 189"
+E20C188P2,C,deep,7,7/7/2020,11:08,23,4.5,"label says DOY 188, but sample collected on DOY 189"
+E20C188P3,C,deep,7,7/7/2020,11:09,23,4.5,"label says DOY 188, but sample collected on DOY 189"
+E20D188P1,D,deep,7,7/7/2020,11:15,23,4.5,"label says DOY 188, but sample collected on DOY 189"
+E20D188P2,D,deep,7,7/7/2020,11:14,23,4.5,"label says DOY 188, but sample collected on DOY 189"
+E20D188P3,D,deep,7,7/7/2020,11:13,23,4.5,"label says DOY 188, but sample collected on DOY 189"
+E20E188P1,E,deep,7,7/7/2020,11:18,23,4.5,"label says DOY 188, but sample collected on DOY 189"
+E20E188P2,E,deep,7,7/7/2020,11:19,23,4.5,"label says DOY 188, but sample collected on DOY 189"
+E20E188P3,E,deep,7,7/7/2020,11:20,23,4.5,"label says DOY 188, but sample collected on DOY 189"
+E20F188P1,F,deep,7,7/7/2020,11:25,23,4.5,"label says DOY 188, but sample collected on DOY 189"
+E20F188P2,F,deep,7,7/7/2020,11:24,23,4.5,"label says DOY 188, but sample collected on DOY 189"
+E20F188P3,F,deep,7,7/7/2020,11:23,23,4.5,"label says DOY 188, but sample collected on DOY 189"
+E20A194P1,A,deep,8,7/12/2020,10:05,23,4.5,
+E20A194P2,A,deep,8,7/12/2020,10:06,23,4.5,
+E20A194P3,A,deep,8,7/12/2020,10:07,23,4.5,
+E20B194P1,B,deep,8,7/12/2020,10:10,23,4.5,
+E20B194P2,B,deep,8,7/12/2020,10:11,23,4.5,
+E20B194P3,B,deep,8,7/12/2020,10:12,23,4.5,
+E20C194P1,C,deep,8,7/12/2020,10:15,23,4.5,
+E20C194P2,C,deep,8,7/12/2020,10:16,23,4.5,
+E20C194P3,C,deep,8,7/12/2020,10:17,23,4.5,
+E20D194P1,D,deep,8,7/12/2020,10:21,23,4.5,
+E20D194P2,D,deep,8,7/12/2020,10:22,23,4.5,
+E20D194P3,D,deep,8,7/12/2020,10:23,23,4.5,
+E20E194P1,E,deep,8,7/12/2020,10:25,23,4.5,
+E20E194P2,E,deep,8,7/12/2020,10:26,23,4.5,
+E20E194P3,E,deep,8,7/12/2020,10:27,23,4.5,
+E20F194P1,F,deep,8,7/12/2020,10:30,23,4.5,
+E20F194P2,F,deep,8,7/12/2020,10:31,23,4.5,
+E20F194P3,F,deep,8,7/12/2020,10:32,23,4.5,
+E20A195P1,A,deep,8,7/13/2020,11:26,23,4.5,
+E20A195P2,A,deep,8,7/13/2020,11:27,23,4.5,
+E20A195P3,A,deep,8,7/13/2020,11:28,23,4.5,
+E20B195P1,B,deep,8,7/13/2020,11:31,23,4.5,
+E20B195P2,B,deep,8,7/13/2020,11:32,23,4.5,
+E20B195P3,B,deep,8,7/13/2020,11:33,23,4.5,
+E20C195P1,C,deep,8,7/13/2020,11:36,23,4.5,
+E20C195P2,C,deep,8,7/13/2020,11:37,23,4.5,
+E20C195P3,C,deep,8,7/13/2020,11:38,23,4.5,
+E20D195P1,D,deep,8,7/13/2020,11:41,23,4.5,
+E20D195P2,D,deep,8,7/13/2020,11:42,23,4.5,
+E20D195P3,D,deep,8,7/13/2020,11:43,23,4.5,
+E20E195P1,E,deep,8,7/13/2020,11:47,23,4.5,
+E20E195P2,E,deep,8,7/13/2020,11:48,23,4.5,
+E20E195P3,E,deep,8,7/13/2020,11:49,23,4.5,
+E20F195P1,F,deep,8,7/13/2020,11:56,23,4.5,
+E20F195P2,F,deep,8,7/13/2020,11:57,23,4.5,
+E20F195P3,F,deep,8,7/13/2020,11:58,23,4.5,
+E20A201P1,A,deep,9,7/19/2020,12:08,23,4.5,
+E20A201P2,A,deep,9,7/19/2020,12:09,23,4.5,
+E20A201P3,A,deep,9,7/19/2020,12:10,23,4.5,
+E20B201P1,B,deep,9,7/19/2020,12:13,23,4.5,
+E20B201P2,B,deep,9,7/19/2020,12:14,23,4.5,
+E20B201P3,B,deep,9,7/19/2020,12:15,23,4.5,
+E20C201P1,C,deep,9,7/19/2020,12:18,23,4.5,
+E20C201P2,C,deep,9,7/19/2020,12:19,23,4.5,
+E20C201P3,C,deep,9,7/19/2020,12:20,23,4.5,
+E20D201P1,D,deep,9,7/19/2020,12:23,23,4.5,
+E20D201P2,D,deep,9,7/19/2020,12:24,23,4.5,
+E20D201P3,D,deep,9,7/19/2020,12:25,23,4.5,
+E20E201P1,E,deep,9,7/19/2020,12:30,23,4.5,
+E20E201P2,E,deep,9,7/19/2020,12:31,23,4.5,
+E20E201P3,E,deep,9,7/19/2020,12:32,23,4.5,
+E20F201P1,F,deep,9,7/19/2020,12:35,23,4.5,
+E20F201P2,F,deep,9,7/19/2020,12:36,23,4.5,
+E20F201P3,F,deep,9,7/19/2020,12:37,23,4.5,
+E20A202P1,A,deep,9,7/20/2020,10:35,23,4.5,
+E20A202P2,A,deep,9,7/20/2020,10:36,23,4.5,
+E20A202P3,A,deep,9,7/20/2020,10:37,23,4.5,
+E20B202P1,B,deep,9,7/20/2020,10:42,23,4.5,
+E20B202P2,B,deep,9,7/20/2020,10:43,23,4.5,
+E20B202P3,B,deep,9,7/20/2020,10:44,23,4.5,
+E20C202P1,C,deep,9,7/20/2020,10:47,23,4.5,
+E20C202P2,C,deep,9,7/20/2020,10:48,23,4.5,
+E20C202P3,C,deep,9,7/20/2020,10:49,23,4.5,
+E20D202P1,D,deep,9,7/20/2020,10:54,23,4.5,
+E20D202P2,D,deep,9,7/20/2020,10:55,23,4.5,
+E20D202P3,D,deep,9,7/20/2020,10:56,23,4.5,
+E20E202P1,E,deep,9,7/20/2020,11:00,23,4.5,
+E20E202P2,E,deep,9,7/20/2020,11:01,23,4.5,
+E20E202P3,E,deep,9,7/20/2020,11:02,23,4.5,
+E20F202P1,F,deep,9,7/20/2020,11:06,23,4.5,
+E20F202P2,F,deep,9,7/20/2020,11:07,23,4.5,
+E20F202P3,F,deep,9,7/20/2020,11:08,23,4.5,
+E20A208P1,A,deep,10,7/26/2020,10:23,23,4.5,
+E20A208P2,A,deep,10,7/26/2020,10:24,23,4.5,
+E20A208P3,A,deep,10,7/26/2020,10:25,23,4.5,
+E20B208P1,B,deep,10,7/26/2020,10:28,23,4.5,
+E20B208P2,B,deep,10,7/26/2020,10:29,23,4.5,
+E20B208P3,B,deep,10,7/26/2020,10:30,23,4.5,
+E20C208P1,C,deep,10,7/26/2020,10:33,23,4.5,
+E20C208P2,C,deep,10,7/26/2020,10:34,23,4.5,
+E20C208P3,C,deep,10,7/26/2020,10:35,23,4.5,
+E20D208P1,D,deep,10,7/26/2020,10:38,23,4.5,
+E20D208P2,D,deep,10,7/26/2020,10:39,23,4.5,
+E20D208P3,D,deep,10,7/26/2020,10:40,23,4.5,
+E20E208P1,E,deep,10,7/26/2020,10:43,23,4.5,
+E20E208P2,E,deep,10,7/26/2020,10:44,23,4.5,
+E20E208P3,E,deep,10,7/26/2020,10:45,23,4.5,
+E20F208P1,F,deep,10,7/26/2020,10:48,23,4.5,
+E20F208P2,F,deep,10,7/26/2020,10:49,23,4.5,
+E20F208P3,F,deep,10,7/26/2020,10:50,23,4.5,
+E20A209P1,A,deep,10,7/27/2020,12:55,23,4.5,
+E20A209P2,A,deep,10,7/27/2020,12:56,23,4.5,
+E20A209P3,A,deep,10,7/27/2020,12:57,23,4.5,
+E20B209P1,B,deep,10,7/27/2020,13:00,23,4.5,
+E20B209P2,B,deep,10,7/27/2020,13:01,23,4.5,
+E20B209P3,B,deep,10,7/27/2020,13:02,23,4.5,
+E20C209P1,C,deep,10,7/27/2020,13:05,23,4.5,
+E20C209P2,C,deep,10,7/27/2020,13:06,23,4.5,
+E20C209P3,C,deep,10,7/27/2020,13:07,23,4.5,
+E20D209P1,D,deep,10,7/27/2020,13:12,23,4.5,
+E20D209P2,D,deep,10,7/27/2020,13:13,23,4.5,
+E20D209P3,D,deep,10,7/27/2020,13:14,23,4.5,
+E20E209P1,E,deep,10,7/27/2020,13:16,23,4.5,
+E20E209P2,E,deep,10,7/27/2020,13:17,23,4.5,
+E20E209P3,E,deep,10,7/27/2020,13:18,23,4.5,
+E20F209P1,F,deep,10,7/27/2020,13:20,23,4.5,
+E20F209P2,F,deep,10,7/27/2020,13:21,23,4.5,
+E20F209P3,F,deep,10,7/27/2020,13:22,23,4.5,
+E20A215P1,A,deep,11,8/2/2020,11:12,23,4.5,
+E20A215P2,A,deep,11,8/2/2020,11:13,23,4.5,
+E20A215P3,A,deep,11,8/2/2020,11:14,23,4.5,
+E20B215P1,B,deep,11,8/2/2020,11:16,23,4.5,
+E20B215P2,B,deep,11,8/2/2020,11:17,23,4.5,
+E20B215P3,B,deep,11,8/2/2020,11:18,23,4.5,
+E20C215P1,C,deep,11,8/2/2020,11:20,23,4.5,
+E20C215P2,C,deep,11,8/2/2020,11:21,23,4.5,
+E20C215P3,C,deep,11,8/2/2020,11:22,23,4.5,
+E20D215P1,D,deep,11,8/2/2020,11:26,23,4.5,
+E20D215P2,D,deep,11,8/2/2020,11:27,23,4.5,
+E20D215P3,D,deep,11,8/2/2020,11:28,23,4.5,
+E20E215P1,E,deep,11,8/2/2020,11:31,23,4.5,
+E20E215P2,E,deep,11,8/2/2020,11:32,23,4.5,
+E20E215P3,E,deep,11,8/2/2020,11:33,23,4.5,
+E20F215P1,F,deep,11,8/2/2020,11:37,23,4.5,
+E20F215P2,F,deep,11,8/2/2020,11:38,23,4.5,
+E20F215P3,F,deep,11,8/2/2020,,23,4.5,sample not collected; septa port fell off chamber before deployment
+E20A216P1,A,deep,11,8/3/2020,11:06,23,4.5,
+E20A216P2,A,deep,11,8/3/2020,11:07,23,4.5,
+E20A216P3,A,deep,11,8/3/2020,11:08,23,4.5,
+E20B216P1,B,deep,11,8/3/2020,11:11,23,4.5,
+E20B216P2,B,deep,11,8/3/2020,11:12,23,4.5,
+E20B216P3,B,deep,11,8/3/2020,11:13,23,4.5,
+E20C216P1,C,deep,11,8/3/2020,11:15,23,4.5,
+E20C216P2,C,deep,11,8/3/2020,11:16,23,4.5,
+E20C216P3,C,deep,11,8/3/2020,11:17,23,4.5,
+E20D216P1,D,deep,11,8/3/2020,11:21,23,4.5,
+E20D216P2,D,deep,11,8/3/2020,11:22,23,4.5,
+E20D216P3,D,deep,11,8/3/2020,11:23,23,4.5,
+E20E216P1,E,deep,11,8/3/2020,11:26,23,4.5,
+E20E216P2,E,deep,11,8/3/2020,11:27,23,4.5,
+E20E216P3,E,deep,11,8/3/2020,11:28,23,4.5,
+E20F216P1,F,deep,11,8/3/2020,11:32,23,4.5,
+E20F216P2,F,deep,11,8/3/2020,11:33,23,4.5,
+E20F216P3,F,deep,11,8/3/2020,,23,4.5,sample not collected; septa port fell off chamber before deployment
+E20A222P1,A,deep,12,8/8/2020,12:27,23,4.5,"label says 222, but sample collected DOY 221"
+E20A222P2,A,deep,12,8/8/2020,12:28,23,4.5,"label says 222, but sample collected DOY 221"
+E20A222P3,A,deep,12,8/8/2020,12:29,23,4.5,"label says 222, but sample collected DOY 221"
+E20B222P1,B,deep,12,8/8/2020,12:32,23,4.5,"label says 222, but sample collected DOY 221"
+E20B222P2,B,deep,12,8/8/2020,12:33,23,4.5,"label says 222, but sample collected DOY 221"
+E20B222P3,B,deep,12,8/8/2020,12:34,23,4.5,"label says 222, but sample collected DOY 221"
+E20C222P1,C,deep,12,8/8/2020,12:36,23,4.5,"label says 222, but sample collected DOY 221"
+E20C222P2,C,deep,12,8/8/2020,12:37,23,4.5,"label says 222, but sample collected DOY 221"
+E20C222P3,C,deep,12,8/8/2020,12:38,23,4.5,"label says 222, but sample collected DOY 221"
+E20D222P1,D,deep,12,8/8/2020,12:40,23,4.5,"label says 222, but sample collected DOY 221"
+E20D222P2,D,deep,12,8/8/2020,12:41,23,4.5,"label says 222, but sample collected DOY 221"
+E20D222P3,D,deep,12,8/8/2020,12:42,23,4.5,"label says 222, but sample collected DOY 221"
+E20E222P1,E,deep,12,8/8/2020,12:46,23,4.5,"label says 222, but sample collected DOY 221"
+E20E222P2,E,deep,12,8/8/2020,12:47,23,4.5,"label says 222, but sample collected DOY 221"
+E20E222P3,E,deep,12,8/8/2020,12:48,23,4.5,"label says 222, but sample collected DOY 221"
+E20F222P1,F,deep,12,8/8/2020,12:50,23,4.5,"label says 222, but sample collected DOY 221"
+E20F222P2,F,deep,12,8/8/2020,12:51,23,4.5,"label says 222, but sample collected DOY 221"
+E20F222P3,F,deep,12,8/8/2020,12:52,23,4.5,"label says 222, but sample collected DOY 221"
+E20A223P1,A,deep,12,8/9/2020,10:05,23,4.5,"label says 223, but sample collected DOY 222"
+E20A223P2,A,deep,12,8/9/2020,10:06,23,4.5,"label says 223, but sample collected DOY 222"
+E20A223P3,A,deep,12,8/9/2020,10:07,23,4.5,"label says 223, but sample collected DOY 222"
+E20B223P1,B,deep,12,8/9/2020,10:09,23,4.5,"label says 223, but sample collected DOY 222"
+E20B223P2,B,deep,12,8/9/2020,10:10,23,4.5,"label says 223, but sample collected DOY 222"
+E20B223P3,B,deep,12,8/9/2020,10:11,23,4.5,"label says 223, but sample collected DOY 222"
+E20C223P1,C,deep,12,8/9/2020,10:14,23,4.5,"label says 223, but sample collected DOY 222"
+E20C223P2,C,deep,12,8/9/2020,10:15,23,4.5,"label says 223, but sample collected DOY 222"
+E20C223P3,C,deep,12,8/9/2020,10:16,23,4.5,"label says 223, but sample collected DOY 222"
+E20D223P1,D,deep,12,8/9/2020,10:19,23,4.5,"label says 223, but sample collected DOY 222"
+E20D223P2,D,deep,12,8/9/2020,10:20,23,4.5,"label says 223, but sample collected DOY 222"
+E20D223P3,D,deep,12,8/9/2020,10:21,23,4.5,"label says 223, but sample collected DOY 222"
+E20E223P1,E,deep,12,8/9/2020,10:26,23,4.5,"label says 223, but sample collected DOY 222"
+E20E223P2,E,deep,12,8/9/2020,10:27,23,4.5,"label says 223, but sample collected DOY 222"
+E20E223P3,E,deep,12,8/9/2020,10:28,23,4.5,"label says 223, but sample collected DOY 222"
+E20F223P1,F,deep,12,8/9/2020,10:32,23,4.5,"label says 223, but sample collected DOY 222"
+E20F223P2,F,deep,12,8/9/2020,10:33,23,4.5,"label says 223, but sample collected DOY 222"
+E20F223P3,F,deep,12,8/9/2020,10:34,23,4.5,"label says 223, but sample collected DOY 222"
+E20A229P1,A,deep,13,8/15/2020,11:54,23,4.5,"label says 229, but sample collected DOY 228"
+E20A229P2,A,deep,13,8/15/2020,11:55,23,4.5,"label says 229, but sample collected DOY 228"
+E20A229P3,A,deep,13,8/15/2020,11:56,23,4.5,"label says 229, but sample collected DOY 228"
+E20B229P1,B,deep,13,8/15/2020,11:59,23,4.5,"label says 229, but sample collected DOY 228"
+E20B229P2,B,deep,13,8/15/2020,12:00,23,4.5,"label says 229, but sample collected DOY 228"
+E20B229P3,B,deep,13,8/15/2020,12:01,23,4.5,"label says 229, but sample collected DOY 228"
+E20C229P1,C,deep,13,8/15/2020,12:05,23,4.5,"label says 229, but sample collected DOY 228"
+E20C229P2,C,deep,13,8/15/2020,12:06,23,4.5,"label says 229, but sample collected DOY 228"
+E20C229P3,C,deep,13,8/15/2020,12:07,23,4.5,"label says 229, but sample collected DOY 228"
+E20D229P1,D,deep,13,8/15/2020,12:13,23,4.5,"label says 229, but sample collected DOY 228"
+E20D229P2,D,deep,13,8/15/2020,12:14,23,4.5,"label says 229, but sample collected DOY 228"
+E20D229P3,D,deep,13,8/15/2020,12:15,23,4.5,"label says 229, but sample collected DOY 228"
+E20E229P1,E,deep,13,8/15/2020,12:19,23,4.5,"label says 229, but sample collected DOY 228"
+E20E229P2,E,deep,13,8/15/2020,12:20,23,4.5,"label says 229, but sample collected DOY 228"
+E20E229P3,E,deep,13,8/15/2020,12:21,23,4.5,"label says 229, but sample collected DOY 228"
+E20F229P1,F,deep,13,8/15/2020,12:25,23,4.5,"label says 229, but sample collected DOY 228"
+E20F229P2,F,deep,13,8/15/2020,12:26,23,4.5,"label says 229, but sample collected DOY 228"
+E20F229P3,F,deep,13,8/15/2020,12:27,23,4.5,"label says 229, but sample collected DOY 228"
+E20A230P1,A,deep,13,8/16/2020,10:18,23,4.5,"label says 230, but sample collected DOY 229"
+E20A230P2,A,deep,13,8/16/2020,10:19,23,4.5,"label says 230, but sample collected DOY 229"
+E20A230P3,A,deep,13,8/16/2020,10:20,23,4.5,"label says 230, but sample collected DOY 229"
+E20B230P1,B,deep,13,8/16/2020,10:23,23,4.5,"label says 230, but sample collected DOY 229"
+E20B230P2,B,deep,13,8/16/2020,10:24,23,4.5,"label says 230, but sample collected DOY 229"
+E20B230P3,B,deep,13,8/16/2020,10:25,23,4.5,"label says 230, but sample collected DOY 229"
+E20C230P1,C,deep,13,8/16/2020,10:30,23,4.5,"label says 230, but sample collected DOY 229"
+E20C230P2,C,deep,13,8/16/2020,10:31,23,4.5,"label says 230, but sample collected DOY 229"
+E20C230P3,C,deep,13,8/16/2020,10:32,23,4.5,"label says 230, but sample collected DOY 229"
+E20D230P1,D,deep,13,8/16/2020,10:35,23,4.5,"label says 230, but sample collected DOY 229"
+E20D230P2,D,deep,13,8/16/2020,10:36,23,4.5,"label says 230, but sample collected DOY 229"
+E20D230P3,D,deep,13,8/16/2020,10:37,23,4.5,"label says 230, but sample collected DOY 229"
+E20E230P1,E,deep,13,8/16/2020,10:40,23,4.5,"label says 230, but sample collected DOY 229"
+E20E230P2,E,deep,13,8/16/2020,10:41,23,4.5,"label says 230, but sample collected DOY 229"
+E20E230P3,E,deep,13,8/16/2020,10:42,23,4.5,"label says 230, but sample collected DOY 229"
+E20F230P1,F,deep,13,8/16/2020,10:47,23,4.5,"label says 230, but sample collected DOY 229"
+E20F230P2,F,deep,13,8/16/2020,10:48,23,4.5,"label says 230, but sample collected DOY 229"
+E20F230P3,F,deep,13,8/16/2020,10:49,23,4.5,"label says 230, but sample collected DOY 229"
+E20A236P1,A,deep,14,8/22/2020,11:37,23,4.5,"label says 236, but sample collected DOY 235"
+E20A236P2,A,deep,14,8/22/2020,11:38,23,4.5,"label says 236, but sample collected DOY 235"
+E20A236P3,A,deep,14,8/22/2020,11:39,23,4.5,"label says 236, but sample collected DOY 235"
+E20B236P1,B,deep,14,8/22/2020,11:42,23,4.5,"label says 236, but sample collected DOY 235"
+E20B236P2,B,deep,14,8/22/2020,11:43,23,4.5,"label says 236, but sample collected DOY 235"
+E20B236P3,B,deep,14,8/22/2020,11:44,23,4.5,"label says 236, but sample collected DOY 235"
+E20C236P1,C,deep,14,8/22/2020,11:47,23,4.5,"label says 236, but sample collected DOY 235"
+E20C236P2,C,deep,14,8/22/2020,11:48,23,4.5,"label says 236, but sample collected DOY 235"
+E20C236P3,C,deep,14,8/22/2020,11:49,23,4.5,"label says 236, but sample collected DOY 235"
+E20D236P1,D,deep,14,8/22/2020,11:53,23,4.5,"label says 236, but sample collected DOY 235"
+E20D236P2,D,deep,14,8/22/2020,11:54,23,4.5,"label says 236, but sample collected DOY 235"
+E20D236P3,D,deep,14,8/22/2020,11:55,23,4.5,"label says 236, but sample collected DOY 235"
+E20E236P1,E,deep,14,8/22/2020,11:57,23,4.5,"label says 236, but sample collected DOY 235"
+E20E236P2,E,deep,14,8/22/2020,11:58,23,4.5,"label says 236, but sample collected DOY 235"
+E20E236P3,E,deep,14,8/22/2020,11:59,23,4.5,"label says 236, but sample collected DOY 235"
+E20F236P1,F,deep,14,8/22/2020,12:02,23,4.5,"label says 236, but sample collected DOY 235"
+E20F236P2,F,deep,14,8/22/2020,12:03,23,4.5,"label says 236, but sample collected DOY 235"
+E20F236P3,F,deep,14,8/22/2020,12:04,23,4.5,"label says 236, but sample collected DOY 235"
+E20A237P1,A,deep,14,8/23/2020,9:35,23,4.5,"label says 237, but sample collected DOY 236"
+E20A237P2,A,deep,14,8/23/2020,9:36,23,4.5,"label says 237, but sample collected DOY 236"
+E20A237P3,A,deep,14,8/23/2020,9:37,23,4.5,"label says 237, but sample collected DOY 236"
+E20B237P1,B,deep,14,8/23/2020,9:39,23,4.5,"label says 237, but sample collected DOY 236"
+E20B237P2,B,deep,14,8/23/2020,9:40,23,4.5,"label says 237, but sample collected DOY 236"
+E20B237P3,B,deep,14,8/23/2020,9:41,23,4.5,"label says 237, but sample collected DOY 236"
+E20C237P1,C,deep,14,8/23/2020,9:43,23,4.5,"label says 237, but sample collected DOY 236"
+E20C237P2,C,deep,14,8/23/2020,9:44,23,4.5,"label says 237, but sample collected DOY 236"
+E20C237P3,C,deep,14,8/23/2020,9:45,23,4.5,"label says 237, but sample collected DOY 236"
+E20D237P1,D,deep,14,8/23/2020,9:48,23,4.5,"label says 237, but sample collected DOY 236"
+E20D237P2,D,deep,14,8/23/2020,9:49,23,4.5,"label says 237, but sample collected DOY 236"
+E20D237P3,D,deep,14,8/23/2020,9:50,23,4.5,"label says 237, but sample collected DOY 236"
+E20E237P1,E,deep,14,8/23/2020,9:54,23,4.5,"under dock at end; label says 237, but sample collected DOY 236"
+E20E237P2,E,deep,14,8/23/2020,9:55,23,4.5,"under dock at end; label says 237, but sample collected DOY 236"
+E20E237P3,E,deep,14,8/23/2020,9:56,23,4.5,"under dock at end; label says 237, but sample collected DOY 236"
+E20F237P1,F,deep,14,8/23/2020,10:01,23,4.5,"label says 237, but sample collected DOY 236"
+E20F237P2,F,deep,14,8/23/2020,10:02,23,4.5,"label says 237, but sample collected DOY 236"
+E20F237P3,F,deep,14,8/23/2020,10:03,23,4.5,"label says 237, but sample collected DOY 236"

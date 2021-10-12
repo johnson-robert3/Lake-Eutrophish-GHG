@@ -1,0 +1,7 @@
+pond_id,latitude,longitude,max_depth,length,width,surface_area,trt_fish,trt_nutrients
+A,42.110176,-93.580688,,,,,medium,yes
+B,42.110074,-93.580462,,,,,low,yes
+C,42.109963,-93.580252,,,,,high,yes
+D,42.10984,-93.580052,,,,,medium,no
+E,42.109726,-93.579835,,,,,high,no
+F,42.109619,-93.579637,,,,,low,no
