@@ -25,21 +25,28 @@ pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
 # Function to wrangle each sonde profile data sheet as it is read in
 #  select only the desired columns and rename to match across files
 read_profile = function(.dat, .skip) {
-   read_csv(.dat, skip = .skip) %>%
+   # read_csv(.dat, skip = .skip) %>%
+   read.csv(.dat, skip = .skip) %>%
       clean_names() %>%
-      select(date, time, site, temp_f, odo_percent_sat, odo_mg_l, p_h, contains("chlorophyll"), contains("cond"), pc_rfu, pc_ug_l,
+      # select(date, time, site, temp_f, odo_percent_sat, odo_mg_l, p_h, contains("chlorophyll"), contains("cond"), pc_rfu, pc_ug_l,
+      #        sal_psu, pressure_psi_a, depth_m, vertical_position_m, -contains("n_lf_cond")) %>%
+      select(date, time, site, temp_f, odo_sat, odo_mg_l, p_h, contains("chlorophyll"), contains("cond"), pc_rfu, pc_ug_l,
              sal_psu, pressure_psi_a, depth_m, vertical_position_m, -contains("n_lf_cond")) %>%
       rename(pond_id = site,
              temp = temp_f,
-             do_sat = odo_percent_sat,
+             # do_sat = odo_percent_sat,
+             do_sat = odo_sat,
              do = odo_mg_l,
              ph = p_h,
-             chla = chlorophyll_g_l,         # units are actually ug/L; new clean_names() drops this for some reason
+             # chla = chlorophyll_g_l,         # units are actually ug/L; new clean_names() drops "u" for some reason
+             chla = chlorophyll_mg_l,         # units are actually ug/L; new clean_names() makes this "mg" for some reason
              chla_rfu = chlorophyll_rfu,
              phyco = pc_ug_l,
              phyco_rfu = pc_rfu,
-             cond = cond_s_cm,               # units are actually uS/cm; new clean_names() drops this for some reason
-             sp_cond = sp_cond_u_fffd_s_cm,
+             # cond = cond_s_cm,               # units are actually uS/cm; new clean_names() drops "u" for some reason
+             cond = cond_m_s_cm,               # units are actually uS/cm; new clean_names() makes this "m_g" for some reason
+             # sp_cond = sp_cond_u_fffd_s_cm,
+             sp_cond = sp_cond_m_s_cm,         # units are actually uS/cm; new clean_names() makes this "m_g" for some reason
              salinity = sal_psu,
              vert_m = vertical_position_m)
 }
@@ -75,14 +82,14 @@ sonde_profiles = sonde_profiles %>%
    arrange(doy, pond_id, date_time) %>%
    select(-date, -time) %>%
    relocate(date_time, doy) %>%
+   # remove errant measurements recorded as 1970-01-01
+   filter(!(doy==1)) %>%
    # change temp data to Celcius
-   mutate(temp = (temp - 32) / 1.8) %>%
+   mutate(temp = (temp - 32) / 1.8)
    # correct vertical position (depth sensor and probes not at same height)
    # add 5 cm to all
    # mutate(vert_m = vert_m + 0.05,
    #        vert_m = if_else(vert_m<0, 0, vert_m)) %>%
-   # remove errant measurements recorded as 1970-01-01
-   filter(!(doy==1))
    
 
    ## remove temporary objects
@@ -130,8 +137,10 @@ sonde_int = sonde_profiles %>%
    ungroup() 
 
 
-##__Bottom water means
+##__Bottom water means 
 #  Depth: bottom 30 cm
+
+### I think we should actually use 20 cm instead of 30 (need to check with group)
 
 sonde_bottom = sonde_int %>%
    group_by(pond_id, doy) %>%
@@ -139,6 +148,13 @@ sonde_bottom = sonde_int %>%
    slice_tail(n=3) %>%
    summarize(across(temp:salinity, ~mean(., na.rm=T))) %>%
    ungroup()
+
+# alternative way for bottom water (using measured max depth)
+# sonde_bottom2 = sonde_profiles %>%
+#    group_by(pond_id, doy) %>%
+#    filter(vert_m <= max(vert_m) & vert_m >= (max(vert_m) - 0.30)) %>%
+#    summarize(across(temp:salinity, ~mean(., na.rm=T))) %>%
+#    ungroup()
 
 
 #---
@@ -509,17 +525,19 @@ ebu_samples = ebu_samples %>%
 #---
 
 # Data
-weather_data_raw = read_csv("Data/R-Data/2020_weather-data.csv", skip=1)
+weather_data_raw = read.csv("Data/R-Data/2020_weather-data.csv", skip=1)
 
 
 # Clean up variable names
 weather_data = weather_data_raw %>%
    clean_names() %>%
-   select(-number) %>%
+   # select(-number) %>%
+   select(-x) %>%
    rename(date_time = date_time_gmt_05_00,
-          wind_speed = wind_speed_m_s_lgr_s_n_20849581_sen_s_n_20843154,
-          gust_speed = gust_speed_m_s_lgr_s_n_20849581_sen_s_n_20843154,
-          par = par_mol_m_u_fffd_s_lgr_s_n_20849581_sen_s_n_20856725)
+          wind_speed = wind_speed_m_s_lgr_s_n_20849581_sen_s_n_20843154,   # units are m/s
+          gust_speed = gust_speed_m_s_lgr_s_n_20849581_sen_s_n_20843154,   # units are m/s
+          # par = par_mol_m_u_fffd_s_lgr_s_n_20849581_sen_s_n_20856725)
+          par = par_mmol_m2_s_lgr_s_n_20849581_sen_s_n_20856725)    # units are actually umol/m2/s; new clean_names() makes this "mmol" for some reason
 
 
 # Additional variables
