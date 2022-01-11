@@ -34,7 +34,7 @@ KH_td_n2o = 2600
 
 # [gas] = (P/RT)*(10^6 umol/mol)
 
-# units = umol/L
+# units = umol/L   (units = uM)
 
 ideal_gas_law = function(pp, temp) {
    
@@ -59,7 +59,7 @@ ideal_gas_law = function(pp, temp) {
 syr_conc = lake_samples %>%
    # select only pond samples, exclude atmosphere samples
    filter(!(str_detect(sample_id, "Y"))) %>%
-   # calculate partial pressures of gases in headspace (units = atmosphere)
+   # calculate partial pressures of gases in headspace from samples measured on GC (units = atm)
    # convert measured syringe values from ppm to atm
    mutate(pch4_head = ch4_ppm / 10^6 * 0.97,
           pn2o_head = n2o_ppm / 10^6 * 0.97) %>%
@@ -84,12 +84,12 @@ syr_conc = lake_samples %>%
 atm_conc = lake_samples %>%
    # select only atmosphere samples
    filter(str_detect(sample_id, "Y")) %>%
-   # calculate partial pressures of gases in headspace (units = atmosphere)
+   # calculate partial pressures of gases from samples measured on GC (units = atm)
    # convert measured syringe values from ppm to atm
    mutate(pch4_atmo = ch4_ppm / 10^6 * 0.97,
           pco2_atmo = co2_ppm / 10^6 * 0.97,
           pn2o_atmo = n2o_ppm / 10^6 * 0.97) %>%
-   # Ideal Gas Law (units = uM)
+   # concentration of atmosphere samples (units = uM)
    mutate(ch4_atmo = ideal_gas_law(pch4_atmo, 25),
           co2_atmo = ideal_gas_law(pco2_atmo, 25),
           n2o_atmo = ideal_gas_law(pn2o_atmo, 25))
@@ -113,11 +113,11 @@ source("Data-Wrangling/Rheadspace.R")
 
 # Make a data frame with the necessary data
 df_co2 = lake_samples %>%
-   # pond sample data, measured equilibrated headspace pCO2 in ppm
+   # pond sample data, measured equilibrated headspace pCO2 (units = ppm)
    filter(!(pond_id=="Y")) %>%
    select(sample_id:vol_air, surface_temp, co2_ppm) %>%
    rename(head_co2_ppm = co2_ppm) %>%
-   # add atmosphere pCO2, i.e. headspace ppm prior to equilibration
+   # add atmosphere pCO2, i.e. headspace ppm prior to equilibration (units = ppm)
    left_join(lake_samples %>%
                 filter(pond_id=="Y") %>%
                 select(doy, co2_ppm) %>%
@@ -217,7 +217,7 @@ lake_flux = lake_flux %>%
 ##__Gas concentrations at end of incubation
 
 #_HEADSPACE
-#  measured from vial collected from bottle headspace (ppm)
+#  measured from vial collected from bottle headspace (units = ppm)
 
 methano_samples = methano_samples %>%
    # partial pressure of gases (units = atm)
@@ -250,7 +250,7 @@ methano_samples = methano_samples %>%
 methano_samples = methano_samples %>%
    left_join(bulk_density) %>%
    # calculate total aqueous volume in bottle using porosity data
-   # aqueous volume = water sample + aqueous portion of sediment sample
+   # aqueous volume = water sample + aqueous portion of sediment sample (units = L)
    mutate(vol_aq = vol_water + (vol_sediment * porosity)) %>%
    # calculate total sample mass in each assay bottle using sediment bulk density
    # vol_aq = water mass (since 1 cm^3 = 1 g)
@@ -260,14 +260,14 @@ methano_samples = methano_samples %>%
           mass_slurry = mass_aq + mass_sed)
 
 
-##__Methane Production Rate (units = umol g-1 h-1)
+##__Methane Production Rate (units = umol/g/h)
 
 methano_samples = methano_samples %>%
    # total amount of gases in bottle at end of incubation (headspace + dissolved) (units = umol)
    mutate(ch4_tot_umol = (ch4_aq * vol_aq) + (ch4_head * vol_head),
           co2_tot_umol = (co2_aq * vol_aq) + (co2_head * vol_head),
           n2o_tot_umol = (n2o_aq * vol_aq) + (n2o_head * vol_head)) %>%
-   # hourly rate of production per gram of slurry mass (units = umol g-1 h-1)
+   # hourly rate of production per gram of slurry mass (units = umol/g/h)
    mutate(ch4_rate = ch4_tot_umol / mass_slurry / (incubation_length / 60),
           co2_rate = co2_tot_umol / mass_slurry / (incubation_length / 60),
           n2o_rate = n2o_tot_umol / mass_slurry / (incubation_length / 60))
@@ -288,7 +288,7 @@ methano_rates = methano_samples %>%
 ##__Gas concentrations at end of incubation
 
 #_HEADSPACE
-#  measured from vial collected from bottle headspace
+#  measured from vial collected from bottle headspace (units = ppm)
 
 dea_samples = dea_samples %>%
    # partial pressure of gases (units = atm)
@@ -316,12 +316,12 @@ dea_samples = dea_samples %>%
           n2o_aq = tKH_n2o * pn2o * 10^6)
 
 
-#_Add sediment bulk density and porosity to Methano dataset
+#_Add sediment bulk density and porosity to DEA dataset
 
 dea_samples = dea_samples %>%
    left_join(bulk_density) %>%
    # calculate total aqueous volume in bottle using porosity data
-   # aqueous volume = water sample + aqueous portion of sediment sample
+   # aqueous volume = water sample + aqueous portion of sediment sample (units = L)
    mutate(vol_aq = vol_water + vol_media + (vol_sediment * porosity)) %>%
    # calculate total sample mass in each assay bottle using sediment bulk density
    # vol_aq = water mass (since 1 cm^3 = 1 g)
@@ -331,14 +331,14 @@ dea_samples = dea_samples %>%
           mass_slurry = mass_aq + mass_sed)
 
 
-##__Denitrification Enzyme Activity (N2O production rate) (units = umol g-1 h-1)
+##__Denitrification Enzyme Activity (N2O production rate) (units = umol/g/h)
 
 dea_samples = dea_samples %>%
    # total amount of gases in bottle at end of incubation (headspace + dissolved) (units = umol)
    mutate(ch4_tot_umol = (ch4_aq * vol_aq) + (ch4_head * vol_head),
           co2_tot_umol = (co2_aq * vol_aq) + (co2_head * vol_head),
           n2o_tot_umol = (n2o_aq * vol_aq) + (n2o_head * vol_head)) %>%
-   # hourly rate of production per gram of slurry mass (units = umol g-1 h-1)
+   # hourly rate of production per gram of slurry mass (units = umol/g/h)
    mutate(ch4_rate = ch4_tot_umol / mass_slurry / (incubation_length / 60),
           co2_rate = co2_tot_umol / mass_slurry / (incubation_length / 60),
           n2o_rate = n2o_tot_umol / mass_slurry / (incubation_length / 60))
