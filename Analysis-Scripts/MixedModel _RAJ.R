@@ -8,8 +8,11 @@ library(sjPlot)
 #
 if (!require(lme4)) install.packages('lme4')
 library(lme4)
+if (!require(nlme)) install.packages('nlme')
+library(nlme)
 if (!require(tidyverse)) install.packages('tidyverse')
 library(tidyverse)
+
 
 #Function to calculate R2
 rsq<-function(emp,pred){
@@ -21,6 +24,7 @@ rsq<-function(emp,pred){
 
 # full data set
 fdat = read_csv("ghg-model-dataset.csv")
+fdat = read_csv("ghg-model-dataset_2022-01-10.csv")
 
 
 #==================#
@@ -76,20 +80,31 @@ summary(mod7)
 # summary(mod10)
 
 
+# remove "Period" as a fixed effect
+mod11 = lmer(co2_lake ~ treatment * log(tp) + buoy_freq + (1|pond_id), data = mdat, REML=F)
+summary(mod11)
+
+mod12 = lmer(co2_lake ~ treatment + log(tp) + buoy_freq + treatment:log(tp) + NEP  + (1|pond_id), data = mdat, REML=F)
+summary(mod12)
+
+# mod13 = lmer(co2_lake ~ treatment + log(tp) + chla + buoy_freq + NEP + treatment:log(tp) + treatment:chla + treatment:NEP + (1|pond_id), data = mdat, REML=F)
+# summary(mod13)
+
+
 #Calculate the variance explained by the model (R-squared)
 rsq(mdat$co2_lake, predict(mod7)) 
 
 #Plot the Effect Sizes
 sjPlot::plot_model(mod7, 
-                   axis.labels=c("Treatment * Period \n(Pulse2)", "Treatment * Period \n(Pulse1)", "log(TP)",
-                                 "Buoyancy \nFrequency", "Period \n(Pulse2)", "Period \n(Pulse1)", "Treatment"),
+                   # axis.labels=c("Treatment * Period \n(Pulse2)", "Treatment * Period \n(Pulse1)", "log(TP)",
+                   #               "Buoyancy \nFrequency", "Period \n(Pulse2)", "Period \n(Pulse1)", "Treatment"),
                    show.values=TRUE, show.p=TRUE,
                    title = expression(Effect~on~CO[2]~Flux))
 
 #Make a pretty table
 sjPlot::tab_model(mod7,
-                  pred.labels = c("(Intercept)", "Treatment", "Period (Pulse1)", "Period (Pulse2)", "Buoyancy Frequency",
-                                  "log(TP)", "Treatment * Period (Pulse1)", "Treatment * Period (Pulse2)"),
+                  # pred.labels = c("(Intercept)", "Treatment", "Period (Pulse1)", "Period (Pulse2)", "Buoyancy Frequency",
+                  #                 "log(TP)", "Treatment * Period (Pulse1)", "Treatment * Period (Pulse2)"),
                   show.re.var= TRUE, 
                   dv.labels= "Effects on CO2 Flux")
 
@@ -173,20 +188,25 @@ summary(mod11)
 # summary(mod14)
 
 
+# remove "Period" as a fixed effect
+mod15 = lmer(ch4_lake ~ treatment * bottom_do + (1|pond_id), data = mdat, REML=F)
+summary(mod15)
+
+
 #Calculate the variance explained by the model (R-squared)
 rsq(mdat$ch4_lake, predict(mod11)) 
 
 #Plot the Effect Sizes
 sjPlot::plot_model(mod11, 
-                   axis.labels = c("Treatment * Period \n(Pulse2)", "Treatment * Period \n(Pulse1)", "Bottom  \nWater DO",
-                                   "Period \n(Pulse2)", "Period \n(Pulse1)", "Treatment"),
+                   # axis.labels = c("Treatment * Period \n(Pulse2)", "Treatment * Period \n(Pulse1)", "Bottom  \nWater DO",
+                   #                 "Period \n(Pulse2)", "Period \n(Pulse1)", "Treatment"),
                    show.values=TRUE, show.p=TRUE,
                    title=expression(Effect~on~CH[4]~Flux))
 
 #Make a pretty table
 sjPlot::tab_model(mod11, 
-                  pred.labels = c("(Intercept)", "Treatment", "Period (Pulse1)", "Period (Pulse2)", "Bottom Water DO",
-                                  "Treatment * Period (Pulse1)", "Treatment * Period (Pulse2)"),
+                  # pred.labels = c("(Intercept)", "Treatment", "Period (Pulse1)", "Period (Pulse2)", "Bottom Water DO",
+                  #                 "Treatment * Period (Pulse1)", "Treatment * Period (Pulse2)"),
                   show.re.var= TRUE, 
                   dv.labels= "Effects on CH4 Flux")
 
@@ -284,8 +304,8 @@ rsq(mdat$n2o_lake, predict(mod8))
 
 #Plot the Effect Sizes
 sjPlot::plot_model(mod8, 
-                   axis.labels=c("Treatment * Period \n(Pulse2)", "Treatment * Period \n(Pulse1)", "Bottom  \nWater DO",
-                                 "NOx", "Period \n(Pulse2)", "Period \n(Pulse1)", "Treatment"),
+                   # axis.labels=c("Treatment * Period \n(Pulse2)", "Treatment * Period \n(Pulse1)", "Bottom  \nWater DO",
+                   #               "NOx", "Period \n(Pulse2)", "Period \n(Pulse1)", "Treatment"),
                    show.values=TRUE, show.p=TRUE,
                    title=expression(Effect~on~N[2]*O~Flux))
 
