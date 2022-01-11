@@ -336,6 +336,9 @@ lake_sample_data = read_csv("Data/R-Data/2020_sample-metadata_lake-conc.csv") %>
 #
 # For most of these it is quite obvious which vial is the outlier, and most
 #  appear to be the result of one vial being contaminated with atmosphere. 
+#
+# After outliers are identified and flagged in the data sheet, this part 
+#  between the {} is no longer needed when normally running the script. 
 
 
 # combine raw ghg values and some meta data for processing
@@ -407,7 +410,7 @@ lake_ghg = ghg_clean %>%
    ungroup()
 
 
-# Add meta data to GHG values
+# Add sample data to GHG values
 lake_samples = left_join(lake_sample_data, lake_ghg) %>%
    # add surface water temperature
    left_join(sonde_surface %>% select(pond_id, doy, surface_temp=temp)) %>%
@@ -426,9 +429,9 @@ lake_samples = left_join(lake_sample_data, lake_ghg) %>%
 # GHG data
 ghg_methano_raw = read_csv("Data/R-Data/2020_ghgs_methano-assay.csv")
 
-# Sample meta data
+# Sample data
 methano_sample_data = read_csv("Data/R-Data/2020_sample-metadata_methano-assay.csv") %>%
-   # add a bottle headspace variable
+   # add a variable for bottle headspace (units = ml) 
    mutate(vol_head = vol_bottle - (vol_sediment + vol_water)) %>%
    # convert volumes from ml to L
    mutate(across(starts_with("vol"), ~(./1000)))
@@ -441,7 +444,7 @@ methano_samples = methano_sample_data %>%
    mutate(datetime_start = as.POSIXct(mdy(date_start) + hms(time_start)),
           datetime_end = as.POSIXct(mdy(date_end) + hms(time_end)),
           doy = yday(datetime_start)) %>%
-   # add length of incubation period
+   # add length of incubation period (units = minutes)
    mutate(incubation_length = difftime(datetime_end, datetime_start, units="mins"),
           incubation_length = as.numeric(incubation_length))
 
@@ -459,11 +462,11 @@ methano_samples = methano_samples %>%
 # GHG data
 ghg_dea_raw = read_csv("Data/R-Data/2020_ghgs_dea-assay.csv")
 
-# Sample meta data
+# Sample data
 dea_sample_data = read_csv("Data/R-Data/2020_sample-metadata_dea-assay.csv") %>%
-   # add bottle headspace variable
+   # add a variable for bottle headspace (units = ml) 
    mutate(vol_head = vol_bottle - (vol_sediment + vol_water + vol_media)) %>%
-   # convert volumns from ml to L
+   # convert volumes from ml to L
    mutate(across(starts_with("vol"), ~(./1000)))
 
 
@@ -474,7 +477,7 @@ dea_samples = dea_sample_data %>%
    filter(!(is.na(time_start))) %>%
    mutate(date_collect = mdy(date_collect),
           doy = yday(date_collect)) %>%
-   # add length of incubation period
+   # add length of incubation period (units = minutes)
    mutate(incubation_length = difftime(time_end, time_start, units="mins"),
           incubation_length = as.numeric(incubation_length))
 
@@ -511,7 +514,7 @@ ebu_samples = ebu_sample_data %>%
    relocate(date_time, doy, .after = week)
 
 
-# Calculate deployment length
+# Calculate deployment length (units = days)
 ebu_samples = ebu_samples %>%
    group_by(week, pond_id, replicate) %>%
    arrange(doy, .by_group=T) %>%
@@ -546,7 +549,7 @@ weather_data = weather_data %>%
    mutate(date_time = mdy_hm(date_time),
           doy = yday(date_time)) %>%
    relocate(doy, .after = date_time) %>%
-   # anemometer height (4 m)
+   # anemometer height (4 m) (units = m)
    mutate(wind_z = rep_len(4, n()))
 
 
@@ -565,7 +568,7 @@ bulk_density = bulk_density_raw %>%
    mutate(date = mdy(date),
           doy = yday(date)) %>%
    filter(!(sample_type=="nutrients")) %>%
-   # sample weights
+   # sample weights (units = g)
    mutate(mass_wet = mass_wet_tin.sample - mass_tin,
           mass_dry = mass_dry_tin.sample - mass_tin) %>%
    # dry bulk density and porosity (units = g / cm3)
@@ -575,6 +578,7 @@ bulk_density = bulk_density_raw %>%
 # calculate mean sediment bulk density and porosity for each pond (summer mean value)
 bulk_density = bulk_density %>%
    group_by(pond_id) %>%
+   # units = g/cm3
    summarize(DBD = mean(DBD, na.rm=T),
              porosity = mean(porosity, na.rm=T)) %>%
    ungroup()
@@ -584,7 +588,7 @@ bulk_density = bulk_density %>%
 om_data = organic_matter_raw %>%
    mutate(date = mdy(date),
           doy = yday(date)) %>%
-   # sample weights
+   # sample weights (units = g)
    mutate(mass_dry = mass_dry_tin.sample - mass_tin,
           mass_ash = mass_ash_tin.sample - mass_tin) %>%
    # OM content (%)
