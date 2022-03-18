@@ -561,7 +561,7 @@ ggplot(mod_n2o %>%
    scale_x_continuous(name = "Estimate", limits = c(-8, 2), breaks = seq(-8, 2, 2)) +
    # factors in order of model
    scale_y_discrete(name=NULL, labels = c("Treatment * Period \n(Pulse2)", "Treatment * Period \n(Pulse1)", "Bottom  \nWater DO",
-                                          "NOx", "Period \n(Pulse2)", "Period \n(Pulse1)", "Treatment")) +
+                                          "Nitrate", "Period \n(Pulse2)", "Period \n(Pulse1)", "Treatment")) +
    # factors ordered by decreasing effect size
    # scale_y_discrete(name = NULL,
    #                  labels = c("Treatment * Period \n(Pulse2)", "Bottom  \nWater DO", "Treatment",
@@ -576,6 +576,6 @@ windows(height=10, width=5); a / b / c
 
 # plot_grid(a, b, c, ncol=1, align="v")
 
-ggsave(filename = "Figures/AGU-poster/lme-effect-sizes.png", height=10, width=5, units="in")
+ggsave(filename = "Figures/lme-effect-sizes.png", height=10, width=5, units="in")
 
 
