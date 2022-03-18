@@ -26,20 +26,21 @@ fdat = read_csv("ghg-model-dataset.csv")
 #==================#
 #     CO2 FLUX     #
 #==================#
+
 #=====GETTING STARTED
 #Read in the data
-# flux = read.csv("co2_noNA.csv")
-# flux$period<-as.factor(flux$period) #make a new column with period as a factor
 
 # data for this model
 mdat = fdat %>%
    mutate(np_ratio = (tn/14.001) / ((tp/1000)/30.97)) %>%
    select(pond_id:period, co2_lake, NEP, np_ratio, tp, srp, tn, nox, bottom_do_sat, temp, chla, buoy_freq) %>%
-   filter(across(co2_lake:buoy_freq, ~!(is.na(.)))) %>%
+   # only keep rows that have values for all variables
+   filter(!(if_any(co2_lake:buoy_freq, is.na))) %>%
    # force the reference treatment to be first (so model results show effect of the pulse treatment)
-   arrange(desc(treatment), pond_id, doy) %>%
-   mutate(treatment = as_factor(treatment),
-          period = as_factor(period))
+   mutate(treatment = as.factor(treatment),
+          period = as.factor(period),
+          treatment = fct_relevel(treatment, "reference"))
+
 
 #=====STEP 1: MIXED EFFECTS MODEL
 # mod_mixed<-lmerTest::lmer(co2_flux ~ buoy_freq + (1|pond_id), data=flux, na.action="na.fail", REML=F)
@@ -122,20 +123,20 @@ mod_co2 = summary(mod7)$coefficients %>% as.data.frame() %>% rownames_to_column(
 #==================#
 #     CH4 FLUX     #
 #==================#
+
 #=====GETTING STARTED
 #Read in the data
-# flux = read.csv("ch4_noNA_phys.csv")
-# flux$period<-as.factor(flux$period) #make a new column with period as a factor
 
 # data for this model
 mdat = fdat %>%
    mutate(np_ratio = (tn/14.001) / ((tp/1000)/30.97)) %>%
    select(pond_id:period, ch4_lake, tp, tn, np_ratio, bottom_do, temp, chla, wind_speed, buoy_freq) %>%
-   filter(across(ch4_lake:buoy_freq, ~!(is.na(.)))) %>%
+   # only keep rows that have values for all variables
+   filter(!(if_any(ch4_lake:buoy_freq, is.na))) %>%
    # force the reference treatment to be first (so model results show effect of the pulse treatment)
-   arrange(desc(treatment), pond_id, doy) %>%
-   mutate(treatment = as_factor(treatment),
-          period = as_factor(period))
+   mutate(treatment = as.factor(treatment),
+          period = as.factor(period),
+          treatment = fct_relevel(treatment, "reference"))
 
 
 #=====STEP 1: MIXED EFFECTS MODEL
@@ -225,21 +226,21 @@ mod_ch4 = summary(mod11)$coefficients %>% as.data.frame() %>% rownames_to_column
 #==================#
 #     N2O FLUX     #
 #==================#
+
 #=====GETTING STARTED
 #Read in the data
-# flux = read.csv("n2o_noNA_DEA.csv")
-# flux$period<-as.factor(flux$period) #make a new column with period as a factor
 
 # data for this model
 mdat = fdat %>%
    mutate(np_ratio = (tn/14.001) / ((tp/1000)/30.97),
           n2o_lake = n2o_lake * 1000) %>%
    select(pond_id:period, n2o_lake, tp, tn, np_ratio, nox, bottom_do, temp, wind_speed, buoy_freq) %>%
-   filter(across(n2o_lake:buoy_freq, ~!(is.na(.)))) %>%
+   # only keep rows that have values for all variables
+   filter(!(if_any(n2o_lake:buoy_freq, is.na))) %>%
    # force the reference treatment to be first (so model results show effect of the pulse treatment)
-   arrange(desc(treatment), pond_id, doy) %>%
-   mutate(treatment = as_factor(treatment),
-          period = as_factor(period))
+   mutate(treatment = as.factor(treatment),
+          period = as.factor(period),
+          treatment = fct_relevel(treatment, "reference"))
 
 
 # mean weekly values to include DEA
