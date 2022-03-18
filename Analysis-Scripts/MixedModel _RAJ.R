@@ -21,7 +21,6 @@ library(MuMIn)
 
 # full data set
 fdat = read_csv("ghg-model-dataset.csv")
-fdat = read_csv("ghg-model-dataset_2022-01-10.csv")
 
 
 #==================#
