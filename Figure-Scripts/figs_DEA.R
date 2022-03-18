@@ -382,6 +382,7 @@ ggplot(dea_rates %>% left_join(pond_data) %>% mutate(n2o_rate = n2o_rate * 1000)
    #
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(DEA~N[2]*O~(nmol~g^-1~h^-1)), limits = c(0, 1.2)) +
+   ggtitle("Nitrous Oxide") +
    theme_classic()
 
 
@@ -415,6 +416,7 @@ ggplot(dea_rates %>% left_join(pond_data) %>% mutate(co2_rate = co2_rate * 1000)
    #
    scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
    scale_y_continuous(name = expression(DEA~CO[2]~(nmol~g^-1~h^-1)), expand = expansion(mult=0.1)) +
+   ggtitle("Carbon Dioxide") +
    theme_classic()
 
 
