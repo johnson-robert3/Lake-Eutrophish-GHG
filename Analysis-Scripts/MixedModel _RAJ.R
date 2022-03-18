@@ -12,14 +12,11 @@ if (!require(nlme)) install.packages('nlme')
 library(nlme)
 if (!require(tidyverse)) install.packages('tidyverse')
 library(tidyverse)
+if (!require(MuMIn)) install.packages('MuMIn')
+library(MuMIn)
 
 
-#Function to calculate R2
-rsq<-function(emp,pred){
-  sstot<-sum((emp-mean(emp))^2)
-  ssres<-sum((pred-emp)^2)
-  return(1-(ssres/sstot))
-}
+# use MuMIn::r.squaredGLMM() to calculate R2 values from mixed effects models
 
 
 # full data set
@@ -92,7 +89,8 @@ summary(mod12)
 
 
 #Calculate the variance explained by the model (R-squared)
-rsq(mdat$co2_lake, predict(mod7)) 
+# rsq(mdat$co2_lake, predict(mod7)) 
+r.squaredGLMM(mod7)
 
 #Plot the Effect Sizes
 sjPlot::plot_model(mod7, 
@@ -194,7 +192,8 @@ summary(mod15)
 
 
 #Calculate the variance explained by the model (R-squared)
-rsq(mdat$ch4_lake, predict(mod11)) 
+# rsq(mdat$ch4_lake, predict(mod11)) 
+r.squaredGLMM(mod11)
 
 #Plot the Effect Sizes
 sjPlot::plot_model(mod11, 
@@ -300,7 +299,8 @@ summary(mod8)
 
 
 #Calculate the variance explained by the model (R-squared)
-rsq(mdat$n2o_lake, predict(mod8)) 
+# rsq(mdat$n2o_lake, predict(mod8)) 
+r.squaredGLMM(mod8)
 
 #Plot the Effect Sizes
 sjPlot::plot_model(mod8, 
