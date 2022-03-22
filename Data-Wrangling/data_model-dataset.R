@@ -43,15 +43,23 @@ t4 = sonde_bottom %>%
 t5 = sonde_profiles %>%
    group_by(pond_id, doy) %>%
    filter(vert_m > 0.05 & vert_m < 0.60) %>%
-   summarize(across(temp:salinity, ~mean(., na.rm=T))) %>%
+   summarize(across(temp:salinity, ~mean(., na.rm=TRUE))) %>%
    ungroup() %>%
    select(pond_id, doy, temp, chla)
 
 
-t6 = wind_k %>%
-   select(doy, wnd, U10) %>%
-   rename(wind_speed = wnd, 
-          wind_U10 = U10)
+# t6 = wind_k %>%
+#    select(doy, wnd, U10) %>%
+#    rename(wind_speed = wnd,
+#           wind_U10 = U10)
+
+t6 = weather_data %>%
+   mutate(U10 = wind_speed * ((10 / wind_z)^(1/7))) %>%
+   select(doy, wind_speed, U10) %>%
+   group_by(doy) %>%
+   summarize(across(wind_speed:U10, ~mean(., na.rm=TRUE))) %>%
+   ungroup() %>%
+   rename(wind_U10 = U10)
 
 
 t7 = dea_rates %>%
@@ -65,9 +73,9 @@ t8 = methano_rates %>%
 
 
 t9 = hobo_mld %>%
-   mutate(doy = yday(datetime)) %>%
+   mutate(doy = yday(date_time)) %>%
    group_by(pond_id, doy) %>%
-   summarize(buoy_freq = median(buoy_freq, na.rm=T)) %>%
+   summarize(buoy_freq = median(buoy_freq, na.rm=TRUE)) %>%
    ungroup()
 
 
@@ -98,5 +106,5 @@ model_dataset = test2 %>%
    arrange(pond_id, doy)
 
 
-write_csv(model_dataset, file = "ghg-model-dataset.csv")
+write_csv(model_dataset, file = "ghg-model-dataset_2022-01-10.csv")
 
