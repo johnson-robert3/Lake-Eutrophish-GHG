@@ -11,42 +11,7 @@ library(LakeMetabolizer)
 # Data Prep
 #---
 
-# Calculate mixed-layer depth from Hobo t-chains
-
-hobo_nest = hobo_temp %>%
-   # remove dates when loggers were out of ponds
-   mutate(doy = yday(date_time)) %>%
-   filter(doy >= 143, doy <= 240) %>%
-   # format for rLakeAnalyzer
-   mutate(depth = str_replace(depth, "Anchor", "2.0"), 
-          depth = paste("wtr", depth, sep="_")) %>%
-   rename(datetime = date_time) %>%
-   select(-doy) %>%
-   # nest data in long format
-   group_by(pond_id) %>%
-   nest() %>%
-   # widen data and run functions
-   mutate(hobo_wide = map(data, ~pivot_wider(., names_from = "depth", values_from = "temp")),
-          meta_depths = map(hobo_wide, ~ts.meta.depths(., na.rm=T)),
-          thermocline = map(hobo_wide, ~ts.thermo.depth(., na.rm=T)),
-          buoy_freq = map(hobo_wide, ~ts.buoyancy.freq(., na.rm=T)))
-
-
-hobo_mld = hobo_nest %>%
-   select(-data, -hobo_wide) %>%
-   # can't have a variable duplicated across list-columns for unnesting
-   mutate(thermocline = map(thermocline, ~select(., -datetime)),
-          buoy_freq = map(buoy_freq, ~select(., -datetime))) %>%
-   # unnest list-columns
-   unnest(cols = c(meta_depths, thermocline, buoy_freq)) %>% 
-   ungroup() %>%
-   rename(meta_top = top,
-          meta_bottom = bottom,
-          thermocline = thermo.depth,
-          buoy_freq = n2)
-
-
-##__Combine data
+# Get and combine necessary data from various data sets
 
 # Temp and DO from miniDOTs
 metab_data = minidot %>%
@@ -54,30 +19,40 @@ metab_data = minidot %>%
    mutate(date_time = date_time - minutes(15)) %>%
    # add weather
    left_join(weather_data) %>%
+   
    # add surface salinity from sonde profiles
+   #  Pond B doy 151 and Pond C doy 231 are missing profiles. 
+   #  Can we address this since we only need salinity data from the profiles? so we don't have to remove these days from calculations?
    left_join(sonde_surface %>%
                 select(pond_id, doy, salinity)) %>%
-   # remove unnecessary data
+   
+   # remove unnecessary data from before experiment began and after experiment ended
    filter(doy >= 145, doy <= 240) %>%
    select(-do_sat, -gust_speed)
 
 
 # Add mixed-layer depth
-metab_data = hobo_mld %>%
-   # use thermocline for the mld
-   select(pond_id, datetime, thermocline) %>%
-   # add treatment ID; data for B and F will be used for all ponds in a treatment
+metab_data = hobo_strat %>%
+   
+   # use thermocline for the mixed-layer depth (mld)
+   select(pond_id, date_time, thermocline) %>%
+   rename(z_mix = thermocline) %>%
+   
+   # add a treatment ID 
+   #  data for B and F will be used for all ponds in a treatment; t-chains were only deployed in ponds B and F
    mutate(trt = case_when(.$pond_id=="B" ~ "pulse",
                           .$pond_id=="F" ~ "ref")) %>%
    select(-pond_id) %>%
-   rename(date_time = datetime,
-          z_mix = thermocline) %>%
-   # set NaN's (times of turnover) to a depth of 1.75
+   
+   # address times of turnover when a mixed-layer depth cannot be calculated ("NaN"s in the data)
+   #  set 'mld' to 1.75m during times of turnover 
+   #  [ is this mean pond depth? should we use a different depth for turnover? ]
    mutate(z_mix = replace(z_mix, .$z_mix=="NaN", 1.75)) %>%
    right_join(metab_data %>%
                  # treatment ID for combining
                  mutate(trt = case_when(.$pond_id %in% c("A", "B", "C") ~ "pulse",
                                         .$pond_id %in% c("D", "E", "F") ~ "ref"))) %>%
+   #
    relocate(pond_id) %>%
    relocate(z_mix, .after = salinity) %>%
    select(-trt) %>%
