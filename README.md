@@ -1,3 +1,3 @@
 # 2020 Hort Farm Pond Experiment
 
-Effects of food web structure and eutrophication on lake greenhouse gas fluxes
+Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nutrient Addition
