@@ -343,10 +343,10 @@ limno_field_data = read_csv("Data/R-Data/2020_limno-field-data.csv") %>%
 #---
 
 # GHG data
-ghg_lake_raw = read_csv("Data/R-Data/2020_ghgs_lake-conc.csv")
+ghg_lake_raw = read_csv("Data/R-Data/2020_ghg-data_lake-conc.csv")
 
 # Sample meta data
-lake_sample_data = read_csv("Data/R-Data/2020_sample-metadata_lake-conc.csv") %>%
+lake_sample_data = read_csv("Data/R-Data/2020_sample-data_lake-conc.csv") %>%
    # convert volumes from ml to L
    mutate(across(starts_with("vol"), ~(./1000))) %>%
    # date and DOY
@@ -458,10 +458,10 @@ lake_samples = left_join(lake_sample_data, lake_ghg) %>%
 #---
 
 # GHG data
-ghg_methano_raw = read_csv("Data/R-Data/2020_ghgs_methano-assay.csv")
+ghg_methano_raw = read_csv("Data/R-Data/2020_ghg-data_methanogenesis.csv")
 
 # Sample data
-methano_sample_data = read_csv("Data/R-Data/2020_sample-metadata_methano-assay.csv") %>%
+methano_sample_data = read_csv("Data/R-Data/2020_sample-data_methanogenesis.csv") %>%
    # add a variable for bottle headspace (units = ml) 
    mutate(vol_head = vol_bottle - (vol_sediment + vol_water)) %>%
    # convert volumes from ml to L
@@ -491,10 +491,10 @@ methano_samples = methano_samples %>%
 #---
 
 # GHG data
-ghg_dea_raw = read_csv("Data/R-Data/2020_ghgs_dea-assay.csv")
+ghg_dea_raw = read_csv("Data/R-Data/2020_ghg-data_DEA.csv")
 
 # Sample data
-dea_sample_data = read_csv("Data/R-Data/2020_sample-metadata_dea-assay.csv") %>%
+dea_sample_data = read_csv("Data/R-Data/2020_sample-data_DEA.csv") %>%
    # add a variable for bottle headspace (units = ml) 
    mutate(vol_head = vol_bottle - (vol_sediment + vol_water + vol_media)) %>%
    # convert volumes from ml to L
@@ -524,10 +524,10 @@ dea_samples = dea_samples %>%
 #---
 
 # GHG data
-ghg_ebu_raw = read_csv("Data/R-Data/2020_ghgs_ebullition.csv")
+ghg_ebu_raw = read_csv("Data/R-Data/2020_ghg-data_ebullition.csv")
 
 # Sample meta data
-ebu_sample_data = read_csv("Data/R-Data/2020_sample-metadata_ebullition.csv") %>%
+ebu_sample_data = read_csv("Data/R-Data/2020_sample-data_ebullition.csv") %>%
    # add a column for sample replicate
    mutate(replicate = str_sub(sample_id, -2, -1)) %>%
    relocate(replicate, .after = pond_id) %>%
