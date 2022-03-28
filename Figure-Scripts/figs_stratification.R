@@ -12,8 +12,8 @@ source("Figure-Scripts/figs_functions.R")
 #--
 
 # Set up data
-test_hobo = hobo_mld %>%
-   mutate(doy = yday(datetime)) %>%
+test_hobo = hobo_strat %>%
+   mutate(doy = yday(date_time)) %>%
    filter(doy >= 145, doy <= 240)
 
 
