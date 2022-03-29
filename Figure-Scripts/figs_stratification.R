@@ -49,7 +49,9 @@ tdat = hobo_temp %>%
 # Using HOBO t-chain data
 #--
 
-# Stratification heat maps
+## Stratification heat maps
+
+# Pond B
 windows(height=6, width=10)
 ggplot(tdat %>% filter(pond_id=="B")) +
    #
@@ -69,6 +71,7 @@ ggplot(tdat %>% filter(pond_id=="B")) +
 # ggsave(filename = "t-chain_heat-map_Pond-B.png")
 
 
+# Pond F
 windows(height=6, width=10)
 ggplot(tdat %>% filter(pond_id=="F")) +
    #
@@ -89,7 +92,7 @@ ggplot(tdat %>% filter(pond_id=="F")) +
 
 
 
-## Viewing daily values
+## Daily stratification values
 
 # Set up data
 test_hobo = hobo_strat %>%
@@ -98,21 +101,56 @@ test_hobo = hobo_strat %>%
 
 
 # Daily thermocline and metalimnion depths
-windows()
+
+# Pond B
+windows(height=6, width=10)
 ggplot(test_hobo %>%
           group_by(pond_id, doy) %>%
           summarize(across(meta_top:buoy_freq, ~mean(., na.rm=T))) %>%
           ungroup() %>%
-          filter(pond_id=="B"))+
+          filter(pond_id=="B")) +
+   #
    geom_line(aes(x = doy, y = thermocline), color="black") +
    geom_line(aes(x = doy, y = meta_top), color="red") +
    geom_line(aes(x = doy, y = meta_bottom), color="blue") +
-   scale_y_reverse() +
+   #
+   scale_x_continuous(name = "Day of year",
+                      breaks = seq(140, 240, 10)) +
+   scale_y_continuous(name = "Meta depths (m)",
+                      trans = "reverse") +
+   ggtitle("Pond B") +
+   #
    theme_classic()
 
+# ggsave(filename = "daily-meta-depths_Pond-B.png")
 
-# Daily Buoyancy Frequency values
-windows()
+
+# Pond F
+windows(height=6, width=10)
+ggplot(test_hobo %>%
+          group_by(pond_id, doy) %>%
+          summarize(across(meta_top:buoy_freq, ~mean(., na.rm=T))) %>%
+          ungroup() %>%
+          filter(pond_id=="F")) +
+   #
+   geom_line(aes(x = doy, y = thermocline), color="black") +
+   geom_line(aes(x = doy, y = meta_top), color="red") +
+   geom_line(aes(x = doy, y = meta_bottom), color="blue") +
+   #
+   scale_x_continuous(name = "Day of year",
+                      breaks = seq(140, 240, 10)) +
+   scale_y_continuous(name = "Meta depths (m)",
+                      trans = "reverse") +
+   ggtitle("Pond F") +
+   #
+   theme_classic()
+
+# ggsave(filename = "daily-meta-depths_Pond-F.png")
+
+
+
+# Daily Buoyancy Frequency 
+windows(height=6, width=10)
 ggplot(test_hobo %>% 
           group_by(pond_id, doy) %>%
           summarize(buoy_freq = median(buoy_freq, na.rm=T)) %>%
@@ -132,11 +170,14 @@ ggplot(test_hobo %>%
    #
    scale_color_manual(breaks = nut_breaks, 
                       values = nut_color) +
-   labs(x = "Day of year",
-        y = "median Buoyancy frequency") +
-   lims(y = c(0, 0.15)) +
-   theme_classic()
+   scale_x_continuous(name = "Day of year",
+                      breaks = seq(140, 240, 10)) +
+   scale_y_continuous(name = "median Buoyancy frequency", limits = c(0, 0.15)) +
+   theme_classic() +
+   theme(legend.position = c(0.85, 0.85),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line")))
 
+# ggsave(filename = "daily-buoyancy-frequency.png")
 
 
 #--
