@@ -4,12 +4,92 @@
 #~~~
 
 
+library(viridis)
+
 source("Figure-Scripts/figs_functions.R")
+
+
+# color values for stratification heat maps
+mycolors = magma(n=10)
+
+# Format t-chain data for figures
+tdat = hobo_temp %>%
+   # DOY variable for grouping
+   mutate(doy = yday(date_time)) %>%
+   select(-date_time) %>%
+   # remove beg/end dates
+   filter(doy >= 143, doy <= 240) %>%
+   group_by(pond_id, doy, depth) %>%
+   # calculate daily mean temps
+   summarize(temp = mean(temp, na.rm=T)) %>%
+   mutate(depth = replace(depth, depth=="Anchor", "2.0"),
+          depth = as.numeric(depth)) %>%
+   ungroup() %>%
+   #
+   # add a 1.75m depth
+   pivot_wider(id_cols = c(pond_id, doy),
+               names_from = 'depth', 
+               values_from = 'temp') %>%
+   mutate(new = rep(-9999, nrow(.)),
+          new = na_if(new, -9999),
+          doy = as.character(doy)) %>%
+   pivot_longer(cols = '0':new,
+                names_to = "depth",
+                values_to = "temp") %>%
+   mutate(depth = replace(depth, depth=="new", 1.75) %>% as.numeric()) %>%
+   #
+   # interpolate missing temp data
+   group_by(pond_id, doy) %>%
+   arrange(depth, .by_group = TRUE) %>%
+   mutate(temp = zoo::na.approx(temp)) %>%
+   ungroup()
 
 
 #--
 # Using HOBO t-chain data
 #--
+
+# Stratification heat maps
+windows(height=6, width=10)
+ggplot(tdat %>% filter(pond_id=="B")) +
+   #
+   geom_tile(aes(x = doy, y = depth, fill = temp)) +
+   #
+   scale_fill_gradientn(name = "Temp", 
+                        colors = mycolors,
+                        breaks = seq(65, 85, 10)) +
+   scale_x_discrete(name = "Day of year",
+                    breaks = seq(140, 240, 10)) +
+   scale_y_continuous(name = "Depth (m)",
+                      trans = "reverse") +
+   ggtitle("Pond B") +
+   #
+   theme_classic()
+
+# ggsave(filename = "t-chain_heat-map_Pond-B.png")
+
+
+windows(height=6, width=10)
+ggplot(tdat %>% filter(pond_id=="F")) +
+   #
+   geom_tile(aes(x = doy, y = depth, fill = temp)) +
+   #
+   scale_fill_gradientn(name = "Temp", 
+                        colors = mycolors,
+                        breaks = seq(65, 85, 10)) +
+   scale_x_discrete(name = "Day of year",
+                    breaks = seq(140, 240, 10)) +
+   scale_y_continuous(name = "Depth (m)",
+                      trans = "reverse") +
+   ggtitle("Pond F") +
+   #
+   theme_classic()
+
+# ggsave(filename = "t-chain_heat-map_Pond-F.png")
+
+
+
+## Viewing daily values
 
 # Set up data
 test_hobo = hobo_strat %>%
@@ -17,29 +97,7 @@ test_hobo = hobo_strat %>%
    filter(doy >= 145, doy <= 240)
 
 
-# Buoyancy Frequency
-
-windows()
-ggplot(test_hobo %>% 
-          group_by(pond_id, doy) %>%
-          summarize(buoy_freq = median(buoy_freq, na.rm=T)) %>%
-          ungroup(),
-       aes(x = doy, y = buoy_freq)) +
-   # reference
-   geom_line(data = ~filter(.x, pond_id=="F"),
-             size=1.5, color="cornflowerblue", alpha=0.8) +
-   # pulse
-   geom_line(data = ~filter(.x, pond_id=="B"),
-             size=1.5, color="seagreen3", alpha=0.8) +
-   geom_vline(xintercept = c(176, 211), linetype=2, color = "gray60") +
-   labs(x = "DOY",
-        y = "median buoy_freq") +
-   theme_classic()
-
-
-
-# Metalimnion and thermocline depths
-
+# Daily thermocline and metalimnion depths
 windows()
 ggplot(test_hobo %>%
           group_by(pond_id, doy) %>%
@@ -50,6 +108,33 @@ ggplot(test_hobo %>%
    geom_line(aes(x = doy, y = meta_top), color="red") +
    geom_line(aes(x = doy, y = meta_bottom), color="blue") +
    scale_y_reverse() +
+   theme_classic()
+
+
+# Daily Buoyancy Frequency values
+windows()
+ggplot(test_hobo %>% 
+          group_by(pond_id, doy) %>%
+          summarize(buoy_freq = median(buoy_freq, na.rm=T)) %>%
+          ungroup() %>%
+          mutate(pulse = case_when(pond_id=="B" ~ "yes",
+                                   pond_id=="F" ~ "no")),
+       aes(x = doy, y = buoy_freq)) +
+   # reference
+   # geom_line(data = ~filter(.x, pond_id=="F"),
+   #           size=1, color="#0f3460", alpha=0.8) +
+   # pulse
+   # geom_line(data = ~filter(.x, pond_id=="B"),
+   #           size=1, color="#e94560", alpha=0.8) +
+   #
+   geom_line(aes(group = pulse, color = pulse), size=1, alpha=0.8) +
+   geom_vline(xintercept = c(176, 211), linetype=2, color = "gray60") +
+   #
+   scale_color_manual(breaks = nut_breaks, 
+                      values = nut_color) +
+   labs(x = "Day of year",
+        y = "median Buoyancy frequency") +
+   lims(y = c(0, 0.15)) +
    theme_classic()
 
 
@@ -79,16 +164,16 @@ ggplot(test_sonde,
        aes(x = doy, y = buoy_freq)) +
    # reference
    geom_line(data = ~filter(.x, pond_id=="F"),
-             size=1.5, color="cornflowerblue", alpha=0.8) +
+             size=1, color="#0f3460", alpha=0.8) +
    # pulse
    geom_line(data = ~filter(.x, pond_id=="B"),
-             size=1.5, color="seagreen3", alpha=0.8) +
+             size=1, color="#e94560", alpha=0.8) +
    geom_vline(xintercept = c(176, 211), linetype=2, color = "gray60") +
-   labs(x = "DOY",
-        y = "sonde buoy_freq") +
+   labs(x = "Day of year",
+        y = "sonde Buoyancy Frequency") +
    theme_classic()
 
-   
+
 
 
 
