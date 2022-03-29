@@ -22,6 +22,8 @@ pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
 # Daily Sonde Profiles
 #---
 
+# Import, process, and combine individual sonde profiles
+{
 # Function to wrangle each sonde profile data sheet as it is read in
 #  select only the desired columns and rename to match across files
 read_profile = function(.dat, .skip) {
@@ -76,26 +78,36 @@ sonde_profiles = sonde_profiles %>%
    # remove the times (n=3) when a duplicate profile appears in the data set, but with no data
    # DOY 162 Pond C; DOY 185 Pond F; DOY 210 Pond D
    filter(!(is.na(temp) & is.na(do) & is.na(chla) & is.na(vert_m))) %>%
+   # 
    mutate(pond_id = str_remove(pond_id, "Pond "),
           date_time = as.POSIXct(mdy(date) + hms(time)),
           doy = yday(date_time)) %>%
    arrange(doy, pond_id, date_time) %>%
    select(-date, -time) %>%
    relocate(date_time, doy) %>%
-   # remove errant measurements recorded as 1970-01-01
-   filter(!(doy==1)) %>%
    # change temp data to Celcius
-   mutate(temp = (temp - 32) / 1.8)
+   mutate(temp = (temp - 32) / 1.8) %>%
+   # remove errant measurements recorded as 1970-01-01
+   filter(!(doy==1))
+
    # correct vertical position (depth sensor and probes not at same height)
    # add 5 cm to all
    # mutate(vert_m = vert_m + 0.05,
    #        vert_m = if_else(vert_m<0, 0, vert_m)) %>%
-   
+
+
+# Output full sonde profile dataset to a CSV file, so individual files don't all need to be read in & processed each time
+write.csv(sonde_profiles, file = "sonde-profiles_all-data_2022-03-29.csv")
 
    ## remove temporary objects
    rm(sonde_nohead, sonde_head)
    ##
+}
 
+   
+# Data (from full, processed sonde dataset)
+sonde_profiles = read_csv("sonde-profiles_all-data_2022-03-29.csv")
+   
 
 ##__Surface water means 
 #  Depth: 10-30 cm
