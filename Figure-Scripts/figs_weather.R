@@ -27,7 +27,7 @@ ggplot(weather_data) +
 windows()
 ggplot(weather_data %>%
           
-          filter(doy %in% c(170:174))) +
+          filter(doy %in% c(146))) +
    
    geom_line(aes(x = date_time, y = wind_speed)) +
    labs(x = "Date",

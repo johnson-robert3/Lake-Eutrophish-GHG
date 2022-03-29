@@ -50,7 +50,7 @@ ggplot(minidot %>%
           mutate(hour = hour(date_time),
                  minute = minute(date_time)) %>%
           # select which days to view
-          filter(doy %in% c(210:214))) +
+          filter(doy %in% c(146))) +
    
    # data as lines
    geom_line(aes(x = date_time, y = do), color="cornflowerblue") +
