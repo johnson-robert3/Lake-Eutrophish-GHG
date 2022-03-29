@@ -15,8 +15,6 @@ library(LakeMetabolizer)
 
 # Temp and DO from miniDOTs
 metab_data = minidot %>%
-   # subtract 15 minutes from minidot data to match weather time-stamps
-   mutate(date_time = date_time - minutes(15)) %>%
    # add weather
    left_join(weather_data) %>%
    
