@@ -158,6 +158,30 @@ windows(height=7, width=6); a / b
 }
 
 
+# 1 panel (blue & red)
+windows(height=3.5, width=5)
+ggplot(ldat,
+       aes(x = doy, y = chla)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
+   # pond data
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.3, size=1) +
+   # geom_point(aes(color = trt_nutrients), size=1.5, alpha=0.4) +
+   # treatment mean (loess smooth)
+   geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
+   #
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_x_continuous(name = " ", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_y_continuous(name = expression(Chlorophyll~italic("a")~(mu*g~L^-1))) +
+   #
+   theme_classic() +
+   theme(legend.position = c(0.18, 0.85),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line")))
+
+# ggsave(filename = "Figures/new-figs/surface-chla.png", height=3.5, width=5, units="in")
+
+
 #--
 # Phycocyanin
 #--
@@ -288,6 +312,34 @@ ggplot(rdat %>% filter(trt_nutrients=="yes"),
 windows(height=7, width=6); a / b
 
 }
+
+
+#--
+# Dissolved Oxygen
+#--
+
+# 1 panel (blue & red)
+windows(height=3.5, width=5)
+ggplot(ldat,
+       aes(x = doy, y = do)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
+   # pond data
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.3, size=1) +
+   # geom_point(aes(color = trt_nutrients), size=1.5, alpha=0.4) +
+   # treatment mean (loess smooth)
+   geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
+   #
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_x_continuous(name = " ", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_y_continuous(name = expression(Dissolved~oxygen~(mg~L^-1))) +
+   #
+   theme_classic() +
+   theme(legend.position = c(0.85, 0.85),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line")))
+
+# ggsave(filename = "Figures/new-figs/surface-DO.png", height=3.5, width=5, units="in")
 
 
 #===
