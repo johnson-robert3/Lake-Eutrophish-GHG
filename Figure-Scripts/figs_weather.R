@@ -36,7 +36,7 @@ ggplot(weather_data %>%
 
 
 ## Daily wind values
-windows()
+windows(height=6, width=10)
 ggplot(weather_data %>%
           group_by(doy) %>%
           summarize(min = min(wind_speed), max = max(wind_speed), mean = mean(wind_speed), med = median(wind_speed)) %>%
@@ -49,10 +49,14 @@ ggplot(weather_data %>%
    #
    scale_color_manual(breaks = c('min', 'max', 'mean', 'med'), 
                       values = c('min' = 'black', 'max' = 'black', 'mean' = 'firebrick2', 'med' = 'royalblue2')) +
-   labs(x = "Date", 
-        y = expression(Wind~speed~(m~s^-1))) +
+   scale_x_continuous(name = "Day of year",
+                      breaks = seq(140, 240, 10)) +
+   scale_y_continuous(name = expression(Wind~speed~(m~s^-1))) +
    #
-   theme_classic()
+   theme_classic() +
+   theme(legend.position = c(0.1, 0.85))
+
+ggsave(filename = "daily-wind-speed.png")
 
 
 
@@ -82,7 +86,7 @@ ggplot(weather_data %>%
 
 
 ## Daily PAR values
-windows()
+windows(height=6, width=10)
 ggplot(weather_data %>%
           # exclude nighttime values
           filter(par > 1.2) %>%
@@ -97,8 +101,11 @@ ggplot(weather_data %>%
    #
    scale_color_manual(breaks = c('min', 'max', 'mean', 'med'), 
                       values = c('min' = 'black', 'max' = 'black', 'mean' = 'firebrick2', 'med' = 'royalblue2')) +
-   labs(x = "Date", 
-        y = expression(PAR~(mu*mol~m^-2~s^-1))) +
+   scale_x_continuous(name = "Day of year",
+                      breaks = seq(140, 240, 10)) +
+   scale_y_continuous(name = expression(PAR~(mu*mol~m^-2~s^-1))) +
    #
    theme_classic()
+
+# ggsave(filename = "daily-PAR.png")
 
