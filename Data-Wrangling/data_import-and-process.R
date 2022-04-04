@@ -579,11 +579,10 @@ weather_data = weather_data_raw %>%
    clean_names() %>%
    # select(-number) %>%
    select(-x) %>%
-   rename(date_time = date_time_gmt_05_00,
-          wind_speed = wind_speed_m_s_lgr_s_n_20849581_sen_s_n_20843154,   # units are m/s
-          gust_speed = gust_speed_m_s_lgr_s_n_20849581_sen_s_n_20843154,   # units are m/s
-          # par = par_mol_m_u_fffd_s_lgr_s_n_20849581_sen_s_n_20856725)
-          par = par_mmol_m2_s_lgr_s_n_20849581_sen_s_n_20856725)    # units are actually umol/m2/s; new clean_names() makes this "mmol" for some reason
+   rename(date_time = starts_with("date_time"),
+          wind_speed = starts_with("wind_speed"),  # units are m/s
+          gust_speed = starts_with("gust_speed"),   # units are m/s
+          par = starts_with("par_"))    # units are umol/m2/s; new clean_names() makes this "mmol" for some reason
 
 
 # Additional variables
