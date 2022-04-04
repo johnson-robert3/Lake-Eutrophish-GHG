@@ -9,6 +9,12 @@ library(viridis)
 source("Figure-Scripts/figs_functions.R")
 
 
+
+#--
+# Using HOBO t-chain data
+#--
+
+
 # color values for stratification heat maps
 mycolors = magma(n=10)
 
@@ -28,7 +34,7 @@ tdat = hobo_temp %>%
    #
    # add a 1.75m depth
    pivot_wider(id_cols = c(pond_id, doy),
-               names_from = 'depth', 
+               names_from = 'depth',
                values_from = 'temp') %>%
    mutate(new = rep(-9999, nrow(.)),
           new = na_if(new, -9999),
@@ -45,11 +51,9 @@ tdat = hobo_temp %>%
    ungroup()
 
 
-#--
-# Using HOBO t-chain data
-#--
+##__Stratification heat maps
 
-## Stratification heat maps
+## Daily mean temperatures
 
 # Pond B
 windows(height=6, width=10)
@@ -64,11 +68,12 @@ ggplot(tdat %>% filter(pond_id=="B")) +
                     breaks = seq(140, 240, 10)) +
    scale_y_continuous(name = "Depth (m)",
                       trans = "reverse") +
-   ggtitle("Pond B") +
+   labs(title = "Pond B",
+        subtitle = "daily means") +
    #
    theme_classic()
 
-# ggsave(filename = "t-chain_heat-map_Pond-B.png")
+# ggsave(filename = "t-chain_heat-map_daily_Pond-B.png")
 
 
 # Pond F
@@ -84,15 +89,60 @@ ggplot(tdat %>% filter(pond_id=="F")) +
                     breaks = seq(140, 240, 10)) +
    scale_y_continuous(name = "Depth (m)",
                       trans = "reverse") +
-   ggtitle("Pond F") +
+   labs(title = "Pond F",
+        subtitle = "daily means") +
    #
    theme_classic()
 
-# ggsave(filename = "t-chain_heat-map_Pond-F.png")
+# ggsave(filename = "t-chain_heat-map_daily_Pond-F.png")
+
+
+# Original 30-min. temperatures
+
+# Pond B
+windows(height=6, width=10)
+ggplot(tdat %>% filter(pond_id=="B")) +
+   #
+   geom_tile(aes(x = date_time, y = depth, fill = temp)) +
+   #
+   scale_fill_gradientn(name = "Temp", 
+                        colors = mycolors,
+                        breaks = seq(65, 85, 10)) +
+   # scale_x_discrete(name = "Day of year",
+   #                  breaks = seq(140, 240, 10)) +
+   scale_y_continuous(name = "Depth (m)",
+                      trans = "reverse") +
+   labs(title = "Pond B",
+        subtitle = "30-min data") +
+   #
+   theme_classic()
+
+# ggsave(filename = "t-chain_heat-map_30-min_Pond-B.png")
+
+
+# Pond F
+windows(height=6, width=10)
+ggplot(tdat %>% filter(pond_id=="F")) +
+   #
+   geom_tile(aes(x = date_time, y = depth, fill = temp)) +
+   #
+   scale_fill_gradientn(name = "Temp", 
+                        colors = mycolors,
+                        breaks = seq(65, 85, 10)) +
+   # scale_x_discrete(name = "Day of year",
+   #                  breaks = seq(140, 240, 10)) +
+   scale_y_continuous(name = "Depth (m)",
+                      trans = "reverse") +
+   labs(title = "Pond F",
+        subtitle = "30-min data") +
+   #
+   theme_classic()
+
+# ggsave(filename = "t-chain_heat-map_30-min_Pond-F.png")
 
 
 
-## Daily stratification values
+##__Daily stratification values
 
 # Set up data
 test_hobo = hobo_strat %>%
@@ -148,7 +198,6 @@ ggplot(test_hobo %>%
 # ggsave(filename = "daily-meta-depths_Pond-F.png")
 
 
-
 # Daily Buoyancy Frequency 
 windows(height=6, width=10)
 ggplot(test_hobo %>% 
@@ -178,6 +227,54 @@ ggplot(test_hobo %>%
          axis.title.y = element_text(margin = margin(r=0.5, unit="line")))
 
 # ggsave(filename = "daily-buoyancy-frequency.png")
+
+
+
+##__High resolution stratification
+
+# view thermocline "flipping" during times of turnover
+
+# just thermocline depths with points
+windows()
+ggplot(test_hobo %>%
+          mutate(thermocline = replace(thermocline, .$thermocline=="NaN", 1.75)) %>%
+          mutate(thermocline = if_else(meta_top==0 & meta_bottom==2, 1.75, thermocline)) %>%
+          filter(pond_id=="F"
+                 , doy %in% c(210:211)
+                 ),
+       aes(x = date_time, y = thermocline)) +
+   # all data points
+   geom_line() +
+   # when entire water column was metalimnion
+   geom_point(
+      data = ~filter(.x, meta_top==0 & meta_bottom==2),
+      color = "firebrick2", shape=1, alpha=0.9) +
+   # times when the metalimnion was not the whole water column
+   geom_point(
+      data = ~filter(.x, !(meta_top==0 & meta_bottom==2)),
+      color = "cornflowerblue", shape=1, alpha=0.9) +
+   #
+   scale_y_continuous(limits = c(2,0), trans="reverse") +
+   theme_classic()
+
+
+# meta top, bottom, and thermo
+windows()
+ggplot(test_hobo %>%
+          mutate(thermocline = replace(thermocline, .$thermocline=="NaN", 1.75)) %>%
+          mutate(thermocline = if_else(meta_top==0 & meta_bottom==2, 1.75, thermocline)) %>%
+          filter(pond_id=="F"
+                 , doy %in% c(210:211)
+                 )) +
+   # all data points
+   geom_line(aes(x = date_time, y = thermocline), color = "black") +
+   geom_line(aes(x = date_time, y = meta_top), color = "cornflowerblue") +
+   geom_line(aes(x = date_time, y = meta_bottom), color = "firebrick2") +
+   scale_y_continuous(limits = c(2,0), trans="reverse") +
+   theme_classic()
+  
+
+
 
 
 #--
