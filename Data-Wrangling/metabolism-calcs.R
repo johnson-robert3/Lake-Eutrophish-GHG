@@ -33,19 +33,21 @@ metab_data = minidot %>%
 metab_data = hobo_strat %>%
    
    # use thermocline for the mixed-layer depth (mld)
-   select(pond_id, date_time, thermocline) %>%
+   # select(pond_id, date_time, thermocline) %>%
    rename(z_mix = thermocline) %>%
+   
+   # Address times of turnover and mixing in the ponds
+   #  set 'mld' to 1.75m during times when ponds were mixed 
+   #  "NaN"s in the data are also turnover, when the rLakeAnalyzer functions could not calculate the stratification variables
+   mutate(z_mix = replace(z_mix, .$z_mix=="NaN", 1.75),
+          z_mix = if_else(meta_top==0 & meta_bottom==2, 1.75, z_mix)) %>%
    
    # add a treatment ID 
    #  data for B and F will be used for all ponds in a treatment; t-chains were only deployed in ponds B and F
    mutate(trt = case_when(.$pond_id=="B" ~ "pulse",
                           .$pond_id=="F" ~ "ref")) %>%
    select(-pond_id) %>%
-   
-   # address times of turnover when a mixed-layer depth cannot be calculated ("NaN"s in the data)
-   #  set 'mld' to 1.75m during times of turnover 
-   #  [ is this mean pond depth? should we use a different depth for turnover? ]
-   mutate(z_mix = replace(z_mix, .$z_mix=="NaN", 1.75)) %>%
+   #
    right_join(metab_data %>%
                  # treatment ID for combining
                  mutate(trt = case_when(.$pond_id %in% c("A", "B", "C") ~ "pulse",
