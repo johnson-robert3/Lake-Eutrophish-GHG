@@ -204,7 +204,9 @@ hobo_temp = tibble(file_name = hobo_files) %>%
    separate(col = file_name, into = c("pond_id", "depth"), sep="_") %>%
    mutate(pond_id = str_remove(pond_id, "Pond")) %>%
    # update formats
-   mutate(date_time = mdy_hms(date_time))
+   mutate(date_time = mdy_hms(date_time)) %>%
+   # convert temperatures to Celcius
+   mutate(temp = (temp - 32) / 1.8)
 
 
 #---
