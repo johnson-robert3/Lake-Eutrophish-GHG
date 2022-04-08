@@ -19,6 +19,8 @@ source("Figure-Scripts/figs_functions.R")
 mycolors = magma(n=10)
 
 # Format t-chain data for figures
+
+#--Using daily mean values
 tdat = hobo_temp %>%
    # DOY variable for grouping
    mutate(doy = yday(date_time)) %>%
@@ -51,6 +53,34 @@ tdat = hobo_temp %>%
    ungroup()
 
 
+#--Using original 30-minute data
+tdat = hobo_temp %>%
+   # DOY variable for grouping
+   mutate(doy = yday(date_time)) %>%
+   # remove beg/end dates
+   filter(doy >= 143, doy <= 240) %>%
+   #
+   # add a 1.75m depth
+   pivot_wider(id_cols = c(pond_id, date_time, doy),
+               names_from = 'depth',
+               values_from = 'temp') %>%
+   mutate(new = rep(-9999, nrow(.)),
+          new = na_if(new, -9999),
+          doy = as.character(doy)) %>%
+   rename("2.0" = Anchor) %>%
+   pivot_longer(cols = '0.0':new,
+                names_to = "depth",
+                values_to = "temp") %>%
+   mutate(depth = replace(depth, depth=="new", 1.75) %>% as.numeric()) %>%
+   #
+   # interpolate missing temp data
+   group_by(pond_id, doy, date_time) %>%
+   arrange(depth, .by_group = TRUE) %>%
+   mutate(temp = zoo::na.approx(temp)) %>%
+   ungroup()
+
+
+
 ##__Stratification heat maps
 
 ## Daily mean temperatures
@@ -62,8 +92,7 @@ ggplot(tdat %>% filter(pond_id=="B")) +
    geom_tile(aes(x = doy, y = depth, fill = temp)) +
    #
    scale_fill_gradientn(name = "Temp", 
-                        colors = mycolors,
-                        breaks = seq(65, 85, 10)) +
+                        colors = mycolors) +
    scale_x_discrete(name = "Day of year",
                     breaks = seq(140, 240, 10)) +
    scale_y_continuous(name = "Depth (m)",
@@ -83,8 +112,7 @@ ggplot(tdat %>% filter(pond_id=="F")) +
    geom_tile(aes(x = doy, y = depth, fill = temp)) +
    #
    scale_fill_gradientn(name = "Temp", 
-                        colors = mycolors,
-                        breaks = seq(65, 85, 10)) +
+                        colors = mycolors) +
    scale_x_discrete(name = "Day of year",
                     breaks = seq(140, 240, 10)) +
    scale_y_continuous(name = "Depth (m)",
@@ -106,8 +134,7 @@ ggplot(tdat %>% filter(pond_id=="B")) +
    geom_tile(aes(x = date_time, y = depth, fill = temp)) +
    #
    scale_fill_gradientn(name = "Temp", 
-                        colors = mycolors,
-                        breaks = seq(65, 85, 10)) +
+                        colors = mycolors) +
    # scale_x_discrete(name = "Day of year",
    #                  breaks = seq(140, 240, 10)) +
    scale_y_continuous(name = "Depth (m)",
@@ -127,8 +154,7 @@ ggplot(tdat %>% filter(pond_id=="F")) +
    geom_tile(aes(x = date_time, y = depth, fill = temp)) +
    #
    scale_fill_gradientn(name = "Temp", 
-                        colors = mycolors,
-                        breaks = seq(65, 85, 10)) +
+                        colors = mycolors) +
    # scale_x_discrete(name = "Day of year",
    #                  breaks = seq(140, 240, 10)) +
    scale_y_continuous(name = "Depth (m)",
