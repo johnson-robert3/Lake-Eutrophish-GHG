@@ -226,29 +226,17 @@ read_minidot = function(.dat, .skip=9) {
 
 # DOY 150 [2020-05-29], DOY 164 [2020-06-12], DOY 192 [2020-07-10]
 
-# Function to correct time-stamps from when loggers were downloaded and re-deployed
-# fix_times = function(.dat) {
-#    .dat %>%
-#       mutate(date = date(date_time),
-#              hour = hour(date_time),
-#              minute = minute(date_time)) %>%
-#       select(-date_time) %>%
-#       mutate(new_min = case_when(.$minute %in% c(1:29) ~ 15,
-#                                  .$minute %in% c(31:59) ~ 45),
-#              new_dt = as.POSIXct(ymd(date) + hm(paste(hour, new_min, sep=" ")))) %>%
-#       select(-date, -hour, -minute, -new_min) %>%
-#       rename(date_time = new_dt) %>%
-#       mutate(doy = yday(date_time)) %>%
-#       relocate(pond_id, date_time, doy)
-# }
    
 # Pond A
 mini_a = list.files(path = "./Data/R-Data/2020_MiniDOTs",
                     pattern = "*_A.csv",
                     full.names = T) %>%
    map_dfr(~read_minidot(.)) %>%
-   mutate(pond_id = rep("A", nrow(.))) #%>%
-   # fix_times()
+   mutate(pond_id = rep("A", nrow(.))) %>%
+   # change all times to be on the hour or half-hour
+   # fix time-stamps that were altered during re-deployment
+   mutate(date_time = case_when(minute(date_time) %in% c(15,45) ~ floor_date(date_time, "30 minutes"),
+                                TRUE ~ round_date(date_time, unit="30 minutes")))
    
 
 # Pond B
@@ -256,8 +244,10 @@ mini_b = list.files(path = "./Data/R-Data/2020_MiniDOTs",
                     pattern = "*_B.csv",
                     full.names = T) %>%
    map_dfr(~read_minidot(.)) %>%
-   mutate(pond_id = rep("B", nrow(.))) #%>%
-   # fix_times()
+   mutate(pond_id = rep("B", nrow(.))) %>%
+   # change all times to be on the hour or half-hour
+   # fix time-stamps that were altered during re-deployment
+   mutate(date_time = round_date(date_time, "30 minutes"))
 
 
 # Pond C
@@ -265,8 +255,10 @@ mini_c = list.files(path = "./Data/R-Data/2020_MiniDOTs",
                     pattern = "*_C.csv",
                     full.names = T) %>%
    map_dfr(~read_minidot(.)) %>%
-   mutate(pond_id = rep("C", nrow(.))) #%>%
-   # fix_times()
+   mutate(pond_id = rep("C", nrow(.))) %>%
+   # change all times to be on the hour or half-hour
+   # fix time-stamps that were altered during re-deployment
+   mutate(date_time = round_date(date_time, "30 minutes"))
 
 
 # Pond D
@@ -274,8 +266,10 @@ mini_d = list.files(path = "./Data/R-Data/2020_MiniDOTs",
                     pattern = "*_D.csv",
                     full.names = T) %>%
    map_dfr(~read_minidot(.)) %>%
-   mutate(pond_id = rep("D", nrow(.))) #%>%
-   # fix_times()
+   mutate(pond_id = rep("D", nrow(.))) %>%
+   # change all times to be on the hour or half-hour
+   # fix time-stamps that were altered during re-deployment
+   mutate(date_time = round_date(date_time, "30 minutes"))
 
 
 # Pond E
@@ -283,8 +277,10 @@ mini_e = list.files(path = "./Data/R-Data/2020_MiniDOTs",
                     pattern = "*_E.csv",
                     full.names = T) %>%
    map_dfr(~read_minidot(.)) %>%
-   mutate(pond_id = rep("E", nrow(.))) #%>%
-   # fix_times()
+   mutate(pond_id = rep("E", nrow(.))) %>%
+   # change all times to be on the hour or half-hour
+   # fix time-stamps that were altered during re-deployment
+   mutate(date_time = round_date(date_time, "30 minutes"))
 
 
 # Pond F
@@ -292,15 +288,17 @@ mini_f = list.files(path = "./Data/R-Data/2020_MiniDOTs",
                     pattern = "*_F.csv",
                     full.names = T) %>%
    map_dfr(~read_minidot(.)) %>%
-   mutate(pond_id = rep("F", nrow(.))) #%>%
-   # fix_times()
+   mutate(pond_id = rep("F", nrow(.))) %>%
+   # change all times to be on the hour or half-hour
+   # fix time-stamps that were altered during re-deployment
+   mutate(date_time = round_date(date_time, "30 minutes"))
 
 
 # combine all
 minidot = bind_rows(mini_a, mini_b, mini_c, mini_d, mini_e, mini_f) %>%
-   # fix time-stamps that were altered during re-deployment
    # change all times to be on the hour or half-hour
-   mutate(date_time = ymd_hms(date_time) %>% ceiling_date(., "30 minutes"),
+   # fix time-stamps that were altered during re-deployment
+   mutate(#date_time = ymd_hms(date_time) %>% ceiling_date(., "30 minutes"),
           doy = yday(date_time)) %>%
    relocate(pond_id) %>%
    relocate(doy, .after=date_time)
