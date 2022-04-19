@@ -81,7 +81,7 @@ metab_data = metab_data %>%
    mutate(daynight = case_when(.$daynight=="TRUE" ~ 1,
                                .$daynight=="FALSE" ~ 0)) %>%
    # n() measurements in each day
-   add_count(pond_id, doy)  # doy 150 & 192 have n=47 for all ponds
+   add_count(pond_id, doy)
 
 
 #---
@@ -92,11 +92,6 @@ metab_data = metab_data %>%
 ##__Bookkeeping method
 
 metab_book = metab_data %>%
-   # exclude days missing sonde profiles
-   filter(!(pond_id=="B" & doy==151)) %>%
-   filter(!(pond_id=="C" & doy==231)) %>%
-   #
-   filter(n == max(n)) %>%
    group_by(pond_id, doy) %>%
    group_modify(
       ~metab.bookkeep(do.obs = .$do,
@@ -120,7 +115,6 @@ metab_book = metab_data %>%
 # pond a
 mle.a = metab_data %>%
    filter(pond_id=="A") %>%
-   filter(n == max(n)) %>%
    group_by(doy) %>%
    nest() %>%
    mutate(metab = map(data, ~metab.mle(do.obs = .$do,
@@ -143,8 +137,6 @@ mle.a = metab_data %>%
 # pond b
 mle.b = metab_data %>%
    filter(pond_id=="B") %>%
-   filter(!(doy==151)) %>%
-   filter(n == max(n)) %>%
    group_by(doy) %>%
    nest() %>%
    mutate(metab = map(data, ~metab.mle(do.obs = .$do,
@@ -167,8 +159,6 @@ mle.b = metab_data %>%
 # pond c
 mle.c = metab_data %>%
    filter(pond_id=="C") %>%
-   filter(!(doy==231)) %>%
-   filter(n == max(n)) %>%
    group_by(doy) %>%
    nest() %>%
    mutate(metab = map(data, ~metab.mle(do.obs = .$do,
@@ -191,7 +181,6 @@ mle.c = metab_data %>%
 # pond d
 mle.d = metab_data %>%
    filter(pond_id=="D") %>%
-   filter(n == max(n)) %>%
    group_by(doy) %>%
    nest() %>%
    mutate(metab = map(data, ~metab.mle(do.obs = .$do,
@@ -214,7 +203,6 @@ mle.d = metab_data %>%
 # pond e
 mle.e = metab_data %>%
    filter(pond_id=="E") %>%
-   filter(n == max(n)) %>%
    group_by(doy) %>%
    nest() %>%
    mutate(metab = map(data, ~metab.mle(do.obs = .$do,
@@ -237,7 +225,6 @@ mle.e = metab_data %>%
 # pond f 
 mle.f = metab_data %>%
    filter(pond_id=="F") %>%
-   filter(n == max(n)) %>%
    group_by(doy) %>%
    nest() %>%
    mutate(metab = map(data, ~metab.mle(do.obs = .$do,
