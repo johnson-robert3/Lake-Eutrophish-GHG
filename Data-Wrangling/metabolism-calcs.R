@@ -41,10 +41,12 @@ metab_data = hobo_strat %>%
    rename(z_mix = thermocline) %>%
    
    # Address times of turnover and mixing in the ponds
+   
    #  set 'mld' to 1.75m during times when ponds were mixed 
    #  "NaN"s in the data are also turnover, when the rLakeAnalyzer functions could not calculate the stratification variables
-   mutate(z_mix = replace(z_mix, .$z_mix=="NaN", 1.75),
-          z_mix = if_else(meta_top==0 & meta_bottom==2, 1.75, z_mix)) %>%
+   mutate(z_mix = case_when(z_mix == "NaN" ~ 1.75,
+                            meta_top==0 & meta_bottom==2 ~ 1.75,
+                            TRUE ~ z_mix)) %>%
    
    # add a treatment ID 
    #  data for B and F will be used for all ponds in a treatment; t-chains were only deployed in ponds B and F
