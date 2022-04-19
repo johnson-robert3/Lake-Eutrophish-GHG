@@ -334,17 +334,32 @@ write.csv(minidot, file = "Data/miniDOT_total.csv", row.names=FALSE)
 minidot = read_csv("Data/miniDOT_total.csv")
 
    
-# view times of missing data points
-minidot %>%
+# view times of missing data points (when loggers were removed for >30 min. for data download)
+missing = minidot %>%
    mutate(doy = yday(date_time)) %>%
    group_by(pond_id) %>%
    mutate(diff = difftime(date_time, lag(date_time), units="mins"),
           diff = str_remove(diff, pattern = " mins"),
           diff = as.numeric(diff)) %>%
-   filter(diff > 30) %>%
-   View
+   filter(diff > 30)
 
-   
+
+# add rows for missing measurements and interpolate data
+minidot = minidot %>%
+   full_join(missing %>% 
+                select(pond_id, date_time, doy) %>%
+                mutate(date_time = date_time - minutes(30))) %>%
+   group_by(pond_id) %>% 
+   arrange(date_time, .by_group=TRUE) %>%
+   mutate(across(c(temp, do, do_sat), ~zoo::na.approx(.))) %>%
+   ungroup()
+
+
+   ## remove temporary object
+   rm(missing)
+   ##
+
+
 #---
 # Alkalinity
 #---
