@@ -17,6 +17,7 @@ library(LakeMetabolizer)
 metab_data = minidot %>%
    # add weather
    left_join(weather_data) %>%
+   
    # add surface salinity from sonde profiles
    #  Pond B doy 151 and Pond C doy 231 are missing sonde profiles
    #  add rows for B-151 and C-231 and interpolate salinity values
@@ -28,6 +29,7 @@ metab_data = minidot %>%
                 arrange(doy, .by_group=TRUE) %>%
                 mutate(salinity = zoo::na.approx(salinity)) %>%
                 ungroup()) %>%
+   
    # remove unnecessary data from before experiment began and after experiment ended
    filter(doy >= 145, doy <= 240) %>%
    select(-do_sat, -gust_speed)
@@ -46,6 +48,7 @@ metab_data = hobo_strat %>%
    #  "NaN"s in the data are also turnover, when the rLakeAnalyzer functions could not calculate the stratification variables
    mutate(z_mix = case_when(z_mix == "NaN" ~ 1.75,
                             meta_top==0 & meta_bottom==2 ~ 1.75,
+                            z_mix == 0.125 ~ 1.75,
                             TRUE ~ z_mix)) %>%
    
    # add a treatment ID 
@@ -75,11 +78,6 @@ metab_data = metab_data %>%
           o2_eq_sat = o2.at.sat.base(temp = temp, 
                                      baro = 982.85, 
                                      salinity = salinity)) %>%
-   # day/night for bookkeep
-   mutate(daynight = is.day(date_time, lat = 42.11),
-          daynight = as.character(daynight)) %>%
-   mutate(daynight = case_when(.$daynight=="TRUE" ~ 1,
-                               .$daynight=="FALSE" ~ 0)) %>%
    # n() measurements in each day
    add_count(pond_id, doy)
 
@@ -92,6 +90,11 @@ metab_data = metab_data %>%
 ##__Bookkeeping method
 
 metab_book = metab_data %>%
+   # day/night for bookkeep
+   mutate(daynight = is.day(date_time, lat = 42.11),
+          daynight = as.character(daynight)) %>%
+   mutate(daynight = case_when(.$daynight=="TRUE" ~ 1,
+                               .$daynight=="FALSE" ~ 0)) %>%
    group_by(pond_id, doy) %>%
    group_modify(
       ~metab.bookkeep(do.obs = .$do,
