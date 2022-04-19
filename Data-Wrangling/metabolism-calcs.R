@@ -17,13 +17,17 @@ library(LakeMetabolizer)
 metab_data = minidot %>%
    # add weather
    left_join(weather_data) %>%
-   
    # add surface salinity from sonde profiles
-   #  Pond B doy 151 and Pond C doy 231 are missing profiles. 
-   #  Can we address this since we only need salinity data from the profiles? so we don't have to remove these days from calculations?
+   #  Pond B doy 151 and Pond C doy 231 are missing sonde profiles
+   #  add rows for B-151 and C-231 and interpolate salinity values
    left_join(sonde_surface %>%
-                select(pond_id, doy, salinity)) %>%
-   
+                select(pond_id, doy, salinity) %>%
+                add_row(pond_id = "B", doy = 151) %>%
+                add_row(pond_id = "C", doy = 231) %>%
+                group_by(pond_id) %>%
+                arrange(doy, .by_group=TRUE) %>%
+                mutate(salinity = zoo::na.approx(salinity)) %>%
+                ungroup()) %>%
    # remove unnecessary data from before experiment began and after experiment ended
    filter(doy >= 145, doy <= 240) %>%
    select(-do_sat, -gust_speed)
