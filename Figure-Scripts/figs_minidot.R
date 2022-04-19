@@ -15,14 +15,14 @@ windows()
 ggplot(minidot %>% 
           filter(pond_id=="A") %>% 
           
-          # add rolling window of do_sat data
+          # add rolling window of do_sat data (3-hour)
           mutate(rolldo = slide_dbl(do, ~mean(.), .before=5, .complete=F)) %>%
           
           # add day-start for vertical lines
           mutate(hour = hour(date_time),
                  minute = minute(date_time)) %>%
           # select which days to view
-          filter(doy %in% c(162:165))) +
+          filter(doy %in% c(170:171))) +
    
    # data as lines
    geom_line(aes(x = date_time, y = do), color="cornflowerblue") +
@@ -31,10 +31,16 @@ ggplot(minidot %>%
    # denote days
    geom_vline(data = ~filter(.x, hour==0 & minute==0), aes(xintercept = date_time), linetype=2, color="gray60") +
    
-   # rolling window data
+   # rolling window data (3-hour previous)
    geom_line(aes(x = date_time, y = rolldo), color="firebrick2") +
    geom_point(aes(x = date_time, y = rolldo), color="firebrick2") +
    
+   # rolling window data (3-hour previous; time shifted)
+   geom_line(data = ~mutate(.x, date_time = date_time - minutes(60)),
+             aes(x = date_time, y = rolldo), color="seagreen2") +
+   geom_point(data = ~mutate(.x, date_time = date_time - minutes(60)),
+              aes(x = date_time, y = rolldo), color="seagreen2") +
+
    theme_classic()
 
 
