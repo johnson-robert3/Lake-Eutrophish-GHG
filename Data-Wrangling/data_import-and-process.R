@@ -348,6 +348,7 @@ missing = minidot %>%
 minidot = minidot %>%
    full_join(missing %>% 
                 select(pond_id, date_time, doy) %>%
+                # subtract 30 minutes to get the missing time point
                 mutate(date_time = date_time - minutes(30))) %>%
    group_by(pond_id) %>% 
    arrange(date_time, .by_group=TRUE) %>%
