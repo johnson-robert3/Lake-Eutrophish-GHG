@@ -97,7 +97,7 @@ sonde_profiles = sonde_profiles %>%
 
 
 # Output full sonde profile dataset to a CSV file, so individual files don't all need to be read in & processed each time
-write.csv(sonde_profiles, file = "sonde-profiles_all-data_2022-03-29.csv")
+write.csv(sonde_profiles, file = "Data/sonde-profiles_all-data_2022-03-29.csv", row.names=FALSE)
 
    ## remove temporary objects
    rm(sonde_nohead, sonde_head)
@@ -106,7 +106,7 @@ write.csv(sonde_profiles, file = "sonde-profiles_all-data_2022-03-29.csv")
 
    
 # Data (from full, processed sonde dataset)
-sonde_profiles = read_csv("sonde-profiles_all-data_2022-03-29.csv")
+sonde_profiles = read_csv("Data/sonde-profiles_all-data_2022-03-29.csv")
    
 
 ##__Surface water means 
@@ -173,6 +173,8 @@ sonde_bottom = sonde_int %>%
 # HOBO T-chains
 #---
 
+# Import, process, and combine individual Hobo data files
+{
 # Function to wrangle each hobo file as it is read in
 #  Keep only date-time and temp columns and match across files
 read_hobo = function(.dat) {
@@ -209,10 +211,21 @@ hobo_temp = tibble(file_name = hobo_files) %>%
    mutate(temp = (temp - 32) / 1.8)
 
 
+# output processed t-chain data file, so raw files don't need to be read in and processed each time
+write.csv(hobo_temp, file = "Data/hobo_t-chain_profiles.csv", row.names=FALSE)
+}
+
+
+# Data (from full, processed t-chain dataset)
+hobo_temp = read_csv("Data/hobo_t-chain_profiles.csv")
+
+
 #---
 # MiniDOT Surface Temp DO Time-Series Data
 #---
 
+# Import, process, and combine all miniDOT temp/DO files
+{
 # Function to pre-process each file as it is read in
 read_minidot = function(.dat, .skip=9) {
    read_csv(.dat, skip = .skip,
@@ -308,6 +321,19 @@ minidot = bind_rows(mini_a, mini_b, mini_c, mini_d, mini_e, mini_f) %>%
           #                       TRUE ~ round_date(date_time, unit="30 minutes")))
 
 
+   ## remove temporary objects
+   rm(mini_a, mini_b, mini_c, mini_d, mini_e, mini_f)
+   ##
+
+# output processed miniDOT data, so raw files don't need to be read in and processed each time
+write.csv(minidot, file = "Data/miniDOT_total.csv", row.names=FALSE)
+}
+
+
+# Data (from full, processed miniDOT dataset)
+minidot = read_csv("Data/miniDOT_total.csv")
+
+   
 # view times of missing data points
 minidot %>%
    mutate(doy = yday(date_time)) %>%
@@ -317,11 +343,6 @@ minidot %>%
           diff = as.numeric(diff)) %>%
    filter(diff > 30) %>%
    View
-
-
-   ## remove temporary objects
-   rm(mini_a, mini_b, mini_c, mini_d, mini_e, mini_f)
-   ##
 
    
 #---
