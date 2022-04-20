@@ -6,7 +6,7 @@
 
 windows(width=12, height=8)
 ggplot(minidot %>% 
-          filter(pond_id=="B") %>% 
+          filter(pond_id=="E") %>% 
           
           # add DO difference from previous point
           mutate(do_diff = do - lag(do)) %>%
@@ -35,7 +35,7 @@ ggplot(minidot %>%
           mutate(hour = hour(date_time),
                  minute = minute(date_time)) %>%
           # select which days to view
-          filter(doy %in% c(185:194))) +
+          filter(doy %in% c(200:209))) +
    
    # denote days
    geom_vline(data = ~filter(.x, hour==0 & minute==0), aes(xintercept = date_time), linetype=2, color="gray60") +
