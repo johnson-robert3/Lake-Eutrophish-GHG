@@ -309,29 +309,9 @@ mini_f = list.files(path = "./Data/R-Data/2020_MiniDOTs",
 
 # combine all
 minidot = bind_rows(mini_a, mini_b, mini_c, mini_d, mini_e, mini_f) %>%
-   # change all times to be on the hour or half-hour
-   # fix time-stamps that were altered during re-deployment
-   mutate(#date_time = ymd_hms(date_time) %>% ceiling_date(., "30 minutes"),
-          doy = yday(date_time)) %>%
+   mutate(doy = yday(date_time)) %>%
    relocate(pond_id) %>%
    relocate(doy, .after=date_time)
-          
-          # minute = minute(date_time),
-          # date_time = case_when(minute %in% c(15,45) ~ floor_date(date_time, "30 minutes"),
-          #                       TRUE ~ round_date(date_time, unit="30 minutes")))
-
-
-   ## remove temporary objects
-   rm(mini_a, mini_b, mini_c, mini_d, mini_e, mini_f)
-   ##
-
-# output processed miniDOT data, so raw files don't need to be read in and processed each time
-write.csv(minidot, file = "Data/miniDOT_total.csv", row.names=FALSE)
-}
-
-
-# Data (from full, processed miniDOT dataset)
-minidot = read_csv("Data/miniDOT_total.csv")
 
    
 # view times of missing data points (when loggers were removed for >30 min. for data download)
@@ -341,7 +321,8 @@ missing = minidot %>%
    mutate(diff = difftime(date_time, lag(date_time), units="mins"),
           diff = str_remove(diff, pattern = " mins"),
           diff = as.numeric(diff)) %>%
-   filter(diff > 30)
+   filter(diff > 30) %>%
+   ungroup()
 
 
 # add rows for missing measurements and interpolate data
@@ -356,9 +337,18 @@ minidot = minidot %>%
    ungroup()
 
 
-   ## remove temporary object
-   rm(missing)
+   ## remove temporary objects
+   rm(mini_a, mini_b, mini_c, mini_d, mini_e, mini_f, missing)
    ##
+
+
+# output processed miniDOT data, so raw files don't need to be read in and processed each time
+write.csv(minidot, file = "Data/miniDOT_total.csv", row.names=FALSE)
+}
+
+
+# Data (from full, processed miniDOT dataset)
+minidot = read_csv("Data/miniDOT_total.csv")
 
 
 #---
