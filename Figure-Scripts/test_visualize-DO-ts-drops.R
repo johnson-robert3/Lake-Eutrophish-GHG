@@ -27,18 +27,12 @@ ggplot(minidot %>%
                  new_do = zoo::na.approx(new_do, na.rm=FALSE)) %>%
           
           # rolling window data (3-hour)
+          #  a window of 3 pts back & 2 pts forward is the same result as 5 pts back w/ time-shifting data by 1-hour to match up
           mutate(
              # rolling window on original/raw data
              roll_do = slide_dbl(do, ~mean(.), .before=3, .after=2, .complete=F),
              # rolling window on new, corrected DO data with large drops removed/interpolated
              roll_new_do = slide_dbl(new_do, ~mean(.), .before=3, .after=2, .complete=F)) %>%
-          
-          # shift time by 1 hour to match when ups and downs naturally occur in the time series
-          #  this is better than trying to shift date_time later on
-          #  Nevermind, this is exactly the same as using a rolling window of 3 points back and 2 points forward
-          # group_by(pond_id) %>%
-          # mutate(corr_new_do = lead(roll_new_do, n=2)) %>%
-          # ungroup() %>%
           
           # add day-start for vertical lines
           mutate(hour = hour(date_time),
@@ -69,10 +63,6 @@ ggplot(minidot %>%
              aes(x = date_time, y = roll_new_do), color = "firebrick2") +
    geom_point(#data = ~mutate(.x, date_time = date_time - minutes(60)),
               aes(x = date_time, y = roll_new_do), color = "firebrick2") +
-   
-   # rolling without needing to correct times
-   # geom_line(aes(x = date_time, y = corr_new_do), color = "firebrick2") +
-   # geom_point(aes(x = date_time, y = corr_new_do), color = "firebrick2") +
    
    theme_classic()
 
