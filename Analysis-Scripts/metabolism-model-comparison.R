@@ -7,9 +7,7 @@
 
 # metab.mle using Observation Error (default)
 test.oe = metab_data %>%
-   filter(pond_id=="C") %>%
-   filter(!(doy==231)) %>%
-   filter(n == max(n)) %>%
+   filter(pond_id=="A") %>%
    group_by(doy) %>%
    nest() %>%
    mutate(metab = map(data, ~metab.mle(do.obs = .$do,
@@ -29,9 +27,7 @@ test.oe = metab_data %>%
 
 # metab.mle using Process Error
 test.pe = metab_data %>%
-   filter(pond_id=="C") %>%
-   filter(!(doy==231)) %>%
-   filter(n == max(n)) %>%
+   filter(pond_id=="A") %>%
    group_by(doy) %>%
    nest() %>%
    mutate(metab = map(data, ~metab.mle(do.obs = .$do,
@@ -51,9 +47,7 @@ test.pe = metab_data %>%
 
 # metab.ols
 test.ols = metab_data %>%
-   filter(pond_id=="C") %>%
-   filter(!(doy==231)) %>%
-   filter(n == max(n)) %>%
+   filter(pond_id=="A") %>%
    group_by(doy) %>%
    nest() %>%
    mutate(metab = map(data, ~metab.ols(do.obs = .$do,
@@ -72,9 +66,7 @@ test.ols = metab_data %>%
 
 # metab.kalman
 test.kal = metab_data %>%
-   filter(pond_id=="C") %>%
-   filter(!(doy==231)) %>%
-   filter(n == max(n)) %>%
+   filter(pond_id=="A") %>%
    group_by(doy) %>%
    nest() %>%
    mutate(metab = map(data, ~metab.kalman(do.obs = .$do,
@@ -94,8 +86,6 @@ test.kal = metab_data %>%
 # metab.bayesian  [need JAGS installed]
 # test.bay = metab_data %>%
 #    filter(pond_id=="B") %>%
-#    filter(!(doy==151)) %>%
-#    filter(n == max(n)) %>%
 #    group_by(doy) %>%
 #    nest() %>%
 #    mutate(metab = map(data, ~metab.bayesian(do.obs = .$do,
