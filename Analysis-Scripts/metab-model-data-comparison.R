@@ -1,4 +1,5 @@
 
+library(slider)
 
 # compare results from Kalman filter metabolism model using different inputs of DO data
 
@@ -11,7 +12,7 @@ mdat = minidot %>%
    arrange(date_time, .by_group=TRUE) %>%
    # add change in DO concentration from previous point
    mutate(delta_do = do - lag(do)) %>%
-   # remove the offending point along with the next 3 hours (5 points) of data any time DO drops more than 2.0 mg/l
+   # remove the offending point along with the next 2.5 hours (5 points) of data any time DO drops more than 2.0 mg/l
    mutate(drop_pt = case_when(delta_do <= -2 ~ 1,
                               lag(delta_do, n=1)  <= -2 ~ 1,
                               lag(delta_do, n=2)  <= -2 ~ 1,
@@ -19,17 +20,17 @@ mdat = minidot %>%
                               lag(delta_do, n=4)  <= -2 ~ 1,
                               lag(delta_do, n=5)  <= -2 ~ 1,
                               TRUE ~ 0),
-          new_do = case_when(drop_pt == 1 ~ -9999,
-                             drop_pt == 0 ~ do),
-          new_do = na_if(new_do, -9999),
+          corr_do = case_when(drop_pt == 1 ~ -9999,
+                              drop_pt == 0 ~ do),
+          corr_do = na_if(corr_do, -9999),
           # linearly interpolate across removed points
-          new_do = zoo::na.approx(new_do, na.rm=FALSE)) %>%
+          corr_do = zoo::na.approx(corr_do, na.rm=FALSE)) %>%
    # rolling window data (3-hour)
    mutate(
       # rolling window on original/raw data
       roll_do = slide_dbl(do, ~mean(.), .before=3, .after=2, .complete=F),
       # rolling window on new, corrected DO data with large drops removed/interpolated
-      roll_new_do = slide_dbl(new_do, ~mean(.), .before=3, .after=2, .complete=F)) %>%
+      roll_corr_do = slide_dbl(corr_do, ~mean(.), .before=3, .after=2, .complete=F)) %>%
    ungroup()
 
 
@@ -78,7 +79,7 @@ kalman.corr = metab_data %>%
    filter(pond_id=="A") %>%
    group_by(doy) %>%
    nest() %>%
-   mutate(metab = map(data, ~metab.kalman(do.obs = .$new_do,
+   mutate(metab = map(data, ~metab.kalman(do.obs = .$corr_do,
                                        do.sat = .$o2_eq_sat,
                                        k.gas = .$k_gas,
                                        z.mix = .$z_mix,
@@ -97,7 +98,7 @@ kalman.roll.corr = metab_data %>%
    filter(pond_id=="A") %>%
    group_by(doy) %>%
    nest() %>%
-   mutate(metab = map(data, ~metab.kalman(do.obs = .$roll_new_do,
+   mutate(metab = map(data, ~metab.kalman(do.obs = .$roll_corr_do,
                                        do.sat = .$o2_eq_sat,
                                        k.gas = .$k_gas,
                                        z.mix = .$z_mix,
