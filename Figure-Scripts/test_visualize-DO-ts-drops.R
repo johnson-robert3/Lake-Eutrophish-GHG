@@ -3,37 +3,13 @@
 
 library(slider)
 
-#-- MiniDOT DO data --#
+
+#-- View one pond --#
 
 windows(width=12, height=8)
 ggplot(minidot %>% 
+          # select pond
           filter(pond_id=="E") %>% 
-          arrange(date_time) %>%
-          
-          # add change in DO concentration from previous point
-          mutate(delta_do = do - lag(do)) %>%
-          
-          # remove the offending point along with the next 3 hours (5 points) of data any time DO drops more than 2.0 mg/l
-          mutate(drop_do = case_when(delta_do <= -2 ~ 1,
-                                     lag(delta_do, n=1)  <= -2 ~ 1,
-                                     lag(delta_do, n=2)  <= -2 ~ 1,
-                                     lag(delta_do, n=3)  <= -2 ~ 1,
-                                     lag(delta_do, n=4)  <= -2 ~ 1,
-                                     lag(delta_do, n=5)  <= -2 ~ 1,
-                                     TRUE ~ 0),
-                 new_do = case_when(drop_do == 1 ~ -9999,
-                                    drop_do == 0 ~ do),
-                 new_do = na_if(new_do, -9999),
-                 new_do = zoo::na.approx(new_do, na.rm=FALSE)) %>%
-          
-          # rolling window data (3-hour)
-          #  a window of 3 pts back & 2 pts forward is the same result as 5 pts back w/ time-shifting data by 1-hour to match up
-          mutate(
-             # rolling window on original/raw data
-             roll_do = slide_dbl(do, ~mean(.), .before=3, .after=2, .complete=F),
-             # rolling window on new, corrected DO data with large drops removed/interpolated
-             roll_new_do = slide_dbl(new_do, ~mean(.), .before=3, .after=2, .complete=F)) %>%
-          
           # add day-start for vertical lines
           mutate(hour = hour(date_time),
                  minute = minute(date_time)) %>%
@@ -55,15 +31,71 @@ ggplot(minidot %>%
               aes(x = date_time, y = do), shape=1, color="red", size=3) +
    
    # corrected/interpolated raw DO as lines
-   geom_line(aes(x = date_time, y = new_do), color = "seagreen3") +
-   geom_point(aes(x = date_time, y = new_do), color = "seagreen3") +
+   geom_line(aes(x = date_time, y = corr_do), color = "seagreen3") +
+   geom_point(aes(x = date_time, y = corr_do), color = "seagreen3") +
    
    # rolling window on new/corrected DO data
    geom_line(#data = ~mutate(.x, date_time = date_time - minutes(60)),
-             aes(x = date_time, y = roll_new_do), color = "firebrick2") +
+             aes(x = date_time, y = roll_corr_do), color = "firebrick2") +
    geom_point(#data = ~mutate(.x, date_time = date_time - minutes(60)),
-              aes(x = date_time, y = roll_new_do), color = "firebrick2") +
+              aes(x = date_time, y = roll_corr_do), color = "firebrick2") +
    
+   theme_classic()
+
+
+
+
+#-- 6-panel, view all ponds at same time --#
+
+# pre-processed minidot data from 'metab-model-data-comparison' script
+
+windows()
+ggplot(minidot %>%
+          # select days to view
+          filter(doy %in% c(200:219), pond_id=="D"),
+       aes(x = date_time)) +
+   
+   # lines to denote days (midnight)
+   geom_vline(data = minidot %>%
+                 mutate(hour = hour(date_time), minute = minute(date_time)) %>%
+                 filter(hour==0 & minute==0),
+              aes(xintercept = date_time), linetype=2, color="gray60") +
+   # anoxia (0 DO)
+   geom_hline(yintercept=0, linetype=3, color="gray60") + 
+   
+   # raw/measured DO data
+   # geom_line(aes(y = do), color="cornflowerblue") +
+   # geom_point(aes(y = do), color="cornflowerblue", alpha=0.6) +
+
+      # # outline points when DO drops by more than 2.0 mg/l
+      # geom_point(data = ~filter(.x, delta_do <= -2),
+      #            aes(x = date_time, y = do), shape=1, color="red", size=3) +
+      # # outline points when DO drops by more than 1.5 mg/l
+      # geom_point(data = ~filter(.x, delta_do <= -1.5),
+      #            aes(x = date_time, y = do), shape=1, color="#34BE82", size=5) +
+      # # outline points when DO drops by more than 1.0 mg/l
+      # geom_point(data = ~filter(.x, delta_do <= -1),
+      #            aes(x = date_time, y = do), shape=1, color="black", size=4) +
+   
+   # rolling window on raw data
+   # geom_line(aes(y = roll_do), color="firebrick2") +
+   # geom_point(aes(y = roll_do), color="firebrick2", alpha=0.6) +
+
+   # corrected/interpolated raw DO as lines
+   geom_line(aes(y = corr_do), color = "seagreen3") +
+   geom_point(aes(y = corr_do), color = "seagreen3", alpha=0.6) +
+
+   # rolling window on new/corrected DO data
+   geom_line(aes(y = roll_corr_do), color = "darkorchid1") +
+   geom_point(aes(y = roll_corr_do), color = "darkorchid1", alpha=0.6) +
+   
+   # facet by pond
+   # facet_wrap(facets = vars(pond_id)) +
+   
+   labs(title = "Corrected data in green, rolling window (corrected) in violet",
+        subtitle = "Pond D", 
+        x = "Date_time",
+        y = expression(Dissolved~oxygen~(mg~L^-1))) +
    theme_classic()
 
 
