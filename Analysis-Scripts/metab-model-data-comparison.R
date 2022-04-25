@@ -14,14 +14,21 @@ mdat = minidot %>%
    mutate(delta_do = do - lag(do)) %>%
    # remove the offending point along with the next 2.5 hours (5 points) of data any time DO drops more than 2.0 mg/l
    mutate(drop_pt = case_when(delta_do <= -2 ~ 1,
-                              lag(delta_do, n=1)  <= -2 ~ 1,
-                              lag(delta_do, n=2)  <= -2 ~ 1,
-                              lag(delta_do, n=3)  <= -2 ~ 1,
-                              lag(delta_do, n=4)  <= -2 ~ 1,
-                              lag(delta_do, n=5)  <= -2 ~ 1,
+                              # lag(delta_do, n=1) <= -2 ~ 1,
+                              # lag(delta_do, n=2) <= -2 ~ 1,
+                              # lag(delta_do, n=3) <= -2 ~ 1,
+                              # lag(delta_do, n=4) <= -2 ~ 1,
+                              # lag(delta_do, n=5) <= -2 ~ 1,
                               TRUE ~ 0),
-          corr_do = case_when(drop_pt == 1 ~ -9999,
-                              drop_pt == 0 ~ do),
+          # corr_do = case_when(drop_pt == 1 ~ -9999,
+          #                     drop_pt == 0 ~ do),
+          corr_do = case_when(drop_pt == 1 | 
+                                 lag(drop_pt, n=1) == 1 | 
+                                 lag(drop_pt, n=2) == 1 | 
+                                 lag(drop_pt, n=3) == 1 | 
+                                 lag(drop_pt, n=4) == 1 | 
+                                 lag(drop_pt, n=5) == 1 ~ -9999,
+                              TRUE ~ do),
           corr_do = na_if(corr_do, -9999),
           # linearly interpolate across removed points
           corr_do = zoo::na.approx(corr_do, na.rm=FALSE)) %>%
@@ -127,20 +134,32 @@ test = kalman.raw %>% mutate(dat = rep("Raw", nrow(.))) %>%
 # windows()
 gpp =
 ggplot(test) +
-   geom_line(aes(x = doy, y = GPP, group = dat, color = dat)) +
-   scale_color_manual(breaks = c('Raw', '3-hr_win', 'Interp', '3-hr_interp'), 
-                      values = c('Raw'="cornflowerblue", '3-hr_win'="seagreen2", 'Interp'="firebrick2", '3-hr_interp'='darkorchid1')) +
+   
+   # geom_line(aes(x = doy, y = GPP, group = dat, color = dat)) +
+   # scale_color_manual(breaks = c('Raw', '3-hr_win', 'Interp', '3-hr_interp'),
+   #                    values = c('Raw'="cornflowerblue", '3-hr_win'="seagreen2", 'Interp'="firebrick2", '3-hr_interp'='darkorchid1')) +
+   
+   geom_col(aes(x = doy, y = GPP, group = dat, fill = dat), position = position_dodge(preserve="single")) +
+   scale_fill_manual(breaks = c('Raw', '3-hr_win', 'Interp', '3-hr_interp'), 
+                      values = c('Raw'="#940A37", '3-hr_win'="#E26241", 'Interp'="#4CA1A3", '3-hr_interp'='#A5E1AD')) +
+   
    geom_hline(yintercept=0, linetype=2) +
    theme_classic()
 
 
 # R
 # windows()
-re = 
+re =
 ggplot(test) +
-   geom_line(aes(x = doy, y = R, group = dat, color = dat)) +
-   scale_color_manual(breaks = c('Raw', '3-hr_win', 'Interp', '3-hr_interp'), 
-                      values = c('Raw'="cornflowerblue", '3-hr_win'="seagreen2", 'Interp'="firebrick2", '3-hr_interp'='darkorchid1')) +
+   
+   # geom_line(aes(x = doy, y = R, group = dat, color = dat)) +
+   # scale_color_manual(breaks = c('Raw', '3-hr_win', 'Interp', '3-hr_interp'),
+   #                    values = c('Raw'="cornflowerblue", '3-hr_win'="seagreen2", 'Interp'="firebrick2", '3-hr_interp'='darkorchid1')) +
+   
+   geom_col(aes(x = doy, y = R, group = dat, fill = dat), position = position_dodge(preserve="single")) +
+   scale_fill_manual(breaks = c('Raw', '3-hr_win', 'Interp', '3-hr_interp'), 
+                      values = c('Raw'="#940A37", '3-hr_win'="#E26241", 'Interp'="#4CA1A3", '3-hr_interp'='#A5E1AD')) +
+   
    geom_hline(yintercept=0, linetype=2) +
    theme_classic()
 
@@ -149,9 +168,15 @@ ggplot(test) +
 # windows()
 nep =
 ggplot(test) +
-   geom_line(aes(x = doy, y = NEP, group = dat, color = dat)) +
-   scale_color_manual(breaks = c('Raw', '3-hr_win', 'Interp', '3-hr_interp'), 
-                      values = c('Raw'="cornflowerblue", '3-hr_win'="seagreen2", 'Interp'="firebrick2", '3-hr_interp'='darkorchid1')) +
+   
+   # geom_line(aes(x = doy, y = NEP, group = dat, color = dat)) +
+   # scale_color_manual(breaks = c('Raw', '3-hr_win', 'Interp', '3-hr_interp'),
+   #                    values = c('Raw'="cornflowerblue", '3-hr_win'="seagreen2", 'Interp'="firebrick2", '3-hr_interp'='darkorchid1')) +
+   
+   geom_col(aes(x = doy, y = NEP, group = dat, fill = dat), position = position_dodge(preserve="single")) +
+   scale_fill_manual(breaks = c('Raw', '3-hr_win', 'Interp', '3-hr_interp'),
+                      values = c('Raw'="#940A37", '3-hr_win'="#E26241", 'Interp'="#4CA1A3", '3-hr_interp'='#A5E1AD')) +
+   
    geom_hline(yintercept=0, linetype=2) +
    theme_classic()
 
