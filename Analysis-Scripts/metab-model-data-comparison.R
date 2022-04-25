@@ -4,43 +4,6 @@ library(slider)
 # compare results from Kalman filter metabolism model using different inputs of DO data
 
 
-# Process the minidot DO data
-# run this first, then create the metab_data dataframe from the metabolism-calcs script
-
-mdat = minidot %>% 
-   group_by(pond_id) %>% 
-   arrange(date_time, .by_group=TRUE) %>%
-   # add change in DO concentration from previous point
-   mutate(delta_do = do - lag(do)) %>%
-   # remove the offending point along with the next 2.5 hours (5 points) of data any time DO drops more than 2.0 mg/l
-   mutate(drop_pt = case_when(delta_do <= -2 ~ 1,
-                              # lag(delta_do, n=1) <= -2 ~ 1,
-                              # lag(delta_do, n=2) <= -2 ~ 1,
-                              # lag(delta_do, n=3) <= -2 ~ 1,
-                              # lag(delta_do, n=4) <= -2 ~ 1,
-                              # lag(delta_do, n=5) <= -2 ~ 1,
-                              TRUE ~ 0),
-          # corr_do = case_when(drop_pt == 1 ~ -9999,
-          #                     drop_pt == 0 ~ do),
-          corr_do = case_when(drop_pt == 1 | 
-                                 lag(drop_pt, n=1) == 1 | 
-                                 lag(drop_pt, n=2) == 1 | 
-                                 lag(drop_pt, n=3) == 1 | 
-                                 lag(drop_pt, n=4) == 1 | 
-                                 lag(drop_pt, n=5) == 1 ~ -9999,
-                              TRUE ~ do),
-          corr_do = na_if(corr_do, -9999),
-          # linearly interpolate across removed points
-          corr_do = zoo::na.approx(corr_do, na.rm=FALSE)) %>%
-   # rolling window data (3-hour)
-   mutate(
-      # rolling window on original/raw data
-      roll_do = slide_dbl(do, ~mean(.), .before=3, .after=2, .complete=F),
-      # rolling window on new, corrected DO data with large drops removed/interpolated
-      roll_corr_do = slide_dbl(corr_do, ~mean(.), .before=3, .after=2, .complete=F)) %>%
-   ungroup()
-
-
 # kalman models
 
 # raw data
