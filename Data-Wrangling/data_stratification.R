@@ -10,10 +10,10 @@ library(rLakeAnalyzer)
 # Create a nested, wide data frame of t-chain data on which to run functions
 hobo_nest = hobo_temp %>%
    # remove dates when loggers were out of ponds
-   mutate(doy = yday(date_time)) %>%
-   filter(doy >= 143, doy <= 240) %>%
+   # mutate(doy = yday(date_time)) %>%
+   # filter(doy >= 143, doy <= 240) %>%
    # format for rLakeAnalyzer
-   mutate(depth = str_replace(depth, "Anchor", "2.0"), 
+   mutate(#depth = str_replace(depth, "Anchor", "2.0"), 
           depth = paste("wtr", depth, sep="_")) %>%
    rename(datetime = date_time) %>%
    select(-doy) %>%

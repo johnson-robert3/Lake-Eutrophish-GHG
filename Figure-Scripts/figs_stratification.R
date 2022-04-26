@@ -23,15 +23,15 @@ mycolors = magma(n=10)
 #--Using daily mean values
 tdat = hobo_temp %>%
    # DOY variable for grouping
-   mutate(doy = yday(date_time)) %>%
-   select(-date_time) %>%
+   # mutate(doy = yday(date_time)) %>%
+   # select(-date_time) %>%
    # remove beg/end dates
-   filter(doy >= 143, doy <= 240) %>%
+   # filter(doy >= 143, doy <= 240) %>%
    group_by(pond_id, doy, depth) %>%
    # calculate daily mean temps
    summarize(temp = mean(temp, na.rm=T)) %>%
-   mutate(depth = replace(depth, depth=="Anchor", "2.0"),
-          depth = as.numeric(depth)) %>%
+   # mutate(depth = replace(depth, depth=="Anchor", "2.0"),
+   #        depth = as.numeric(depth)) %>%
    ungroup() %>%
    #
    # add a 1.75m depth
@@ -53,17 +53,17 @@ tdat = hobo_temp %>%
 #--Using original 30-minute data
 tdat = hobo_temp %>%
    # DOY variable for grouping
-   mutate(doy = yday(date_time)) %>%
+   # mutate(doy = yday(date_time)) %>%
    # remove beg/end dates
-   filter(doy >= 143, doy <= 240) %>%
+   # filter(doy >= 143, doy <= 240) %>%
    #
    # add a 1.75m depth
    pivot_wider(id_cols = c(pond_id, date_time, doy),
                names_from = 'depth',
                values_from = 'temp') %>%
    mutate("1.75" = NA) %>%
-   rename("2.0" = Anchor) %>%
-   pivot_longer(cols = '0.0':last_col(),
+   # rename("2.0" = Anchor) %>%
+   pivot_longer(cols = '0':last_col(),
                 names_to = "depth",
                 values_to = "temp") %>%
    #
