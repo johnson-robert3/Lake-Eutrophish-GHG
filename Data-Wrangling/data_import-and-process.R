@@ -217,7 +217,26 @@ write.csv(hobo_temp, file = "Data/hobo_t-chain_profiles.csv", row.names=FALSE)
 
 
 # Data (from full, processed t-chain dataset)
-hobo_temp = read_csv("Data/hobo_t-chain_profiles.csv")
+# hobo_temp = read_csv("Data/hobo_t-chain_profiles.csv")
+
+   # This t-chain dataset (hobo_temp), processed by me, contains one additional measurement not present in the dataset from Ellen
+   # Extra measurement is from:  2020-08-21 14:00:00, Pond F, 0.5m depth
+   # The logger at 0.5m in pond F stopped logging at this time and didn't make it through the end of the experiment
+   # This caused a "logged" event in the datasheet next to this temp measurement (at 14:00), which would normally be logged in
+   #  a new row, after the final temperature measurement (when logging is manually stopped)
+   # If rows containing a "logged" event in datasheets were filtered out, this could explain the ommission of this final measurement. 
+
+
+# Use full, processed t-chain profile dataset from Ellen instead
+hobo_temp = read_csv("Data/temp_profiles_2020.csv") %>%
+   # DOY variable has already been created
+   # data have already been filtered to days of the experiment (DOY 143-240)
+   # temperature data have already been converted to Celcius
+   # Site 19 is the deep point of the ponds (Ellen had 3 t-chains in each pond)
+   filter(site_id==19) %>%
+   select(-doy_frac, -site_id) %>%
+   rename(pond_id = pond, depth = temp_depth_m, temp = temp_c, date_time = datetime) %>%
+   relocate(pond_id)
 
 
 #---
