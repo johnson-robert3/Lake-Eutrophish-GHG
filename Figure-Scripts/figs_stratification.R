@@ -38,15 +38,12 @@ tdat = hobo_temp %>%
    pivot_wider(id_cols = c(pond_id, doy),
                names_from = 'depth',
                values_from = 'temp') %>%
-   mutate(new = rep(-9999, nrow(.)),
-          new = na_if(new, -9999),
-          doy = as.character(doy)) %>%
-   pivot_longer(cols = '0':new,
+   mutate("1.75" = NA) %>%
+   pivot_longer(cols = '0':last_col(),
                 names_to = "depth",
                 values_to = "temp") %>%
-   mutate(depth = replace(depth, depth=="new", 1.75) %>% as.numeric()) %>%
    #
-   # interpolate missing temp data
+   # interpolate missing temp data (for figs/visualization only)
    group_by(pond_id, doy) %>%
    arrange(depth, .by_group = TRUE) %>%
    mutate(temp = zoo::na.approx(temp)) %>%
@@ -64,16 +61,13 @@ tdat = hobo_temp %>%
    pivot_wider(id_cols = c(pond_id, date_time, doy),
                names_from = 'depth',
                values_from = 'temp') %>%
-   mutate(new = rep(-9999, nrow(.)),
-          new = na_if(new, -9999),
-          doy = as.character(doy)) %>%
+   mutate("1.75" = NA) %>%
    rename("2.0" = Anchor) %>%
-   pivot_longer(cols = '0.0':new,
+   pivot_longer(cols = '0.0':last_col(),
                 names_to = "depth",
                 values_to = "temp") %>%
-   mutate(depth = replace(depth, depth=="new", 1.75) %>% as.numeric()) %>%
    #
-   # interpolate missing temp data
+   # interpolate missing temp data (for figs/visualization only)
    group_by(pond_id, doy, date_time) %>%
    arrange(depth, .by_group = TRUE) %>%
    mutate(temp = zoo::na.approx(temp)) %>%
