@@ -224,7 +224,7 @@ write.csv(hobo_temp, file = "Data/hobo_t-chain_profiles.csv", row.names=FALSE)
    # The logger at 0.5m in pond F stopped logging at this time and didn't make it through the end of the experiment
    # This caused a "logged" event in the datasheet next to this temp measurement (at 14:00), which would normally be logged in
    #  a new row, after the final temperature measurement (when logging is manually stopped)
-   # If rows containing a "logged" event in datasheets were filtered out, this could explain the ommission of this final measurement. 
+   # If rows containing a "logged" event in datasheets were filtered out, this could explain the omission of this final measurement. 
 
 
 # Use full, processed t-chain profile dataset from Ellen instead
