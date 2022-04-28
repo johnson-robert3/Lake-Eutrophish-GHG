@@ -24,8 +24,10 @@ run0 = run0_dat %>%
    mutate(vial = str_replace(vial, "blk", "Blank"),
           sample_id = vial,
           sample_id = na_if(sample_id, "Blank")) %>%
+   mutate(sample_type = case_when(vial == "Blank" ~ "Blank",
+                                  TRUE ~ "Sample")) %>%
    relocate(sample_id) %>%
-   mutate(run = rep(0, nrow(.))) %>%
+   mutate(run = 0) %>%
    relocate(run, .before = start_time)
 
 
@@ -36,15 +38,17 @@ run1_dat = run1_raw %>%
    remove_empty(c("rows", "cols")) %>%
    clean_names() %>%
    filter(!(is.na(toc_average_ppb))) %>%
-   # convert characters when SD = 0
-   mutate(across(contains("toc"), ~as.numeric(.)))
+   # correct times when SD < 0.03 (i.e., SD = 0) (i.e., all measurements were the same)
+   #  only occurs within columns toc_standard_deviation_ppb and toc_rsd_percent
+   mutate(across(contains("toc"), ~replace(., str_detect(., "<"), 0))) %>%
+   mutate(across(toc_average_ppb:last_col(), ~as.numeric(.)))
 
 # make output match other run files
 run1 = run1_dat %>%
    rename(vial = sample_name) %>%
    unite(sample_id, lot_number, vial, sep="", remove=FALSE) %>%
    mutate(sample_id = na_if(sample_id, "blkBlank")) %>%
-   mutate(run = rep(1, nrow(.))) %>%
+   mutate(run = 1) %>%
    relocate(run, .before = start_time)
 
 
@@ -56,8 +60,10 @@ run2_dat = run2_raw %>%
    remove_empty(c("rows", "cols")) %>%
    clean_names() %>%
    filter(!(is.na(toc_average_ppb))) %>%
-   # convert characters when SD = 0
-   mutate(across(contains("toc"), ~as.numeric(.)))
+   # correct times when SD < 0.03 (i.e., SD = 0) (i.e., all measurements were the same)
+   #  only occurs within columns toc_standard_deviation_ppb and toc_rsd_percent
+   mutate(across(contains("toc"), ~replace(., str_detect(., "<"), 0))) %>%
+   mutate(across(toc_average_ppb:last_col(), ~as.numeric(.)))
 
 # add vial IDs to data
 run2 = run2_dat %>%
@@ -67,7 +73,7 @@ run2 = run2_dat %>%
                 select(-run) %>%
                 mutate(vial = as.character(vial))) %>%
    relocate(sample_id) %>%
-   mutate(run = rep(2, nrow(.))) %>%
+   mutate(run = 2) %>%
    relocate(run, .before = start_time)
 
 
@@ -81,8 +87,10 @@ run3_dat = run3_raw %>%
    # remove all empty spots from when run was aborted
    filter(!(sample_name=="No Results")) %>%
    filter(!(toc_average_ppb=="---")) %>%
-   # convert data to numeric
-   mutate(across(toc_average_ppb:tc_rsd_percent, ~as.numeric(.)))
+   # correct times when SD < 0.03 (i.e., SD = 0) (i.e., all measurements were the same)
+   #  only occurs within columns toc_standard_deviation_ppb and toc_rsd_percent
+   mutate(across(contains("toc"), ~replace(., str_detect(., "<"), 0))) %>%
+   mutate(across(toc_average_ppb:last_col(), ~as.numeric(.)))
 
 # add vial IDs to data
 run3 = run3_dat %>%
@@ -92,7 +100,7 @@ run3 = run3_dat %>%
                 select(-run) %>%
                 mutate(vial = as.character(vial))) %>%
    relocate(sample_id) %>%
-   mutate(run = rep(3, nrow(.))) %>%
+   mutate(run = 3) %>%
    relocate(run, .before = start_time)
 
 
@@ -104,8 +112,10 @@ run4_dat = run4_raw %>%
    remove_empty(c("rows", "cols")) %>%
    clean_names() %>%
    filter(!(is.na(toc_average_ppb))) %>%
-   # convert characters when SD = 0
-   mutate(across(contains("toc"), ~as.numeric(.)))
+   # correct times when SD < 0.03 (i.e., SD = 0) (i.e., all measurements were the same)
+   #  only occurs within columns toc_standard_deviation_ppb and toc_rsd_percent
+   mutate(across(contains("toc"), ~replace(., str_detect(., "<"), 0))) %>%
+   mutate(across(toc_average_ppb:last_col(), ~as.numeric(.)))
 
 # add vial IDs to data
 run4 = run4_dat %>%
@@ -115,7 +125,7 @@ run4 = run4_dat %>%
                 select(-run) %>%
                 mutate(vial = as.character(vial))) %>%
    relocate(sample_id) %>%
-   mutate(run = rep(4, nrow(.))) %>%
+   mutate(run = 4) %>%
    relocate(run, .before = start_time)
 
 
@@ -185,10 +195,11 @@ ggplot(blank_dat %>% filter(doy %in% c(21:36))) +
 p1 =
 ggplot(doc_dat %>% 
           filter(pond_id %in% c('A', 'B', 'C')) %>%
-          mutate(toc_ppb = toc_ppb/1000)) +
+          mutate(toc_ppm = toc_ppb/1000)) +
    #
-   geom_point(aes(x = doy, y = toc_ppb, color = pond_id), size=2) +
-   geom_line(aes(x = doy, y = toc_ppb, group = pond_id, color = pond_id), size=1, alpha=0.7) +
+   geom_point(aes(x = doy, y = toc_ppm, color = pond_id), size=2) +
+   geom_line(aes(x = doy, y = toc_ppm, group = pond_id, color = pond_id), size=1, alpha=0.7) +
+   #
    geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
    #
    scale_color_manual(breaks = c('A', 'B', 'C'),
@@ -202,16 +213,21 @@ ggplot(doc_dat %>%
 p2 =
 ggplot(doc_dat %>% 
           filter(pond_id %in% c('D', 'E', 'F')) %>%
-          mutate(toc_ppb = toc_ppb/1000)) +
+          mutate(toc_ppm = toc_ppb/1000)) +
    #
-   geom_point(aes(x = doy, y = toc_ppb, color = pond_id), size=2) +
-   geom_line(aes(x = doy, y = toc_ppb, group = pond_id, color = pond_id), size=1, alpha=0.7) +
-   # geom_smooth(aes(x = doy, y = toc_ppb, group = pond_id, color = pond_id, fill = pond_id), size=0.01, alpha=0.2) +
-   # geom_smooth(aes(x = doy, y = toc_ppb, group = pond_id, fill = pond_id), alpha=0.25, color=NA) +
+   geom_point(aes(x = doy, y = toc_ppm, color = pond_id), size=2) +
+   geom_line(aes(x = doy, y = toc_ppm, group = pond_id, color = pond_id), size=1, alpha=0.7) +
+   #
+   # geom_smooth(aes(x = doy, y = toc_ppm, group = pond_id, fill = pond_id, color = pond_id), size=0, alpha=0.2) +
+   # geom_smooth(aes(x = doy, y = toc_ppm, group = pond_id, fill = pond_id), alpha=0.2, color=NA) +
+   #
    geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
    #
    scale_color_manual(breaks = c('D', 'E', 'F'),
                       values = c('D' = "#3BB873", 'E' = '#51ADCF', 'F' = '#2D6187')) +
+   scale_fill_manual(breaks = c('D', 'E', 'F'),
+                      values = c('D' = "#3BB873", 'E' = '#51ADCF', 'F' = '#2D6187')) +
+   #
    lims(y=c(0, 50)) +
    theme_classic()
 
