@@ -397,6 +397,35 @@ limno_field_data = read_csv("Data/R-Data/2020_limno-field-data.csv") %>%
 
 
 #---
+#### Weather Data ####
+#---
+
+# Data
+weather_data_raw = read.csv("Data/R-Data/2020_weather-data.csv", skip=1)
+
+
+# Clean up variable names
+weather_data = weather_data_raw %>%
+   clean_names() %>%
+   # select(-number) %>%
+   select(-x) %>%
+   rename(date_time = starts_with("date_time"),
+          wind_speed = starts_with("wind_speed"),  # units are m/s
+          gust_speed = starts_with("gust_speed"),   # units are m/s
+          par = starts_with("par_"))    # units are umol/m2/s; new clean_names() makes this "mmol" for some reason
+
+
+# Additional variables
+weather_data = weather_data %>%
+   # date and DOY
+   mutate(date_time = mdy_hm(date_time),
+          doy = yday(date_time)) %>%
+   relocate(doy, .after = date_time) %>%
+   # anemometer height (4 m) (units = m)
+   mutate(wind_z = rep_len(4, n()))
+
+
+#---
 #### Lake Concentration GHG Samples ####
 #---
 
@@ -610,35 +639,6 @@ ebu_samples = ebu_samples %>%
    mutate(deployment_length = difftime(last(date_time), first(date_time), units="days"),
           deployment_length = as.numeric(deployment_length)) %>%
    ungroup()
-
-
-#---
-#### Weather Data ####
-#---
-
-# Data
-weather_data_raw = read.csv("Data/R-Data/2020_weather-data.csv", skip=1)
-
-
-# Clean up variable names
-weather_data = weather_data_raw %>%
-   clean_names() %>%
-   # select(-number) %>%
-   select(-x) %>%
-   rename(date_time = starts_with("date_time"),
-          wind_speed = starts_with("wind_speed"),  # units are m/s
-          gust_speed = starts_with("gust_speed"),   # units are m/s
-          par = starts_with("par_"))    # units are umol/m2/s; new clean_names() makes this "mmol" for some reason
-
-
-# Additional variables
-weather_data = weather_data %>%
-   # date and DOY
-   mutate(date_time = mdy_hm(date_time),
-          doy = yday(date_time)) %>%
-   relocate(doy, .after = date_time) %>%
-   # anemometer height (4 m) (units = m)
-   mutate(wind_z = rep_len(4, n()))
 
 
 #---
