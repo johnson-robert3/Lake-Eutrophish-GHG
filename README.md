@@ -15,3 +15,4 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
 - [x] Make a figure comparing metabolism output from metab.kalman() using raw DO data, corrected/interpolated data, and rolling window corrected data
 - [x] Compare other cutoff values for removing DO drops (2.0, 1.0, 1.5 mg/l)
 - [x] Correct DOC values for blanks within each run
+- [ ] Update the total GHG model dataset for LME models with updated temp-profile, metabolism, and DOC data
