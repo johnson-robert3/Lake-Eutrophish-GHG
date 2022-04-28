@@ -27,7 +27,8 @@ run0 = run0_dat %>%
    mutate(sample_type = case_when(vial == "Blank" ~ "Blank",
                                   TRUE ~ "Sample")) %>%
    relocate(sample_id) %>%
-   mutate(run = 0) %>%
+   mutate(run = 0,
+          run_date = "Dec. 8") %>%
    relocate(run, .before = start_time)
 
 
@@ -48,7 +49,8 @@ run1 = run1_dat %>%
    rename(vial = sample_name) %>%
    unite(sample_id, lot_number, vial, sep="", remove=FALSE) %>%
    mutate(sample_id = na_if(sample_id, "blkBlank")) %>%
-   mutate(run = 1) %>%
+   mutate(run = 1,
+          run_date = "Jan. 21") %>%
    relocate(run, .before = start_time)
 
 
@@ -73,7 +75,8 @@ run2 = run2_dat %>%
                 select(-run) %>%
                 mutate(vial = as.character(vial))) %>%
    relocate(sample_id) %>%
-   mutate(run = 2) %>%
+   mutate(run = 2,
+          run_date = "Jan. 23") %>%
    relocate(run, .before = start_time)
 
 
@@ -100,7 +103,8 @@ run3 = run3_dat %>%
                 select(-run) %>%
                 mutate(vial = as.character(vial))) %>%
    relocate(sample_id) %>%
-   mutate(run = 3) %>%
+   mutate(run = 3,
+          run_date = "Jan. 26") %>%
    relocate(run, .before = start_time)
 
 
@@ -125,7 +129,8 @@ run4 = run4_dat %>%
                 select(-run) %>%
                 mutate(vial = as.character(vial))) %>%
    relocate(sample_id) %>%
-   mutate(run = 4) %>%
+   mutate(run = 4,
+          run_date = "Feb. 3") %>%
    relocate(run, .before = start_time)
 
 
@@ -139,45 +144,59 @@ doc_all = bind_rows(run0, run1, run2, run3, run4) %>%
           sd_tc = tc_standard_deviation_ppb) %>%
    mutate(start_time = mdy_hms(start_time),
           end_time = mdy_hms(end_time)) %>%
-   select(-vial_number:-flush_time_sec)
+   select(-turbo:-flush_time_sec) %>%
+   # remove columns of standard deviation of instrument measurements within each vial
+   select(-contains("sd_"))
 
 # just blanks
-blank_dat = doc_all %>% filter(vial=="Blank") %>%
-   mutate(date = date(start_time),
-          doy = yday(date),
-          run = case_when(doy == 342 ~ "Dec. 8",
-                          doy %in% c(21:22) ~ "Jan. 21",
-                          doy %in% c(23:25) ~ "Jan. 23",
-                          doy == 26 ~ "Jan. 26",
-                          doy %in% c(34:36) ~ "Feb. 3"),
-          run = fct_inorder(run))
+doc_blk = doc_all %>% filter(vial=="Blank")
 
 # just samples, add Pond ID and DOY
-doc_dat = doc_all %>%
+doc_smpl = doc_all %>%
    filter(!(is.na(sample_id))) %>%
    mutate(sample_id = str_remove(sample_id, "E20")) %>%
    separate(sample_id, into=c("pond_id", "doy"), sep=1, remove=FALSE) %>%
    mutate(doy = as.numeric(doy))
+
+
+## Correct samples for blank values
+
+# mean values of blanks for each run
+blk_means = doc_blk %>%
+   group_by(run) %>%
+   filter(vial_number!=1,
+          # remove outlier values
+          !(toc_ppb > 1000 | toc_ppb < 10)) %>%
+   summarize(across(contains("_ppb"), ~mean(.), .names = "mean_blank_{.col}")) %>%
+   ungroup()
+
+
+# DOC samples
+doc_dat = doc_smpl %>%
+   left_join(blk_means) %>%
+   mutate(doc_ppb = toc_ppb - mean_blank_toc_ppb,
+          dic_ppb = ic_ppb - mean_blank_ic_ppb,
+          dc_ppb = tc_ppb - mean_blank_tc_ppb)
    
 
 
 # view change in blank values between runs / over time
 
 windows(height=4, width=6)
-ggplot(blank_dat %>% filter(doy %in% c(21:36))) +
+ggplot(doc_blk %>% filter(run %in% c(1:4))) +
    # TOC
-   geom_point(aes(x = start_time, y = toc_ppb, color = run), size=1.5) +
-   # geom_line(aes(x = start_time, y = toc_ppb, group = run, color = run), size=0.5) +
+   geom_point(aes(x = start_time, y = toc_ppb, color = run_date), size=1.5) +
+   # geom_line(aes(x = start_time, y = toc_ppb, group = run_date, color = run_date), size=0.5) +
    guides(color=guide_legend(title="Run Start")) +
    labs(x = "Injection start time", y = "TOC (ppb)") +
    # IC
-   # geom_point(aes(x = start_time, y = ic_ppb, color = run), size=1.5) +
-   # # geom_line(aes(x = start_time, y = ic_ppb, group = run, color = run), size=0.5) +
+   # geom_point(aes(x = start_time, y = ic_ppb, color = run_date), size=1.5) +
+   # # geom_line(aes(x = start_time, y = ic_ppb, group = run_date, color = run_date), size=0.5) +
    # guides(color=guide_legend(title="Run Start")) +
    # labs(x = "Injection start time", y = "IC (ppb)") +
    # TC
-   # geom_point(aes(x = start_time, y = tc_ppb, color = run), size=1.5) +
-   # # geom_line(aes(x = start_time, y = tc_ppb, group = run, color = run), size=0.5) +
+   # geom_point(aes(x = start_time, y = tc_ppb, color = run_date), size=1.5) +
+   # # geom_line(aes(x = start_time, y = tc_ppb, group = run_date, color = run_date), size=0.5) +
    # guides(color=guide_legend(title="Run Start")) +
    # labs(x = "Injection start time", y = "TC (ppb)") +
    #
@@ -195,10 +214,10 @@ ggplot(blank_dat %>% filter(doy %in% c(21:36))) +
 p1 =
 ggplot(doc_dat %>% 
           filter(pond_id %in% c('A', 'B', 'C')) %>%
-          mutate(toc_ppm = toc_ppb/1000)) +
+          mutate(doc_ppm = doc_ppb/1000)) +
    #
-   geom_point(aes(x = doy, y = toc_ppm, color = pond_id), size=2) +
-   geom_line(aes(x = doy, y = toc_ppm, group = pond_id, color = pond_id), size=1, alpha=0.7) +
+   geom_point(aes(x = doy, y = doc_ppm, color = pond_id), size=2) +
+   geom_line(aes(x = doy, y = doc_ppm, group = pond_id, color = pond_id), size=1, alpha=0.7) +
    #
    geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
    #
@@ -213,13 +232,13 @@ ggplot(doc_dat %>%
 p2 =
 ggplot(doc_dat %>% 
           filter(pond_id %in% c('D', 'E', 'F')) %>%
-          mutate(toc_ppm = toc_ppb/1000)) +
+          mutate(doc_ppm = doc_ppb/1000)) +
    #
-   geom_point(aes(x = doy, y = toc_ppm, color = pond_id), size=2) +
-   geom_line(aes(x = doy, y = toc_ppm, group = pond_id, color = pond_id), size=1, alpha=0.7) +
+   geom_point(aes(x = doy, y = doc_ppm, color = pond_id), size=2) +
+   geom_line(aes(x = doy, y = doc_ppm, group = pond_id, color = pond_id), size=1, alpha=0.7) +
    #
-   # geom_smooth(aes(x = doy, y = toc_ppm, group = pond_id, fill = pond_id, color = pond_id), size=0, alpha=0.2) +
-   # geom_smooth(aes(x = doy, y = toc_ppm, group = pond_id, fill = pond_id), alpha=0.2, color=NA) +
+   # geom_smooth(aes(x = doy, y = doc_ppm, group = pond_id, fill = pond_id, color = pond_id), size=0, alpha=0.2) +
+   # geom_smooth(aes(x = doy, y = doc_ppm, group = pond_id, fill = pond_id), alpha=0.2, color=NA) +
    #
    geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
    #
@@ -232,10 +251,10 @@ ggplot(doc_dat %>%
    theme_classic()
 
 
-windows(height=8, width=6); p1 / p2
+windows(height=8, width=12); p1 / p2
 
 
-
+# ggsave("doc.png")
 
 
 
