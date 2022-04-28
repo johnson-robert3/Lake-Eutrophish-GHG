@@ -145,7 +145,7 @@ doc_all = bind_rows(run0, run1, run2, run3, run4) %>%
    mutate(start_time = mdy_hms(start_time),
           end_time = mdy_hms(end_time)) %>%
    select(-turbo:-flush_time_sec) %>%
-   # remove columns of standard deviation of instrument measurements within each vial
+   # remove columns of within-vial SD (from replicate instrument measurements)
    select(-contains("sd_"))
 
 # just blanks
@@ -177,7 +177,11 @@ doc_dat = doc_smpl %>%
    mutate(doc_ppb = toc_ppb - mean_blank_toc_ppb,
           dic_ppb = ic_ppb - mean_blank_ic_ppb,
           dc_ppb = tc_ppb - mean_blank_tc_ppb)
-   
+
+
+## remove temporary objects
+rm(list = ls(pattern="run."), doc_all, doc_blk, doc_smpl, blk_means)
+##
 
 
 # view change in blank values between runs / over time
