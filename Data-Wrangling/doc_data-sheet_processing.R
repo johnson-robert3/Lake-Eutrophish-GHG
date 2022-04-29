@@ -180,7 +180,7 @@ doc_dat = doc_smpl %>%
 
 
 ## remove temporary objects
-rm(list = ls(pattern="run."), doc_all, doc_blk, doc_smpl, blk_means)
+rm(list = ls(pattern="run[01234]"), doc_all, doc_blk, doc_smpl, blk_means)
 ##
 
 
