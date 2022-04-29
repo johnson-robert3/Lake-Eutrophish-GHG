@@ -142,10 +142,10 @@ metab_book = metab_data %>%
 
 
 
-##__Maximum Likelihood Estimate method
+##__Kalman Filter method
 
   #--
-  # metab.mle() returns a list (not a data frame)
+  # metab.kalman() returns a list (not a data frame)
   # need to use a nested workflow
   #--
 
@@ -155,17 +155,17 @@ mle.a = metab_data %>%
    filter(pond_id=="A") %>%
    group_by(doy) %>%
    nest() %>%
-   mutate(metab = map(data, ~metab.mle(do.obs = .$do,
+   mutate(metab = map(data, ~metab.kalman(do.obs = .$corr_do,
                                        do.sat = .$o2_eq_sat,
                                        k.gas = .$k_gas,
                                        z.mix = .$z_mix,
                                        irr = .$par,
                                        wtr = .$temp,
-                                       error.type = "OE",
+                                       # error.type = "OE",
                                        datetime = .$date_time)),
-          GPP = map(metab, ~pluck(., 2, "GPP")),
-          R = map(metab, ~pluck(., 2, "R")),
-          NEP = map(metab, ~pluck(., 2, "NEP"))) %>%
+          GPP = map(metab, ~pluck(., 3, "GPP")),
+          R = map(metab, ~pluck(., 3, "R")),
+          NEP = map(metab, ~pluck(., 3, "NEP"))) %>%
    select(doy, GPP, R, NEP) %>%
    unnest(cols = c(GPP, R, NEP)) %>%
    ungroup() %>%
@@ -177,17 +177,17 @@ mle.b = metab_data %>%
    filter(pond_id=="B") %>%
    group_by(doy) %>%
    nest() %>%
-   mutate(metab = map(data, ~metab.mle(do.obs = .$do,
+   mutate(metab = map(data, ~metab.kalman(do.obs = .$corr_do,
                                        do.sat = .$o2_eq_sat,
                                        k.gas = .$k_gas,
                                        z.mix = .$z_mix,
                                        irr = .$par,
                                        wtr = .$temp,
-                                       error.type = "OE",
+                                       # error.type = "OE",
                                        datetime = .$date_time)),
-          GPP = map(metab, ~pluck(., 2, "GPP")),
-          R = map(metab, ~pluck(., 2, "R")),
-          NEP = map(metab, ~pluck(., 2, "NEP"))) %>%
+          GPP = map(metab, ~pluck(., 3, "GPP")),
+          R = map(metab, ~pluck(., 3, "R")),
+          NEP = map(metab, ~pluck(., 3, "NEP"))) %>%
    select(doy, GPP, R, NEP) %>%
    unnest(cols = c(GPP, R, NEP)) %>%
    ungroup() %>%
@@ -199,17 +199,17 @@ mle.c = metab_data %>%
    filter(pond_id=="C") %>%
    group_by(doy) %>%
    nest() %>%
-   mutate(metab = map(data, ~metab.mle(do.obs = .$do,
+   mutate(metab = map(data, ~metab.kalman(do.obs = .$corr_do,
                                        do.sat = .$o2_eq_sat,
                                        k.gas = .$k_gas,
                                        z.mix = .$z_mix,
                                        irr = .$par,
                                        wtr = .$temp,
-                                       error.type = "OE",
+                                       # error.type = "OE",
                                        datetime = .$date_time)),
-          GPP = map(metab, ~pluck(., 2, "GPP")),
-          R = map(metab, ~pluck(., 2, "R")),
-          NEP = map(metab, ~pluck(., 2, "NEP"))) %>%
+          GPP = map(metab, ~pluck(., 3, "GPP")),
+          R = map(metab, ~pluck(., 3, "R")),
+          NEP = map(metab, ~pluck(., 3, "NEP"))) %>%
    select(doy, GPP, R, NEP) %>%
    unnest(cols = c(GPP, R, NEP)) %>%
    ungroup() %>%
@@ -221,17 +221,17 @@ mle.d = metab_data %>%
    filter(pond_id=="D") %>%
    group_by(doy) %>%
    nest() %>%
-   mutate(metab = map(data, ~metab.mle(do.obs = .$do,
+   mutate(metab = map(data, ~metab.kalman(do.obs = .$corr_do,
                                        do.sat = .$o2_eq_sat,
                                        k.gas = .$k_gas,
                                        z.mix = .$z_mix,
                                        irr = .$par,
                                        wtr = .$temp,
-                                       error.type = "OE",
+                                       # error.type = "OE",
                                        datetime = .$date_time)),
-          GPP = map(metab, ~pluck(., 2, "GPP")),
-          R = map(metab, ~pluck(., 2, "R")),
-          NEP = map(metab, ~pluck(., 2, "NEP"))) %>%
+          GPP = map(metab, ~pluck(., 3, "GPP")),
+          R = map(metab, ~pluck(., 3, "R")),
+          NEP = map(metab, ~pluck(., 3, "NEP"))) %>%
    select(doy, GPP, R, NEP) %>%
    unnest(cols = c(GPP, R, NEP)) %>%
    ungroup() %>%
@@ -243,17 +243,17 @@ mle.e = metab_data %>%
    filter(pond_id=="E") %>%
    group_by(doy) %>%
    nest() %>%
-   mutate(metab = map(data, ~metab.mle(do.obs = .$do,
+   mutate(metab = map(data, ~metab.kalman(do.obs = .$corr_do,
                                        do.sat = .$o2_eq_sat,
                                        k.gas = .$k_gas,
                                        z.mix = .$z_mix,
                                        irr = .$par,
                                        wtr = .$temp,
-                                       error.type = "OE",
+                                       # error.type = "OE",
                                        datetime = .$date_time)),
-          GPP = map(metab, ~pluck(., 2, "GPP")),
-          R = map(metab, ~pluck(., 2, "R")),
-          NEP = map(metab, ~pluck(., 2, "NEP"))) %>%
+          GPP = map(metab, ~pluck(., 3, "GPP")),
+          R = map(metab, ~pluck(., 3, "R")),
+          NEP = map(metab, ~pluck(., 3, "NEP"))) %>%
    select(doy, GPP, R, NEP) %>%
    unnest(cols = c(GPP, R, NEP)) %>%
    ungroup() %>%
@@ -265,17 +265,17 @@ mle.f = metab_data %>%
    filter(pond_id=="F") %>%
    group_by(doy) %>%
    nest() %>%
-   mutate(metab = map(data, ~metab.mle(do.obs = .$do,
+   mutate(metab = map(data, ~metab.kalman(do.obs = .$corr_do,
                                        do.sat = .$o2_eq_sat,
                                        k.gas = .$k_gas,
                                        z.mix = .$z_mix,
                                        irr = .$par,
                                        wtr = .$temp,
-                                       error.type = "OE",
+                                       # error.type = "OE",
                                        datetime = .$date_time)),
-          GPP = map(metab, ~pluck(., 2, "GPP")),
-          R = map(metab, ~pluck(., 2, "R")),
-          NEP = map(metab, ~pluck(., 2, "NEP"))) %>%
+          GPP = map(metab, ~pluck(., 3, "GPP")),
+          R = map(metab, ~pluck(., 3, "R")),
+          NEP = map(metab, ~pluck(., 3, "NEP"))) %>%
    select(doy, GPP, R, NEP) %>%
    unnest(cols = c(GPP, R, NEP)) %>%
    ungroup() %>%
@@ -284,11 +284,11 @@ mle.f = metab_data %>%
 
 
 # all ponds
-metab_mle = bind_rows(mle.a, mle.b, mle.c, mle.d, mle.e, mle.f)
+metabolism = bind_rows(mle.a, mle.b, mle.c, mle.d, mle.e, mle.f)
 
 
    ## remove temporary objects
-   rm(mle.a, mle.b, mle.c, mle.d, mle.e, mle.f)
+   rm(list = ls(pattern="mle.[abcdef]"))
    ##
 
 
