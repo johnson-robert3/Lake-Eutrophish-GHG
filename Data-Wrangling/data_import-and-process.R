@@ -114,7 +114,7 @@ sonde_profiles = read_csv("Data/sonde-profiles_all-data_2022-03-29.csv")
 
 sonde_surface = sonde_profiles %>%
    group_by(pond_id, doy) %>%
-   filter(vert_m >= 0.1 & vert_m <= 0.30) %>%
+   filter(vert_m >= 0.05 & vert_m <= 0.50) %>%
    summarize(across(temp:salinity, ~mean(., na.rm=T))) %>%
    ungroup()
 
