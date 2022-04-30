@@ -179,6 +179,23 @@ doc_dat = doc_smpl %>%
           dc_ppb = tc_ppb - mean_blank_tc_ppb)
 
 
+#-- Align dates of DOC samples with GHG samples
+#   day of year became offset by 1 later in the season
+
+doc_dat = lake_flux %>%
+   select(pond_id:doy, ch4_flux) %>%
+   full_join(doc_dat) %>%
+   group_by(pond_id) %>%
+   arrange(doy, .by_group=TRUE) %>%
+   mutate(newdoy = if_else(is.na(ch4_flux) & doc_ppb>0, doy-1, doy),
+          newdoy = if_else(newdoy==142, 143, newdoy)) %>%
+   ungroup() %>%
+   relocate(newdoy, .after=doy) %>%
+   filter(!(is.na(doc_ppb))) %>%
+   select(-ch4_flux, -week, -date, -doy) %>%
+   rename(doy = newdoy)
+
+
 ## remove temporary objects
 rm(list = ls(pattern="run[01234]"), doc_all, doc_blk, doc_smpl, blk_means)
 ##
