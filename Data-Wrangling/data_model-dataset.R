@@ -19,11 +19,11 @@
 ## Prep the individual data sets
 
 t1 = lake_flux %>%
-   select(pond_id, doy, week, ends_with("flux"))
+   select(pond_id, doy, week, ends_with("flux"), ends_with("lake"))
 
 
-t10 = lake_conc %>%
-   select(pond_id, doy, ends_with("lake"))
+# t10 = lake_conc %>%
+#    select(pond_id, doy, ends_with("lake"))
 
 
 t2 = metabolism %>%
@@ -81,7 +81,7 @@ t9 = alk_data %>%
 
 # combined
 
-test = full_join(t1, t10) %>%
+test = t1 %>%  #full_join(t1, t10) %>%
    full_join(t2) %>%
    full_join(t3) %>%
    full_join(t4) %>%
@@ -107,7 +107,7 @@ model_dataset = test %>%
    arrange(pond_id, doy)
 
 
-write_csv(model_dataset, file = "ghg-model-dataset_2022-04-29.csv")
+write_csv(model_dataset, file = "ghg-model-dataset_2022-04-30.csv")
 
 
 ## remove temporary individual data sets
