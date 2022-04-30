@@ -18,7 +18,7 @@
 
 ## Prep the individual data sets
 
-t1 = lake_flux %>%
+m10 = lake_flux %>%
    select(pond_id, doy, week, ends_with("flux"), ends_with("lake"))
 
 
@@ -26,21 +26,21 @@ t1 = lake_flux %>%
 #    select(pond_id, doy, ends_with("lake"))
 
 
-t2 = metabolism %>%
+m11 = metabolism %>%
    filter(!(GPP < 0 | R > 0))
 
 
-t3 = limno_field_data %>%
+m12 = limno_field_data %>%
    select(pond_id, doy, period, tp:nhx)
 
 
-t4 = sonde_bottom %>%
+m13 = sonde_bottom %>%
    select(pond_id, doy, do, do_sat) %>%
    rename(bottom_do = do,
           bottom_do_sat = do_sat)
 
 
-t5 = sonde_profiles %>%
+m14 = sonde_profiles %>%
    group_by(pond_id, doy) %>%
    filter(vert_m > 0.05 & vert_m < 0.60) %>%
    summarize(across(temp:salinity, ~mean(., na.rm=TRUE))) %>%
@@ -48,7 +48,7 @@ t5 = sonde_profiles %>%
    select(pond_id, doy, temp, chla)
 
 
-t6 = weather_data %>%
+m15 = weather_data %>%
    mutate(U10 = wind_speed * ((10 / wind_z)^(1/7))) %>%
    select(doy, wind_speed, U10) %>%
    group_by(doy) %>%
@@ -57,19 +57,23 @@ t6 = weather_data %>%
    rename(wind_U10 = U10)
 
 
-t7 = dea_rates %>%
+m16 = dea_rates %>%
    select(pond_id, doy, n2o_rate) %>%
    rename(DEA = n2o_rate)
 
 
-t8 = methano_rates %>%
+m17 = methano_rates %>%
    select(pond_id, doy, ch4_rate) %>%
    rename(methanogenesis = ch4_rate)
 
 
-t9 = alk_data %>%
+m18 = alk_data %>%
    select(-sample_id, -notes) %>%
    relocate(pond_id)
+
+
+m19 = doc_dat %>%
+   select(pond_id, doy, doc_ppb)
 
 
 # t9 = hobo_strat %>%
@@ -81,15 +85,16 @@ t9 = alk_data %>%
 
 # combined
 
-test = t1 %>%  #full_join(t1, t10) %>%
-   full_join(t2) %>%
-   full_join(t3) %>%
-   full_join(t4) %>%
-   full_join(t5) %>%
-   full_join(t6) %>%
-   full_join(t7) %>%
-   full_join(t8) %>%
-   full_join(t9)
+test = m10 %>%  #full_join(t1, t10) %>%
+   full_join(m11) %>%
+   full_join(m12) %>%
+   full_join(m13) %>%
+   full_join(m14) %>%
+   full_join(m15) %>%
+   full_join(m16) %>%
+   full_join(m17) %>%
+   full_join(m18) %>%
+   full_join(m19)
 
 
 test = test %>%
