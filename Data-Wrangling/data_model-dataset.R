@@ -116,6 +116,6 @@ write_csv(model_dataset, file = "ghg-model-dataset_2022-04-30.csv")
 
 
 ## remove temporary individual data sets
-rm(list = ls(pattern = "t[[:digit:]]"))
+rm(list = ls(pattern = "m[[:digit:]]"), test)
 ##
 
