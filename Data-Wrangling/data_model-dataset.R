@@ -108,14 +108,25 @@ test = test %>%
 
 
 model_dataset = test %>%
+   # reorder variables
    select(pond_id, treatment, doy, period, everything()) %>%
-   arrange(pond_id, doy)
+   arrange(pond_id, doy) %>%
+   # add N:P ratio variable
+   mutate(np_ratio = (tn/14.001) / ((tp/1000)/30.97),
+          # convert DOC to ppm (mg/L)
+          doc_ppm = doc_ppb / 1000) %>%
+   # add a new 'period' variable to account for the fact that pulse periods don't mean anything for the reference treatment
+   #  reference ponds are, in effect, always in the 'Base' period
+   mutate(period2 = if_else(treatment=="reference", "BASE", period)) %>%
+   relocate(period2, .after=period)
 
 
-write_csv(model_dataset, file = "ghg-model-dataset_2022-04-30.csv")
+# output the complete model dataset
+write_csv(model_dataset, file = "Data/ghg-model-dataset_2022-05-01.csv")
 
 
-## remove temporary individual data sets
-rm(list = ls(pattern = "m[[:digit:]]"), test)
-##
+   ## remove temporary individual data sets
+   rm(list = ls(pattern = "m[[:digit:]]"), test)
+   ##
+
 
