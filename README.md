@@ -17,6 +17,21 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
 - [x] Correct DOC values for blanks within each run
 - [x] Update the total GHG model dataset for LME models with updated temp-profile, metabolism, and DOC data
 - [ ] How should we treat erroneous metabolism estimates (GPP<0, R>0)?
+- [ ] CO2 model
+   - [ ] Create the full model
+   - [ ] Iteratively remove components to find the best-fit model
+   - [ ] Test the model using just the pulsed ponds (difference between periods?)
+   - [ ] Compare treatments, but excluding the pre-pulse (i.e., BASE) period
+- [ ] CH4 model
+   - [ ] Create the full model
+   - [ ] Iteratively remove components to find the best-fit model
+   - [ ] Test the model using just the pulsed ponds (difference between periods?)
+   - [ ] Compare treatments, but excluding the pre-pulse (i.e., BASE) period
+- [ ] N2O model
+   - [ ] Create the full model
+   - [ ] Iteratively remove components to find the best-fit model
+   - [ ] Test the model using just the pulsed ponds (difference between periods?)
+   - [ ] Compare treatments, but excluding the pre-pulse (i.e., BASE) period
 
 
 
