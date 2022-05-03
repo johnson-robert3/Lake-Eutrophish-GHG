@@ -74,56 +74,6 @@ anova(m2, c.full)  # ns; m2 has slightly lower AIC and fewer DF; c.full has slig
 
 
 
-
-##-- testing random effect structure for pond, time, and pulse-period
-
-## intercept for pond
-
-# lme4: (1 | pond)
-
-t1 = lme(co2_lake ~ treatment * doy, 
-         random = ~ 1 | pond_id, 
-         correlation=corAR1(), mdat_co2 %>% filter(period=="PULSE2"), method='REML')
-
-## intercept for pond and slope of time within period
-
-# lme4: (1 | pond) + (0 + doy | pond/period)
-
-t2 = lme(co2_lake ~ treatment * doy, 
-         random = list(pond_id = pdBlocked(list(~1, ~0+doy)), 
-                       period = ~0+doy), 
-         correlation=corAR1(), mdat_co2 %>% filter(period=="PULSE2"), method='REML')
-
-t5 = lme(co2_lake ~ treatment * doy, 
-         random = list(pond_id = pdDiag(~doy), 
-                       period = ~0+doy), 
-         correlation=corAR1(), mdat_co2 %>% filter(period=="PULSE2"), method='REML')
-
-## random effect structure for t2 and t5 is the same, just a different way of writing it
-
-
-# lme4: (1 | pond) + (0 + doy | pond:period)
-
-t3 = lme(co2_lake ~ treatment * doy, 
-         random = list(pond_id = ~1, 
-                       period = ~0+doy), 
-         correlation=corAR1(), mdat_co2 %>% filter(period=="PULSE2"), method='REML')
-
-## intercept for pond and period and slope of time within period
-
-# lme4: (1 | pond/period) + (0 + doy | pond:period) = 
-# lme4: (1 | pond) + (1 | pond:period) + (0 + doy | pond:period)
-
-t4 = lme(co2_lake ~ treatment * doy, 
-         random = list(pond_id = ~1, 
-                       period = pdDiag(~doy)), 
-         correlation=corAR1(), mdat_co2 %>% filter(period=="PULSE2"), method='REML')
-
-
-anova(t1, t2, t3, t4)  # ns; t1 has fewest df and lowest AIC; t1 is best (i.e., just random intercept for pond)
-
-
-
 #-- Step 3: Iteratively remove components and find best-fit model
 
 # Is the random effect significant (effect of repeated measures)?
