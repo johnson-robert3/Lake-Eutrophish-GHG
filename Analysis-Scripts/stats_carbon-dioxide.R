@@ -57,16 +57,28 @@ f2 = update(f1, correlation = corAR1(form = ~ time|pond_id, value = ACF(f1, form
 
 anova(f1, f2)  # f2 is better
 
+
+# are there differences/effects of how or when autocorrelation is added to the model?
+
 f3 = lme(co2_lake ~ chla + NEP + R + alkalinity + bottom_do_sat + doc_ppm + treatment + period + treatment:period,
          random = ~ 1 | pond_id, correlation = corAR1(), data = mdat_co2, method="ML")
 
 f4 = update(f1, correlation = corAR1())
 
-f5 = update(f4, .~. - alkalinity)
 
-f6 = update(f1, .~. - alkalinity, correlation = corAR1())
+# does when autocorrelation is added make a difference for updating fixed effects later? 
+f5 = update(f1, .~. - alkalinity); f5 = update(f5, correlation = corAR1())
 
-f7 = update(f5, correlation = corAR1())
+f6 = update(f4, .~. - alkalinity)
+
+f7 = update(f3, .~. - alkalinity)
+
+f8 = update(f1, .~. - alkalinity, correlation = corAR1())
+
+f9 = update(f4, .~. - alkalinity, correlation = corAR1())
+
+## no, no differences; f2-f4 are the same, and f5-f9 are the same
+
 
 ## Is 'period2' better than 'period'? (period2 also encompasses treatment, so remove both period and treatment variables)
 m1 = update(f1, .~. - treatment - period - treatment:period + period2)
