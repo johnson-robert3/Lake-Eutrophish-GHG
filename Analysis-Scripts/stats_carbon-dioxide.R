@@ -53,39 +53,74 @@ f1 = lme(co2_lake ~ chla + NEP + R + alkalinity + bottom_do_sat + doc_ppm + trea
          random = ~ 1 | pond_id, data = mdat_co2, method="ML")
 
 # should the model include autocorrelation (AR(1))?
-f2 = update(f1, correlation = corAR1(form = ~ time|pond_id, value = ACF(f1, form = ~ time|pond_id)[2,2]))
+f2 = update(f1, correlation = corAR1())
 
 anova(f1, f2)  # f2 is better
 
-
-# are there differences/effects of how or when autocorrelation is added to the model?
-
-f3 = lme(co2_lake ~ chla + NEP + R + alkalinity + bottom_do_sat + doc_ppm + treatment + period + treatment:period,
-         random = ~ 1 | pond_id, correlation = corAR1(), data = mdat_co2, method="ML")
-
-f4 = update(f1, correlation = corAR1())
-
-
-# does when autocorrelation is added make a difference for updating fixed effects later? 
-f5 = update(f1, .~. - alkalinity); f5 = update(f5, correlation = corAR1())
-
-f6 = update(f4, .~. - alkalinity)
-
-f7 = update(f3, .~. - alkalinity)
-
-f8 = update(f1, .~. - alkalinity, correlation = corAR1())
-
-f9 = update(f4, .~. - alkalinity, correlation = corAR1())
-
-## no, no differences; f2-f4 are the same, and f5-f9 are the same
+# CO2 full model
+c.full = f2
 
 
 ## Is 'period2' better than 'period'? (period2 also encompasses treatment, so remove both period and treatment variables)
-m1 = update(f1, .~. - treatment - period - treatment:period + period2)
-m2 = update(m1, correlation = corAR1(form = ~ time|pond_id, value = ACF(m1, form = ~ time|pond_id)[2,2]))
-m3 = update(m1, correlation = corAR1())
+m1 = update(c.full, .~. - treatment - period - treatment:period + period2)
 
-anova(m1, f2)  # f2 is better
+anova(m1, c.full)  # c.full is better
+
+
+## use DOY for time instead of period or period2?
+m2 = update(c.full, .~. - period - treatment:period + doy + treatment:doy)
+
+anova(m2, c.full)  # ns; m2 has slightly lower AIC and fewer DF; c.full has slightly higher loglik
+
+
+
+
+##-- testing random effect structure for pond, time, and pulse-period
+
+## intercept for pond
+
+# lme4: (1 | pond)
+
+t1 = lme(co2_lake ~ treatment * doy, 
+         random = ~ 1 | pond_id, 
+         correlation=corAR1(), mdat_co2 %>% filter(period=="PULSE2"), method='REML')
+
+## intercept for pond and slope of time within period
+
+# lme4: (1 | pond) + (0 + doy | pond/period)
+
+t2 = lme(co2_lake ~ treatment * doy, 
+         random = list(pond_id = pdBlocked(list(~1, ~0+doy)), 
+                       period = ~0+doy), 
+         correlation=corAR1(), mdat_co2 %>% filter(period=="PULSE2"), method='REML')
+
+t5 = lme(co2_lake ~ treatment * doy, 
+         random = list(pond_id = pdDiag(~doy), 
+                       period = ~0+doy), 
+         correlation=corAR1(), mdat_co2 %>% filter(period=="PULSE2"), method='REML')
+
+## random effect structure for t2 and t5 is the same, just a different way of writing it
+
+
+# lme4: (1 | pond) + (0 + doy | pond:period)
+
+t3 = lme(co2_lake ~ treatment * doy, 
+         random = list(pond_id = ~1, 
+                       period = ~0+doy), 
+         correlation=corAR1(), mdat_co2 %>% filter(period=="PULSE2"), method='REML')
+
+## intercept for pond and period and slope of time within period
+
+# lme4: (1 | pond/period) + (0 + doy | pond:period) = 
+# lme4: (1 | pond) + (1 | pond:period) + (0 + doy | pond:period)
+
+t4 = lme(co2_lake ~ treatment * doy, 
+         random = list(pond_id = ~1, 
+                       period = pdDiag(~doy)), 
+         correlation=corAR1(), mdat_co2 %>% filter(period=="PULSE2"), method='REML')
+
+
+anova(t1, t2, t3, t4)  # ns; t1 has fewest df and lowest AIC; t1 is best (i.e., just random intercept for pond)
 
 
 
