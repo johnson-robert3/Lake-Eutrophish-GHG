@@ -219,6 +219,10 @@ MuMIn::r.squaredGLMM(update(m14, method='REML'))
 
 # sjPlot outputs to visualize
 
+sjPlot::tab_model(update(m14, method='REML'), show.re.var=TRUE)
+
+sjPlot::plot_model(update(m14, method='REML'), show.p=TRUE, show.values=TRUE)
+
 
 
 
