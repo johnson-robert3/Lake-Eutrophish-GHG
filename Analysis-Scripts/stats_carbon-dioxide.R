@@ -204,8 +204,8 @@ MuMIn::r.squaredGLMM(update(m13, method='REML'))
 # MuMIn::r.squaredGLMM(update(m12, method='REML'))
 
 
-## keep NEP and allow an interaction (NEP may affect CO2 differently between treatments, because macrophyte dynamics differed between treatment)
-## keep chla, but have an interaction (effect of chla on CO2 should not differ between treatments
+## keep NEP and allow an interaction (NEP may affect CO2 differently between treatments, because macrophyte dynamics differed between treatments)
+## keep chla, but without an interaction (effect of chla on CO2 should not differ between treatments)
 
 m14 = update(m1, .~ treatment * (doy + alkalinity + NEP) + chla)
 anova(m1, m14, m10, m11)  # m14 or m11 is best
@@ -217,12 +217,28 @@ MuMIn::r.squaredGLMM(update(m14, method='REML'))
 ## I think that ecologically, model m14 makes the most sense
 
 
-# sjPlot outputs to visualize
+## Best Model - m14
+co2.lme = lme(co2_lake ~ treatment * (doy + alkalinity + NEP) + chla,
+              random = ~ doy | pond_id, correlation = corAR1(),
+              mdat_co2, method='REML')
 
-sjPlot::tab_model(update(m14, method='REML'), show.re.var=TRUE)
+# output
+summary(co2.lme)
+broom.mixed::tidy(co2.lme)
+# R2
+MuMIn::r.squaredGLMM(co2.lme)
 
-sjPlot::plot_model(update(m14, method='REML'), show.p=TRUE, show.values=TRUE)
 
+#-- Step 4: Visualize Model Output
+
+# Residuals
+ggResidpanel::resid_panel(co2.lme)
+
+# Table of model results as a figure
+sjPlot::tab_model(co2.lme, show.re.var=TRUE)
+
+# Effect size and significance of fixed effects
+sjPlot::plot_model(co2.lme, show.p=TRUE, show.values=TRUE)
 
 
 
