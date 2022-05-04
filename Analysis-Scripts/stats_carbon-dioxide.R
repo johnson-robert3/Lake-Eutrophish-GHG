@@ -88,7 +88,7 @@ MuMIn::r.squaredGLMM(update(c.full, method='REML'))
 # Is the random effect significant (effect of repeated measures)?
 g1 = gls(co2_lake ~ treatment + doy + chla + NEP + R + alkalinity + bottom_do_sat + doc_ppm + treatment:doy,
          data = mdat_co2, method="ML")
-g2 = update(g1, correlation = corAR1(form = ~ time|pond_id, value = ACF(g1, form = ~ time|pond_id)[2,2]))
+g2 = update(g1, correlation = corAR1(form = ~ 1|pond_id, value = ACF(g1, form = ~ 1|pond_id)[2,2]))
 
 anova(g1, g2)  # g2 is better
 anova(g2, c.full)  # c.full is better
