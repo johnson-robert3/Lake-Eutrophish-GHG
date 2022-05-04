@@ -9,6 +9,8 @@ if (!require(tidyverse)) install.packages('tidyverse'); library(tidyverse)
 if (!require(lme4)) install.packages('lme4'); library(lme4)
 if (!require(nlme)) install.packages('nlme'); library(nlme)
 
+# use MuMIn::r.squaredGLMM() to calculate R2 values from mixed effects models
+
 
 #-- Step 1: Prepare the data
 
@@ -81,6 +83,7 @@ c.full = lme(co2_lake ~ treatment + doy + chla + NEP + R + alkalinity + bottom_d
 #-- Step 3: Iteratively remove components and find best-fit model
 
 summary(update(c.full, method='REML'))
+MuMIn::r.squaredGLMM(update(c.full, method='REML'))
 
 # Is the random effect significant (effect of repeated measures)?
 g1 = gls(co2_lake ~ treatment + doy + chla + NEP + R + alkalinity + bottom_do_sat + doc_ppm + treatment:doy,
@@ -105,19 +108,21 @@ summary(t1)
 
 
 # Allow for a random effect (slope) of time within each pond
-# DOY is the strongest predictor of CO2 conc., so allow it to vary, since we aren't interested in the effect of time as a driver
-# lme4: (1+doy|pond_id)
+# DOY is the strongest predictor of dissolved CO2 conc., so allow it to vary by pond, since we aren't 
+#  interested in whether the effect of time is different across ponds, but rather just between treatments
+# lme4: (doy|pond_id)  # same as (1+doy|pond_id)
 m1 = update(c.full, random = ~ doy | pond_id)
 
 anova(m1, c.full)  # m1 is better
 
 summary(update(m1, method='REML'))
+MuMIn::r.squaredGLMM(update(m1, method='REML'))
 
 
 # Compare only post-pulse time periods
 m2 = update(m1, data = mdat_co2 %>% filter(period!="BASE"))
 
-anova(m1, m2)  # erroneous; cannot compare models with different n()
+# anova(m1, m2)  # erroneous; cannot compare models with different n()
 
 
 # Add interactions between treatment and all continuous variables
@@ -126,39 +131,94 @@ m3 = update(m1, .~ treatment * (doy + chla + NEP + R + alkalinity + bottom_do_sa
 anova(m1, m3)  # m3 is better
 
 summary(update(m3, method='REML'))
+MuMIn::r.squaredGLMM(update(m3, method='REML'))  # lower R2m than m1, but much higher R2c than m1
 
 # only alkalinity (and interaction) is significant
 # interactions between treatment and most of the continuous variables also do not make ecological sense 
 
 # only keep interactions for DOY and alkalinity with treatment
-m4 = update(m3, .~ treatment * (doy + alkalinity) + chla + NEP + R + bottom_do_sat + doc_ppm)
-anova(m3, m4)  # ns; m4 is better (i.e., no need for all of the extra interaction terms)
+m4 = update(m1, .~ treatment * (doy + alkalinity) + chla + NEP + R + bottom_do_sat + doc_ppm)
+anova(m3, m4)  # ns; m4 is better with lower AIC and lower DF (i.e., no need for all of the extra interaction terms)
 summary(update(m4, method='REML'))
+MuMIn::r.squaredGLMM(update(m4, method='REML'))  # similar R2's to m3
 
 # remove DOC
 m5 = update(m4, .~. - doc_ppm)
 anova(m4, m5)  # ns
 summary(update(m5, method='REML'))
+MuMIn::r.squaredGLMM(update(m5, method='REML'))  # similar R2's
 
 # remove NEP
 m6 = update(m5, .~. - NEP)
 anova(m5, m6)  # ns
 summary(update(m6, method='REML'))
+MuMIn::r.squaredGLMM(update(m6, method='REML'))  # similar R2's
 
 # remove R
 m7 = update(m6, .~. - R)
 anova(m6, m7)  # ns
 summary(update(m7, method='REML'))
+MuMIn::r.squaredGLMM(update(m7, method='REML'))  # similar R2's
 
 # remove Bottom DO
 m8 = update(m7, .~. - bottom_do_sat)
 anova(m7, m8)  # ns
 summary(update(m8, method='REML'))
+MuMIn::r.squaredGLMM(update(m8, method='REML'))  # similar R2's
 
 # remove Chlorophyll
 m9 = update(m8, .~. - chla)
 anova(m8, m9)  # ns
 summary(update(m9, method='REML'))
+MuMIn::r.squaredGLMM(update(m9, method='REML'))  # slightly higher R2m, slightly lower R2c
 
-# R2
-MuMIn::r.squaredGLMM(m9)
+
+## Should we keep some variables (e.g., NEP, Chla) that make ecological sense for their effect on dissolved CO2, even if they aren't significant in the model?
+m10 = update(m1, .~ treatment * (doy + alkalinity + NEP + chla))
+anova(m10, m9)  # ns
+anova(m10, m1)  # same
+anova(m10, m3)  # ns; m10 is better with lower AIC and lower DF
+
+summary(update(m10, method='REML'))
+MuMIn::r.squaredGLMM(update(m10, method='REML'))
+
+
+# Keep NEP, but remove Chla (NEP accounts for metabolism of both the phytoplankton and the macrophytes)
+m11 = update(m1, .~ treatment * (doy + alkalinity + NEP))
+anova(m10, m11)  # ns; m11 is better with lower AIC and lower DF
+anova(m11, m1)  # sig.; m11 is better
+summary(update(m11, method='REML'))
+MuMIn::r.squaredGLMM(update(m11, method='REML'))
+
+# remove treatment:nep interaction
+m13 = update(m11, .~. - treatment:NEP)
+anova(m13, m11)  # ns; lower AIC and DF
+summary(update(m13, method='REML'))
+MuMIn::r.squaredGLMM(update(m13, method='REML'))
+
+
+# # R instead of NEP
+# m12 = update(m1, .~ treatment * (doy + alkalinity + R))
+# anova(m11, m12)  # same
+# summary(update(m12, method='REML'))
+# MuMIn::r.squaredGLMM(update(m12, method='REML'))
+
+
+## keep NEP and allow an interaction (NEP may affect CO2 differently between treatments, because macrophyte dynamics differed between treatment)
+## keep chla, but have an interaction (effect of chla on CO2 should not differ between treatments
+
+m14 = update(m1, .~ treatment * (doy + alkalinity + NEP) + chla)
+anova(m1, m14, m10, m11)  # m14 or m11 is best
+anova(m14, m11)  # ns
+
+summary(update(m14, method='REML'))
+MuMIn::r.squaredGLMM(update(m14, method='REML'))
+
+## I think that ecologically, model m14 makes the most sense
+
+
+# sjPlot outputs to visualize
+
+
+
+
