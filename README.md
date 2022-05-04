@@ -49,15 +49,16 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
    - [x] Iteratively remove components to find the best-fit model
    - [x] Test the model using just the pulsed ponds (difference between periods?)
    - [x] Compare treatments, but excluding the pre-pulse (i.e., BASE) period
-   - [ ] Are there better models (higher R-squared) but that have non-sig. fixed effects?
-- [ ] **CH4 model**
-   - [ ] Create the full model
-   - [ ] Iteratively remove components to find the best-fit model
-   - [ ] Test the model using just the pulsed ponds (difference between periods?)
-   - [ ] Compare treatments, but excluding the pre-pulse (i.e., BASE) period
+   - [x] Are there better models (higher R-squared) but that have non-sig. fixed effects?
+   - [ ] Try with using nutrients instead of DOY effect (like CH4 model)
+- [x] **CH4 model**
+   - [x] Create the full model
+   - [x] Iteratively remove components to find the best-fit model
+   - [x] Test the model using just the pulsed ponds (difference between periods?)
+   - [x] Compare treatments, but excluding the pre-pulse (i.e., BASE) period
 - [ ] **N2O model**
    - [ ] Create the full model
    - [ ] Iteratively remove components to find the best-fit model
    - [ ] Test the model using just the pulsed ponds (difference between periods?)
    - [ ] Compare treatments, but excluding the pre-pulse (i.e., BASE) period
-- [ ] Use DOY as a fixed effect variable in models and include a treatment:time interaction (gases follow different temporal dynamics due to differences in plant phenology). Is time a significant variable? Is DOY better than Period?
+- [x] Use DOY as a fixed effect variable in models and include a treatment:time interaction (gases follow different temporal dynamics due to differences in plant phenology). Is time a significant variable? Is DOY better than Period?
