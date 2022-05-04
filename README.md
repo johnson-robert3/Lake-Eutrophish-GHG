@@ -45,10 +45,11 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
 ### Next Steps / To Do 
 
 - [ ] **CO2 model**
-   - [ ] Create the full model
-   - [ ] Iteratively remove components to find the best-fit model
-   - [ ] Test the model using just the pulsed ponds (difference between periods?)
-   - [ ] Compare treatments, but excluding the pre-pulse (i.e., BASE) period
+   - [x] Create the full model
+   - [x] Iteratively remove components to find the best-fit model
+   - [x] Test the model using just the pulsed ponds (difference between periods?)
+   - [x] Compare treatments, but excluding the pre-pulse (i.e., BASE) period
+   - [ ] Are there better models (higher R-squared) but that have non-sig. fixed effects?
 - [ ] **CH4 model**
    - [ ] Create the full model
    - [ ] Iteratively remove components to find the best-fit model
