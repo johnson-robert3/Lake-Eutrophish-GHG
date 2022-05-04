@@ -52,68 +52,113 @@ mdat_co2 = fdat %>%
 f1 = lme(co2_lake ~ chla + NEP + R + alkalinity + bottom_do_sat + doc_ppm + treatment + period + treatment:period,
          random = ~ 1 | pond_id, data = mdat_co2, method="ML")
 
-# should the model include autocorrelation (AR(1))?
+# Should the model include autocorrelation (AR(1))?
 f2 = update(f1, correlation = corAR1())
 
 anova(f1, f2)  # f2 is better
 
-# CO2 full model
-c.full = f2
+
+# Is 'period2' better than 'period'? (period2 also encompasses treatment, so remove both period and treatment variables)
+f3 = update(f2, .~. - treatment - period - treatment:period + period2)
+
+anova(f3, f2)  # f2 is better
 
 
-## Is 'period2' better than 'period'? (period2 also encompasses treatment, so remove both period and treatment variables)
-m1 = update(c.full, .~. - treatment - period - treatment:period + period2)
+# use DOY for time instead of period or period2?
+f4 = update(f2, .~. - period - treatment:period + doy + treatment:doy)
 
-anova(m1, c.full)  # c.full is better
+anova(f4, f2)  # ns; f4 has slightly lower AIC and fewer DF; f2 has slightly higher loglik
 
 
-## use DOY for time instead of period or period2?
-m2 = update(c.full, .~. - period - treatment:period + doy + treatment:doy)
-
-anova(m2, c.full)  # ns; m2 has slightly lower AIC and fewer DF; c.full has slightly higher loglik
+## CO2 full model
+c.full = lme(co2_lake ~ treatment + doy + chla + NEP + R + alkalinity + bottom_do_sat + doc_ppm + treatment:doy,
+             random = ~ 1 | pond_id, 
+             correlation = corAR1(),
+             data = mdat_co2, method="ML")
 
 
 
 #-- Step 3: Iteratively remove components and find best-fit model
 
+summary(update(c.full, method='REML'))
+
 # Is the random effect significant (effect of repeated measures)?
-g1 = gls(co2_lake ~ chla + NEP + R + alkalinity + bottom_do_sat + doc_ppm + treatment + period + treatment:period,
+g1 = gls(co2_lake ~ treatment + doy + chla + NEP + R + alkalinity + bottom_do_sat + doc_ppm + treatment:doy,
          data = mdat_co2, method="ML")
 g2 = update(g1, correlation = corAR1(form = ~ time|pond_id, value = ACF(g1, form = ~ time|pond_id)[2,2]))
 
 anova(g1, g2)  # g2 is better
-anova(g2, f2)  # f2 is better
+anova(g2, c.full)  # c.full is better
 
 
+# Pulsed ponds only - are the pulsed "periods" different from the pre-pulse (base) period?
+p1 = update(f2, .~. - treatment - treatment:period, data = mdat_co2 %>% filter(treatment=="pulsed"), method="REML")
 
-## Pulsed ponds only - are the pulsed "periods" different from the pre-pulse (base) period?
-p1 = update(f1, .~. - treatment - treatment:period + alkalinity:period, data = mdat_co2 %>% filter(treatment=="pulsed"), method="REML")
-p2 = update(p1, correlation = corAR1(form = ~ time|pond_id, value = ACF(p1, form = ~ time|pond_id)[2,2]))
-
-summary(p2)
+summary(p1)  # pulse-period did not have a significant effect on CO2, which seems strange when looking at the figure...
 
 
-## use nutrient concentration instead of treatment to represent differences
-# t1 = lme(co2_lake ~ tp + tn + NEP + R + chla + alkalinity + bottom_do_sat + doc_ppm,
-#          random = ~1|pond_id, data = mdat_co2, method="REML")
-# t1 = update(t1, correlation = corAR1(form = ~ time|pond_id, value = ACF(t1, form = ~ time|pond_id)[2,2]))
-# 
-# summary(t1)
+# Use nutrient concentration instead of treatment to represent differences (need to recreate mdat_co2 df with adding nutrient variables)
+t1 = lme(co2_lake ~ tn + tp + chla + NEP + R + alkalinity + bottom_do_sat + doc_ppm,
+         random = ~1|pond_id, correlation = corAR1(), data = mdat_co2, method="REML")
+
+summary(t1)
 
 
-## Compare only post-pulse time periods
+# Allow for a random effect (slope) of time within each pond
+# DOY is the strongest predictor of CO2 conc., so allow it to vary, since we aren't interested in the effect of time as a driver
+# lme4: (1+doy|pond_id)
+m1 = update(c.full, random = ~ doy | pond_id)
 
-m2 = update(f1, data = mdat_co2 %>% filter(period!="BASE"), method='ML')
-m2 = update(m2, correlation = corAR1(form = ~ time|pond_id, value = ACF(m2, form = ~ time|pond_id)[2,2]))
+anova(m1, c.full)  # m1 is better
 
-# anova(m2, f2)  # erroneous; cannot compare models with different n()
-
-# without including pulse-period as an effect
-m3 = update(f1, .~. - period - treatment:period, data = mdat_co2 %>% filter(period!="BASE"), method='ML')
-m3 = update(m3, correlation = corAR1(form = ~ time|pond_id, value = ACF(m3, form = ~ time|pond_id)[2,2]))
-
-anova(m2, m3)  # m2 is better
+summary(update(m1, method='REML'))
 
 
+# Compare only post-pulse time periods
+m2 = update(m1, data = mdat_co2 %>% filter(period!="BASE"))
+
+anova(m1, m2)  # erroneous; cannot compare models with different n()
 
 
+# Add interactions between treatment and all continuous variables
+m3 = update(m1, .~ treatment * (doy + chla + NEP + R + alkalinity + bottom_do_sat + doc_ppm))
+
+anova(m1, m3)  # m3 is better
+
+summary(update(m3, method='REML'))
+
+# only alkalinity (and interaction) is significant
+# interactions between treatment and most of the continuous variables also do not make ecological sense 
+
+# only keep interactions for DOY and alkalinity with treatment
+m4 = update(m3, .~ treatment * (doy + alkalinity) + chla + NEP + R + bottom_do_sat + doc_ppm)
+anova(m3, m4)  # ns; m4 is better (i.e., no need for all of the extra interaction terms)
+summary(update(m4, method='REML'))
+
+# remove DOC
+m5 = update(m4, .~. - doc_ppm)
+anova(m4, m5)  # ns
+summary(update(m5, method='REML'))
+
+# remove NEP
+m6 = update(m5, .~. - NEP)
+anova(m5, m6)  # ns
+summary(update(m6, method='REML'))
+
+# remove R
+m7 = update(m6, .~. - R)
+anova(m6, m7)  # ns
+summary(update(m7, method='REML'))
+
+# remove Bottom DO
+m8 = update(m7, .~. - bottom_do_sat)
+anova(m7, m8)  # ns
+summary(update(m8, method='REML'))
+
+# remove Chlorophyll
+m9 = update(m8, .~. - chla)
+anova(m8, m9)  # ns
+summary(update(m9, method='REML'))
+
+# R2
+MuMIn::r.squaredGLMM(m9)
