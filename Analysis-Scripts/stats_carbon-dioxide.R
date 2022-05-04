@@ -38,8 +38,10 @@ mdat_co2 = fdat %>%
    arrange(doy, .by_group=TRUE) %>%
    mutate(time = seq_len(n())) %>%
    ungroup() %>%
-   # force the reference treatment to be first (so model results show effect of the pulse treatment)
+   # force the reference treatment to be first (so "treatment" shows the effect of the pulsed treatment in model results)
    mutate(treatment = fct_relevel(treatment, "reference"))
+   # force the pulsed treatment for be first (so model results show effect of continuous variables for the pulsed treatment)
+   # mutate(treatment = fct_relevel(treatment, "pulsed"))
 
 
 
@@ -219,7 +221,8 @@ MuMIn::r.squaredGLMM(update(m14, method='REML'))
 
 ## Best Model - m14
 co2.lme = lme(co2_lake ~ treatment * (doy + alkalinity + NEP) + chla,
-              random = ~ doy | pond_id, correlation = corAR1(),
+              random = ~ doy | pond_id, 
+              correlation = corAR1(),
               mdat_co2, method='REML')
 
 # output
