@@ -28,7 +28,7 @@ mdat_ch4 = fdat %>%
       ch4_flux, ch4_lake, 
       R, NEP, 
       bottom_do, bottom_do_sat, temp, chla, alkalinity, doc_ppm
-      # , tp, srp, tn, nox, np_ratio
+      , tp, srp, tn, nox, np_ratio
       ) %>%
    # only keep rows that have values for all variables
    filter(!(if_any(ch4_flux:last_col(), is.na))) %>%
@@ -38,8 +38,10 @@ mdat_ch4 = fdat %>%
    arrange(doy, .by_group=TRUE) %>%
    mutate(time = seq_len(n())) %>%
    ungroup() %>%
-   # force the reference treatment to be first (so model results show effect of the pulse treatment)
-   mutate(treatment = fct_relevel(treatment, "reference"))
+   # force the reference treatment to be first (so "treatment" shows the effect of the pulsed treatment in model results)
+   # mutate(treatment = fct_relevel(treatment, "reference"))
+   # force the pulsed treatment for be first (so model results show effect of continuous variables for the pulsed treatment)
+   mutate(treatment = fct_relevel(treatment, "pulsed"))
 
 
 
@@ -51,7 +53,7 @@ mdat_ch4 = fdat %>%
 
 
 ## Full Model
-f1 = lme(ch4_lake ~ chla + NEP + R + alkalinity + bottom_do_sat + doc_ppm + treatment + period + treatment:period,
+f1 = lme(ch4_lake ~ chla + NEP + R + bottom_do + doc_ppm + treatment + period + treatment:period,
          random = ~ 1 | pond_id, data = mdat_ch4, method="ML")
 
 # Should the model include autocorrelation (AR(1))?
@@ -73,7 +75,7 @@ anova(f2, f4)  # ns; f4 has lower AIC and lower DF; use f4, DOY makes more sense
 
 
 ## CH4 full model
-m.full = lme(ch4_lake ~ treatment * doy + chla + NEP + R + alkalinity + bottom_do_sat + doc_ppm,
+m.full = lme(ch4_lake ~ treatment * doy + chla + NEP + R + bottom_do + doc_ppm,
              random = ~ 1 | pond_id, 
              correlation = corAR1(),
              data = mdat_ch4, method="ML")
@@ -86,7 +88,7 @@ summary(update(m.full, method='REML'))
 MuMIn::r.squaredGLMM(update(m.full, method='REML'))
 
 # Is the random effect significant (effect of repeated measures)?
-g1 = gls(ch4_lake ~ treatment * doy + chla + NEP + R + alkalinity + bottom_do_sat + doc_ppm,
+g1 = gls(ch4_lake ~ treatment * doy + chla + NEP + R + bottom_do + doc_ppm,
          data = mdat_ch4, method="ML")
 g2 = update(g1, correlation = corAR1(form = ~ 1|pond_id, value = ACF(g1, form = ~ 1|pond_id)[2,2]))
 
@@ -97,9 +99,87 @@ anova(g2, m.full)  # ns
 # Pulsed ponds only - are the pulsed "periods" different from the pre-pulse (base) period?
 p1 = update(f2, .~. - treatment - treatment:period, data = mdat_ch4 %>% filter(treatment=="pulsed"), method="REML")
 
-summary(p1)  # pulse-period did not have a significant effect on CH4, which seems strange when looking at the figure...
+summary(p1)  # pulse-period did not have a significant effect on CH4, which seems strange when looking at the figure... (maybe visual diff. is driven by pond A?)
 
 
 
+## DOY and the treatment:doy interaction are not significant in the full methane model (m.full)
+
+## Use nutrient concentration instead of treatment to represent differences 
+# need to re-create the mdat_ch4 df (adding the nutrient variables)
+
+m1 = lme(ch4_lake ~ tn + tp + nox + srp + np_ratio + chla + NEP + R + bottom_do + doc_ppm,
+         random = ~1|pond_id, correlation = corAR1(), data = mdat_ch4, method="ML")
+
+summary(update(m1, method="REML"))  # SRP is significant
+MuMIn::r.squaredGLMM(update(m1, method='REML'))
+
+
+# model using Phosphorus instead of "treatment" (i.e., remove nitrogen)
+m2 = update(m1, .~. - tn - nox - np_ratio)
+anova(m1, m2)  # ns; m2 is better with lower AIC and lower DF
+summary(update(m2, method="REML"))
+MuMIn::r.squaredGLMM(update(m2, method='REML'))
+
+# transform p data
+m3 = update(m2, .~. - tp + log(tp))
+anova(m2, m3)  # no difference
+
+# transform methane
+m4 = update(m2, log(ch4_lake) ~.)
+summary(update(m4, method="REML"))  # cannot compare with different response variables, but doesn't seem to be better than using raw ch4_lake
+
+# add treatment back
+m5 = lme(ch4_lake ~ treatment + tp + srp + chla + NEP + R + bottom_do + doc_ppm,
+         random = ~1|pond_id, correlation = corAR1(), data = mdat_ch4, method="ML")
+anova(m2, m5)  # sig.; m5 is better
+MuMIn::r.squaredGLMM(update(m5, method='REML'))
+
+# remove NEP (R is much stronger metabolic variable here)
+m6 = update(m5, .~. - NEP)
+anova(m5, m6)  # ns; NEP not needed
+
+# is log-transforming TP needed?
+m7 = update(m6, .~. - tp + log(tp))
+anova(m6, m7)  # no difference
+
+# Add interactions between treatment and ecologically likely variables
+m8 = update(m6, .~ treatment * (tp + srp + chla + R + bottom_do + doc_ppm))
+anova(m6, m8)  # sig.; m8 is better
+summary(update(m8, method="REML"))  # only SRP and DOC have sig. interactions with treatment
+MuMIn::r.squaredGLMM(update(m8, method='REML'))
+
+# remove ns interactions
+m9 = update(m8, .~ treatment * (srp + doc_ppm) + tp + chla + R + bottom_do)
+anova(m8, m9)  # ns; m9 is better
+summary(update(m9, method="REML"))
+MuMIn::r.squaredGLMM(update(m9, method='REML'))
+
+## I think m9 is the best model; TP and bottom_do are not significant, but make sense to leave in (had expected bottom_do to be a significant driver)
+
+
+## Best Model - m9
+ch4.lme = lme(ch4_lake ~ treatment * (srp + doc_ppm) + tp + chla + R + bottom_do,
+              random = ~ 1 | pond_id, 
+              correlation = corAR1(),
+              mdat_ch4, method='REML')
+
+# output
+summary(ch4.lme)
+broom.mixed::tidy(ch4.lme)
+# R2
+MuMIn::r.squaredGLMM(ch4.lme)
+
+
+#-- Step 4: Visualize Model Output
+
+# Residuals
+ggResidpanel::resid_panel(ch4.lme)
+
+# Table of model results as a figure
+sjPlot::tab_model(ch4.lme, show.re.var=TRUE)
+
+# Effect size and significance of fixed effects
+sjPlot::plot_model(ch4.lme, show.p=TRUE, show.values=TRUE)
 
 
