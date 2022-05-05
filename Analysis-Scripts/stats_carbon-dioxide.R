@@ -15,7 +15,7 @@ if (!require(nlme)) install.packages('nlme'); library(nlme)
 #-- Step 1: Prepare the data
 
 # Full data set
-fdat = read_csv("Data/ghg-model-dataset_2022-05-01.csv")
+fdat = read_csv("Data/ghg-model-dataset_2022-05-05.csv")
 
 
 # Data for the CO2 model
@@ -28,7 +28,7 @@ mdat_co2 = fdat %>%
       co2_flux, co2_lake, 
       R, NEP, 
       bottom_do, bottom_do_sat, temp, chla, alkalinity, doc_ppm
-      # , tp, srp, tn, nox, np_ratio
+      , tp, srp, tn, nox, np_ratio
       ) %>%
    # only keep rows that have values for all variables
    filter(!(if_any(co2_flux:last_col(), is.na))) %>%
@@ -39,9 +39,9 @@ mdat_co2 = fdat %>%
    mutate(time = seq_len(n())) %>%
    ungroup() %>%
    # force the reference treatment to be first (so "treatment" shows the effect of the pulsed treatment in model results)
-   mutate(treatment = fct_relevel(treatment, "reference"))
+   # mutate(treatment = fct_relevel(treatment, "reference"))
    # force the pulsed treatment for be first (so model results show effect of continuous variables for the pulsed treatment)
-   # mutate(treatment = fct_relevel(treatment, "pulsed"))
+   mutate(treatment = fct_relevel(treatment, "pulsed"))
 
 
 
