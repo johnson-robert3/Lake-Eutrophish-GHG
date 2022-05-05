@@ -157,7 +157,7 @@ sonde_int = sonde_profiles %>%
 sonde_bottom = sonde_int %>%
    group_by(pond_id, doy) %>%
    arrange(depth_int, .by_group=T) %>%
-   slice_tail(n=3) %>%
+   slice_tail(n=2) %>%
    summarize(across(temp:salinity, ~mean(., na.rm=T))) %>%
    ungroup()
 
