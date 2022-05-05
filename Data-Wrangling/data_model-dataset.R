@@ -31,7 +31,9 @@ m11 = metabolism %>%
 
 
 m12 = limno_field_data %>%
-   select(pond_id, doy, period, tp:nhx)
+   select(pond_id, doy, period, tp:nhx) %>%
+   # align dates of nutrient samples with GHG samples (became offset after DOY 220; nutrients were sampled the day after GHGs)
+   mutate(doy = if_else(doy > 221, doy - 1, doy))
 
 
 m13 = sonde_bottom %>%
@@ -100,7 +102,9 @@ test = m10 %>%  #full_join(t1, t10) %>%
 test = test %>%
    mutate(treatment = case_when(pond_id %in% c("A", "B", "C") ~ "pulsed",
                                 pond_id %in% c("D", "E", "F") ~ "reference")) %>%
-   relocate(treatment, .after=pond_id) #%>%
+   relocate(treatment, .after=pond_id) %>%
+   # remove 3 blank rows with extra wind speed data
+   filter(!(is.na(pond_id)))
    # left_join(t9 %>%
    #              mutate(treatment = case_when(.$pond_id=="B" ~ "pulsed",
    #                                           .$pond_id=="F" ~ "reference")) %>%
@@ -122,7 +126,7 @@ model_dataset = test %>%
 
 
 # output the complete model dataset
-write_csv(model_dataset, file = "Data/ghg-model-dataset_2022-05-01.csv")
+write_csv(model_dataset, file = "Data/ghg-model-dataset_2022-05-05.csv")
 
 
    ## remove temporary individual data sets
