@@ -56,9 +56,9 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
    - [x] Iteratively remove components to find the best-fit model
    - [x] Test the model using just the pulsed ponds (difference between periods?)
    - [x] Compare treatments, but excluding the pre-pulse (i.e., BASE) period
-- [ ] **N2O model**
+- [x] **N2O model**
    - [x] Create the full model
-   - [ ] Iteratively remove components to find the best-fit model
-   - [ ] Test the model using just the pulsed ponds (difference between periods?)
-   - [ ] Compare treatments, but excluding the pre-pulse (i.e., BASE) period
+   - [x] Iteratively remove components to find the best-fit model
+   - [x] Test the model using just the pulsed ponds (difference between periods?)
+   - [-] Compare treatments, but excluding the pre-pulse (i.e., BASE) period [I don't think this makes sense for N2O; there is sig. DOY effect]
 - [x] Use DOY as a fixed effect variable in models and include a treatment:time interaction (gases follow different temporal dynamics due to differences in plant phenology). Is time a significant variable? Is DOY better than Period?
