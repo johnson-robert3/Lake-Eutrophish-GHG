@@ -15,7 +15,7 @@ if (!require(nlme)) install.packages('nlme'); library(nlme)
 #-- Step 1: Prepare the data
 
 # Full data set
-fdat = read_csv("Data/ghg-model-dataset_2022-05-01.csv")
+fdat = read_csv("Data/ghg-model-dataset_2022-05-05.csv")
 
 
 # Data for the N2O model
@@ -79,16 +79,16 @@ summary(update(f4, method='REML'))
 
 
 # DOY has a strong effect on N2O, allow effect of DOY to vary within pond (random slope)
-f5 = update(f4, random = ~ doy | pond_id)
+f5 = update(f4, random = ~ doy | pond_id)  # doesn't work
 
-anova(f4, f5)  # ns; f4 has lower AIC and lower DF
+# anova(f4, f5)  # ns; f4 has lower AIC and lower DF
 
 
 # the treatment:doy interaction is not sig., remove the interaction and allow a random slope of doy within pond
-f6 = update(f4, .~. - treatment:doy, random = ~ doy | pond_id)
+f6 = update(f4, .~. - treatment:doy, random = ~ doy | pond_id)  # doesn't work
 
-anova(f5, f6)  # ns
-anova(f4, f6)  # ns
+# anova(f5, f6)  # ns
+# anova(f4, f6)  # ns
 
 
 ## N2O Full Model
@@ -123,12 +123,12 @@ summary(p1)
 # Add interactions between treatment and all continuous variables
 m1 = update(n.full, .~ treatment * (doy + tn + nox + tp + srp + np_ratio + chla + NEP + R + bottom_do + doc_ppm))
 
-anova(m1, n.full)  # m1 is better
-summary(update(m1, method='REML'))  # sig. interactions between treatment and NEP, R, and DOC
+anova(m1, n.full)  # sig.; n.full has lower AIC, but m1 has higher loglik
+summary(update(m1, method='REML'))  # sig. interactions between treatment and NEP and R
 
 
 # keep only sig. interactions
-m2 = update(n.full, .~ treatment * (NEP + R + doc_ppm) + doy + tn + nox + tp + srp + np_ratio + chla + bottom_do)
+m2 = update(n.full, .~ treatment * (NEP + R) + doy + tn + nox + tp + srp + np_ratio + chla + bottom_do + doc_ppm)
 
 anova(m1, m2)  # ns
 anova(m2, n.full)  # m2 is better
@@ -157,21 +157,23 @@ anova(m3, m5)  # ns
 summary(update(m5, method='REML'))
 MuMIn::r.squaredGLMM(update(m5, method='REML'))
 
-# remove SRP
-m6 = update(m5, .~. - srp)
+# remove DOC
+m6 = update(m5, .~. - doc_ppm)
 anova(m5, m6)  # ns
 summary(update(m6, method='REML'))
 MuMIn::r.squaredGLMM(update(m6, method='REML'))
 
-# remove DOC (why is DOC sig. in the reference treatment?)
-m7 = update(m6, .~. - doc_ppm - treatment:doc_ppm)
-anova(m6, m7)  # sig.; m6 is better
+# remove N:P ratio (small effect size)
+m7 = update(m6, .~. - np_ratio)
+anova(m6, m7)  # ns
 summary(update(m7, method='REML'))
 MuMIn::r.squaredGLMM(update(m7, method='REML'))
 
+# TN and NOx are not significant, but we would have expected these (at least NOx) to play a role; leave in the model
 
-## Best Model - m6
-n2o.lme = lme(n2o_lake ~ treatment * (NEP + R + doc_ppm) + doy + tn + nox + np_ratio + bottom_do,
+
+## Best Model - m7
+n2o.lme = lme(n2o_lake ~ treatment * (NEP + R) + doy + tn + nox + bottom_do,
               random = ~ 1 | pond_id, 
               correlation = corAR1(),
               data = mdat_n2o, method="REML")
