@@ -57,7 +57,7 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
    - [x] Test the model using just the pulsed ponds (difference between periods?)
    - [x] Compare treatments, but excluding the pre-pulse (i.e., BASE) period
 - [ ] **N2O model**
-   - [ ] Create the full model
+   - [x] Create the full model
    - [ ] Iteratively remove components to find the best-fit model
    - [ ] Test the model using just the pulsed ponds (difference between periods?)
    - [ ] Compare treatments, but excluding the pre-pulse (i.e., BASE) period
