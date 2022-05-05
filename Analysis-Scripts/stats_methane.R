@@ -15,7 +15,7 @@ if (!require(nlme)) install.packages('nlme'); library(nlme)
 #-- Step 1: Prepare the data
 
 # Full data set
-fdat = read_csv("Data/ghg-model-dataset_2022-05-01.csv")
+fdat = read_csv("Data/ghg-model-dataset_2022-05-05.csv")
 
 
 # Data for the CH4 model
@@ -106,11 +106,11 @@ summary(p1)  # pulse-period did not have a significant effect on CH4, which seem
 ## DOY and the treatment:doy interaction are not significant in the full methane model (m.full)
 
 ## Use nutrient concentration instead of treatment to represent differences 
-# need to re-create the mdat_ch4 df (adding the nutrient variables)
 
 m1 = lme(ch4_lake ~ tn + tp + nox + srp + np_ratio + chla + NEP + R + bottom_do + doc_ppm,
          random = ~1|pond_id, correlation = corAR1(), data = mdat_ch4, method="ML")
 
+anova(m1, m.full)  # ns
 summary(update(m1, method="REML"))  # SRP is significant
 MuMIn::r.squaredGLMM(update(m1, method='REML'))
 
@@ -132,10 +132,11 @@ summary(update(m4, method="REML"))  # cannot compare with different response var
 # add treatment back
 m5 = lme(ch4_lake ~ treatment + tp + srp + chla + NEP + R + bottom_do + doc_ppm,
          random = ~1|pond_id, correlation = corAR1(), data = mdat_ch4, method="ML")
-anova(m2, m5)  # sig.; m5 is better
+anova(m2, m5)  # ns
+summary(update(m5, method="REML"))
 MuMIn::r.squaredGLMM(update(m5, method='REML'))
 
-# remove NEP (R is much stronger metabolic variable here)
+# remove NEP (R is better metabolic variable here; much larger effect size)
 m6 = update(m5, .~. - NEP)
 anova(m5, m6)  # ns; NEP not needed
 
@@ -143,7 +144,7 @@ anova(m5, m6)  # ns; NEP not needed
 m7 = update(m6, .~. - tp + log(tp))
 anova(m6, m7)  # no difference
 
-# Add interactions between treatment and ecologically likely variables
+# Add interactions between treatment and continuous variables
 m8 = update(m6, .~ treatment * (tp + srp + chla + R + bottom_do + doc_ppm))
 anova(m6, m8)  # sig.; m8 is better
 summary(update(m8, method="REML"))  # only SRP and DOC have sig. interactions with treatment
@@ -155,11 +156,24 @@ anova(m8, m9)  # ns; m9 is better
 summary(update(m9, method="REML"))
 MuMIn::r.squaredGLMM(update(m9, method='REML'))
 
-## I think m9 is the best model; TP and bottom_do are not significant, but make sense to leave in (had expected bottom_do to be a significant driver)
+# remove TP (very small effect size)
+m10 = update(m9, .~. - tp)
+anova(m9, m10)  # ns; m10 is better; TP does not improve the model
+summary(update(m10, method="REML"))
+MuMIn::r.squaredGLMM(update(m10, method='REML'))
+
+# add N:P ratio
+m11 = update(m10, .~. + np_ratio)
+anova(m10, m11)  # ns; m10 is better
+summary(update(m11, method="REML"))  # N:P ratio ns and has very small effect size
+MuMIn::r.squaredGLMM(update(m11, method='REML'))
 
 
-## Best Model - m9
-ch4.lme = lme(ch4_lake ~ treatment * (srp + doc_ppm) + tp + chla + R + bottom_do,
+## I think m10 is the best model; bottom_do is not significant (p=0.06), but makes sense to leave in (had expected bottom_do to be a significant driver)
+
+
+## Best Model - m10
+ch4.lme = lme(ch4_lake ~ treatment * (srp + doc_ppm) + chla + R + bottom_do,
               random = ~ 1 | pond_id, 
               correlation = corAR1(),
               mdat_ch4, method='REML')
