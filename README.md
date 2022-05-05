@@ -9,7 +9,7 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
 
 **Surface values** of pond limno variables taken from sonde profiles are the mean of all measurements between 5 & 50 cm (0.05 - 0.5 m)
 
-**Bottom values** of pond limno variables taken from sonde profiles are the mean of all measurements from the bottom 30 cm
+**Bottom values** of pond limno variables taken from sonde profiles are the mean of all measurements from the bottom 20 cm
 
 **DO cleaning:** any time DO concentration (from miniDOT loggers) drops by 2.0 mg/L or more from the previous measurement, that point, along with the following 5 points (i.e., 3 hours total) are dropped, and DO concentration data are then linearly interpolated to fill the gap
 
@@ -60,5 +60,5 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
    - [x] Create the full model
    - [x] Iteratively remove components to find the best-fit model
    - [x] Test the model using just the pulsed ponds (difference between periods?)
-   - [-] Compare treatments, but excluding the pre-pulse (i.e., BASE) period [I don't think this makes sense for N2O; there is sig. DOY effect]
+   - [x] Compare treatments, but excluding the pre-pulse (i.e., BASE) period [*I don't think this makes sense for N2O; there is sig. DOY effect*]
 - [x] Use DOY as a fixed effect variable in models and include a treatment:time interaction (gases follow different temporal dynamics due to differences in plant phenology). Is time a significant variable? Is DOY better than Period?
