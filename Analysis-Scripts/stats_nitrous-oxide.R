@@ -195,3 +195,7 @@ sjPlot::tab_model(n2o.lme, show.re.var=TRUE)
 sjPlot::plot_model(n2o.lme, show.p=TRUE, show.values=TRUE)
 
 
+# Output model results as a table for plotting
+mtab_n2o = coef(summary(n2o.lme)) %>% as.data.frame() %>% rownames_to_column(var="fixed.effect") %>% as_tibble()
+
+

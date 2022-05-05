@@ -183,3 +183,7 @@ sjPlot::tab_model(ch4.lme, show.re.var=TRUE)
 sjPlot::plot_model(ch4.lme, show.p=TRUE, show.values=TRUE)
 
 
+# Output model results as a table for plotting
+mtab_ch4 = coef(summary(ch4.lme)) %>% as.data.frame() %>% rownames_to_column(var="fixed.effect") %>% as_tibble()
+
+

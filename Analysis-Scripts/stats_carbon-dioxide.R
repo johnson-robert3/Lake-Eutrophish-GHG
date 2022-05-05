@@ -244,4 +244,7 @@ sjPlot::tab_model(co2.lme, show.re.var=TRUE)
 sjPlot::plot_model(co2.lme, show.p=TRUE, show.values=TRUE)
 
 
+# Output model results as a table for plotting
+mtab_co2 = coef(summary(co2.lme)) %>% as.data.frame() %>% rownames_to_column(var="fixed.effect") %>% as_tibble()
+
 
