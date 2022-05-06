@@ -170,6 +170,8 @@ sjPlot::plot_model(n2o.lme, show.p=TRUE, show.values=TRUE)
 
 
 # Output model results as a table for plotting
-mtab_n2o = coef(summary(n2o.lme)) %>% as.data.frame() %>% rownames_to_column(var="fixed.effect") %>% as_tibble()
+mtab_n2o = coef(summary(n2o.lme)) %>% as.data.frame() %>% rownames_to_column(var="fixed.effect") %>% as_tibble() %>%
+   # add 95% CI
+   left_join(intervals(n2o.lme)$fixed %>% as.data.frame() %>% rownames_to_column(var="fixed.effect") %>% as_tibble())
 
 
