@@ -50,7 +50,8 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
    - [x] Test the model using just the pulsed ponds (difference between periods?)
    - [x] Compare treatments, but excluding the pre-pulse (i.e., BASE) period
    - [x] Are there better models (higher R-squared) but that have non-sig. fixed effects?
-   - [ ] Try with using nutrients instead of DOY effect (like CH4 model)
+   - [ ] Add nutrient variables back to model, now that dates have been aligned so the full data are there
+   - [ ] Remove alkalinity from the model [*alkalinity is used in the equation to calculate CO2, so of course it is a sig. effect*]
 - [x] **CH4 model**
    - [x] Create the full model
    - [x] Iteratively remove components to find the best-fit model
