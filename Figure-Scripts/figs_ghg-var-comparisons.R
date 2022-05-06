@@ -219,6 +219,47 @@ ggplot(pdat %>%
    theme_classic()
 
 
+## LME Effect Sizes
+windows(height=4, width=6)
+ggplot(mtab_ch4 %>%
+          rename(estimate = Value,
+                 se = "Std.Error") %>%
+          mutate(ci = se * 1.96,
+                 fixed.effect = as_factor(fixed.effect)) %>%
+          filter(!(fixed.effect=="(Intercept)")),
+       # fixed effects in order of model
+       aes(x = estimate, y = fct_rev(fixed.effect))) +
+       # fixed effects in order of effect size
+       # aes(x = estimate, y = fct_reorder(fixed.effect, estimate, .fun=abs, .desc=F))) +
+   #
+   geom_vline(xintercept = 0, linetype=1, color="gray60") +
+   # placeholder points to build the plot correctly
+   geom_point(size=1) +
+   #
+   # data points for positive effect size
+   geom_point(data = ~filter(.x, estimate > 0),
+               size=4, color="#28abb9") +
+   geom_errorbarh(data = ~filter(.x, estimate > 0), 
+                  aes(xmin = estimate-ci, xmax = estimate+ci, height=0), size=0.75, color="#28abb9") +
+   # data points for negative effect size
+   geom_point(data = ~filter(.x, estimate < 0),
+               size=4, color="#2d6187") +
+   geom_errorbarh(data = ~filter(.x, estimate < 0),
+                  aes(xmin = estimate-ci, xmax = estimate+ci, height=0), size=0.75, color="#2d6187") +
+   #
+   scale_x_continuous(name = "Effect size", limits = c(-5, 22), breaks = seq(-5, 20, 5)) +
+   # factors in order of model
+   # scale_y_discrete(name=NULL, labels = c("Treatment * Period \n(Pulse2)", "Treatment * Period \n(Pulse1)", "Bottom  \nWater DO",
+   #                                        "Period \n(Pulse2)", "Period \n(Pulse1)", "Treatment")) +
+   # factors ordered by decreasing effect size
+   # scale_y_discrete(name = NULL,
+   #                  labels = c("Bottom  \nWater DO", "Period \n(Pulse2)", "Treatment * Period \n(Pulse1)",
+   #                             "Period \n(Pulse1)", "Treatment", "Treatment * Period \n(Pulse2)")) +
+   ggtitle(expression(Effect~on~CH[4])) +
+   theme_classic() +
+   theme(axis.title.x = element_text(margin = margin(t=0.5, unit="line")))
+
+
 
 #===
 #### N2O - Nitrous Oxide ####
@@ -389,5 +430,46 @@ ggplot(pdat %>%
    scale_y_continuous(name = expression(Dissolved~N[2]*O~(nM))) +
    # 
    theme_classic()
+
+
+## LME Effect Sizes
+windows(height=4, width=6)
+ggplot(mtab_n2o %>%
+          rename(estimate = Value,
+                 se = "Std.Error") %>%
+          mutate(ci = se * 1.96,
+                 fixed.effect = as_factor(fixed.effect)) %>%
+          filter(!(fixed.effect=="(Intercept)")),
+       # fixed effects in order of model
+       aes(x = estimate, y = fct_rev(fixed.effect))) +
+       # fixed effects in order of effect size
+       # aes(x = estimate, y = fct_reorder(fixed.effect, estimate, .fun=abs, .desc=F))) +
+   #
+   geom_vline(xintercept = 0, linetype=1, color="gray60") +
+   # placeholder points to build the plot correctly
+   geom_point(size=1) +
+   #
+   # data points for positive effect size
+   geom_point(data = ~filter(.x, estimate > 0),
+               size=4, color="#28abb9") +
+   geom_errorbarh(data = ~filter(.x, estimate > 0), 
+                  aes(xmin = estimate-ci, xmax = estimate+ci, height=0), size=0.75, color="#28abb9") +
+   # data points for negative effect size
+   geom_point(data = ~filter(.x, estimate < 0),
+               size=4, color="#2d6187") +
+   geom_errorbarh(data = ~filter(.x, estimate < 0),
+                  aes(xmin = estimate-ci, xmax = estimate+ci, height=0), size=0.75, color="#2d6187") +
+   #
+   scale_x_continuous(name = "Effect size", limits = c(-3, 2), breaks = seq(-3, 2, 1)) +
+   # factors in order of model
+   # scale_y_discrete(name=NULL, labels = c("Treatment * Period \n(Pulse2)", "Treatment * Period \n(Pulse1)", "Bottom  \nWater DO",
+   #                                        "Period \n(Pulse2)", "Period \n(Pulse1)", "Treatment")) +
+   # factors ordered by decreasing effect size
+   # scale_y_discrete(name = NULL,
+   #                  labels = c("Bottom  \nWater DO", "Period \n(Pulse2)", "Treatment * Period \n(Pulse1)",
+   #                             "Period \n(Pulse1)", "Treatment", "Treatment * Period \n(Pulse2)")) +
+   ggtitle(expression(Effect~on~N[2]*O)) +
+   theme_classic() +
+   theme(axis.title.x = element_text(margin = margin(t=0.5, unit="line")))
 
 
