@@ -64,14 +64,15 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
 ### Figs. To Make
 
 - [ ] **CO2**
-   - [ ] Over time
+   - [x] Over time
    - [ ] CO2 vs variables used in final model
    - [ ] Effect sizes from model output
 - [ ] **CH4**
-   - [ ] Over time
-   - [ ] CH4 vs variables used in final model
-   - [ ] Effect sizes from model output
+   - [x] Over time
+   - [x] CH4 vs variables used in final model
+   - [x] Effect sizes from model output
 - [ ] **N2O**
-   - [ ] Over time
-   - [ ] N2O vs variables used in final model
-   - [ ] Effect sizes from model output
+   - [x] Over time
+   - [x] N2O vs variables used in final model
+   - [x] Effect sizes from model output
+
