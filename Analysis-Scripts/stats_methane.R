@@ -18,21 +18,20 @@ if (!require(nlme)) install.packages('nlme'); library(nlme)
 fdat = read_csv("Data/ghg-model-dataset_2022-05-05.csv")
 
 
-# Data for the CH4 model
-mdat_ch4 = fdat %>%
+# Data for GHG models
+mdat = fdat %>%
    # factor variables
    mutate(across(c(pond_id, treatment, period, period2), ~as.factor(.))) %>%
+   # convert N2O flux and concentration data from units of micro-mole to nano-mole
+   mutate(across(c(n2o_flux, n2o_lake), ~.*1000)) %>%
    # select desired variables
-   select(
-      pond_id:period2, 
-      ch4_flux, ch4_lake, 
-      R, NEP, 
-      bottom_do, bottom_do_sat, temp, chla, alkalinity, doc_ppm
-      , tp, srp, tn, nox, np_ratio
-      ) %>%
+   select(pond_id:period2, 
+          contains("_lake"), contains("_flux"),
+          R, NEP, bottom_do, bottom_do_sat, 
+          temp, chla, alkalinity, doc_ppm, 
+          tp, srp, tn, nox, np_ratio) %>%
    # only keep rows that have values for all variables
-   filter(!(if_any(ch4_flux:last_col(), is.na))) %>%
-   # filter(!(is.na(ch4_lake))) %>%
+   filter(!(if_any(where(is.numeric), is.na))) %>%
    # add a "time" variable for autocorrelation
    group_by(pond_id) %>%
    arrange(doy, .by_group=TRUE) %>%
@@ -54,7 +53,7 @@ mdat_ch4 = fdat %>%
 
 ## Full Model
 f1 = lme(ch4_lake ~ chla + NEP + R + bottom_do + doc_ppm + treatment + period + treatment:period,
-         random = ~ 1 | pond_id, data = mdat_ch4, method="ML")
+         random = ~ 1 | pond_id, data = mdat, method="ML")
 
 # Should the model include autocorrelation (AR(1))?
 f2 = update(f1, correlation = corAR1())
@@ -78,7 +77,7 @@ anova(f2, f4)  # ns; f4 has lower AIC and lower DF; use f4, DOY makes more sense
 m.full = lme(ch4_lake ~ treatment * doy + chla + NEP + R + bottom_do + doc_ppm,
              random = ~ 1 | pond_id, 
              correlation = corAR1(),
-             data = mdat_ch4, method="ML")
+             data = mdat, method="ML")
 
 
 
@@ -89,7 +88,7 @@ MuMIn::r.squaredGLMM(update(m.full, method='REML'))
 
 # Is the random effect significant (effect of repeated measures)?
 g1 = gls(ch4_lake ~ treatment * doy + chla + NEP + R + bottom_do + doc_ppm,
-         data = mdat_ch4, method="ML")
+         data = mdat, method="ML")
 g2 = update(g1, correlation = corAR1(form = ~ 1|pond_id, value = ACF(g1, form = ~ 1|pond_id)[2,2]))
 
 anova(g1, g2)  # g2 is better
@@ -97,7 +96,7 @@ anova(g2, m.full)  # ns
 
 
 # Pulsed ponds only - are the pulsed "periods" different from the pre-pulse (base) period?
-p1 = update(f2, .~. - treatment - treatment:period, data = mdat_ch4 %>% filter(treatment=="pulsed"), method="REML")
+p1 = update(f2, .~. - treatment - treatment:period, data = mdat %>% filter(treatment=="pulsed"), method="REML")
 
 summary(p1)  # pulse-period did not have a significant effect on CH4, which seems strange when looking at the figure... (maybe visual diff. is driven by pond A?)
 
@@ -108,7 +107,7 @@ summary(p1)  # pulse-period did not have a significant effect on CH4, which seem
 ## Use nutrient concentration instead of treatment to represent differences 
 
 m1 = lme(ch4_lake ~ tn + tp + nox + srp + np_ratio + chla + NEP + R + bottom_do + doc_ppm,
-         random = ~1|pond_id, correlation = corAR1(), data = mdat_ch4, method="ML")
+         random = ~1|pond_id, correlation = corAR1(), data = mdat, method="ML")
 
 anova(m1, m.full)  # ns
 summary(update(m1, method="REML"))  # SRP is significant
@@ -131,7 +130,7 @@ summary(update(m4, method="REML"))  # cannot compare with different response var
 
 # add treatment back
 m5 = lme(ch4_lake ~ treatment + tp + srp + chla + NEP + R + bottom_do + doc_ppm,
-         random = ~1|pond_id, correlation = corAR1(), data = mdat_ch4, method="ML")
+         random = ~1|pond_id, correlation = corAR1(), data = mdat, method="ML")
 anova(m2, m5)  # ns
 summary(update(m5, method="REML"))
 MuMIn::r.squaredGLMM(update(m5, method='REML'))
@@ -176,7 +175,7 @@ MuMIn::r.squaredGLMM(update(m11, method='REML'))
 ch4.lme = lme(ch4_lake ~ treatment * (srp + doc_ppm) + chla + R + bottom_do,
               random = ~ 1 | pond_id, 
               correlation = corAR1(),
-              mdat_ch4, method='REML')
+              mdat, method='REML')
 
 # output
 summary(ch4.lme)

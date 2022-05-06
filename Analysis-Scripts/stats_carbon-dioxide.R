@@ -18,21 +18,20 @@ if (!require(nlme)) install.packages('nlme'); library(nlme)
 fdat = read_csv("Data/ghg-model-dataset_2022-05-05.csv")
 
 
-# Data for the CO2 model
-mdat_co2 = fdat %>%
+# Data for GHG models
+mdat = fdat %>%
    # factor variables
    mutate(across(c(pond_id, treatment, period, period2), ~as.factor(.))) %>%
+   # convert N2O flux and concentration data from units of micro-mole to nano-mole
+   mutate(across(c(n2o_flux, n2o_lake), ~.*1000)) %>%
    # select desired variables
-   select(
-      pond_id:period2, 
-      co2_flux, co2_lake, 
-      R, NEP, 
-      bottom_do, bottom_do_sat, temp, chla, alkalinity, doc_ppm
-      , tp, srp, tn, nox, np_ratio
-      ) %>%
+   select(pond_id:period2, 
+          contains("_lake"), contains("_flux"),
+          R, NEP, bottom_do, bottom_do_sat, 
+          temp, chla, alkalinity, doc_ppm, 
+          tp, srp, tn, nox, np_ratio) %>%
    # only keep rows that have values for all variables
-   filter(!(if_any(co2_flux:last_col(), is.na))) %>%
-   # filter(!(is.na(co2_lake))) %>%
+   filter(!(if_any(where(is.numeric), is.na))) %>%
    # add a "time" variable for autocorrelation
    group_by(pond_id) %>%
    arrange(doy, .by_group=TRUE) %>%
@@ -54,7 +53,7 @@ mdat_co2 = fdat %>%
 
 ## Full Model
 f1 = lme(co2_lake ~ chla + NEP + R + alkalinity + bottom_do_sat + doc_ppm + treatment + period + treatment:period,
-         random = ~ 1 | pond_id, data = mdat_co2, method="ML")
+         random = ~ 1 | pond_id, data = mdat, method="ML")
 
 # Should the model include autocorrelation (AR(1))?
 f2 = update(f1, correlation = corAR1())
@@ -78,7 +77,7 @@ anova(f4, f2)  # ns; f4 has slightly lower AIC and fewer DF; f2 has slightly hig
 c.full = lme(co2_lake ~ treatment + doy + chla + NEP + R + alkalinity + bottom_do_sat + doc_ppm + treatment:doy,
              random = ~ 1 | pond_id, 
              correlation = corAR1(),
-             data = mdat_co2, method="ML")
+             data = mdat, method="ML")
 
 
 
@@ -89,7 +88,7 @@ MuMIn::r.squaredGLMM(update(c.full, method='REML'))
 
 # Is the random effect significant (effect of repeated measures)?
 g1 = gls(co2_lake ~ treatment + doy + chla + NEP + R + alkalinity + bottom_do_sat + doc_ppm + treatment:doy,
-         data = mdat_co2, method="ML")
+         data = mdat, method="ML")
 g2 = update(g1, correlation = corAR1(form = ~ 1|pond_id, value = ACF(g1, form = ~ 1|pond_id)[2,2]))
 
 anova(g1, g2)  # g2 is better
@@ -97,14 +96,14 @@ anova(g2, c.full)  # c.full is better
 
 
 # Pulsed ponds only - are the pulsed "periods" different from the pre-pulse (base) period?
-p1 = update(f2, .~. - treatment - treatment:period, data = mdat_co2 %>% filter(treatment=="pulsed"), method="REML")
+p1 = update(f2, .~. - treatment - treatment:period, data = mdat %>% filter(treatment=="pulsed"), method="REML")
 
 summary(p1)  # pulse-period did not have a significant effect on CO2, which seems strange when looking at the figure...
 
 
-# Use nutrient concentration instead of treatment to represent differences (need to recreate mdat_co2 df with adding nutrient variables)
+# Use nutrient concentration instead of treatment to represent differences 
 t1 = lme(co2_lake ~ tn + tp + chla + NEP + R + alkalinity + bottom_do_sat + doc_ppm,
-         random = ~1|pond_id, correlation = corAR1(), data = mdat_co2, method="REML")
+         random = ~1|pond_id, correlation = corAR1(), data = mdat, method="REML")
 
 summary(t1)
 
@@ -122,7 +121,7 @@ MuMIn::r.squaredGLMM(update(m1, method='REML'))
 
 
 # Compare only post-pulse time periods
-m2 = update(m1, data = mdat_co2 %>% filter(period!="BASE"))
+m2 = update(m1, data = mdat %>% filter(period!="BASE"))
 
 # anova(m1, m2)  # erroneous; cannot compare models with different n()
 
@@ -223,7 +222,7 @@ MuMIn::r.squaredGLMM(update(m14, method='REML'))
 co2.lme = lme(co2_lake ~ treatment * (doy + alkalinity + NEP) + chla,
               random = ~ doy | pond_id, 
               correlation = corAR1(),
-              mdat_co2, method='REML')
+              mdat, method='REML')
 
 # output
 summary(co2.lme)
