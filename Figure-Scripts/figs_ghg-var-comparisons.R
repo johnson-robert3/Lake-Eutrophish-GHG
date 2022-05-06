@@ -223,9 +223,9 @@ ggplot(pdat %>%
 windows(height=4, width=6)
 ggplot(mtab_ch4 %>%
           rename(estimate = Value,
-                 se = "Std.Error") %>%
-          mutate(ci = se * 1.96,
-                 fixed.effect = as_factor(fixed.effect)) %>%
+                 ci_lower = lower,
+                 ci_upper = upper) %>%
+          mutate(fixed.effect = as_factor(fixed.effect)) %>%
           filter(!(fixed.effect=="(Intercept)")),
        # fixed effects in order of model
        aes(x = estimate, y = fct_rev(fixed.effect))) +
@@ -240,14 +240,14 @@ ggplot(mtab_ch4 %>%
    geom_point(data = ~filter(.x, estimate > 0),
                size=4, color="#28abb9") +
    geom_errorbarh(data = ~filter(.x, estimate > 0), 
-                  aes(xmin = estimate-ci, xmax = estimate+ci, height=0), size=0.75, color="#28abb9") +
+                  aes(xmin = ci_lower, xmax = ci_upper, height=0), size=0.75, color="#28abb9") +
    # data points for negative effect size
    geom_point(data = ~filter(.x, estimate < 0),
                size=4, color="#2d6187") +
    geom_errorbarh(data = ~filter(.x, estimate < 0),
-                  aes(xmin = estimate-ci, xmax = estimate+ci, height=0), size=0.75, color="#2d6187") +
+                  aes(xmin = ci_lower, xmax = ci_upper, height=0), size=0.75, color="#2d6187") +
    #
-   scale_x_continuous(name = "Effect size", limits = c(-5, 22), breaks = seq(-5, 20, 5)) +
+   scale_x_continuous(name = "Effect size", limits = c(-5, 25), breaks = seq(-5, 25, 5)) +
    # factors in order of model
    # scale_y_discrete(name=NULL, labels = c("Treatment * Period \n(Pulse2)", "Treatment * Period \n(Pulse1)", "Bottom  \nWater DO",
    #                                        "Period \n(Pulse2)", "Period \n(Pulse1)", "Treatment")) +
@@ -436,9 +436,9 @@ ggplot(pdat %>%
 windows(height=4, width=6)
 ggplot(mtab_n2o %>%
           rename(estimate = Value,
-                 se = "Std.Error") %>%
-          mutate(ci = se * 1.96,
-                 fixed.effect = as_factor(fixed.effect)) %>%
+                 ci_lower = lower,
+                 ci_upper = upper) %>%
+          mutate(fixed.effect = as_factor(fixed.effect)) %>%
           filter(!(fixed.effect=="(Intercept)")),
        # fixed effects in order of model
        aes(x = estimate, y = fct_rev(fixed.effect))) +
@@ -453,12 +453,12 @@ ggplot(mtab_n2o %>%
    geom_point(data = ~filter(.x, estimate > 0),
                size=4, color="#28abb9") +
    geom_errorbarh(data = ~filter(.x, estimate > 0), 
-                  aes(xmin = estimate-ci, xmax = estimate+ci, height=0), size=0.75, color="#28abb9") +
+                  aes(xmin = ci_lower, xmax = ci_upper, height=0), size=0.75, color="#28abb9") +
    # data points for negative effect size
    geom_point(data = ~filter(.x, estimate < 0),
                size=4, color="#2d6187") +
    geom_errorbarh(data = ~filter(.x, estimate < 0),
-                  aes(xmin = estimate-ci, xmax = estimate+ci, height=0), size=0.75, color="#2d6187") +
+                  aes(xmin = ci_lower, xmax = ci_upper, height=0), size=0.75, color="#2d6187") +
    #
    scale_x_continuous(name = "Effect size", limits = c(-3, 2), breaks = seq(-3, 2, 1)) +
    # factors in order of model
