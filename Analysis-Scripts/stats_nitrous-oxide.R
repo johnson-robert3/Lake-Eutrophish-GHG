@@ -156,13 +156,14 @@ broom.mixed::tidy(n2o.lme)
 MuMIn::r.squaredGLMM(n2o.lme)
 
 
+
 #-- Step 4: Visualize Model Output
 
 # Residuals
 ggResidpanel::resid_panel(n2o.lme)
 
 # Table of model results as a figure
-sjPlot::tab_model(n2o.lme, show.re.var=TRUE)
+sjPlot::tab_model(n2o.lme, show.re.var=TRUE, show.se=TRUE)
 
 # Effect size and significance of fixed effects
 sjPlot::plot_model(n2o.lme, show.p=TRUE, show.values=TRUE)

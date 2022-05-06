@@ -158,13 +158,14 @@ broom.mixed::tidy(ch4.lme)
 MuMIn::r.squaredGLMM(ch4.lme)
 
 
+
 #-- Step 4: Visualize Model Output
 
 # Residuals
 ggResidpanel::resid_panel(ch4.lme)
 
 # Table of model results as a figure
-sjPlot::tab_model(ch4.lme, show.re.var=TRUE)
+sjPlot::tab_model(ch4.lme, show.re.var=TRUE, show.se=TRUE)
 
 # Effect size and significance of fixed effects
 sjPlot::plot_model(ch4.lme, show.p=TRUE, show.values=TRUE)
