@@ -24,7 +24,6 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
 
 ### Next Steps / To Do 
 
-- [x] Correct DOC values for blanks within each run
 - [x] Update the total GHG model dataset for LME models with updated temp-profile, metabolism, and DOC data
 - [ ] How should we treat erroneous metabolism estimates (GPP<0, R>0)?
 
@@ -67,11 +66,11 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
    - [x] Over time
    - [ ] CO2 vs variables used in final model
    - [ ] Effect sizes from model output
-- [ ] **CH4**
+- [x] **CH4**
    - [x] Over time
    - [x] CH4 vs variables used in final model
    - [x] Effect sizes from model output
-- [ ] **N2O**
+- [x] **N2O**
    - [x] Over time
    - [x] N2O vs variables used in final model
    - [x] Effect sizes from model output
