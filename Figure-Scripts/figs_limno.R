@@ -12,6 +12,10 @@ library(slider)
 source("Figure-Scripts/figs_functions.R")
 
 
+# Full dataset of combined variables (used for GHG models
+fdat = read_csv("Data/ghg-model-dataset_2022-05-05.csv")
+
+
 #===
 # Sonde Profile Data
 #===
@@ -378,6 +382,87 @@ ggplot(sonde_bottom %>% left_join(pond_data),
 #===
 # Field Samples
 #===
+
+#--
+# DOC
+#--
+
+## 1-panel (blue & red)
+windows(height=3.5, width=5)
+ggplot(fdat %>% 
+          filter(!(is.na(doc_ppm))) %>% 
+          left_join(pond_data),
+       aes(x = doy, y = doc_ppm)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
+   # pond data
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.3, size=1) +
+   # geom_point(aes(color = trt_nutrients), size=1.5, alpha=0.4) +
+   # treatment mean (loess smooth)
+   geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
+   #
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_y_continuous(name = expression(DOC~(mg~L^-1)),
+                      limits = c(0, 50), breaks = seq(0, 50, 10)) +
+   #
+   theme_classic() +
+   theme(panel.border = element_rect(fill=NA, color="black"),
+         legend.position = c(0.85, 0.87),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line")),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line")))
+
+# ggsave(filename = "doc.png", height=3.5, width=5, units="in")
+
+
+# doc over time in exp ponds
+# windows(height=4, width=6)
+p1 =
+ggplot(fdat %>% 
+          filter(pond_id %in% c('A', 'B', 'C')) %>%
+          filter(!(is.na(doc_ppm)))) +
+   #
+   geom_point(aes(x = doy, y = doc_ppm, color = pond_id), size=2) +
+   geom_line(aes(x = doy, y = doc_ppm, group = pond_id, color = pond_id), size=1, alpha=0.7) +
+   #
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
+   #
+   scale_color_manual(breaks = c('A', 'B', 'C'),
+                      values = c('A' = "#3BB873", 'B' = '#51ADCF', 'C' = '#2D6187')) +
+   lims(y=c(0, 50)) +
+   labs(x = "day of year", y = "DOC (ppm)") +
+   theme_classic()
+
+
+# doc over time in ref ponds
+# windows(height=4, width=6)
+p2 =
+ggplot(fdat %>% 
+          filter(pond_id %in% c('D', 'E', 'F')) %>%
+          filter(!(is.na(doc_ppm)))) +
+   #
+   geom_point(aes(x = doy, y = doc_ppm, color = pond_id), size=2) +
+   geom_line(aes(x = doy, y = doc_ppm, group = pond_id, color = pond_id), size=1, alpha=0.7) +
+   #
+   # geom_smooth(aes(x = doy, y = doc_ppm, group = pond_id, fill = pond_id, color = pond_id), size=0, alpha=0.2) +
+   # geom_smooth(aes(x = doy, y = doc_ppm, group = pond_id, fill = pond_id), alpha=0.2, color=NA) +
+   #
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray40") +
+   #
+   scale_color_manual(breaks = c('D', 'E', 'F'),
+                      values = c('D' = "#3BB873", 'E' = '#51ADCF', 'F' = '#2D6187')) +
+   scale_fill_manual(breaks = c('D', 'E', 'F'),
+                      values = c('D' = "#3BB873", 'E' = '#51ADCF', 'F' = '#2D6187')) +
+   #
+   lims(y=c(0, 50)) +
+   labs(x = "day of year", y = "DOC (ppm)") +
+   theme_classic()
+
+
+windows(height=8, width=12); p1 / p2
+
+# ggsave("doc-by-np-trt.png")
 
 
 #--
