@@ -52,9 +52,12 @@ ggplot(pdat, aes(x = doy, y = co2_lake)) +
 #### CH4 - Methane ####
 #===
 
-## CH4 over time
+## Dissolved CH4 concentration over time
 windows(height=4, width=5)
-ggplot(pdat, aes(x = doy, y = ch4_lake)) +
+ggplot(fdat %>%
+          filter(!(is.na(ch4_lake))) %>%
+          left_join(pond_data), 
+       aes(x = doy, y = ch4_lake)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
@@ -267,9 +270,11 @@ ggplot(mtab_ch4 %>%
    # factors ordered by decreasing effect size
    # scale_y_discrete(name = NULL,
    #                  labels = c()) +
-   ggtitle(expression(Effect~on~CH[4])) +
+   ggtitle(expression(Effect~on~dissolved~CH[4])) +
    theme_classic() +
    theme(axis.title.x = element_text(margin = margin(t=0.5, unit="line")))
+
+# ggsave(filename="ch4_effect-size.png", height=4, width=6, units='in')
 
 
 
@@ -277,9 +282,13 @@ ggplot(mtab_ch4 %>%
 #### N2O - Nitrous Oxide ####
 #===
 
-## N2O over time
+## Dissolved N2O concentration over time
 windows(height=4, width=5)
-ggplot(pdat, aes(x = doy, y = n2o_lake)) +
+ggplot(fdat %>%
+          filter(!(is.na(n2o_lake))) %>%
+          mutate(n2o_lake = n2o_lake * 1000) %>%
+          left_join(pond_data), 
+       aes(x = doy, y = n2o_lake)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
@@ -493,8 +502,10 @@ ggplot(mtab_n2o %>%
    # factors ordered by decreasing effect size
    # scale_y_discrete(name = NULL,
    #                  labels = c()) +
-   ggtitle(expression(Effect~on~N[2]*O)) +
+   ggtitle(expression(Effect~on~dissolved~N[2]*O)) +
    theme_classic() +
    theme(axis.title.x = element_text(margin = margin(t=0.5, unit="line")))
+
+# ggsave(filename="n2o_effect-size.png", height=4, width=6, units='in')
 
 
