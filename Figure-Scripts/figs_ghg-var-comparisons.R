@@ -549,15 +549,16 @@ ggplot(mtab_n2o %>%
    scale_x_continuous(name = "Effect size", limits = c(-3, 2), breaks = seq(-3, 2, 1)) +
    # scale_x_continuous(name = "Effect size", limits = c(-1.5,1.5), breaks = seq(-1.5, 1.5, 0.5)) +
    # factors in order of model
-   scale_y_discrete(name=NULL, 
-                    labels = c("Resp. × Treatment\n(Pulse)", 
-                               "NEP × Treatment\n(Pulse)", 
-                               "Bottom water DO",
-                               "Nitrate", 
-                               "Total nitrogen", 
-                               "Time (day of year)", 
+   scale_y_discrete(name=NULL,
+                    labels = c("Resp. × Treatment\n(Pulse)",
+                               "NEP × Treatment\n(Pulse)",
                                "Respiration",
-                               "Net Ecosystem Production", 
+                               "Net Ecosystem Production",
+                               "Bottom water DO",
+                               "SRP", 
+                               "Nitrate",
+                               "Total nitrogen",
+                               "Time (day of year)",
                                "Treatment\n(Pulse)")) +
    # factors ordered by decreasing effect size
    # scale_y_discrete(name = NULL,
