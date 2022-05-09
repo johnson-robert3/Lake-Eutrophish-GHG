@@ -140,11 +140,16 @@ anova(m6, m7)  # ns
 summary(update(m7, method='REML'))
 MuMIn::r.squaredGLMM(update(m7, method='REML'))
 
+# remove SRP (forgot about this one previously??)
+m8 = update(m7, .~. - srp)
+anova(m7, m8)  # sig.; m7 is better; SRP makes model better
+
 # TN and NOx are not significant, but we would have expected these (at least NOx) to play a role; leave in the model
 
 
 ## Best Model - m7
-n2o.lme = lme(n2o_lake ~ treatment * (NEP + R) + doy + tn + nox + bottom_do,
+# n2o.lme = lme(n2o_lake ~ treatment * (NEP + R) + doy + tn + nox + srp + bottom_do,
+n2o.lme = lme(n2o_lake ~ treatment + doy + tn + nox + srp + bottom_do + NEP + R + treatment:NEP + treatment:R,
               random = ~ 1 | pond_id, 
               correlation = corAR1(),
               data = mdat, method="REML")
@@ -172,6 +177,6 @@ sjPlot::plot_model(n2o.lme, show.p=TRUE, show.values=TRUE)
 # Output model results as a table for plotting
 mtab_n2o = coef(summary(n2o.lme)) %>% as.data.frame() %>% rownames_to_column(var="fixed.effect") %>% as_tibble() %>%
    # add 95% CI
-   left_join(intervals(n2o.lme)$fixed %>% as.data.frame() %>% rownames_to_column(var="fixed.effect") %>% as_tibble())
+   left_join(intervals(n2o.lme, which="fixed")[[1]] %>% as.data.frame() %>% rownames_to_column(var="fixed.effect") %>% as_tibble())
 
 
