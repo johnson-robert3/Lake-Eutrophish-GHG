@@ -70,10 +70,10 @@ ggplot(fdat %>%
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
    scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
-   scale_y_continuous(name = expression(Diffusive~CH[4]~flux~(mmol~m^-2~d^-1)),
+   scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^-1)),
                       limits = c(0, 60), breaks = seq(0, 60, 10)) +
    #
-   # ggtitle(expression(CH[4])) +
+   ggtitle(expression(Diffusive~CH[4]~flux)) +
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color='black'),
          legend.position = c(0.82, 0.88),
@@ -330,9 +330,10 @@ ggplot(fdat %>%
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
    scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
-   scale_y_continuous(name = expression(Diffusive~N[2]*O~flux~(mu*mol~m^-2~d^-1)),
+   scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)),
                       limits = c(-4, 3), breaks = seq(-4, 3, 1)) +
    #
+   ggtitle(expression(Diffusive~N[2]*O~flux)) +
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color='black'),
          legend.position = c(0.51, 0.88),
