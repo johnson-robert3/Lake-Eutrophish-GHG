@@ -77,14 +77,14 @@ ggplot(fdat %>%
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color='black'),
          legend.position = c(0.82, 0.88),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line")),
          axis.title.y = element_text(margin = margin(r=0.5, unit="line")))
 
 # ggsave(filename="diffusive-ch4-flux.png", height=4, width=5.5, units='in')
 
 
-
 ## Dissolved CH4 concentration over time
-windows(height=4, width=5)
+windows(height=4, width=5.5)
 ggplot(fdat %>%
           filter(!(is.na(ch4_lake))) %>%
           left_join(pond_data), 
@@ -99,13 +99,18 @@ ggplot(fdat %>%
    geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_continuous(name = " ", limits = c(140, 245), breaks = seq(140,240,20)) +
-   scale_y_continuous(name = expression(Dissolved~CH[4]~(mu*M))) +
+   scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_y_continuous(name = expression(CH[4]~(mu*M)),
+                      limits = c(0, 86), breaks = seq(0, 80, 20)) +
    #
-   # ggtitle(expression(CH[4])) +
+   ggtitle(expression(Dissolved~CH[4]~concentration)) +
    theme_classic() +
-   theme(legend.position = c(0.8, 0.9),
+   theme(panel.border = element_rect(fill=NA, color='black'),
+         legend.position = c(0.83, 0.88),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line")),
          axis.title.y = element_text(margin = margin(r=0.5, unit="line")))
+
+# ggsave(filename="ch4-concentration.png", height=4, width=5.5, units='in')
 
 
 ## CH4 vs SRP
@@ -346,7 +351,8 @@ ggplot(fdat %>%
 windows(height=4, width=5.5)
 ggplot(fdat %>%
           filter(!(is.na(n2o_lake))) %>%
-          mutate(n2o_lake = n2o_lake * 1000) %>%
+          mutate(n2o_lake = n2o_lake * 1000,
+                 n2o_lake = if_else(n2o_lake < 0, 0, n2o_lake)) %>%
           left_join(pond_data), 
        aes(x = doy, y = n2o_lake)) +
    #
@@ -359,13 +365,18 @@ ggplot(fdat %>%
    geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_continuous(name = " ", limits = c(140, 245), breaks = seq(140,240,20)) +
-   scale_y_continuous(name = expression(Dissolved~N[2]*O~(nM))) +
+   scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_y_continuous(name = expression(N[2]*O~(nM)),
+                      limits = c(0, 12.5), breaks = seq(0, 12.5, 2.5)) +
    #
-   # ggtitle(expression(N[2]*O)) +
+   ggtitle(expression(Dissolved~N[2]*O~concentration)) +
    theme_classic() +
-   theme(legend.position = c(0.8, 0.9),
+   theme(panel.border = element_rect(fill=NA, color='black'),
+         legend.position = c(0.51, 0.88),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line")),
          axis.title.y = element_text(margin = margin(r=0.5, unit="line")))
+
+# ggsave(filename="n2o-concentration.png", height=4, width=5.5, units='in')
 
 
 ## N2O vs NEP
