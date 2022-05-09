@@ -17,6 +17,7 @@ source("Figure-Scripts/figs_functions.R")
 pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
 
 # Data for plotting
+#  Need to run "stats_model-data.R" script first
 pdat = left_join(mdat, pond_data %>% select(pond_id, starts_with("trt")))
 
 
@@ -51,6 +52,36 @@ ggplot(pdat, aes(x = doy, y = co2_lake)) +
 #===
 #### CH4 - Methane ####
 #===
+
+## Diffusive flux
+windows(height=4, width=5.5)
+ggplot(fdat %>%
+          filter(!(is.na(ch4_flux))) %>%
+          left_join(pond_data), 
+       aes(x = doy, y = ch4_flux)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
+   # pond data
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.3, size=1) +
+   # geom_point(aes(color = trt_nutrients), size=1.5, alpha=0.4) +
+   # treatment mean (loess smooth)
+   geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
+   #
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_y_continuous(name = expression(Diffusive~CH[4]~flux~(mmol~m^-2~d^-1)),
+                      limits = c(0, 60), breaks = seq(0, 60, 10)) +
+   #
+   # ggtitle(expression(CH[4])) +
+   theme_classic() +
+   theme(panel.border = element_rect(fill=NA, color='black'),
+         legend.position = c(0.82, 0.88),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line")))
+
+# ggsave(filename="diffusive-ch4-flux.png", height=4, width=5.5, units='in')
+
+
 
 ## Dissolved CH4 concentration over time
 windows(height=4, width=5)
@@ -242,9 +273,9 @@ ggplot(mtab_ch4 %>%
    #
    # data points for not significant
    geom_point(data = ~filter(.x, p > 0.05),
-               size=4, color="gray60") +
+               size=3, color="gray60") +
    geom_errorbarh(data = ~filter(.x, p > 0.05), 
-                  aes(xmin = ci_lower, xmax = ci_upper, height=0), size=0.75, color="gray60") +
+                  aes(xmin = ci_lower, xmax = ci_upper, height=0), size=0.6, color="gray60") +
    # data points for positive effect size
    geom_point(data = ~filter(.x, p <= 0.05 & estimate > 0),
                size=4, color="#28abb9") +
@@ -259,8 +290,8 @@ ggplot(mtab_ch4 %>%
    scale_x_continuous(name = "Effect size", limits = c(-5, 25), breaks = seq(-5, 25, 5)) +
    # factors in order of model
    scale_y_discrete(name=NULL, 
-                    labels = c("DOC x Treatment\n(Pulse)",
-                               "SRP x Treatment\n(Pulse)",
+                    labels = c("DOC × Treatment\n(Pulse)",
+                               "SRP × Treatment\n(Pulse)",
                                "Bottom water DO", 
                                "Respiration", 
                                "Chlorophyll a",
@@ -282,8 +313,36 @@ ggplot(mtab_ch4 %>%
 #### N2O - Nitrous Oxide ####
 #===
 
+## Diffusive flux
+windows(height=4, width=5.5)
+ggplot(fdat %>%
+          filter(!(is.na(n2o_flux))) %>%
+          mutate(n2o_flux = n2o_flux * 1000) %>%
+          left_join(pond_data), 
+       aes(x = doy, y = n2o_flux)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
+   # pond data
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.3, size=1) +
+   # treatment mean (loess smooth)
+   geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
+   #
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_y_continuous(name = expression(Diffusive~N[2]*O~flux~(mu*mol~m^-2~d^-1)),
+                      limits = c(-4, 3), breaks = seq(-4, 3, 1)) +
+   #
+   theme_classic() +
+   theme(panel.border = element_rect(fill=NA, color='black'),
+         legend.position = c(0.51, 0.88),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line")))
+
+# ggsave(filename="diffusive-n2o-flux.png", height=4, width=5.5, units='in')
+
+
 ## Dissolved N2O concentration over time
-windows(height=4, width=5)
+windows(height=4, width=5.5)
 ggplot(fdat %>%
           filter(!(is.na(n2o_lake))) %>%
           mutate(n2o_lake = n2o_lake * 1000) %>%
@@ -473,9 +532,9 @@ ggplot(mtab_n2o %>%
    #
    # data points for not significant
    geom_point(data = ~filter(.x, p > 0.05),
-               size=4, color="gray60") +
+               size=3, color="gray60") +
    geom_errorbarh(data = ~filter(.x, p > 0.05), 
-                  aes(xmin = ci_lower, xmax = ci_upper, height=0), size=0.75, color="gray60") +
+                  aes(xmin = ci_lower, xmax = ci_upper, height=0), size=0.6, color="gray60") +
    # data points for positive effect size
    geom_point(data = ~filter(.x, p <= 0.05 & estimate > 0),
                size=4, color="#28abb9") +
@@ -488,10 +547,11 @@ ggplot(mtab_n2o %>%
                   aes(xmin = ci_lower, xmax = ci_upper, height=0), size=0.75, color="#2d6187") +
    #
    scale_x_continuous(name = "Effect size", limits = c(-3, 2), breaks = seq(-3, 2, 1)) +
+   # scale_x_continuous(name = "Effect size", limits = c(-1.5,1.5), breaks = seq(-1.5, 1.5, 0.5)) +
    # factors in order of model
    scale_y_discrete(name=NULL, 
-                    labels = c("Resp. x Treatment\n(Pulse)", 
-                               "NEP x Treatment\n(Pulse)", 
+                    labels = c("Resp. × Treatment\n(Pulse)", 
+                               "NEP × Treatment\n(Pulse)", 
                                "Bottom water DO",
                                "Nitrate", 
                                "Total nitrogen", 
