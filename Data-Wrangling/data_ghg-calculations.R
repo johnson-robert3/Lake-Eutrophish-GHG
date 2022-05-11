@@ -13,11 +13,11 @@ library(LakeMetabolizer)
 # Ames, IA = 0.97 atm
 
    
-#_Henry's Law Constants (KH) (units = M/atm) (units = mol / L / atm)
+#_Henry's Law Constants (KH) 
    
 ### Used to calculate dissolved gas concentration in a liquid based on equilibrium with a gaseous headspace
 
-# KH = concentration / partial pressure
+# KH (units = M/atm = mol/L/atm) (concentration / partial pressure)
 KH_ch4 = 0.00142
 KH_co2 = 0.0344
 KH_n2o = 0.024
@@ -30,11 +30,16 @@ KH_td_n2o = 2600
 
 #_Ideal Gas Law
 
-### Used to calculate concentration of a gas based on its partial pressure
+### Used to calculate the concentration of a gas from its partial pressure
 
-# [gas] = (P/RT)*(10^6 umol/mol)
+# [gas] = (P/RT)*(10^6 umol/mol)   # units = umol/L (units = uM)
 
-# units = umol/L   (units = uM)
+# P: gas partial pressure (units = atm)
+# R: ideal gas law constant (units = L atm / K mol = L atm K-1 mol-1) (R=0.0821 L atm K-1 mol-1)
+# T: temperature (units = K)
+
+# ideal gas law gives units of mol/L, multiply by 10^6 to get micro-mol/L
+
 
 ideal_gas_law = function(pp, temp) {
    
