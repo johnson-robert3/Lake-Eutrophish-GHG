@@ -64,23 +64,24 @@ ideal_gas_law = function(pp, temp) {
 syr_conc = lake_samples %>%
    # select only pond samples, exclude atmosphere samples
    filter(!(str_detect(sample_id, "Y"))) %>%
-   # calculate partial pressures of gases in headspace from samples measured on GC (units = atm)
+   # calculate partial pressures of gases in equilibrated headspace from samples measured on GC (units = atm)
    # convert measured syringe values from ppm to atm
-   mutate(pch4_head = ch4_ppm / 10^6 * 0.97,
-          pn2o_head = n2o_ppm / 10^6 * 0.97) %>%
+   mutate(pch4_head.eq = ch4_ppm / 10^6 * 0.97,
+          pn2o_head.eq = n2o_ppm / 10^6 * 0.97) %>%
+   # concentration of gases in equilibrated headspace (units = uM)
+   mutate(ch4_head.eq = ideal_gas_law(pch4_head.eq, surface_temp),
+          n2o_head.eq = ideal_gas_law(pn2o_head.eq, surface_temp)) %>%
    # temperature-corrected Henry's Law constants (KH) based on pond surface water temperatures
    mutate(tKH_ch4 = KH_ch4 * exp(KH_td_ch4 * ((1 / (surface_temp + 273.15)) - (1 / 298.15))),
           tKH_co2 = KH_co2 * exp(KH_td_co2 * ((1 / (surface_temp + 273.15)) - (1 / 298.15))),
           tKH_n2o = KH_n2o * exp(KH_td_n2o * ((1 / (surface_temp + 273.15)) - (1 / 298.15)))) %>%
-   # concentration of gases in equilibrated headspace (units = uM)
-   mutate(ch4_head = ideal_gas_law(pch4_head, surface_temp),
-          n2o_head = ideal_gas_law(pn2o_head, surface_temp)) %>%
-   # concentration of dissolved gases in equilibrated aqueous sample (units = uM)
-   mutate(ch4_aq = tKH_ch4 * pch4_head * 10^6,
-          n2o_aq = tKH_n2o * pn2o_head * 10^6) %>%
-   # total amount of gas in syringe (units = umol)
-   mutate(ch4_tot_umol = (ch4_aq * vol_water) + (ch4_head * vol_air),
-          n2o_tot_umol = (n2o_aq * vol_water) + (n2o_head * vol_air))
+   # concentration of dissolved gases in equilibrated water sample (units = uM)
+   mutate(ch4_water.eq = tKH_ch4 * pch4_head.eq * 10^6,
+          n2o_water.eq = tKH_n2o * pn2o_head.eq * 10^6) %>%
+   # calculate the total amount of gas in the syringe (units = uM)
+   # total gas (umol) in equilibrated headspace plus total gas (umol) in equilibrated water sample
+   mutate(ch4_tot_umol = (ch4_head.eq * vol_air) + (ch4_water.eq * vol_water),
+          n2o_tot_umol = (n2o_head.eq * vol_air) + (n2o_water.eq * vol_water))
 
 
 ##__Atmosphere concentration (units = uM)
@@ -89,11 +90,14 @@ syr_conc = lake_samples %>%
 atm_conc = lake_samples %>%
    # select only atmosphere samples
    filter(str_detect(sample_id, "Y")) %>%
+   rename(ch4_atmo_ppm = ch4_ppm,
+          co2_atmo_ppm = co2_ppm,
+          n2o_atmo_ppm = n2o_ppm) %>%
    # calculate partial pressures of gases from samples measured on GC (units = atm)
    # convert measured syringe values from ppm to atm
-   mutate(pch4_atmo = ch4_ppm / 10^6 * 0.97,
-          pco2_atmo = co2_ppm / 10^6 * 0.97,
-          pn2o_atmo = n2o_ppm / 10^6 * 0.97) %>%
+   mutate(pch4_atmo = ch4_atmo_ppm / 10^6 * 0.97,
+          pco2_atmo = co2_atmo_ppm / 10^6 * 0.97,
+          pn2o_atmo = n2o_atmo_ppm / 10^6 * 0.97) %>%
    # concentration of atmosphere samples (units = uM)
    mutate(ch4_atmo = ideal_gas_law(pch4_atmo, 25),
           co2_atmo = ideal_gas_law(pco2_atmo, 25),
