@@ -10,17 +10,8 @@ library(patchwork)
 library(slider)
 library(lubridate)
 library(viridis)
-# library(PNWColors)
 
 source("Figure-Scripts/figs_functions.R")
-
-
-mycolors = c("high" = inferno(n=1, begin=0.25),
-             "medium" = inferno(n=1, begin=0.5),
-             "low" = magma(n=1, begin=0.8))
-
-# from PNWColors palette "Anemone"
-# mycolors = c("high" = "#009474", "medium" = "#72e1e1", "low" = "#dcbe9b")
 
 
 # Pond/Site Data
