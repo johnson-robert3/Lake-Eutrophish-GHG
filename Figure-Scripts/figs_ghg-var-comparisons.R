@@ -304,7 +304,7 @@ ggplot(mtab_ch4 %>%
    geom_errorbarh(data = ~filter(.x, p <= 0.05 & estimate < 0),
                   aes(xmin = ci_lower, xmax = ci_upper, height=0), size=0.75, color="#2d6187") +
    #
-   scale_x_continuous(name = "Effect size", limits = c(-5, 25), breaks = seq(-5, 25, 5)) +
+   scale_x_continuous(name = "Estimate", limits = c(-5, 15), breaks = seq(-5, 15, 5)) +
    # factors in order of model
    scale_y_discrete(name=NULL, 
                     labels = c("DOC × Treatment\n(Pulse)",
@@ -318,7 +318,7 @@ ggplot(mtab_ch4 %>%
    # factors ordered by decreasing effect size
    # scale_y_discrete(name = NULL,
    #                  labels = c()) +
-   ggtitle(expression(Effect~on~dissolved~CH[4])) +
+   ggtitle(expression(Effect~on~diffusive~CH[4]~flux)) +
    theme_classic() +
    theme(axis.title.x = element_text(margin = margin(t=0.5, unit="line")))
 
@@ -580,8 +580,8 @@ ggplot(mtab_n2o %>%
    geom_errorbarh(data = ~filter(.x, p <= 0.05 & estimate < 0),
                   aes(xmin = ci_lower, xmax = ci_upper, height=0), size=0.75, color="#2d6187") +
    #
-   scale_x_continuous(name = "Effect size", limits = c(-3, 2), breaks = seq(-3, 2, 1)) +
-   # scale_x_continuous(name = "Effect size", limits = c(-1.5,1.5), breaks = seq(-1.5, 1.5, 0.5)) +
+   # scale_x_continuous(name = "Effect size", limits = c(-3, 2), breaks = seq(-3, 2, 1)) +
+   scale_x_continuous(name = "Estimate", limits = c(-1.5, 1.5), breaks = seq(-1.5, 1.5, 0.5)) +
    # factors in order of model
    scale_y_discrete(name=NULL,
                     labels = c("Resp. × Treatment\n(Pulse)",
@@ -597,7 +597,7 @@ ggplot(mtab_n2o %>%
    # factors ordered by decreasing effect size
    # scale_y_discrete(name = NULL,
    #                  labels = c()) +
-   ggtitle(expression(Effect~on~dissolved~N[2]*O)) +
+   ggtitle(expression(Effect~on~diffusive~N[2]*O~flux)) +
    theme_classic() +
    theme(axis.title.x = element_text(margin = margin(t=0.5, unit="line")))
 
