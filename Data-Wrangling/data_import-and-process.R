@@ -110,39 +110,47 @@ sonde_profiles = read_csv("Data/sonde-profiles_all-data_2022-03-29.csv")
    
 
 ##__Surface water means 
-#  Depth: 10-30 cm
+#  Depth: 5-50 cm
 
 sonde_surface = sonde_profiles %>%
    group_by(pond_id, doy) %>%
    filter(vert_m >= 0.05 & vert_m <= 0.50) %>%
    summarize(across(temp:salinity, ~mean(., na.rm=T))) %>%
+   ungroup() %>%
+   # sonde profiles missing for Pond C (DOY 231) and Pond B (DOY 151)
+   # add these days and linearly interpolate for all variables, so that surface values aren't missing
+   add_row(pond_id = "B", doy = 151) %>%
+   add_row(pond_id = "C", doy = 231) %>%
+   group_by(pond_id) %>%
+   arrange(doy, .by_group=TRUE) %>%
+   mutate(across(temp:salinity, ~zoo::na.approx(.))) %>%
    ungroup()
 
 
 # Assign depth intervals to data for plotting 
 sonde_int = sonde_profiles %>%
    # 10cm depth intervals
-   mutate(depth_int = case_when(.$vert_m >= 0.0 & vert_m <= 0.1 ~ 0.1,
-                                .$vert_m > 0.1 & vert_m <= 0.2 ~ 0.2,
-                                .$vert_m > 0.2 & vert_m <= 0.3 ~ 0.3,
-                                .$vert_m > 0.3 & vert_m <= 0.4 ~ 0.4,
-                                .$vert_m > 0.4 & vert_m <= 0.5 ~ 0.5,
-                                .$vert_m > 0.5 & vert_m <= 0.6 ~ 0.6,
-                                .$vert_m > 0.6 & vert_m <= 0.7 ~ 0.7,
-                                .$vert_m > 0.7 & vert_m <= 0.8 ~ 0.8,
-                                .$vert_m > 0.8 & vert_m <= 0.9 ~ 0.9,
-                                .$vert_m > 0.9 & vert_m <= 1.0 ~ 1.0,
-                                .$vert_m > 1.0 & vert_m <= 1.1 ~ 1.1,
-                                .$vert_m > 1.1 & vert_m <= 1.2 ~ 1.2,
-                                .$vert_m > 1.2 & vert_m <= 1.3 ~ 1.3,
-                                .$vert_m > 1.3 & vert_m <= 1.4 ~ 1.4,
-                                .$vert_m > 1.4 & vert_m <= 1.5 ~ 1.5,
-                                .$vert_m > 1.5 & vert_m <= 1.6 ~ 1.6,
-                                .$vert_m > 1.6 & vert_m <= 1.7 ~ 1.7,
-                                .$vert_m > 1.7 & vert_m <= 1.8 ~ 1.8,
-                                .$vert_m > 1.8 & vert_m <= 1.9 ~ 1.9,
-                                .$vert_m > 1.9 & vert_m <= 2.0 ~ 2.0,
-                                .$vert_m > 2 ~ 2.1)) %>%
+   mutate(depth_int = case_when(between(vert_m, -0.1, 0.1) ~ 0.1,
+                                between(vert_m, 0.1, 0.2) ~ 0.2,
+                                between(vert_m, 0.2, 0.3) ~ 0.3,
+                                between(vert_m, 0.3, 0.4) ~ 0.4,
+                                between(vert_m, 0.4, 0.5) ~ 0.5,
+                                between(vert_m, 0.5, 0.6) ~ 0.6,
+                                between(vert_m, 0.6, 0.7) ~ 0.7,
+                                between(vert_m, 0.7, 0.8) ~ 0.8,
+                                between(vert_m, 0.8, 0.9) ~ 0.9,
+                                between(vert_m, 0.9, 1.0) ~ 1.0,
+                                between(vert_m, 1.0, 1.1) ~ 1.1,
+                                between(vert_m, 1.1, 1.2) ~ 1.2,
+                                between(vert_m, 1.2, 1.3) ~ 1.3,
+                                between(vert_m, 1.3, 1.4) ~ 1.4,
+                                between(vert_m, 1.4, 1.5) ~ 1.5,
+                                between(vert_m, 1.5, 1.6) ~ 1.6,
+                                between(vert_m, 1.6, 1.7) ~ 1.7,
+                                between(vert_m, 1.7, 1.8) ~ 1.8,
+                                between(vert_m, 1.8, 1.9) ~ 1.9,
+                                between(vert_m, 1.9, 2.0) ~ 2.0,
+                                vert_m > 2.0 ~ 2.1)) %>%
    # mean values within each depth interval
    group_by(pond_id, doy, depth_int) %>%
    summarize(across(temp:salinity, mean, na.rm=T)) %>%
@@ -150,7 +158,7 @@ sonde_int = sonde_profiles %>%
 
 
 ##__Bottom water means 
-#  Depth: bottom 30 cm
+#  Depth: bottom 20 cm
 
 ### I think we should actually use 20 cm instead of 30 (need to check with group)
 
@@ -159,7 +167,16 @@ sonde_bottom = sonde_int %>%
    arrange(depth_int, .by_group=T) %>%
    slice_tail(n=2) %>%
    summarize(across(temp:salinity, ~mean(., na.rm=T))) %>%
+   ungroup() %>%
+   # sonde profiles missing for Pond C (DOY 231) and Pond B (DOY 151)
+   # add these days and linearly interpolate for all variables, so that bottom values aren't missing
+   add_row(pond_id = "B", doy = 151) %>%
+   add_row(pond_id = "C", doy = 231) %>%
+   group_by(pond_id) %>%
+   arrange(doy, .by_group=TRUE) %>%
+   mutate(across(temp:salinity, ~zoo::na.approx(.))) %>%
    ungroup()
+
 
 # alternative way for bottom water (using measured max depth)
 # sonde_bottom2 = sonde_profiles %>%
