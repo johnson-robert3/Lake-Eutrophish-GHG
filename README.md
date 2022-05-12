@@ -19,7 +19,7 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
 
 **DOC data:** sample values were corrected by subtracting the mean value of the blanks within the corresponding run. the first blank in each run was excluded (carryover from flushing) from this mean, as well as two blanks that were outliers (one had TOC > 1000 ppb, one had TOC < 10 ppb) 
 
-**GHG Model Dataset:** days with erroneous metabolism values (i.e, negative GPP, positive R) are currently excluded from the total compiled dataset for use with GHG models; pond surface values of temperature and chlorophyll are calculated from sonde profiles and are each the mean of all values between 5 & 60 cm (0.05 - 0.6 m)
+**GHG Model Dataset:** days with erroneous metabolism values (i.e, negative GPP, positive R) are currently excluded from the total compiled dataset for use with GHG models; pond surface values of temperature and chlorophyll are calculated from sonde profiles and are each the mean of all values between 5 & 60 cm (0.05 - 0.6 m); *this has been updated to use sonde surface values (as above) instead of recalculating, so these values are now means from 0.05 - 0.5 m (instead of 0.6)*
 
 
 ### Next Steps / To Do 
@@ -32,6 +32,14 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
 ## Modeling
 
 ### Modeling Notes
+To recreate the full model dataset from all individual datasets, run scripts in this order:
+
+   1. data_import-and-process
+   2. data_stratification
+   3. data_ghg-calculations
+   4. doc_data-sheet-processing
+   5. metabolism-calcs
+   6. data_model-dataset
 
 
 ### Next Steps / To Do 
