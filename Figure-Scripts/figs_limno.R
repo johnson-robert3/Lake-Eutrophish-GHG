@@ -13,7 +13,7 @@ source("Figure-Scripts/figs_functions.R")
 
 
 # Full dataset of combined variables (used for GHG models
-fdat = read_csv("Data/ghg-model-dataset_2022-05-05.csv")
+fdat = read_csv("Data/ghg-model-dataset_2022-05-12.csv")
 
 
 #===
