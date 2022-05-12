@@ -42,12 +42,15 @@ m13 = sonde_bottom %>%
           bottom_do_sat = do_sat)
 
 
-m14 = sonde_profiles %>%
-   group_by(pond_id, doy) %>%
-   filter(vert_m > 0.05 & vert_m < 0.60) %>%
-   summarize(across(temp:salinity, ~mean(., na.rm=TRUE))) %>%
-   ungroup() %>%
+m14 = sonde_surface %>%
    select(pond_id, doy, temp, chla)
+
+# m14 = sonde_profiles %>%
+#    group_by(pond_id, doy) %>%
+#    filter(vert_m > 0.05 & vert_m < 0.60) %>%
+#    summarize(across(temp:salinity, ~mean(., na.rm=TRUE))) %>%
+#    ungroup() %>%
+#    select(pond_id, doy, temp, chla)
 
 
 m15 = weather_data %>%
@@ -126,7 +129,7 @@ model_dataset = test %>%
 
 
 # output the complete model dataset
-write_csv(model_dataset, file = "Data/ghg-model-dataset_2022-05-05.csv")
+write_csv(model_dataset, file = "Data/ghg-model-dataset_2022-05-12.csv")
 
 
    ## remove temporary individual data sets
