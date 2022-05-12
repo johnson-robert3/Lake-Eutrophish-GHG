@@ -124,13 +124,14 @@ ggplot(pdat %>%
 
 ## CH4 vs Chla
 windows(height=4, width=5)
-ggplot(pdat, aes(x = chla, y = ch4_flux)) +
+ggplot(pdat, aes(x = log(chla+1), y = log(ch4_flux+1))) +
    #
    geom_point(aes(color = trt_nutrients), alpha=0.8, size=1.5) +
+   geom_smooth(aes(group = trt_nutrients, color=trt_nutrients), method = "lm") +
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_continuous(name = "Surface Chla") +
-   scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^1))) +
+   # scale_x_continuous(name = "Surface Chla (ln-transformed)") +
+   # scale_y_continuous(name = expression(CH[4]~flux~(ln-transformed))) +
    # 
    theme_classic() +
    theme(legend.position = "none")
@@ -147,7 +148,7 @@ ggplot(pdat %>%
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
    scale_x_continuous(name = "Surface Chla") +
-   scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^1))) +
+   scale_y_continuous(name = expression(CH[4]~flux)) +
    # 
    theme_classic() +
    theme(legend.position = "none")
@@ -302,15 +303,17 @@ ggplot(pdat %>%
 
 ## N2O vs Bottom DO
 windows(height=4, width=5)
-ggplot(pdat, aes(x = bottom_do, y = n2o_lake)) +
+ggplot(pdat, aes(x = log(bottom_do), y = log(n2o_flux+5))) +
    #
    geom_point(aes(color = trt_nutrients), alpha=0.8, size=1.5) +
+   geom_smooth(aes(group = trt_nutrients, color = trt_nutrients), method="lm") +
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_continuous(name = "DO in bottom 20cm") +
-   scale_y_continuous(name = expression(Dissolved~N[2]*O~(nM))) +
+   # scale_x_continuous(name = "bottom DO") +
+   # scale_y_continuous(name = expression(N[2]*O~flux)) +
    # 
-   theme_classic()
+   theme_classic() +
+   theme(legend.position = "none")
 
 # treatment means
 windows(height=4, width=5)
@@ -318,13 +321,13 @@ ggplot(pdat %>%
           group_by(trt_nutrients, doy) %>%
           summarize(across(ch4_lake:np_ratio, list(mean=mean, sd=sd), .names="{.fn}_{.col}")) %>%
           ungroup(), 
-       aes(x = mean_bottom_do, y = mean_n2o_lake)) +
+       aes(x = mean_bottom_do, y = mean_n2o_flux)) +
    #
    geom_point(aes(color = trt_nutrients), alpha=0.8, size=2) +
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_continuous(name = "DO in bottom 20cm") +
-   scale_y_continuous(name = expression(Dissolved~N[2]*O~(nM))) +
+   scale_x_continuous(name = "bottom DO") +
+   scale_y_continuous(name = expression(N[2]*O~flux)) +
    # 
    theme_classic()
 
