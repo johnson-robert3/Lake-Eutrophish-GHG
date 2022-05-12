@@ -125,7 +125,10 @@ model_dataset = test %>%
    # add a new 'period' variable to account for the fact that pulse periods don't mean anything for the reference treatment
    #  reference ponds are, in effect, always in the 'Base' period
    mutate(period2 = if_else(treatment=="reference", "BASE", period)) %>%
-   relocate(period2, .after=period)
+   relocate(period2, .after=period) %>%
+   # add a Date variable
+   mutate(date = as_date(doy, origin="2020-01-01")) %>%
+   relocate(date, .before=doy)
 
 
 # output the complete model dataset
