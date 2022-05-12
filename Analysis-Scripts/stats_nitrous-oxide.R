@@ -149,7 +149,7 @@ anova(m7, m8)  # sig.; m7 is better; SRP makes model better
 
 ## Best Model - m7
 # n2o.lme = lme(n2o_lake ~ treatment * (NEP + R) + doy + tn + nox + srp + bottom_do,
-n2o.lme = lme(n2o_lake ~ treatment + doy + tn + nox + srp + bottom_do + NEP + R + treatment:NEP + treatment:R,
+n2o.lme = lme(n2o_flux ~ treatment + doy + tn + nox + srp + bottom_do + NEP + R + treatment:NEP + treatment:R,
               random = ~ 1 | pond_id, 
               correlation = corAR1(),
               data = mdat, method="REML")

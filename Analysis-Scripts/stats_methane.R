@@ -146,7 +146,7 @@ MuMIn::r.squaredGLMM(update(m11, method='REML'))
 
 
 ## Best Model - m10
-ch4.lme = lme(ch4_lake ~ treatment * (srp + doc_ppm) + chla + R + bottom_do,
+ch4.lme = lme(ch4_flux ~ treatment * (srp + doc_ppm) + chla + R + bottom_do,
               random = ~ 1 | pond_id, 
               correlation = corAR1(),
               mdat, method='REML')
