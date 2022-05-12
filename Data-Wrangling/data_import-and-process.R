@@ -548,13 +548,7 @@ lake_ghg = ghg_clean %>%
 # Add sample data to GHG values
 lake_samples = left_join(lake_sample_data, lake_ghg) %>%
    # add surface water temperature
-   left_join(sonde_surface %>% select(pond_id, doy, surface_temp=temp)) %>%
-   # fill in a surface temperature for Pond C, DOY 231 (profile not recorded)
-   # linearly interpolate between prior and following measurements
-   group_by(pond_id) %>%
-   arrange(doy, .by_group=T) %>%
-   mutate(surface_temp = if_else(is.na(surface_temp), (lead(surface_temp) + lag(surface_temp)) / 2, surface_temp)) %>%
-   ungroup()
+   left_join(sonde_surface %>% select(pond_id, doy, surface_temp=temp))
 
 
 #---
