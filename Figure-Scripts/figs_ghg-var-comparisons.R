@@ -184,18 +184,19 @@ ggplot(pdat %>%
 
 
 ## LME Effect Sizes
-windows(height=4, width=6)
+windows(height=4, width=6.5)
 ggplot(mtab_ch4 %>%
           rename(estimate = Value,
                  ci_lower = lower,
                  ci_upper = upper,
                  p = "p-value") %>%
+          arrange(estimate) %>%  # to put factors in order of effect size (from neg. to pos.)
           mutate(fixed.effect = as_factor(fixed.effect)) %>%
           filter(!(fixed.effect=="(Intercept)")),
        # fixed effects in order of model
        aes(x = estimate, y = fct_rev(fixed.effect))) +
        # fixed effects in order of effect size
-       # aes(x = estimate, y = fct_reorder(fixed.effect, estimate, .fun=abs, .desc=F))) +
+       # aes(x = estimate, y = fct_reorder(fixed.effect, estimate, .fun=abs, .desc=T))) +
    #
    geom_vline(xintercept = 0, linetype=1, color="gray60") +
    # placeholder points to build the plot correctly
@@ -217,25 +218,26 @@ ggplot(mtab_ch4 %>%
    geom_errorbarh(data = ~filter(.x, p <= 0.05 & estimate < 0),
                   aes(xmin = ci_lower, xmax = ci_upper, height=0), size=0.75, color="#2d6187") +
    #
-   scale_x_continuous(name = "Estimate", limits = c(-5, 15), breaks = seq(-5, 15, 5)) +
+   scale_x_continuous(name = "Estimate", limits = c(-2, 15), breaks = seq(0, 15, 5)) +
    # factors in order of model
-   scale_y_discrete(name=NULL, 
-                    labels = c("DOC × Treatment\n(Pulse)",
-                               "SRP × Treatment\n(Pulse)",
-                               "Bottom water DO", 
-                               "Respiration", 
+   scale_y_discrete(name=NULL,
+                    labels = c("Treatment (Pulse)", 
+                               "SRP × Treat. (Pulse)",
+                               "SRP",
+                               "DOC",
                                "Chlorophyll a",
-                               "DOC", 
-                               "SRP", 
-                               "Treatment\n(Pulse)")) +
+                               "Respiration",
+                               "Bottom water DO",
+                               "DOC × Treat. (Pulse)")) +
    # factors ordered by decreasing effect size
    # scale_y_discrete(name = NULL,
    #                  labels = c()) +
-   ggtitle(expression(Effect~on~diffusive~CH[4]~flux)) +
+   ggtitle(expression(Effect~on~CH[4]~Flux)) +
    theme_classic() +
-   theme(axis.title.x = element_text(margin = margin(t=0.5, unit="line")))
+   theme(axis.text = element_text(color="black", size=rel(1)),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line"), size=rel(1.1)))
 
-# ggsave(filename="ch4_effect-size.png", height=4, width=6, units='in')
+# ggsave(filename="ch4_effect-size-decreasing.png")
 
 
 
@@ -391,12 +393,13 @@ ggplot(pdat %>%
 
 
 ## LME Effect Sizes
-windows(height=4, width=6)
+windows(height=4, width=6.5)
 ggplot(mtab_n2o %>%
           rename(estimate = Value,
                  ci_lower = lower,
                  ci_upper = upper,
                  p = "p-value") %>%
+          arrange(estimate) %>%  # to put factors in order of effect size (from neg. to pos.)
           mutate(fixed.effect = as_factor(fixed.effect)) %>%
           filter(!(fixed.effect=="(Intercept)")),
        # fixed effects in order of model
@@ -425,26 +428,27 @@ ggplot(mtab_n2o %>%
                   aes(xmin = ci_lower, xmax = ci_upper, height=0), size=0.75, color="#2d6187") +
    #
    # scale_x_continuous(name = "Effect size", limits = c(-3, 2), breaks = seq(-3, 2, 1)) +
-   scale_x_continuous(name = "Estimate", limits = c(-1.5, 1.5), breaks = seq(-1.5, 1.5, 0.5)) +
+   scale_x_continuous(name = "Estimate", limits = c(-1.5, 1), breaks = seq(-1.5, 1, 0.5)) +
    # factors in order of model
    scale_y_discrete(name=NULL,
-                    labels = c("Resp. × Treatment\n(Pulse)",
-                               "NEP × Treatment\n(Pulse)",
+                    labels = c("Total Nitrogen",
+                               "NEP × Treat. (Pulse)",
+                               "Bottom Water DO",
                                "Respiration",
-                               "Net Ecosystem Production",
-                               "Bottom water DO",
-                               "SRP", 
-                               "Nitrate",
-                               "Total nitrogen",
                                "Time (day of year)",
-                               "Treatment\n(Pulse)")) +
+                               "Net Ecosystem Production",
+                               "SRP",
+                               "Resp. × Treat. (Pulse)",
+                               "Nitrate",
+                               "Treatment (Pulse)")) +
    # factors ordered by decreasing effect size
    # scale_y_discrete(name = NULL,
    #                  labels = c()) +
-   ggtitle(expression(Effect~on~diffusive~N[2]*O~flux)) +
+   ggtitle(expression(Effect~on~N[2]*O~Flux)) +
    theme_classic() +
-   theme(axis.title.x = element_text(margin = margin(t=0.5, unit="line")))
+   theme(axis.text = element_text(color="black", size=rel(1)),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line"), size=rel(1.1)))
 
-# ggsave(filename="n2o_effect-size.png", height=4, width=6, units='in')
+# ggsave(filename="n2o_effect-size-decreasing.png")
 
 
