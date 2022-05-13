@@ -82,4 +82,8 @@ To recreate the full model dataset from all individual datasets, run scripts in 
    - [x] Over time
    - [x] N2O vs variables used in final model
    - [x] Effect sizes from model output
+   - [ ] Cumulative diffusive flux
+- [ ] NEP vs time
+- [ ] R vs time
+- [ ] Remake other figs (bottom DO, Chla, nutrients) with date instead of DOY for x-axis
 
