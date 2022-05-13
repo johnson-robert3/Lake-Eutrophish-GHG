@@ -31,7 +31,7 @@ m11 = metabolism %>%
 
 
 m12 = limno_field_data %>%
-   select(pond_id, doy, period, tp:nhx) %>%
+   select(pond_id, doy, period, tn, tp, nox, srp) %>%
    # align dates of nutrient samples with GHG samples (became offset after DOY 220; nutrients were sampled the day after GHGs)
    mutate(doy = if_else(doy > 221, doy - 1, doy))
 
@@ -80,8 +80,6 @@ m18 = alk_data %>%
 m19 = doc_dat %>%
    select(pond_id, doy, doc_ppb) %>%
    arrange(pond_id, doy) %>%
-   # remove DOY 143, this was an early DOC sample before GHG sampling started
-   filter(!(doy==143)) %>% 
    # align dates of DOC samples with GHG samples
    #  Pond A: DOC becomes offset from GHGs by one day starting at DOY 222
    #  Pond B: DOC is offset from GHGs by one day for DOYs 223, 225, 227, 230, 232
