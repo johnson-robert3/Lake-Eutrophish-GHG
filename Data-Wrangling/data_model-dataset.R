@@ -43,7 +43,7 @@ m13 = sonde_bottom %>%
 
 
 m14 = sonde_surface %>%
-   select(pond_id, doy, temp, chla)
+   select(pond_id, doy, temp, chla, surface_do = do, surface_do_sat = do_sat)
 
 # m14 = sonde_profiles %>%
 #    group_by(pond_id, doy) %>%
@@ -78,7 +78,10 @@ m18 = alk_data %>%
 
 
 m19 = doc_dat %>%
-   select(pond_id, doy, doc_ppb)
+   select(pond_id, doy, doc_ppb) %>%
+   arrange(pond_id, doy) %>%
+   # align dates of nutrient samples with GHG samples (became offset after DOY 220; nutrients were sampled the day after GHGs)
+   mutate(doy = if_else(doy > 221, doy - 1, doy))
 
 
 # t9 = hobo_strat %>%
@@ -132,7 +135,7 @@ model_dataset = test %>%
 
 
 # output the complete model dataset
-write_csv(model_dataset, file = "Data/ghg-model-dataset_2022-05-12.csv")
+write_csv(model_dataset, file = "Data/ghg-model-dataset_2022-05-13.csv")
 
 
    ## remove temporary individual data sets
