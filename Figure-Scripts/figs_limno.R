@@ -12,8 +12,16 @@ library(slider)
 source("Figure-Scripts/figs_functions.R")
 
 
-# Full dataset of combined variables (used for GHG models
-fdat = read_csv("Data/ghg-model-dataset_2022-05-12.csv")
+# Pond/Site Data
+pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
+
+# Data for plotting
+#  Need to run "stats_model-data.R" script first
+pdat = fdat %>% 
+   mutate(date = ymd(date)) %>%
+   left_join(pond_data %>% 
+                select(pond_id, starts_with("trt")))
+
 
 
 #===
@@ -21,7 +29,7 @@ fdat = read_csv("Data/ghg-model-dataset_2022-05-12.csv")
 #===
 
 # daily surface limno values from sonde profiles
-ldat = left_join(sonde_surface, pond_data)
+# ldat = left_join(sonde_surface, pond_data)  # no longer needed, the full dataset (fdat) now directly uses the sonde_surface values
 
 
 # rolling window data (3-day)
@@ -163,31 +171,35 @@ windows(height=7, width=6); a / b
 
 
 # 1 panel (blue & red)
-windows(height=3.5, width=5)
-ggplot(ldat,
-       aes(x = doy, y = chla)) +
+windows(height=4, width=5.5)
+ggplot(pdat,
+       aes(x = date, y = chla)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
-   geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
+   geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
+              aes(xintercept = date), linetype=2, color="gray60") +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.3, size=1) +
-   # geom_point(aes(color = trt_nutrients), size=1.5, alpha=0.4) +
    # treatment mean (loess smooth)
    geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_x_date(name = NULL, 
+                breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
+                labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
    scale_y_continuous(name = expression(Chl~italic("a")~(mu*g~L^-1)),
                       limits = c(0, 65), breaks = seq(0, 60, 10)) +
-   ggtitle(expression(Surface~Chlorophyll~italic("a"))) +
+   ggtitle(expression(Surface~Water~Chlorophyll~italic("a"))) +
    #
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
-         legend.position = c(0.18, 0.85),
-         axis.title.y = element_text(margin = margin(r=0.5, unit="line")),
-         axis.title.x = element_text(margin = margin(t=0.5, unit="line")))
+         legend.position = c(0.18, 0.86),
+         axis.ticks.length = unit(0.3, 'line'),
+         axis.text = element_text(color='black', size=rel(1)),
+         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
 
-# ggsave(filename = "surface-chla.png", height=3.5, width=5, units="in")
+# ggsave(filename = "surface-chla.png")
 
 
 #--
@@ -326,42 +338,47 @@ windows(height=7, width=6); a / b
 # Dissolved Oxygen
 #--
 
-## Surface DO
+## Surface DO  # doesn't work currently, surface DO not included in fdat dataset
 
 # 1 panel (blue & red)
-windows(height=3.5, width=5)
-ggplot(ldat,
-       aes(x = doy, y = do)) +
+windows(height=4, width=5.5)
+ggplot(pdat,
+       aes(x = date, y = do)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
-   geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
+   geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
+              aes(xintercept = date), linetype=2, color="gray60") +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.3, size=1) +
-   # geom_point(aes(color = trt_nutrients), size=1.5, alpha=0.4) +
    # treatment mean (loess smooth)
    geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_x_date(name = NULL, 
+                breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
+                labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
    scale_y_continuous(name = expression(DO~(mg~L^-1))) +
    #
-   ggtitle("Surface water dissolved oxygen") +
+   ggtitle(expression(Surface~Water~Dissolved~O[2])) +
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
          legend.position = c(0.85, 0.85),
-         axis.title.y = element_text(margin = margin(r=0.5, unit="line")),
-         axis.title.x = element_text(margin = margin(t=0.5, unit="line")))
+         axis.ticks.length = unit(0.3, 'line'),
+         axis.text = element_text(color='black', size=rel(1)),
+         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
 
-# ggsave(filename = "surface-water-DO.png", height=3.5, width=5, units="in")
+# ggsave(filename = "surface-water-DO.png")
 
 
 ## Bottom water DO
-windows(height=3.5, width=5)
-ggplot(sonde_bottom %>% left_join(pond_data),
-       aes(x = doy, y = do)) +
+windows(height=4, width=5.5)
+ggplot(pdat,
+       aes(x = date, y = bottom_do)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
-   geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
+   geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
+              aes(xintercept = date), linetype=2, color="gray60") +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.3, size=1) +
    # geom_point(aes(color = trt_nutrients), size=1.5, alpha=0.4) +
@@ -369,17 +386,21 @@ ggplot(sonde_bottom %>% left_join(pond_data),
    geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_x_date(name = NULL, 
+                breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
+                labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
    scale_y_continuous(name = expression(DO~(mg~L^-1))) +
    #
-   ggtitle("Bottom water dissolved oxygen") +
+   ggtitle(expression(Bottom~Water~Dissolved~O[2])) +
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
-         legend.position = c(0.85, 0.85),
-         axis.title.y = element_text(margin = margin(r=0.5, unit="line")),
-         axis.title.x = element_text(margin = margin(t=0.5, unit="line")))
+         legend.position = c(0.85, 0.86),
+         axis.ticks.length = unit(0.3, 'line'),
+         axis.text = element_text(color='black', size=rel(1)),
+         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
 
-# ggsave(filename = "bottom-water-DO.png", height=3.5, width=5, units="in")
+# ggsave(filename = "bottom-water-DO.png")
 
 
 #===
