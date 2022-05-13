@@ -97,6 +97,58 @@ ggplot(fdat %>%
 # ggsave(filename="diffusive-ch4-flux.png", height=4, width=5.5, units='in')
 
 
+## Cumulative diffusive flux
+windows(height=4, width=5.5)
+ggplot(fdat %>%
+          filter(!(is.na(ch4_flux))) %>%
+          # add in blank rows for days without GHG sampling
+          full_join(tibble('A' = c(146:240), 'B' = c(146:240), 'C' = c(146:240), 'D' = c(146:240), 'E' = c(146:240), 'F' = c(146:240)) %>%
+                       pivot_longer(cols = everything(), names_to = "pond_id", values_to = "doy") %>%
+                       mutate(doy = as.numeric(doy))) %>%
+          group_by(pond_id) %>%
+          arrange(doy, .by_group=TRUE) %>%
+          # add Dates for the DOYs that have now been added
+          mutate(date = as_date(doy, origin="2020-01-01"),
+                 date = ymd(date)) %>%
+          # linearly interpolate CH4 flux for days without measurements
+          mutate(ch4_interp = zoo::na.approx(ch4_flux)) %>%
+          # cumulative flux during experiment
+          mutate(ch4_net = slide_dbl(ch4_interp, ~sum(.), .before=Inf)) %>%
+          ungroup() %>%
+          left_join(pond_data),
+       aes(x = date, y = ch4_net)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   # geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
+   geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
+              aes(xintercept = date), linetype=2, color="gray60") +
+   # pond data
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.8, size=1.1) +
+   # treatment mean (loess smooth)
+   # geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
+   #
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   # scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_x_date(name = NULL, 
+                breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
+                # date_labels = "%b %Y",
+                labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
+   scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2)),
+                      limits = c(0, 1000), breaks = seq(0, 1000, 250)) +
+   #
+   ggtitle(expression(Cumulative~Diffusive~CH[4]~Flux)) +
+   theme_classic() +
+   theme(panel.border = element_rect(fill=NA, color='black'),
+         legend.position = c(0.16, 0.88),
+         axis.ticks.length = unit(0.3, 'line'),
+         axis.text = element_text(color='black', size=rel(1)),
+         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
+         # axis.title.x = element_text(margin = margin(t=0.5, unit="line")),
+         axis.title.y = element_text(size=rel(1.1)))
+
+# ggsave(filename="cumulative-diffusive-ch4-flux.png", height=4, width=5.5, units='in')
+
+
 
 #---
 #### Nitrous Oxide ####
@@ -106,6 +158,7 @@ ggplot(fdat %>%
 windows(height=4, width=5.5)
 ggplot(fdat %>%
           filter(!(is.na(n2o_lake))) %>%
+          # convert from uM to nM
           mutate(n2o_lake = n2o_lake * 1000,
                  n2o_lake = if_else(n2o_lake < 0, 0, n2o_lake)) %>%
           left_join(pond_data), 
@@ -137,6 +190,7 @@ ggplot(fdat %>%
 windows(height=4, width=5.5)
 ggplot(fdat %>%
           filter(!(is.na(n2o_flux))) %>%
+          # convert from mmol to umol
           mutate(n2o_flux = n2o_flux * 1000) %>%
           left_join(pond_data), 
        aes(x = date, y = n2o_flux)) +
@@ -159,7 +213,7 @@ ggplot(fdat %>%
    scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)),
                       limits = c(-4, 3), breaks = seq(-4, 3, 1)) +
    #
-   ggtitle(expression(Diffusive~N[2]*O~flux)) +
+   ggtitle(expression(Diffusive~N[2]*O~Flux)) +
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color='black'),
          legend.position = c(0.51, 0.88),
@@ -171,6 +225,59 @@ ggplot(fdat %>%
 
 # ggsave(filename="diffusive-n2o-flux.png", height=4, width=5.5, units='in')
 
+
+## Cumulative diffusive flux
+windows(height=4, width=5.5)
+ggplot(fdat %>%
+          filter(!(is.na(n2o_flux))) %>%
+          # convert from mmol to umol
+          mutate(n2o_flux = n2o_flux * 1000) %>%
+          # add in blank rows for days without GHG sampling
+          full_join(tibble('A' = c(146:240), 'B' = c(146:240), 'C' = c(146:240), 'D' = c(146:240), 'E' = c(146:240), 'F' = c(146:240)) %>%
+                       pivot_longer(cols = everything(), names_to = "pond_id", values_to = "doy") %>%
+                       mutate(doy = as.numeric(doy))) %>%
+          group_by(pond_id) %>%
+          arrange(doy, .by_group=TRUE) %>%
+          # add Dates for the DOYs that have now been added
+          mutate(date = as_date(doy, origin="2020-01-01"),
+                 date = ymd(date)) %>%
+          # linearly interpolate CH4 flux for days without measurements
+          mutate(n2o_interp = zoo::na.approx(n2o_flux)) %>%
+          # cumulative flux during experiment
+          mutate(n2o_net = slide_dbl(n2o_interp, ~sum(.), .before=Inf)) %>%
+          ungroup() %>%
+          left_join(pond_data),
+       aes(x = date, y = n2o_net)) +
+   #
+   geom_hline(yintercept=0, linetype=2, color="gray60", size=1) +
+   # geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
+   geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
+              aes(xintercept = date), linetype=2, color="gray60") +
+   # pond data
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.8, size=1.1) +
+   # treatment mean (loess smooth)
+   # geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
+   #
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   # scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_x_date(name = NULL,
+                breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')),
+                # date_labels = "%b %Y",
+                labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) +
+   scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2)),
+                      limits = c(-160, 25), breaks = seq(-150, 0, 50)) +
+   #
+   ggtitle(expression(Cumulative~Diffusive~N[2]*O~Flux)) +
+   theme_classic() +
+   theme(panel.border = element_rect(fill=NA, color='black'),
+         legend.position = c(0.16, 0.16),
+         axis.ticks.length = unit(0.3, 'line'),
+         axis.text = element_text(color='black', size=rel(1)),
+         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
+         # axis.title.x = element_text(margin = margin(t=0.5, unit="line")),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
+
+# ggsave(filename="cumulative-diffusive-n2o-flux.png", height=4, width=5.5, units='in')
 
 
 #---
