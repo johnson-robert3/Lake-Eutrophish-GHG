@@ -153,7 +153,7 @@ windows(height=4, width=5.5)
 ggplot(pdat,
        aes(x = date, y = NEP)) +
    #
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_hline(yintercept=0, linetype=2, color="gray60", size=1) +
    geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
               aes(xintercept = date), linetype=2, color="gray60") +
    # pond data
