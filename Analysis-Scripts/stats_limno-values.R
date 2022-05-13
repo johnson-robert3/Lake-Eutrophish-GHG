@@ -167,5 +167,33 @@ lake_flux %>%
    ungroup()
 
 
+# more recent, using full model dataset
+fdat %>%
+          filter(!(is.na(n2o_flux))) %>%
+          # convert from mmol to umol
+          mutate(n2o_flux = n2o_flux * 1000) %>%
+          # add in blank rows for days without GHG sampling
+          full_join(tibble('A' = c(146:240), 'B' = c(146:240), 'C' = c(146:240), 'D' = c(146:240), 'E' = c(146:240), 'F' = c(146:240)) %>%
+                       pivot_longer(cols = everything(), names_to = "pond_id", values_to = "doy") %>%
+                       mutate(doy = as.numeric(doy))) %>%
+          group_by(pond_id) %>%
+          arrange(doy, .by_group=TRUE) %>%
+          # add Dates for the DOYs that have now been added
+          mutate(date = as_date(doy, origin="2020-01-01"),
+                 date = ymd(date)) %>%
+          # linearly interpolate CH4 flux for days without measurements
+          mutate(n2o_interp = zoo::na.approx(n2o_flux)) %>%
+          # cumulative flux during experiment
+          mutate(n2o_net = slide_dbl(n2o_interp, ~sum(.), .before=Inf)) %>%
+          ungroup() %>%
+          left_join(pond_data) %>%
+   group_by(pond_id) %>%
+   arrange(doy, .by_group=TRUE) %>%
+   slice_tail(n=1) %>% 
+   ungroup() %>%
+   group_by(trt_nutrients) %>%
+   summarize(mean = mean(n2o_net), se = sd(n2o_net)/sqrt(n())) %>% 
+   View
+
 
 
