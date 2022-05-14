@@ -10,6 +10,7 @@ library(cowplot)
 library(patchwork)
 library(slider)
 library(lubridate)
+library(scales)
 
 source("Figure-Scripts/figs_functions.R")
 
@@ -218,7 +219,8 @@ ggplot(mtab_ch4 %>%
    geom_errorbarh(data = ~filter(.x, p <= 0.05 & estimate < 0),
                   aes(xmin = ci_lower, xmax = ci_upper, height=0), size=0.75, color="#2d6187") +
    #
-   scale_x_continuous(name = "Estimate", limits = c(-2, 15), breaks = seq(0, 15, 5)) +
+   scale_x_continuous(name = "Estimate (mean ± 95% CI)", 
+                      limits = c(-2, 8), breaks = seq(-2, 8, 2), oob=squish) +
    # factors in order of model
    scale_y_discrete(name=NULL,
                     labels = c("Treatment (Pulse)", 
@@ -250,6 +252,7 @@ windows(height=4, width=5)
 ggplot(pdat, aes(x = NEP, y = n2o_lake)) +
    #
    geom_point(aes(color = trt_nutrients), alpha=0.8, size=1.5) +
+   geom_smooth(aes(color = trt_nutrients), alpha=0.8, method="lm") +
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
    scale_x_continuous(name = "NEP") +
@@ -279,6 +282,7 @@ windows(height=4, width=5)
 ggplot(pdat, aes(x = R, y = n2o_lake)) +
    #
    geom_point(aes(color = trt_nutrients), alpha=0.8, size=1.5) +
+   geom_smooth(aes(color = trt_nutrients), alpha=0.8, method="lm") +
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
    scale_x_continuous(name = "Respiration") +
@@ -428,7 +432,8 @@ ggplot(mtab_n2o %>%
                   aes(xmin = ci_lower, xmax = ci_upper, height=0), size=0.75, color="#2d6187") +
    #
    # scale_x_continuous(name = "Effect size", limits = c(-3, 2), breaks = seq(-3, 2, 1)) +
-   scale_x_continuous(name = "Estimate", limits = c(-1.5, 1), breaks = seq(-1.5, 1, 0.5)) +
+   scale_x_continuous(name = "Estimate (mean ± 95% CI)", 
+                      limits = c(-1, 1), breaks = seq(-1, 1, 0.5), oob=squish) +
    # factors in order of model
    scale_y_discrete(name=NULL,
                     labels = c("Total Nitrogen",
