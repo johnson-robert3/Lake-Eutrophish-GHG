@@ -166,7 +166,7 @@ ggplot(pdat,
                 breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
                 labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
    scale_y_continuous(name = expression(NEP~(mg~O[2]~L^-1~d^-1)),
-                      limits = c(-8, 8), breaks = seq(-8, 8, 4)) +
+                      limits = c(-8, 8), breaks = seq(-8, 8, 2)) +
    ggtitle("Net Ecosystem Production") +
    #
    theme_classic() +
