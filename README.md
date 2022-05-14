@@ -85,5 +85,5 @@ To recreate the full model dataset from all individual datasets, run scripts in 
    - [x] Cumulative diffusive flux
 - [x] NEP vs time
 - [x] R vs time
-- [ ] Remake other figs (bottom DO, Chla, nutrients) with date instead of DOY for x-axis
+- [x] Remake other figs (bottom DO, Chla, nutrients) with date instead of DOY for x-axis
 
