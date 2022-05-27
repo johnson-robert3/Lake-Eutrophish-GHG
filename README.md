@@ -44,7 +44,7 @@ To recreate the full model dataset from all individual datasets, run scripts in 
 
 ### Next Steps / To Do 
 
-- [ ] **CO2 model**
+- [ ] **CO2 LME model**
    - [x] Create the full model
    - [x] Iteratively remove components to find the best-fit model
    - [x] Test the model using just the pulsed ponds (difference between periods?)
@@ -52,17 +52,12 @@ To recreate the full model dataset from all individual datasets, run scripts in 
    - [x] Are there better models (higher R-squared) but that have non-sig. fixed effects?
    - [ ] Add nutrient variables back to model, now that dates have been aligned so the full data are there
    - [ ] Remove alkalinity from the model (*alkalinity is used in the equation to calculate CO2, so of course it is a sig. effect*)
-- [x] **CH4 model**
-   - [x] Create the full model
-   - [x] Iteratively remove components to find the best-fit model
-   - [x] Test the model using just the pulsed ponds (difference between periods?)
-   - [x] Compare treatments, but excluding the pre-pulse (i.e., BASE) period
-- [x] **N2O model**
-   - [x] Create the full model
-   - [x] Iteratively remove components to find the best-fit model
-   - [x] Test the model using just the pulsed ponds (difference between periods?)
-   - [x] Compare treatments, but excluding the pre-pulse (i.e., BASE) period (*I don't think this makes sense for N2O; there is sig. DOY effect*)
-- [x] Use DOY as a fixed effect variable in models and include a treatment:time interaction (gases follow different temporal dynamics due to differences in plant phenology). Is time a significant variable? Is DOY better than Period?
+
+
+- [ ] Try using conditional inference trees to determine which predictor variables are most likely important (to then use to create an initial model)
+- [ ] Try using GAM instead of LME to analyzes GHG flux data
+- [ ] Use PCA or NMDS instead, since we have so many predictor variables?
+- [ ] Should any data be transformed prior to analysis?
 
 
 
@@ -74,16 +69,4 @@ To recreate the full model dataset from all individual datasets, run scripts in 
    - [x] Over time
    - [ ] CO2 vs variables used in final model
    - [ ] Effect sizes from model output
-- [x] **CH4**
-   - [x] Over time
-   - [x] CH4 vs variables used in final model
-   - [x] Effect sizes from model output
-- [x] **N2O**
-   - [x] Over time
-   - [x] N2O vs variables used in final model
-   - [x] Effect sizes from model output
-   - [x] Cumulative diffusive flux
-- [x] NEP vs time
-- [x] R vs time
-- [x] Remake other figs (bottom DO, Chla, nutrients) with date instead of DOY for x-axis
 
