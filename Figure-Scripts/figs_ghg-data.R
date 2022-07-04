@@ -267,35 +267,6 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(ch4_ppm))),
 }
 
 
-## Mean + CI by nutrient treatment
-windows(height=4, width=6)
-
-b=
-ggplot(lake_flux %>% left_join(pond_data),
-       aes(x = doy, y = ch4_flux)) +
-   # CI
-   geom_smooth(aes(group = trt_nutrients,
-                   fill = trt_nutrients),
-               method = "loess", se = T, span = 0.2, alpha = 0.15, show.legend=F) +
-   # mean
-   geom_smooth(aes(group = trt_nutrients,
-                   color = trt_nutrients),
-               method = "loess", se = F, span = 0.2) +
-   #
-   scale_color_manual(name = NULL,
-                      breaks = c("no", "yes"),
-                      values = c("no" = "royalblue", "yes" = "seagreen"),
-                      labels = c("no" = "Reference", "yes" = "Pulsed"),
-                      guide = guide_legend(override.aes = list(fill = NA))) +
-   scale_fill_manual(breaks = c("no", "yes"),
-                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-   geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
-   geom_hline(yintercept = 0, linetype=3, color="gray40") +
-   #
-   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
-   theme_classic()
-
 
 #---
 #### Nitrous Oxide ####
@@ -439,35 +410,6 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(n2o_ppm))),
 }
 
 
-## Mean + CI by nutrient treatment
-windows(height=4, width=6)
-
-c=
-ggplot(lake_flux %>% left_join(pond_data)%>% mutate(n2o_flux = n2o_flux * 1000),
-       aes(x = doy, y = n2o_flux)) +
-   # CI
-   geom_smooth(aes(group = trt_nutrients,
-                   fill = trt_nutrients),
-               method = "loess", se = T, span = 0.2, alpha = 0.15, show.legend=F) +
-   # mean
-   geom_smooth(aes(group = trt_nutrients,
-                   color = trt_nutrients),
-               method = "loess", se = F, span = 0.2) +
-   #
-   scale_color_manual(name = NULL,
-                      breaks = c("no", "yes"),
-                      values = c("no" = "royalblue", "yes" = "seagreen"),
-                      labels = c("no" = "Reference", "yes" = "Pulsed"),
-                      guide = guide_legend(override.aes = list(fill = NA))) +
-   scale_fill_manual(breaks = c("no", "yes"),
-                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
-   geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
-   geom_hline(yintercept = 0, linetype=3, color="gray40") +
-   #
-   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
-   scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
-   theme_classic()
-
 
 #---
 #### Carbon Dioxide ####
@@ -607,7 +549,14 @@ ggplot(lake_flux %>% left_join(pond_data) %>% filter(!(is.na(co2_ppm))),
 }
 
 
+
+#---
+# All gases together
+#---
+
 ## Mean + CI by nutrient treatment
+{
+#- CARBON DIOXIDE
 windows(height=4, width=6)
 
 a=
@@ -638,15 +587,71 @@ ggplot(lake_flux %>% left_join(pond_data),
    theme_classic()
 
 
+#- METHANE
+windows(height=4, width=6)
 
-#---
-# All gases, mean + CI
-#---
+b=
+ggplot(lake_flux %>% left_join(pond_data),
+       aes(x = doy, y = ch4_flux)) +
+   # CI
+   geom_smooth(aes(group = trt_nutrients,
+                   fill = trt_nutrients),
+               method = "loess", se = T, span = 0.2, alpha = 0.15, show.legend=F) +
+   # mean
+   geom_smooth(aes(group = trt_nutrients,
+                   color = trt_nutrients),
+               method = "loess", se = F, span = 0.2) +
+   #
+   scale_color_manual(name = NULL,
+                      breaks = c("no", "yes"),
+                      values = c("no" = "royalblue", "yes" = "seagreen"),
+                      labels = c("no" = "Reference", "yes" = "Pulsed"),
+                      guide = guide_legend(override.aes = list(fill = NA))) +
+   scale_fill_manual(breaks = c("no", "yes"),
+                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
+   #
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   theme_classic()
 
+
+#- NITROUS OXIDE
+windows(height=4, width=6)
+
+c=
+ggplot(lake_flux %>% left_join(pond_data)%>% mutate(n2o_flux = n2o_flux * 1000),
+       aes(x = doy, y = n2o_flux)) +
+   # CI
+   geom_smooth(aes(group = trt_nutrients,
+                   fill = trt_nutrients),
+               method = "loess", se = T, span = 0.2, alpha = 0.15, show.legend=F) +
+   # mean
+   geom_smooth(aes(group = trt_nutrients,
+                   color = trt_nutrients),
+               method = "loess", se = F, span = 0.2) +
+   #
+   scale_color_manual(name = NULL,
+                      breaks = c("no", "yes"),
+                      values = c("no" = "royalblue", "yes" = "seagreen"),
+                      labels = c("no" = "Reference", "yes" = "Pulsed"),
+                      guide = guide_legend(override.aes = list(fill = NA))) +
+   scale_fill_manual(breaks = c("no", "yes"),
+                     values = c("no" = "cornflowerblue", "yes" = "seagreen3")) +
+   geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
+   geom_hline(yintercept = 0, linetype=3, color="gray40") +
+   #
+   scale_x_continuous(name = "DOY", expand = expansion(mult=0.1)) +
+   scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), expand = expansion(mult=0.1)) +
+   theme_classic()
+
+
+# 3-panel figure
 windows(height=10, width=6)
-
 a / b / c
 
-ggsave(filename = "Figures/new-figs/diffusive-flux_all.png", height=10, width=6, units="in")
+# ggsave(filename = "Figures/new-figs/diffusive-flux_all.png", height=10, width=6, units="in")
+}
 
 
