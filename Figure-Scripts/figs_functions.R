@@ -63,5 +63,5 @@ nut_labs = c("yes" = "Pulsed", "no" = "Reference")
 fish_breaks = c("high", "medium", "low")
 fish_alpha = c("high" = 0.9, "medium" = 0.6, "low" = 0.3)
 fish_labs = c("high" = "High", "medium" = "Intermediate", "low" = "Low")
-
+fish_color = c("high" = "#a8dda8", "medium" = "#51c2d5", "low" = "#0f3460")
 
