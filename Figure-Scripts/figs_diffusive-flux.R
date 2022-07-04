@@ -305,4 +305,174 @@ ggplot(pdat, aes(x = doy, y = co2_lake)) +
          axis.title.y = element_text(margin = margin(r=0.5, unit="line")))
 
 
+#---
+#### All Gases ####
+#---
+
+# CH4 - pulsed
+windows(height=4, width=5.5)
+a = 
+ggplot(fdat %>%
+          filter(!(is.na(ch4_flux)), treatment=="pulsed") %>%
+          left_join(pond_data), 
+       aes(x = date, y = ch4_flux)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
+              aes(xintercept = date), linetype=2, color="gray60") +
+   #
+   geom_line(aes(group = pond_id, color = trt_fish), size=1) +
+   #
+   scale_color_manual(name = NULL, breaks = fish_breaks, values = fish_color, labels = fish_labs) +
+   scale_x_date(name = NULL, 
+                breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
+                labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
+   scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^-1)),
+                      limits = c(0, 60), breaks = seq(0, 60, 10)) +
+   #
+   ggtitle("CH4 - pulsed") +
+   theme_classic() +
+   theme(panel.border = element_rect(fill=NA, color='black'),
+         legend.position = "none")
+   
+# CH4 - reference
+windows(height=4, width=5.5)
+d = 
+ggplot(fdat %>%
+          filter(!(is.na(ch4_flux)), treatment=="reference") %>%
+          left_join(pond_data), 
+       aes(x = date, y = ch4_flux)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
+   #            aes(xintercept = date), linetype=2, color="gray60") +
+   #
+   geom_line(aes(group = pond_id, color = trt_fish), size=1) +
+   #
+   scale_color_manual(name = NULL, breaks = fish_breaks, values = fish_color, labels = fish_labs) +
+   scale_x_date(name = NULL, 
+                breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
+                labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
+   scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^-1)),
+                      limits = c(0, 60), breaks = seq(0, 60, 10)) +
+   #
+   ggtitle("CH4 - reference") +
+   theme_classic() +
+   theme(panel.border = element_rect(fill=NA, color='black'),
+         legend.position = "none")
+
+
+# N2O - pulsed
+windows(height=4, width=5.5)
+b = 
+ggplot(fdat %>%
+          filter(!(is.na(n2o_flux)), treatment=="pulsed") %>%
+          # convert from mmol to umol
+          mutate(n2o_flux = n2o_flux * 1000) %>%
+          left_join(pond_data), 
+       aes(x = date, y = n2o_flux)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
+              aes(xintercept = date), linetype=2, color="gray60") +
+   #
+   geom_line(aes(group = pond_id, color = trt_fish), size=1) +
+   #
+   scale_color_manual(name = NULL, breaks = fish_breaks, values = fish_color, labels = fish_labs) +
+   scale_x_date(name = NULL, 
+                breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')),
+                labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
+   scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)),
+                      limits = c(-4, 3), breaks = seq(-4, 3, 1)) +
+   #
+   ggtitle("N2O - pulsed") +
+   theme_classic() +
+   theme(panel.border = element_rect(fill=NA, color='black'),
+         legend.position = "none")
+
+# N2O - reference
+windows(height=4, width=5.5)
+e = 
+ggplot(fdat %>%
+          filter(!(is.na(n2o_flux)), treatment=="reference") %>%
+          # convert from mmol to umol
+          mutate(n2o_flux = n2o_flux * 1000) %>%
+          left_join(pond_data), 
+       aes(x = date, y = n2o_flux)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
+   #            aes(xintercept = date), linetype=2, color="gray60") +
+   #
+   geom_line(aes(group = pond_id, color = trt_fish), size=1) +
+   #
+   scale_color_manual(name = NULL, breaks = fish_breaks, values = fish_color, labels = fish_labs) +
+   scale_x_date(name = NULL, 
+                breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')),
+                labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
+   scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)),
+                      limits = c(-4, 3), breaks = seq(-4, 3, 1)) +
+   #
+   ggtitle("N2O - reference") +
+   theme_classic() +
+   theme(panel.border = element_rect(fill=NA, color='black'),
+         legend.position = "none")
+
+
+# CO2 - pulsed
+windows(height=4, width=5.5)
+c = 
+ggplot(fdat %>%
+          filter(!(is.na(co2_flux)), treatment=="pulsed") %>%
+          left_join(pond_data), 
+       aes(x = date, y = co2_flux)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
+              aes(xintercept = date), linetype=2, color="gray60") +
+   #
+   geom_line(aes(group = pond_id, color = trt_fish), size=1) +
+   #
+   scale_color_manual(name = NULL, breaks = fish_breaks, values = fish_color, labels = fish_labs) +
+   scale_x_date(name = NULL, 
+                breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
+                labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
+   scale_y_continuous(name = expression(CO[2]~flux~(mmol~m^-2~d^-1)), limits = c(-20, 175), breaks = seq(0, 175, 25)) +
+   #
+   ggtitle("CO2 - pulsed") + 
+   theme_classic() +
+   theme(panel.border = element_rect(fill=NA, color='black'),
+         legend.position = "none")
+
+# CO2 - reference
+windows(height=4, width=5.5)
+f = 
+ggplot(fdat %>%
+          filter(!(is.na(co2_flux)), treatment=="reference") %>%
+          left_join(pond_data), 
+       aes(x = date, y = co2_flux)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
+   #            aes(xintercept = date), linetype=2, color="gray60") +
+   #
+   geom_line(aes(group = pond_id, color = trt_fish), size=1) +
+   #
+   scale_color_manual(name = NULL, breaks = fish_breaks, values = fish_color, labels = fish_labs) +
+   scale_x_date(name = NULL, 
+                breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
+                labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
+   scale_y_continuous(name = expression(CO[2]~flux~(mmol~m^-2~d^-1)), limits = c(-20, 175), breaks = seq(0, 175, 25)) +
+   #
+   ggtitle("CO2 - reference") +
+   theme_classic() +
+   theme(panel.border = element_rect(fill=NA, color='black'),
+         legend.position = "none")
+
+
+# 6-panel figure
+
+windows(height=7, width=12)
+(a + b + c) / (d + e + f)
+
 
