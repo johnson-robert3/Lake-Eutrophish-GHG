@@ -69,4 +69,6 @@ To recreate the full model dataset from all individual datasets, run scripts in 
    - [x] Over time
    - [ ] CO2 vs variables used in final model
    - [ ] Effect sizes from model output
+- [x] 6-panel GHG figure (gas X nutrient treatment)
+
 
