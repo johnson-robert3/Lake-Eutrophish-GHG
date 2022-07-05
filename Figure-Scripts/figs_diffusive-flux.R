@@ -310,18 +310,27 @@ ggplot(pdat, aes(x = doy, y = co2_lake)) +
 #---
 
 # CH4 - pulsed
-windows(height=4, width=5.5)
-a = 
+# windows(height=4, width=5.5)
+a =
 ggplot(fdat %>%
           filter(!(is.na(ch4_flux)), treatment=="pulsed") %>%
           left_join(pond_data), 
        aes(x = date, y = ch4_flux)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
-   geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
+   # pulse days
+   geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
               aes(xintercept = date), linetype=2, color="gray60") +
+   # derecho, DOY 223
+   geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
+   # heat wave, DOY 186-190
+   annotate(geom = 'rect', 
+            xmin = as_date(186, origin='2020-01-01'), xmax = as_date(190, origin='2020-01-01'),
+            ymin = -Inf, ymax = Inf,
+            fill = 'gray90') +
    #
    geom_line(aes(group = pond_id, color = trt_fish), size=1) +
+   geom_point(aes(color = trt_fish), shape=1, size=2) +
    #
    scale_color_manual(name = NULL, breaks = fish_breaks, values = fish_color, labels = fish_labs) +
    scale_x_date(name = NULL, 
@@ -336,20 +345,30 @@ ggplot(fdat %>%
          legend.position = "none")
    
 # CH4 - reference
-windows(height=4, width=5.5)
-d = 
+# windows(height=4, width=5.5)
+d =
 ggplot(fdat %>%
           filter(!(is.na(ch4_flux)), treatment=="reference") %>%
           left_join(pond_data), 
        aes(x = date, y = ch4_flux)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
-   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
+   # pulse days
+   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
    #            aes(xintercept = date), linetype=2, color="gray60") +
+   # derecho, DOY 223
+   geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
+   # heat wave, DOY 186-190
+   annotate(geom = 'rect', 
+            xmin = as_date(186, origin='2020-01-01'), xmax = as_date(190, origin='2020-01-01'),
+            ymin = -Inf, ymax = Inf,
+            fill = 'gray90') +
    #
    geom_line(aes(group = pond_id, color = trt_fish), size=1) +
+   geom_point(aes(color = trt_fish), shape=1, size=2) +
    #
-   scale_color_manual(name = NULL, breaks = fish_breaks, values = fish_color, labels = fish_labs) +
+   scale_color_manual(name = 'Food Web', breaks = fish_breaks, values = fish_color, 
+                      labels = c('high' = 'High (C,E)', 'medium' = 'Med (A,D)', 'low' = 'Low (B,F)')) +
    scale_x_date(name = NULL, 
                 breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
                 labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
@@ -359,11 +378,11 @@ ggplot(fdat %>%
    ggtitle("CH4 - reference") +
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color='black'),
-         legend.position = "none")
+         legend.position = c(0.17, 0.8))
 
 
 # N2O - pulsed
-windows(height=4, width=5.5)
+# windows(height=4, width=5.5)
 b = 
 ggplot(fdat %>%
           filter(!(is.na(n2o_flux)), treatment=="pulsed") %>%
@@ -373,10 +392,19 @@ ggplot(fdat %>%
        aes(x = date, y = n2o_flux)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
-   geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
+   # pulse days
+   geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
               aes(xintercept = date), linetype=2, color="gray60") +
+   # derecho, DOY 223
+   geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
+   # heat wave, DOY 186-190
+   annotate(geom = 'rect', 
+            xmin = as_date(186, origin='2020-01-01'), xmax = as_date(190, origin='2020-01-01'),
+            ymin = -Inf, ymax = Inf,
+            fill = 'gray90') +
    #
    geom_line(aes(group = pond_id, color = trt_fish), size=1) +
+   geom_point(aes(color = trt_fish), shape=1, size=2) +
    #
    scale_color_manual(name = NULL, breaks = fish_breaks, values = fish_color, labels = fish_labs) +
    scale_x_date(name = NULL, 
@@ -391,7 +419,7 @@ ggplot(fdat %>%
          legend.position = "none")
 
 # N2O - reference
-windows(height=4, width=5.5)
+# windows(height=4, width=5.5)
 e = 
 ggplot(fdat %>%
           filter(!(is.na(n2o_flux)), treatment=="reference") %>%
@@ -401,10 +429,19 @@ ggplot(fdat %>%
        aes(x = date, y = n2o_flux)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
-   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
+   # pulse days
+   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
    #            aes(xintercept = date), linetype=2, color="gray60") +
+   # derecho, DOY 223
+   geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
+   # heat wave, DOY 186-190
+   annotate(geom = 'rect', 
+            xmin = as_date(186, origin='2020-01-01'), xmax = as_date(190, origin='2020-01-01'),
+            ymin = -Inf, ymax = Inf,
+            fill = 'gray90') +
    #
    geom_line(aes(group = pond_id, color = trt_fish), size=1) +
+   geom_point(aes(color = trt_fish), shape=1, size=2) +
    #
    scale_color_manual(name = NULL, breaks = fish_breaks, values = fish_color, labels = fish_labs) +
    scale_x_date(name = NULL, 
@@ -420,7 +457,7 @@ ggplot(fdat %>%
 
 
 # CO2 - pulsed
-windows(height=4, width=5.5)
+# windows(height=4, width=5.5)
 c = 
 ggplot(fdat %>%
           filter(!(is.na(co2_flux)), treatment=="pulsed") %>%
@@ -428,16 +465,25 @@ ggplot(fdat %>%
        aes(x = date, y = co2_flux)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
-   geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
+   # pulse days
+   geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
               aes(xintercept = date), linetype=2, color="gray60") +
+   # derecho, DOY 223
+   geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
+   # heat wave, DOY 186-190
+   annotate(geom = 'rect', 
+            xmin = as_date(186, origin='2020-01-01'), xmax = as_date(190, origin='2020-01-01'),
+            ymin = -Inf, ymax = Inf,
+            fill = 'gray90') +
    #
    geom_line(aes(group = pond_id, color = trt_fish), size=1) +
+   geom_point(aes(color = trt_fish), shape=1, size=2) +
    #
    scale_color_manual(name = NULL, breaks = fish_breaks, values = fish_color, labels = fish_labs) +
    scale_x_date(name = NULL, 
                 breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
                 labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
-   scale_y_continuous(name = expression(CO[2]~flux~(mmol~m^-2~d^-1)), limits = c(-20, 175), breaks = seq(0, 175, 25)) +
+   scale_y_continuous(name = expression(CO[2]~flux~(mmol~m^-2~d^-1)), limits = c(-20, 250), breaks = seq(0, 250, 50)) +
    #
    ggtitle("CO2 - pulsed") + 
    theme_classic() +
@@ -445,24 +491,33 @@ ggplot(fdat %>%
          legend.position = "none")
 
 # CO2 - reference
-windows(height=4, width=5.5)
-f = 
+# windows(height=4, width=5.5)
+f =
 ggplot(fdat %>%
           filter(!(is.na(co2_flux)), treatment=="reference") %>%
           left_join(pond_data), 
        aes(x = date, y = co2_flux)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
-   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
+   # pulse days
+   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
    #            aes(xintercept = date), linetype=2, color="gray60") +
+   # derecho, DOY 223
+   geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
+   # heat wave, DOY 186-190
+   annotate(geom = 'rect', 
+            xmin = as_date(186, origin='2020-01-01'), xmax = as_date(190, origin='2020-01-01'),
+            ymin = -Inf, ymax = Inf,
+            fill = 'gray90') +
    #
    geom_line(aes(group = pond_id, color = trt_fish), size=1) +
+   geom_point(aes(color = trt_fish), shape=1, size=2) +
    #
    scale_color_manual(name = NULL, breaks = fish_breaks, values = fish_color, labels = fish_labs) +
    scale_x_date(name = NULL, 
                 breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
                 labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
-   scale_y_continuous(name = expression(CO[2]~flux~(mmol~m^-2~d^-1)), limits = c(-20, 175), breaks = seq(0, 175, 25)) +
+   scale_y_continuous(name = expression(CO[2]~flux~(mmol~m^-2~d^-1)), limits = c(-20, 250), breaks = seq(0, 250, 50)) +
    #
    ggtitle("CO2 - reference") +
    theme_classic() +
@@ -472,7 +527,9 @@ ggplot(fdat %>%
 
 # 6-panel figure
 
-windows(height=7, width=12)
+windows(height=8, width=14)
 (a + b + c) / (d + e + f)
 
+
+# ggsave(file = '6-panel_gas-by-pulse-trt.png')
 
