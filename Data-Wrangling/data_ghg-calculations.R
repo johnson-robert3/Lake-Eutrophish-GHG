@@ -780,3 +780,5 @@ ebu_flux_pond = ebu_flux %>%
    rm(list=ls(pattern="test"))
    ##
 
+write.csv(ebu_flux_pond, file="Data/ebullition_total.csv", row.names=FALSE)
+
