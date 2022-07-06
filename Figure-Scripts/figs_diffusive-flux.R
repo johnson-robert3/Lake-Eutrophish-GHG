@@ -531,5 +531,5 @@ windows(height=8, width=14)
 (a + b + c) / (d + e + f)
 
 
-# ggsave(file = '6-panel_gas-by-pulse-trt.png')
+# ggsave(file = '6-panel_flux_by-pulse-trt.png')
 
