@@ -70,5 +70,6 @@ To recreate the full model dataset from all individual datasets, run scripts in 
    - [ ] CO2 vs variables used in final model
    - [ ] Effect sizes from model output
 - [x] 6-panel GHG figure (gas X nutrient treatment)
+- [x] 6-panel fig; methano, DEA, ebullition (gas X nutrient treatment)
 
 
