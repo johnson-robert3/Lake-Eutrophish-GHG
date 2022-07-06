@@ -8,9 +8,14 @@ source("Figure-Scripts/figs_functions.R")
 
 # Data
 
+# DEA and Methano (create 'fdat' dataset from 'stats_model-data' script)
+fdat = fdat %>% mutate(date = ymd(date))
+
+# Ebullition
 edat = read_csv("Data/ebullition_total.csv") %>%
    # add date
    mutate(date = as_date(doy, origin="2020-01-01"))
+
 
 
 ## METHANOGENESIS
