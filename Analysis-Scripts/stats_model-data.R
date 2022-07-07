@@ -13,7 +13,7 @@ if (!require(tidyverse)) install.packages('tidyverse'); library(tidyverse)
 #-- Step 1: Prepare the data
 
 # Full data set
-fdat = read_csv("Data/ghg-model-dataset_2022-05-13.csv")
+fdat = read_csv("Data/ghg-model-dataset_2022-07-07.csv")
 
 
 # Data for GHG models
