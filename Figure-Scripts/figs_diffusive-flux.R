@@ -321,11 +321,11 @@ ggplot(fdat %>%
    # pulse days
    geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
               aes(xintercept = date), linetype=2, color="gray60") +
-   # derecho, DOY 223
+   # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
-   # heat wave, DOY 186-190
+   # heat wave, DOY 186-190 (July 4-8, 2020)
    annotate(geom = 'rect', 
-            xmin = as_date(186, origin='2020-01-01'), xmax = as_date(190, origin='2020-01-01'),
+            xmin = as_date(186, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
             ymin = -Inf, ymax = Inf,
             fill = 'gray90') +
    #
@@ -356,11 +356,11 @@ ggplot(fdat %>%
    # pulse days
    # geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
    #            aes(xintercept = date), linetype=2, color="gray60") +
-   # derecho, DOY 223
+   # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
-   # heat wave, DOY 186-190
+   # heat wave, DOY 186-190 (July 4-8, 2020)
    annotate(geom = 'rect', 
-            xmin = as_date(186, origin='2020-01-01'), xmax = as_date(190, origin='2020-01-01'),
+            xmin = as_date(186, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
             ymin = -Inf, ymax = Inf,
             fill = 'gray90') +
    #
@@ -395,11 +395,11 @@ ggplot(fdat %>%
    # pulse days
    geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
               aes(xintercept = date), linetype=2, color="gray60") +
-   # derecho, DOY 223
+   # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
-   # heat wave, DOY 186-190
+   # heat wave, DOY 186-190 (July 4-8, 2020)
    annotate(geom = 'rect', 
-            xmin = as_date(186, origin='2020-01-01'), xmax = as_date(190, origin='2020-01-01'),
+            xmin = as_date(186, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
             ymin = -Inf, ymax = Inf,
             fill = 'gray90') +
    #
@@ -432,11 +432,11 @@ ggplot(fdat %>%
    # pulse days
    # geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
    #            aes(xintercept = date), linetype=2, color="gray60") +
-   # derecho, DOY 223
+   # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
-   # heat wave, DOY 186-190
+   # heat wave, DOY 186-190 (July 4-8, 2020)
    annotate(geom = 'rect', 
-            xmin = as_date(186, origin='2020-01-01'), xmax = as_date(190, origin='2020-01-01'),
+            xmin = as_date(186, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
             ymin = -Inf, ymax = Inf,
             fill = 'gray90') +
    #
@@ -468,11 +468,11 @@ ggplot(fdat %>%
    # pulse days
    geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
               aes(xintercept = date), linetype=2, color="gray60") +
-   # derecho, DOY 223
+   # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
-   # heat wave, DOY 186-190
+   # heat wave, DOY 186-190 (July 4-8, 2020)
    annotate(geom = 'rect', 
-            xmin = as_date(186, origin='2020-01-01'), xmax = as_date(190, origin='2020-01-01'),
+            xmin = as_date(186, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
             ymin = -Inf, ymax = Inf,
             fill = 'gray90') +
    #
@@ -502,11 +502,11 @@ ggplot(fdat %>%
    # pulse days
    # geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
    #            aes(xintercept = date), linetype=2, color="gray60") +
-   # derecho, DOY 223
+   # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
-   # heat wave, DOY 186-190
+   # heat wave, DOY 186-190 (July 4-8, 2020)
    annotate(geom = 'rect', 
-            xmin = as_date(186, origin='2020-01-01'), xmax = as_date(190, origin='2020-01-01'),
+            xmin = as_date(186, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
             ymin = -Inf, ymax = Inf,
             fill = 'gray90') +
    #
