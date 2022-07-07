@@ -135,12 +135,13 @@ model_dataset = test %>%
    mutate(period2 = if_else(treatment=="reference", "BASE", period)) %>%
    relocate(period2, .after=period) %>%
    # add a Date variable
-   mutate(date = as_date(doy, origin="2020-01-01")) %>%
+   #  updated dates; as_date() treats the 'origin' as day 0, not day 1, so need to set it as the previous day to the desired start
+   mutate(date = as_date(doy, origin="2019-12-31")) %>%
    relocate(date, .before=doy)
 
 
 # output the complete model dataset
-write_csv(model_dataset, file = "Data/ghg-model-dataset_2022-05-13.csv")
+write_csv(model_dataset, file = "Data/ghg-model-dataset_2022-07-07.csv")
 
 
    ## remove temporary individual data sets
