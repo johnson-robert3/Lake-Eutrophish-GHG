@@ -1,12 +1,24 @@
+#~~~
+# Script for making process rate figures (Methanogenesis, DEA, Ebullition)
+# 
+# By: R. Johnson
+#~~~
 
 
+library(tidyverse)
 library(cowplot)
 library(patchwork)
+library(slider)
+library(lubridate)
+library(viridis)
 
 source("Figure-Scripts/figs_functions.R")
 
 
 # Data
+
+# Pond/Site Data
+pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
 
 # DEA and Methano (create 'fdat' dataset from 'stats_model-data' script)
 fdat = fdat %>% mutate(date = ymd(date))
