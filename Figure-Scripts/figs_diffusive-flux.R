@@ -30,35 +30,6 @@ fdat = fdat %>% mutate(date = ymd(date))
 #### Methane ####
 #---
 
-## Dissolved CH4 concentration
-windows(height=4, width=5.5)
-ggplot(fdat %>%
-          filter(!(is.na(ch4_lake))) %>%
-          left_join(pond_data), 
-       aes(x = doy, y = ch4_lake)) +
-   #
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
-   geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
-   # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.3, size=1) +
-   # treatment mean (loess smooth)
-   geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
-   #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
-   scale_y_continuous(name = expression(CH[4]~(mu*M)),
-                      limits = c(0, 86), breaks = seq(0, 80, 20)) +
-   #
-   ggtitle(expression(Dissolved~CH[4]~concentration)) +
-   theme_classic() +
-   theme(panel.border = element_rect(fill=NA, color='black'),
-         legend.position = c(0.83, 0.88),
-         axis.title.x = element_text(margin = margin(t=0.5, unit="line")),
-         axis.title.y = element_text(margin = margin(r=0.5, unit="line")))
-
-# ggsave(filename="ch4-concentration.png", height=4, width=5.5, units='in')
-
-
 ## Diffusive flux
 windows(height=4, width=5.5)
 ggplot(fdat %>%
@@ -153,38 +124,6 @@ ggplot(fdat %>%
 #---
 #### Nitrous Oxide ####
 #---
-
-## Dissolved N2O concentration
-windows(height=4, width=5.5)
-ggplot(fdat %>%
-          filter(!(is.na(n2o_lake))) %>%
-          # convert from uM to nM
-          mutate(n2o_lake = n2o_lake * 1000,
-                 n2o_lake = if_else(n2o_lake < 0, 0, n2o_lake)) %>%
-          left_join(pond_data), 
-       aes(x = doy, y = n2o_lake)) +
-   #
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
-   geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
-   # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.3, size=1) +
-   # treatment mean (loess smooth)
-   geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
-   #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
-   scale_y_continuous(name = expression(N[2]*O~(nM)),
-                      limits = c(0, 12.5), breaks = seq(0, 12.5, 2.5)) +
-   #
-   ggtitle(expression(Dissolved~N[2]*O~concentration)) +
-   theme_classic() +
-   theme(panel.border = element_rect(fill=NA, color='black'),
-         legend.position = c(0.51, 0.88),
-         axis.title.x = element_text(margin = margin(t=0.5, unit="line")),
-         axis.title.y = element_text(margin = margin(r=0.5, unit="line")))
-
-# ggsave(filename="n2o-concentration.png", height=4, width=5.5, units='in')
-
 
 ## Diffusive flux
 windows(height=4, width=5.5)
@@ -284,25 +223,6 @@ ggplot(fdat %>%
 #### Carbon Dioxide ####
 #---
 
-## Dissolved CO2 concentration
-windows(height=4, width=5)
-ggplot(pdat, aes(x = doy, y = co2_lake)) +
-   #
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
-   geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
-   # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.3, size=1) +
-   # treatment mean (loess smooth)
-   geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
-   #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_continuous(name = " ", limits = c(140, 245), breaks = seq(140,240,20)) +
-   scale_y_continuous(name = expression(Dissolved~CO[2]~(mu*M))) +
-   #
-   # ggtitle(expression(CO[2])) +
-   theme_classic() +
-   theme(legend.position = c(0.18, 0.9),
-         axis.title.y = element_text(margin = margin(r=0.5, unit="line")))
 
 
 #---
@@ -354,8 +274,8 @@ ggplot(fdat %>%
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    # pulse days
-   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
-   #            aes(xintercept = date), linetype=2, color="gray60") +
+   geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
+              aes(xintercept = date), linetype=2, color="gray60") +
    # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
    # heat wave, DOY 186-190 (July 4-8, 2020)
@@ -430,8 +350,8 @@ ggplot(fdat %>%
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    # pulse days
-   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
-   #            aes(xintercept = date), linetype=2, color="gray60") +
+   geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
+              aes(xintercept = date), linetype=2, color="gray60") +
    # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
    # heat wave, DOY 186-190 (July 4-8, 2020)
@@ -500,8 +420,8 @@ ggplot(fdat %>%
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    # pulse days
-   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
-   #            aes(xintercept = date), linetype=2, color="gray60") +
+   geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
+              aes(xintercept = date), linetype=2, color="gray60") +
    # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
    # heat wave, DOY 186-190 (July 4-8, 2020)
