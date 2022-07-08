@@ -69,7 +69,7 @@ ggplot(fdat %>%
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    # pulse days, DOY 176, 211
-   # geom_vline(xintercept = c(as_date(176, origin='2019-12-31'), as_date(211, origin='2019-12-31')), linetype=2, color="gray60") +
+   geom_vline(xintercept = c(as_date(176, origin='2019-12-31'), as_date(211, origin='2019-12-31')), linetype=2, color="gray60") +
    # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
    # heat wave, DOY 186-190 (July 4-8, 2020)
@@ -147,7 +147,7 @@ ggplot(fdat %>%
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    # pulse days, DOY 176, 211
-   # geom_vline(xintercept = c(as_date(176, origin='2019-12-31'), as_date(211, origin='2019-12-31')), linetype=2, color="gray60") +
+   geom_vline(xintercept = c(as_date(176, origin='2019-12-31'), as_date(211, origin='2019-12-31')), linetype=2, color="gray60") +
    # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
    # heat wave, DOY 186-190 (July 4-8, 2020)
@@ -220,7 +220,7 @@ ggplot(edat %>%
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    # pulse days, DOY 176, 211
-   # geom_vline(xintercept = c(as_date(176, origin='2019-12-31'), as_date(211, origin='2019-12-31')), linetype=2, color="gray60") +
+   geom_vline(xintercept = c(as_date(176, origin='2019-12-31'), as_date(211, origin='2019-12-31')), linetype=2, color="gray60") +
    # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
    # heat wave, DOY 186-190 (July 4-8, 2020)
