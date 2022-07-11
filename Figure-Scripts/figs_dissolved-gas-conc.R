@@ -122,7 +122,7 @@ ggplot(pdat, aes(x = doy, y = co2_lake)) +
 
 
 #---
-#### All Gases ####
+#### All Gases - by nutrient treatment ####
 #---
 
 # CH4 - pulsed
@@ -348,6 +348,139 @@ ggplot(fdat %>%
 windows(height=8, width=14)
 (a + b + c) / (d + e + f)
 
-
 # ggsave(file = '6-panel_dissolved-conc_by-pulse-trt.png')
+
+
+
+#---
+#### All Gases - by food web treatment ####
+#---
+
+fwdat = fdat %>% 
+   left_join(pond_data) %>%
+   mutate(trt_fish = as.factor(trt_fish),
+          trt_fish = fct_relevel(trt_fish, 'high', 'medium', 'low'))
+
+
+# 9-panel Gas X Food Web trt
+
+# CH4
+windows(width=4, height=9)
+a = 
+ggplot(fwdat %>%
+          filter(!(is.na(ch4_lake))),
+       aes(x = date, y = ch4_lake)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   # pulse days
+   geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
+              aes(xintercept = date), linetype=2, color="gray60") +
+   # derecho, DOY 223 (Aug. 10, 2020)
+   geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
+   # heat wave, DOY 186-190 (July 4-8, 2020)
+   annotate(geom = 'rect', 
+            xmin = as_date(186, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
+            ymin = -Inf, ymax = Inf,
+            fill = 'gray90') +
+   #
+   geom_line(aes(group = pond_id, color = trt_nutrients), size=1) +
+   geom_point(aes(color = trt_nutrients), shape=1, size=2) +
+   #
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_x_date(name = NULL, 
+                breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
+                labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
+   scale_y_continuous(name = expression(dissolved~CH[4]~(mu*M)),
+                      limits = c(0, 90), breaks = seq(0, 90, 15)) +
+   #
+   facet_wrap(facets = vars(trt_fish), ncol=1) +
+   #
+   ggtitle("CH4") +
+   theme_classic() +
+   theme(panel.border = element_rect(fill=NA, color='black'),
+         legend.position = "none")
+   
+
+# N2O
+windows(width=4, height=9)
+b = 
+ggplot(fwdat %>%
+          filter(!(is.na(n2o_lake))) %>%
+          # convert from uM to nM
+          mutate(n2o_lake = n2o_lake * 1000),
+       aes(x = date, y = n2o_lake)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   # pulse days
+   geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
+              aes(xintercept = date), linetype=2, color="gray60") +
+   # derecho, DOY 223 (Aug. 10, 2020)
+   geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
+   # heat wave, DOY 186-190 (July 4-8, 2020)
+   annotate(geom = 'rect', 
+            xmin = as_date(186, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
+            ymin = -Inf, ymax = Inf,
+            fill = 'gray90') +
+   #
+   geom_line(aes(group = pond_id, color = trt_nutrients), size=1) +
+   geom_point(aes(color = trt_nutrients), shape=1, size=2) +
+   #
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_x_date(name = NULL, 
+                breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
+                labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
+   scale_y_continuous(name = expression(dissolved~N[2]*O~(nM)),
+                      limits = c(-0.5, 12.5), breaks = seq(0, 12.5, 2.5)) +
+   #
+   facet_wrap(facets = vars(trt_fish), ncol=1) +
+   #
+   ggtitle("N2O") +
+   theme_classic() +
+   theme(panel.border = element_rect(fill=NA, color='black'),
+         legend.position = "none")
+
+
+# CO2
+windows(width=4, height=9)
+c = 
+ggplot(fwdat %>%
+          filter(!(is.na(co2_lake))),
+       aes(x = date, y = co2_lake)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   # pulse days
+   geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
+              aes(xintercept = date), linetype=2, color="gray60") +
+   # derecho, DOY 223 (Aug. 10, 2020)
+   geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
+   # heat wave, DOY 186-190 (July 4-8, 2020)
+   annotate(geom = 'rect', 
+            xmin = as_date(186, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
+            ymin = -Inf, ymax = Inf,
+            fill = 'gray90') +
+   #
+   geom_line(aes(group = pond_id, color = trt_nutrients), size=1) +
+   geom_point(aes(color = trt_nutrients), shape=1, size=2) +
+   #
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_x_date(name = NULL, 
+                breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
+                labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
+   scale_y_continuous(name = expression(dissolved~CO[2]~(mu*M)), 
+                      limits = c(-25, 425), breaks = seq(0, 400, 50)) +
+   #
+   facet_wrap(facets = vars(trt_fish), ncol=1) +
+   #
+   ggtitle("CO2") +
+   theme_classic() +
+   theme(panel.border = element_rect(fill=NA, color='black'),
+         legend.position = "none")
+
+
+# 9-panel figure
+
+windows(height=9, width=12)
+a + b + c
+
+# ggsave(file = '9-panel_dissolved-conc_by-fw-trt.png')
 
