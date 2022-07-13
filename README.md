@@ -51,7 +51,7 @@ To recreate the full model dataset from all individual datasets, run scripts in 
    - [x] Compare treatments, but excluding the pre-pulse (i.e., BASE) period
    - [x] Are there better models (higher R-squared) but that have non-sig. fixed effects?
    - [ ] Add nutrient variables back to model, now that dates have been aligned so the full data are there
-   - [ ] Remove alkalinity from the model (*alkalinity is used in the equation to calculate CO2, so of course it is a sig. effect*)
+   - [x] Remove alkalinity from the model (*alkalinity is used in the equation to calculate CO2, so of course it is a sig. effect*)
 
 
 - [ ] Try using conditional inference trees to determine which predictor variables are most likely important (to then use to create an initial model)
