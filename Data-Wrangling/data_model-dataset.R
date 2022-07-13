@@ -37,9 +37,10 @@ m12 = limno_field_data %>%
 
 
 m13 = sonde_bottom %>%
-   select(pond_id, doy, do, do_sat) %>%
+   select(pond_id, doy, do, do_sat, temp) %>%
    rename(bottom_do = do,
-          bottom_do_sat = do_sat)
+          bottom_do_sat = do_sat,
+          bottom_temp = temp)
 
 
 m14 = sonde_surface %>%
@@ -141,7 +142,7 @@ model_dataset = test %>%
 
 
 # output the complete model dataset
-write_csv(model_dataset, file = "Data/ghg-model-dataset_2022-07-07.csv")
+write_csv(model_dataset, file = "Data/ghg-model-dataset_2022-07-13.csv")
 
 
    ## remove temporary individual data sets
