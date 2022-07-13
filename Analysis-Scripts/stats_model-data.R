@@ -14,7 +14,7 @@ if (!require(lubridate)) install.packages('lubridate'); library(lubridate)
 #-- Step 1: Prepare the data
 
 # Full data set
-fdat = read_csv("Data/ghg-model-dataset_2022-07-07.csv") %>%
+fdat = read_csv("Data/ghg-model-dataset_2022-07-13.csv") %>%
    # force date format (sometimes date format can be weird coming from Excel)
    mutate(date = ymd(date))
 
