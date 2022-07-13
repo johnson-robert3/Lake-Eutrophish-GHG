@@ -22,8 +22,6 @@ pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
 #  Need to run "stats_model-data.R" script first
 pdat = left_join(mdat, pond_data %>% select(pond_id, starts_with("trt")))
 
-# correct dates for fdat
-fdat = fdat %>% mutate(date = ymd(date))
 
 
 #===

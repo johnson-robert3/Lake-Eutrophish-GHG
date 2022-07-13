@@ -18,12 +18,9 @@ source("Figure-Scripts/figs_functions.R")
 # Pond/Site Data
 pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
 
-# Data for plotting
-#  Need to run "stats_model-data.R" script first
-pdat = left_join(mdat, pond_data %>% select(pond_id, starts_with("trt")))
+# Full variable data set
+# 'fdat' - need to run 'stats_model-data.R' script to create
 
-# correct dates for fdat
-fdat = fdat %>% mutate(date = ymd(date))
 
 
 #---
@@ -101,7 +98,10 @@ ggplot(fdat %>%
 
 ## Dissolved CO2 concentration
 windows(height=4, width=5)
-ggplot(pdat, aes(x = doy, y = co2_lake)) +
+ggplot(fdat %>%
+          filter(!(is.na(co2_lake))) %>%
+          left_join(pond_data), 
+       aes(x = doy, y = co2_lake)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
