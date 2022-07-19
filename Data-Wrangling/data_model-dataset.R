@@ -36,22 +36,13 @@ m12 = limno_field_data %>%
    mutate(doy = if_else(doy > 221, doy - 1, doy))
 
 
-m13 = sonde_bottom %>%
-   select(pond_id, doy, do, do_sat, temp) %>%
-   rename(bottom_do = do,
-          bottom_do_sat = do_sat,
-          bottom_temp = temp)
+m13 = sonde_surface %>%
+   select(-contains("_rfu"))
 
 
-m14 = sonde_surface %>%
-   select(pond_id, doy, temp, chla, surface_do = do, surface_do_sat = do_sat)
-
-# m14 = sonde_profiles %>%
-#    group_by(pond_id, doy) %>%
-#    filter(vert_m > 0.05 & vert_m < 0.60) %>%
-#    summarize(across(temp:salinity, ~mean(., na.rm=TRUE))) %>%
-#    ungroup() %>%
-#    select(pond_id, doy, temp, chla)
+m14 = sonde_bottom %>%
+   select(-contains("_rfu")) %>%
+   rename_with(.fn = ~paste("bottom", ., sep="_"), .cols = temp:last_col())
 
 
 m15 = weather_data %>%
@@ -142,7 +133,7 @@ model_dataset = test %>%
 
 
 # output the complete model dataset
-write_csv(model_dataset, file = "Data/ghg-model-dataset_2022-07-13.csv")
+write_csv(model_dataset, file = "Data/ghg-model-dataset_2022-07-18.csv")
 
 
    ## remove temporary individual data sets
