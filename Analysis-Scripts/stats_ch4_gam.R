@@ -13,13 +13,8 @@ set.seed(1987)
 
 # Data
 gdat = mdat %>%
-   # add food web treatment to data
-   left_join(pond_data %>%
-                select(pond_id, trt_fw = trt_fish) %>%
-                mutate(pond_id = as_factor(pond_id),
-                       trt_fw = as_factor(trt_fw))) %>%
    # select variables (i.e., remove unnecessary variables)
-   select(-date, -time, -contains("n2o"), -contains("co2"), -contains("flux"))
+   select(-date, -time, -contains("n2o"), -contains("co2"), -contains("flux"), -period, -period2)
 
 
 #---
@@ -50,16 +45,16 @@ windows(height=6, width=8); barplot(sort(abs(varimp_ch4), decreasing=TRUE), las=
 # treatment
 
 
-# Exclude the 'intermediate' food web treatment (ponds A + D)
-cforest_ch4 = cforest(ch4_lake ~ ., 
-                      data = gdat %>% filter(!(trt_fw=="medium")),
+# Exclude pond A 
+cforest_ch4_noA = cforest(ch4_lake ~ ., 
+                      data = gdat %>% filter(!(pond_id=='A')),
                       controls = cforest_control(ntree = 20000, mincriterion = 0.9, trace = TRUE))
 
 # identify variables of importance from the forest
-varimp_ch4 = varimp(cforest_ch4)
+varimp_ch4_noA = varimp(cforest_ch4_noA)
 
 # visualize
-windows(height=6, width=8); barplot(sort(abs(varimp_ch4), decreasing=TRUE), las=2)
+windows(height=6, width=8); barplot(sort(abs(varimp_ch4_noA), decreasing=TRUE), las=2)
 
 ## Most important variables: 
 # period
@@ -141,28 +136,28 @@ windows(height=6, width=8); barplot(sort(abs(varimp_ch4), decreasing=TRUE), las=
 #- Using all ponds
 
 # no interactions
-gam1 = gam(ch4_lake ~ s(surface_do_sat) + s(temp) + treatment + period + pond_id, 
+gam1 = gam(ch4_lake ~ s(do_sat) + s(temp) + treatment + period + pond_id, 
            data = gdat, method = "REML")
 
 windows(height=5, width=8); plot(gam1, residuals=T, pages=1, pch=1, shade=T)
 
 
 # vars interact with nutrient treatment
-gam2 = gam(ch4_lake ~ s(surface_do_sat, by = treatment) + s(temp, by = treatment) + treatment + period + pond_id,
+gam2 = gam(ch4_lake ~ s(do_sat, by = treatment) + s(temp, by = treatment) + treatment + period + pond_id,
            data = gdat, method = "REML")
 
 windows(height=10, width=8); plot(gam2, pages=1, pch=1, shade=T)
 
 
 # vars interact with food web treatment
-gam3 = gam(ch4_lake ~ s(surface_do_sat, by = trt_fw) + s(temp, by = trt_fw) + trt_fw + period + pond_id,
+gam3 = gam(ch4_lake ~ s(do_sat, by = trt_fw) + s(temp, by = trt_fw) + trt_fw + period + pond_id,
            data = gdat, method = "REML")
 
 windows(height=10, width=12); plot(gam3, pages=1, pch=1, shade=T)
 
 
 # vars interact with pond_id
-gam4 = gam(ch4_lake ~ s(surface_do_sat, by = pond_id) + s(temp, by = pond_id) + period + pond_id,
+gam4 = gam(ch4_lake ~ s(do_sat, by = pond_id) + s(temp, by = pond_id) + period + pond_id,
            data = gdat, method = "REML")
 
 windows(height=10, width=12); par(mfrow=c(2, 6)); plot(gam4, pages=0, pch=1, shade=T)
@@ -172,28 +167,28 @@ windows(height=10, width=12); par(mfrow=c(2, 6)); plot(gam4, pages=0, pch=1, sha
 #- Excluding intermediate food web (Ponds A + D)
 
 # no interactions
-gam5 = gam(ch4_lake ~ s(surface_do_sat) + s(log(chla+1)) + s(doy) + s(NEP) + period + pond_id, 
+gam5 = gam(ch4_lake ~ s(do_sat) + s(log(chla+1)) + s(doy) + s(NEP) + period + pond_id, 
            data = gdat %>% filter(!(trt_fw=="medium")), method = "REML")
 
 windows(height=10, width=8); plot(gam5, residuals=T, pages=1, pch=1, shade=T)
 
 
 # vars interact with period
-gam6 = gam(ch4_lake ~ s(surface_do_sat, by = period) + s(log(chla+1), by = period) + s(doy, by = period) + period + pond_id, 
+gam6 = gam(ch4_lake ~ s(do_sat, by = period) + s(log(chla+1), by = period) + s(doy, by = period) + period + pond_id, 
            data = gdat %>% filter(!(trt_fw=="medium")), method = "REML")
 
 windows(height=10, width=12); plot(gam6, pages=1, pch=1, shade=T)
 
 
 # vars interact with pond_id
-gam7 = gam(ch4_lake ~ s(surface_do_sat, by = pond_id) + s(log(chla+1), by = pond_id) + s(doy, by = pond_id) + period + pond_id, 
+gam7 = gam(ch4_lake ~ s(do_sat, by = pond_id) + s(log(chla+1), by = pond_id) + s(doy, by = pond_id) + period + pond_id, 
            data = gdat %>% filter(!(trt_fw=="medium")), method = "REML")
 
 windows(height=10, width=12); plot(gam7, pages=1, pch=1, shade=T)
 
 
 # vars interact with food web treatment
-gam8 = gam(ch4_lake ~ s(surface_do_sat, by = trt_fw) + s(log(chla+1), by = trt_fw) + s(doy, by = trt_fw) + period + trt_fw, 
+gam8 = gam(ch4_lake ~ s(do_sat, by = trt_fw) + s(log(chla+1), by = trt_fw) + s(doy, by = trt_fw) + period + trt_fw, 
            data = gdat %>% filter(!(trt_fw=="medium")), method = "REML")
 
 windows(height=10, width=8); par(mfrow=c(3,2)); plot(gam8, pages=0, pch=1, shade=T)
