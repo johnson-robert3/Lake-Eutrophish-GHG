@@ -28,6 +28,14 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
 - [ ] How should we treat erroneous metabolism estimates (GPP<0, R>0)?
 
 
+- [ ] Calculate Z-mix/stratification from daily sonde profiles (gives us a pond-specific measure of mixing at the time of gas sampling)
+- [ ] Compare sonde profile Z-mix to t-chain Z-mix (used in metabolism models). Are they similar?
+- [ ] Can we get/use a single daily value of Z-mix from the t-chains? (e.g., daily mean, or mean of the few hours around when gas samples were collected)
+- [ ] Add all other available variables (e.g., pH, DEA, Methanogenesis, Z-mix/stratification) into random forest models (random forests can handle missing data, so everything should be included)
+
+- [ ] Reach out to Jon Walter to discuss statistical analyses of the dataset
+
+
 
 ## Modeling
 
