@@ -14,17 +14,34 @@ if (!require(lubridate)) install.packages('lubridate'); library(lubridate)
 #-- Step 1: Prepare the data
 
 # Full data set
-fdat = read_csv("Data/ghg-model-dataset_2022-07-13.csv") %>%
+fdat = read_csv("Data/ghg-model-dataset_2022-07-18.csv") %>%
    # force date format (sometimes date format can be weird coming from Excel)
    mutate(date = ymd(date))
+
+
+# Pond/Site Data
+pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
+
 
 
 # Data for GHG models
 mdat = fdat %>%
    # factor variables
    mutate(across(c(pond_id, treatment, period, period2), ~as_factor(.))) %>%
+   # add a variable for 'nutrient treatment X pulse period'
+   mutate(pulse_period = paste(treatment, period, sep = '_') %>% as_factor()) %>%
    # convert N2O flux and concentration data from units of micro-mole to nano-mole
    mutate(across(c(n2o_flux, n2o_lake), ~.*1000)) %>%
+   # add food web treatment to data
+   left_join(pond_data %>%
+                select(pond_id, trt_fw = trt_fish) %>%
+                mutate(pond_id = as_factor(pond_id),
+                       trt_fw = as_factor(trt_fw)))
+
+
+
+# Data for linear mixed effects models
+mdat = mdat %>%
    # select desired variables
    select(pond_id:period2, 
           contains("_lake"), contains("_flux"),
