@@ -73,12 +73,47 @@ sonde_head = list.files(path = "./Data/R-Data/2020_sonde-profiles",
 sonde_profiles = full_join(sonde_nohead, sonde_head)
 
 
+   # View the number of data points in each profile
+   sonde_profiles %>% 
+      group_by(date, pond_id) %>% 
+      summarize(N = n()) %>% 
+      ungroup() %>% 
+      mutate(pond_id = str_remove(pond_id, pattern="Pond ")) %>%
+      # pivot_wider(id_cols = date, names_from = pond_id, values_from = N) %>%
+      mutate(doy = yday(mdy(date))) %>%
+      filter(doy!=1) %>%
+      relocate(doy, .after=date) %>%
+      # arrange(doy) %>%
+      arrange(desc(N)) %>%
+      View
+   
+      ## DOY 217 Pond E has over 1200 data points; two profiles were recorded and the sonde sat recording out of water for several minutes between the profiles
+      ## want to keep just the first profile taken - the first 123 rows/measurements of the   
+   
+   
+   # identify "blank" profiles
+   sonde_profiles %>%
+      filter(if_all(temp:vert_m, ~is.na(.))) %>%
+      mutate(doy = yday(mdy(date))) %>%
+      relocate(doy, .after=date) %>%
+      select(doy, pond_id) %>%
+      distinct() %>%
+      View
+   
+      ## DOY 162 Pond C; DOY 185 Pond F; DOY 210 Pond D
+      ## blank profiles (no data) were recorded on these 3 days along with the actual profiles (with data) in these ponds for some reason
+
+
 # Clean up profile dataset
-sonde_profiles = sonde_profiles %>%
+sonde_clean = sonde_profiles %>%
+   
    # remove the times (n=3) when a duplicate profile appears in the data set, but with no data
    # DOY 162 Pond C; DOY 185 Pond F; DOY 210 Pond D
    filter(!(is.na(temp) & is.na(do) & is.na(chla) & is.na(vert_m))) %>%
-   # 
+   # DOY 162 Pond C also has some rows where all data are zeros in addition to the blank profile
+   filter(!(pond_id=="Pond C" & temp==32 & do==0 & chla==0 & vert_m==0)) %>%
+   
+   # clean up data
    mutate(pond_id = str_remove(pond_id, "Pond "),
           date_time = as.POSIXct(mdy(date) + hms(time)),
           doy = yday(date_time)) %>%
@@ -96,17 +131,27 @@ sonde_profiles = sonde_profiles %>%
    #        vert_m = if_else(vert_m<0, 0, vert_m)) %>%
 
 
+# correct messed up double profile for Pond E on DOY 217
+sonde_profiles = sonde_clean %>%
+   # remove entire pond E for doy 217
+   filter(!(pond_id=='E' & doy==217)) %>%
+   # add just the first profile from pond E back to the full dataset (first 123 rows)
+   bind_rows(sonde_clean %>%
+                filter(pond_id=='E' & doy==217) %>%
+                slice_head(n=123))
+
+
 # Output full sonde profile dataset to a CSV file, so individual files don't all need to be read in & processed each time
-write.csv(sonde_profiles, file = "Data/sonde-profiles_all-data_2022-03-29.csv", row.names=FALSE)
+write.csv(sonde_profiles, file = "Data/sonde-profiles_all-data_2022-07-20.csv", row.names=FALSE)
 
    ## remove temporary objects
-   rm(sonde_nohead, sonde_head)
+   rm(sonde_nohead, sonde_head, sonde_clean)
    ##
 }
 
    
 # Data (from full, processed sonde dataset)
-sonde_profiles = read_csv("Data/sonde-profiles_all-data_2022-03-29.csv")
+sonde_profiles = read_csv("Data/sonde-profiles_all-data_2022-07-20.csv")
    
 
 ##__Surface water means 
