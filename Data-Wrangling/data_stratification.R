@@ -66,12 +66,15 @@ sonde_strat = sonde_int %>%
    ungroup()
 
 
-# Z-mix
-# correct for when thermocline couldn't be calculated, or when meta was the whole water column
+# Z-mix and Stratification
 
 sonde_strat = sonde_strat %>%
-   mutate(z_mix = case_when(thermocline=='NaN' ~ pond_depth,
-                            meta_top < 0.3 & meta_bottom==pond_depth ~ pond_depth,
-                            TRUE ~ thermocline))
+   # correct for when thermocline couldn't be calculated, or when meta was the whole water column
+   mutate(z_mix = case_when(thermocline == 'NaN' ~ pond_depth,
+                            meta_top < 0.3 & meta_bottom == pond_depth ~ pond_depth,
+                            TRUE ~ thermocline)) %>%
+   # add binary variable for if water column is mixed or stratified at time of profile
+   mutate(mixed = case_when(z_mix == pond_depth ~ 'mixed',
+                            TRUE ~ 'stratified'))
 
 
