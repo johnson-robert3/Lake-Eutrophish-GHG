@@ -86,9 +86,20 @@ ggplot(sonde_int) +
 # data - adjust pond, depth, and day
 
 sdat = sonde_profiles %>%
-   filter(pond_id=="A") %>%
-   filter(doy == 170)
+   filter(pond_id=="E") %>%
+   filter(doy %in% c(217))
 
+
+
+# temperature over depth
+
+windows()
+ggplot(sdat) +
+   geom_point(aes(x = temp, 
+                  y = vert_m,
+                  color = as.character(doy))) +
+   scale_y_reverse() +
+   theme_classic()
 
 
 # depth over time
@@ -106,17 +117,8 @@ ggplot(sdat) +
 windows()
 ggplot(sdat) +
    geom_point(aes(x = do_sat, 
-                  y = vert_m)) +
-   scale_y_reverse() +
-   theme_classic()
-
-
-# temperature over depth
-
-windows()
-ggplot(sdat) +
-   geom_point(aes(x = temp, 
-                  y = vert_m)) +
+                  y = vert_m,
+                  color = as.character(doy))) +
    scale_y_reverse() +
    theme_classic()
 
@@ -126,7 +128,8 @@ ggplot(sdat) +
 windows()
 ggplot(sdat) +
    geom_point(aes(x = chla, 
-                  y = vert_m)) +
+                  y = vert_m,
+                  color = as.character(doy))) +
    scale_y_reverse() +
    theme_classic()
 
@@ -136,7 +139,8 @@ ggplot(sdat) +
 windows()
 ggplot(sdat) +
    geom_point(aes(x = ph, 
-                  y = vert_m)) +
+                  y = vert_m,
+                  color = as.character(doy))) +
    scale_y_reverse() +
    theme_classic()
 
@@ -146,7 +150,8 @@ ggplot(sdat) +
 windows()
 ggplot(sdat) +
    geom_point(aes(x = sp_cond, 
-                  y = vert_m)) +
+                  y = vert_m,
+                  color = as.character(doy))) +
    scale_y_reverse() +
    theme_classic()
 
