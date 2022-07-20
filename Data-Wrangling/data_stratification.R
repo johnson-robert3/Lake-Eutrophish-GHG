@@ -74,7 +74,7 @@ sonde_strat = sonde_strat %>%
                             meta_top < 0.3 & meta_bottom == pond_depth ~ pond_depth,
                             TRUE ~ thermocline)) %>%
    # add binary variable for if water column is mixed or stratified at time of profile
-   mutate(mixed = case_when(z_mix == pond_depth ~ 'mixed',
-                            TRUE ~ 'stratified'))
+   mutate(stratification = case_when(z_mix == pond_depth ~ 'mixed',
+                                     TRUE ~ 'stratified'))
 
 
