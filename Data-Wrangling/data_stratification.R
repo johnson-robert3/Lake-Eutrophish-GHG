@@ -7,6 +7,10 @@
 library(rLakeAnalyzer)
 
 
+#---
+# T-chains
+#---
+
 # Create a nested, wide data frame of t-chain data on which to run functions
 hobo_nest = hobo_temp %>%
    # remove dates when loggers were out of ponds
@@ -44,5 +48,30 @@ hobo_strat = hobo_nest %>%
           thermocline = thermo.depth)
           # buoy_freq = n2)
 
+
+
+#---
+# Sonde profiles
+#---
+
+# Calculate stratification variables from sonde profiles
+
+sonde_strat = sonde_int %>%
+   select(pond_id:temp) %>%
+   group_by(pond_id, doy) %>%
+   summarize(pond_depth = max(depth_int),
+             thermocline = thermo.depth(wtr = temp, depths = depth_int),
+             meta_top = meta.depths(wtr = temp, depths = depth_int)[[1]],
+             meta_bottom = meta.depths(wtr = temp, depths = depth_int)[[2]]) %>%
+   ungroup()
+
+
+# Z-mix
+# correct for when thermocline couldn't be calculated, or when meta was the whole water column
+
+sonde_strat = sonde_strat %>%
+   mutate(z_mix = case_when(thermocline=='NaN' ~ pond_depth,
+                            meta_top < 0.3 & meta_bottom==pond_depth ~ pond_depth,
+                            TRUE ~ thermocline))
 
 
