@@ -334,31 +334,32 @@ ggplot(pdat,
 
 
 
-# all ponds and variables
-# windows(width=12)
-# ggplot(metab_mle %>%
-#           filter(!(GPP<0) & !(R>0)) %>%
-#           pivot_longer(cols = GPP:NEP,
-#                        names_to = "variable",
-#                        values_to = "rate",
-#                        values_drop_na = T)) +
-#    geom_col(aes(x = doy, y = rate)) +
-#    geom_hline(yintercept=0, linetype=2) +
-#    facet_grid(rows = vars(variable), cols = vars(pond_id), scales="free_y") +
-#    theme_classic()
+## Bar Charts
+
+# All metab vars by pond
+
+windows(width=12)
+ggplot(metabolism %>%
+          # filter(!(GPP<0) & !(R>0)) %>%
+          pivot_longer(cols = GPP:NEP,
+                       names_to = "variable",
+                       values_to = "rate",
+                       values_drop_na = T)) +
+   geom_col(aes(x = doy, y = rate), fill="gray80", color="black") +
+   # geom_hline(yintercept=0, linetype=2) +
+   facet_grid(rows = vars(variable), cols = vars(pond_id)) +
+   theme_classic()
 
 
-# just NEP
-# windows(width=12)
-# ggplot(metab_mle %>%
-#           filter(!(GPP<0) & !(R>0)) %>%
-#           pivot_longer(cols = GPP:NEP,
-#                        names_to = "variable",
-#                        values_to = "rate",
-#                        values_drop_na = T) %>%
-#           filter(variable=="NEP")) +
-#    geom_col(aes(x = doy, y = rate)) +
-#    geom_hline(yintercept=0, linetype=2) +
-#    facet_wrap(facets = vars(pond_id), ncol=3) +
-#    theme_classic()
+
+# NEP by pond
+
+windows(width=12)
+ggplot(metabolism) + # %>%
+          # filter(!(GPP<0) & !(R>0)) %>%
+   geom_col(aes(x = doy, y = NEP), fill="gray80", color="black") +
+   # geom_hline(yintercept=0, linetype=2) +
+   facet_wrap(facets = vars(pond_id), nrow=2) +
+   theme_classic()
+
 
