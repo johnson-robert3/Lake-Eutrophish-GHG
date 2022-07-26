@@ -10,8 +10,8 @@ source("Figure-Scripts/figs_functions.R")
 
 
 
-#--
-# Using HOBO t-chain data
+#---
+#### HOBO t-chain data ####
 #--
 
 
@@ -42,6 +42,7 @@ tdat = hobo_temp %>%
    pivot_longer(cols = '0':last_col(),
                 names_to = "depth",
                 values_to = "temp") %>%
+   mutate(depth = as.numeric(depth)) %>%
    #
    # interpolate missing temp data (for figs/visualization only)
    group_by(pond_id, doy) %>%
@@ -66,6 +67,7 @@ tdat = hobo_temp %>%
    pivot_longer(cols = '0':last_col(),
                 names_to = "depth",
                 values_to = "temp") %>%
+   mutate(depth = as.numeric(depth)) %>%
    #
    # interpolate missing temp data (for figs/visualization only)
    group_by(pond_id, doy, date_time) %>%
@@ -89,14 +91,25 @@ ggplot(tdat %>% filter(pond_id=="B")) +
                         colors = mycolors) +
    scale_x_discrete(name = "Day of year",
                     breaks = seq(140, 240, 10)) +
-   scale_y_continuous(name = "Depth (m)",
-                      trans = "reverse") +
+   scale_y_reverse(name = "Depth (m)") +
    labs(title = "Pond B",
         subtitle = "daily means") +
    #
    theme_classic()
 
 # ggsave(filename = "t-chain_heat-map_daily_Pond-B.png")
+
+# Pond B as lines
+windows(height=5, width=8)
+ggplot(tdat %>% 
+          filter(pond_id=="B") %>%
+          # exclude 1.75m depth, since this it is interpolated
+          filter(depth!=1.75)) +
+   geom_line(aes(x = doy, y = temp, group = as.character(depth), color = as.character(depth))) + 
+   ggtitle("Pond B") +
+   theme_classic()
+
+# ggsave(filename = "t-chain_time-series_daily_B.png")
 
 
 # Pond F
@@ -109,8 +122,7 @@ ggplot(tdat %>% filter(pond_id=="F")) +
                         colors = mycolors) +
    scale_x_discrete(name = "Day of year",
                     breaks = seq(140, 240, 10)) +
-   scale_y_continuous(name = "Depth (m)",
-                      trans = "reverse") +
+   scale_y_reverse(name = "Depth (m)") +
    labs(title = "Pond F",
         subtitle = "daily means") +
    #
@@ -118,8 +130,21 @@ ggplot(tdat %>% filter(pond_id=="F")) +
 
 # ggsave(filename = "t-chain_heat-map_daily_Pond-F.png")
 
+# Pond F as lines
+windows(height=5, width=8)
+ggplot(tdat %>% 
+          filter(pond_id=="F") %>%
+          # exclude 1.75m depth, since this it is interpolated
+          filter(depth!=1.75)) +
+   geom_line(aes(x = doy, y = temp, group = as.character(depth), color = as.character(depth))) + 
+   ggtitle("Pond F") +
+   theme_classic()
 
-# Original 30-min. temperatures
+# ggsave(filename = "t-chain_time-series_daily_F.png")
+
+
+
+# Original high frequency 30-min. temperatures
 
 # Pond B
 windows(height=6, width=10)
@@ -131,14 +156,25 @@ ggplot(tdat %>% filter(pond_id=="B")) +
                         colors = mycolors) +
    # scale_x_discrete(name = "Day of year",
    #                  breaks = seq(140, 240, 10)) +
-   scale_y_continuous(name = "Depth (m)",
-                      trans = "reverse") +
+   scale_y_reverse(name = "Depth (m)") +
    labs(title = "Pond B",
         subtitle = "30-min data") +
    #
    theme_classic()
 
 # ggsave(filename = "t-chain_heat-map_30-min_Pond-B.png")
+
+# Pond B as lines
+windows(height=5, width=8)
+ggplot(tdat %>% 
+          filter(pond_id=="B") %>%
+          # exclude 1.75m depth, since this it is interpolated
+          filter(depth!=1.75)) +
+   geom_line(aes(x = date_time, y = temp, group = as.character(depth), color = as.character(depth))) + 
+   ggtitle("Pond B") +
+   theme_classic()
+
+# ggsave(filename = "t-chain_time-series_30min_B.png")
 
 
 # Pond F
@@ -151,14 +187,25 @@ ggplot(tdat %>% filter(pond_id=="F")) +
                         colors = mycolors) +
    # scale_x_discrete(name = "Day of year",
    #                  breaks = seq(140, 240, 10)) +
-   scale_y_continuous(name = "Depth (m)",
-                      trans = "reverse") +
+   scale_y_reverse(name = "Depth (m)") +
    labs(title = "Pond F",
         subtitle = "30-min data") +
    #
    theme_classic()
 
 # ggsave(filename = "t-chain_heat-map_30-min_Pond-F.png")
+
+# Pond F as lines
+windows(height=5, width=8)
+ggplot(tdat %>% 
+          filter(pond_id=="F") %>%
+          # exclude 1.75m depth, since this it is interpolated
+          filter(depth!=1.75)) +
+   geom_line(aes(x = date_time, y = temp, group = as.character(depth), color = as.character(depth))) + 
+   ggtitle("Pond F") +
+   theme_classic()
+
+# ggsave(filename = "t-chain_time-series_30min_F.png")
 
 
 
@@ -176,7 +223,7 @@ test_hobo = hobo_strat %>%
 windows(height=6, width=10)
 ggplot(test_hobo %>%
           group_by(pond_id, doy) %>%
-          summarize(across(meta_top:buoy_freq, ~mean(., na.rm=T))) %>%
+          summarize(across(meta_top:thermocline, ~mean(., na.rm=T))) %>%
           ungroup() %>%
           filter(pond_id=="B")) +
    #
@@ -199,7 +246,7 @@ ggplot(test_hobo %>%
 windows(height=6, width=10)
 ggplot(test_hobo %>%
           group_by(pond_id, doy) %>%
-          summarize(across(meta_top:buoy_freq, ~mean(., na.rm=T))) %>%
+          summarize(across(meta_top:thermocline, ~mean(., na.rm=T))) %>%
           ungroup() %>%
           filter(pond_id=="F")) +
    #
@@ -296,10 +343,9 @@ ggplot(test_hobo %>%
 
 
 
-
-#--
-# Using daily sonde profiles
-#--
+#---
+#### Daily Sonde Profiles ####
+#---
 
 # calculate stratification variables
 
@@ -317,21 +363,65 @@ test_sonde = sonde_int %>%
 
 
 
-windows()
-ggplot(test_sonde,
-       aes(x = doy, y = buoy_freq)) +
-   # reference
-   geom_line(data = ~filter(.x, pond_id=="F"),
-             size=1, color="#0f3460", alpha=0.8) +
-   # pulse
-   geom_line(data = ~filter(.x, pond_id=="B"),
-             size=1, color="#e94560", alpha=0.8) +
-   geom_vline(xintercept = c(176, 211), linetype=2, color = "gray60") +
-   labs(x = "Day of year",
-        y = "sonde Buoyancy Frequency") +
+# windows()
+# ggplot(test_sonde,
+#        aes(x = doy, y = buoy_freq)) +
+#    # reference
+#    geom_line(data = ~filter(.x, pond_id=="F"),
+#              size=1, color="#0f3460", alpha=0.8) +
+#    # pulse
+#    geom_line(data = ~filter(.x, pond_id=="B"),
+#              size=1, color="#e94560", alpha=0.8) +
+#    geom_vline(xintercept = c(176, 211), linetype=2, color = "gray60") +
+#    labs(x = "Day of year",
+#         y = "sonde Buoyancy Frequency") +
+#    theme_classic()
+
+
+
+# Pond maximum depth over time from sonde profiles (based on maximum 'vert_m' recorded by sonde each day; when sonde hit the sediment)
+
+# 'sonde_strat' df from the 'data_stratification' script
+
+windows(height=8, width=15)
+ggplot(sonde_strat,
+       aes(x = doy)) + 
+   
+   # pond depth
+   geom_line(aes(y = pond_depth), color='black') +
+   geom_smooth(aes(y = pond_depth), se=F, color='black') +
+   
+   # thermocline from sonde
+   geom_line(aes(y = thermocline), color="red") +
+   
+   # z-mix from sonde (thermocline corrected for mixing times)
+   # geom_line(aes(y = z_mix), color = "violet", linetype=2) +
+   
+   # thermo depth from hobos (not corrected for mixing times)
+   geom_line(data = hobo_strat %>%
+                mutate(doy = yday(date_time),
+                       hour = hour(date_time)) %>%
+                filter(hour %in% c(9:11)) %>%
+                group_by(pond_id, doy) %>%
+                summarize(across(meta_top:thermocline, ~mean(., na.rm=T))) %>%
+                ungroup(),
+             aes(x = doy, y = thermocline), color="blue") +
+   
+   # thermo depth from hobos (corrected for mixing times, from the metabolism script)
+   geom_line(data = metab_data %>%
+                mutate(doy = yday(date_time),
+                       hour = hour(date_time)) %>%
+                filter(hour %in% c(9:11)) %>%
+                group_by(pond_id, doy) %>%
+                summarize(z_mix = mean(z_mix)) %>%
+                ungroup(),
+             aes(x = doy, y = z_mix), color="seagreen3") +
+   
+   #
+   scale_y_reverse(limits = c(2.5, 0)) + 
+   facet_wrap(facets = vars(pond_id)) +
    theme_classic()
 
 
-
-
+# ggsave(filename = "thermoclines-and-pond-depth.png")
 
