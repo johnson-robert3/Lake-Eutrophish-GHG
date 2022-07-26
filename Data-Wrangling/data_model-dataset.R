@@ -123,7 +123,7 @@ t4 = metab_data %>%
                                      TRUE ~ 1)) %>%
    mutate(lagstrat = lag(stratification, n=27)) %>%
    group_by(pond_id, doy) %>%
-   summarize(perc_strat_prev24 = mean(stratification, na.rm=TRUE) * 100) %>%
+   summarize(perc_strat_prev24 = mean(lagstrat, na.rm=TRUE) * 100) %>%
    ungroup()
 
 m20 = full_join(t1, t2) %>% full_join(t3) %>% full_join(t4)
