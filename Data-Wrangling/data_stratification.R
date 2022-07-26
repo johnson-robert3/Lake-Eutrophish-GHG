@@ -78,3 +78,8 @@ sonde_strat = sonde_strat %>%
                                      TRUE ~ 'stratified'))
 
 
+   # view number of mixed and stratified days for each pond
+   sonde_strat %>% count(pond_id, stratification)
+      # pulsed ponds have similar mix:strat days, reference ponds all have more mix than strat days (ponds D and E twice as many)
+
+
