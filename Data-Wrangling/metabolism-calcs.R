@@ -63,17 +63,17 @@ metab_data = minidot %>%
 
 #-- Step 3: Add mixed-layer depth
 metab_data = hobo_strat %>%
-   # use thermocline for the mixed-layer depth 
+   # use calculated thermocline depth for the mixed-layer depth 
    rename(z_mix = thermocline) %>%
    
-   # Set Z_mix to 1.75m during times of turnover and mixing within the ponds  
+   # Set Z_mix to 1.50m during times of turnover and mixing within the ponds  
    mutate(z_mix = case_when(
       # "NaN"s in the data (when rLakeAnalyzer functions can't calculate stratification variables) are also when water column is mixed
-      z_mix == "NaN" ~ 1.75,
+      z_mix == "NaN" ~ 1.5,
       # when the entire water column was considered Metalimnion
-      meta_top==0 & meta_bottom==2 ~ 1.75,
+      meta_top==0 & meta_bottom==2 ~ 1.5,
       # rLakeAnalyzer functions seem to assign thermocline to 0.125m during times of mixing or weak, transient stratification 
-      z_mix == 0.125 ~ 1.75,
+      z_mix == 0.125 ~ 1.5,
       TRUE ~ z_mix)) %>%
    
    # add a treatment ID 
@@ -114,21 +114,21 @@ metab_data = metab_data %>%
 
 ##__Bookkeeping method
 
-metab_book = metab_data %>%
-   # day/night for bookkeep
-   mutate(daynight = is.day(date_time, lat = 42.11),
-          daynight = as.character(daynight)) %>%
-   mutate(daynight = case_when(.$daynight=="TRUE" ~ 1,
-                               .$daynight=="FALSE" ~ 0)) %>%
-   group_by(pond_id, doy) %>%
-   group_modify(
-      ~metab.bookkeep(do.obs = .$do,
-                      do.sat = .$o2_eq_sat,
-                      k.gas = .$k_gas,
-                      z.mix = .$z_mix,
-                      irr = .$daynight,
-                      datetime = .$date_time)) %>%
-   ungroup()
+# metab_book = metab_data %>%
+#    # day/night for bookkeep
+#    mutate(daynight = is.day(date_time, lat = 42.11),
+#           daynight = as.character(daynight)) %>%
+#    mutate(daynight = case_when(.$daynight=="TRUE" ~ 1,
+#                                .$daynight=="FALSE" ~ 0)) %>%
+#    group_by(pond_id, doy) %>%
+#    group_modify(
+#       ~metab.bookkeep(do.obs = .$do,
+#                       do.sat = .$o2_eq_sat,
+#                       k.gas = .$k_gas,
+#                       z.mix = .$z_mix,
+#                       irr = .$daynight,
+#                       datetime = .$date_time)) %>%
+#    ungroup()
 
 
 
