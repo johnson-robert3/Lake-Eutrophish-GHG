@@ -5,46 +5,51 @@
 # Needed data sets
 
 # lake_flux  [co2, ch4, and n2o flux]
-# metabolism  [nep]
+# metabolism  [GPP, R, NEP]
 # limno_field_data  [nutrients]
-# sonde_bottom  [SWI DO]
-# sonde_surface  [Chla, temp]
+# sonde_surface  [all vars - temp, do, chla, phyco, cond, salinity]
+# sonde_bottom  [all vars - temp, do, chla, phyco, cond, salinity]
 # weather_data  [wind speed]
 # dea_rates  [DEA N2O]
 # methano_rates  [methanogenesis]
-# hobo_strat  [buoyancy frequency]  ### we are no longer calculating/using buoyancy frequency. physical limnologists say this is not a good/reliable/useful variable
 # alk_data  [alkalinity]
+# doc_data [DOC]
+# hobo_strat  [daily mean z_mix; daily mean z_mix between 900a-1130a; mean z_mix of previous 24h; percent of previous 24h mixed/stratified]
+# sonde_strat [profile z_mix; profile mixed/stratified status]
+# ebullition
 
 
 ## Prep the individual data sets
 
+# Dissolved gas concentration and diffusive flux
 m10 = lake_flux %>%
    select(pond_id, doy, week, ends_with("flux"), ends_with("lake"))
 
 
-# t10 = lake_conc %>%
-#    select(pond_id, doy, ends_with("lake"))
-
-
+# Daily metabolism estimates
 m11 = metabolism %>%
    filter(!(GPP < 0 | R > 0))
 
 
+# Surface water limno samples
 m12 = limno_field_data %>%
    select(pond_id, doy, period, tn, tp, nox, srp) %>%
    # align dates of nutrient samples with GHG samples (became offset after DOY 220; nutrients were sampled the day after GHGs)
    mutate(doy = if_else(doy > 221, doy - 1, doy))
 
 
+# Sonde surface water values
 m13 = sonde_surface %>%
    select(-contains("_rfu"))
 
 
+# Sonde bottom water values
 m14 = sonde_bottom %>%
    select(-contains("_rfu")) %>%
    rename_with(.fn = ~paste("bottom", ., sep="_"), .cols = temp:last_col())
 
 
+# Weather
 m15 = weather_data %>%
    mutate(U10 = wind_speed * ((10 / wind_z)^(1/7))) %>%
    select(doy, wind_speed, U10) %>%
@@ -54,21 +59,25 @@ m15 = weather_data %>%
    rename(wind_U10 = U10)
 
 
+# DEA
 m16 = dea_rates %>%
    select(pond_id, doy, n2o_rate) %>%
    rename(DEA = n2o_rate)
 
 
+# Methanogenesis
 m17 = methano_rates %>%
    select(pond_id, doy, ch4_rate) %>%
    rename(methanogenesis = ch4_rate)
 
 
+# Alkalinity
 m18 = alk_data %>%
    select(-sample_id, -notes) %>%
    relocate(pond_id)
 
 
+# DOC
 m19 = doc_dat %>%
    select(pond_id, doy, doc_ppb) %>%
    arrange(pond_id, doy) %>%
@@ -81,14 +90,56 @@ m19 = doc_dat %>%
                           TRUE ~ doy))
 
 
-# t9 = hobo_strat %>%
-#    mutate(doy = yday(date_time)) %>%
-#    group_by(pond_id, doy) %>%
-#    summarize(buoy_freq = median(buoy_freq, na.rm=TRUE)) %>%
-#    ungroup()
+# T-chain stratification
+
+# mean daily z-mix
+t1 = metab_data %>%
+   select(pond_id, doy, z_mix) %>%
+   group_by(pond_id, doy) %>%
+   summarize(zmix_daily = mean(z_mix)) %>%
+   ungroup()
+
+# mean z-mix around time of GHG sample collection (9 - 1130 am)
+t2 = metab_data %>%
+   select(pond_id, date_time, doy, z_mix) %>%
+   mutate(hour = hour(date_time)) %>%
+   filter(hour %in% c(9:11)) %>%
+   group_by(pond_id, doy) %>%
+   summarize(zmix_ghg_time = mean(z_mix)) %>%
+   ungroup()
+
+# mean z-mix of previous 24 hours (10 - 10 am)
+t3 = metab_data %>%
+   select(pond_id, date_time, doy, z_mix) %>%
+   mutate(lagzmix = lag(z_mix, n=27)) %>% 
+   group_by(pond_id, doy) %>% 
+   summarize(zmix_prev24 = mean(lagzmix, na.rm=TRUE)) %>%
+   ungroup()
+
+# percent of measurements in previous 24 hours that were "stratified"
+t4 = metab_data %>%
+   mutate(stratification = case_when(z_mix==1.75 ~ 0,
+                                     z_mix==1.5 ~ 0,
+                                     TRUE ~ 1)) %>%
+   mutate(lagstrat = lag(stratification, n=27)) %>%
+   group_by(pond_id, doy) %>%
+   summarize(perc_strat_prev24 = mean(stratification, na.rm=TRUE) * 100) %>%
+   ungroup()
+
+m20 = full_join(t1, t2) %>% full_join(t3) %>% full_join(t4)
 
 
-# combined
+# Sonde profile stratification
+m21 = sonde_strat %>%
+   select(pond_id, doy, sonde_zmix = z_mix, sonde_strat = stratification)
+
+
+# Ebullition
+m22 = read_csv("Data/ebullition_total.csv") %>%
+   select(-week)
+
+
+#- Combined
 
 test = m10 %>%  #full_join(t1, t10) %>%
    full_join(m11) %>%
@@ -99,7 +150,10 @@ test = m10 %>%  #full_join(t1, t10) %>%
    full_join(m16) %>%
    full_join(m17) %>%
    full_join(m18) %>%
-   full_join(m19)
+   full_join(m19) %>%
+   full_join(m20) %>%
+   full_join(m21) %>%
+   full_join(m22)
 
 
 test = test %>%
@@ -108,10 +162,6 @@ test = test %>%
    relocate(treatment, .after=pond_id) %>%
    # remove 3 blank rows with extra wind speed data
    filter(!(is.na(pond_id)))
-   # left_join(t9 %>%
-   #              mutate(treatment = case_when(.$pond_id=="B" ~ "pulsed",
-   #                                           .$pond_id=="F" ~ "reference")) %>%
-   #              select(-pond_id))
 
 
 model_dataset = test %>%
@@ -133,11 +183,11 @@ model_dataset = test %>%
 
 
 # output the complete model dataset
-write_csv(model_dataset, file = "Data/ghg-model-dataset_2022-07-18.csv")
+write_csv(model_dataset, file = "Data/ghg-model-dataset_2022-07-26.csv")
 
 
    ## remove temporary individual data sets
-   rm(list = ls(pattern = "m[[:digit:]]"), test)
+   rm(list = ls(pattern = "m[[:digit:]]"), test, t1, t2, t3, t4)
    ##
 
 
