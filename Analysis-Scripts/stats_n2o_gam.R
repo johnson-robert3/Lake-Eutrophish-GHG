@@ -14,7 +14,13 @@ set.seed(1987)
 # Data
 gdat = mdat %>%
    # select variables (i.e., remove unnecessary variables)
-   select(-date, -time, -contains("ch4"), -contains("co2"), -contains("flux"), -period, -period2)
+   select(
+      -date, -week, 
+      -contains("ch4"), -contains("co2"), -contains("flux"), 
+      -period, -period2,  # using "pulse_period" variable instead
+      -wind_speed,  # use wind_U10 instead
+      -doc_ppb  # use doc_ppm
+   )
 
 
 #---
@@ -27,50 +33,32 @@ gdat = mdat %>%
 
 # All ponds
 cforest_n2o = cforest(n2o_lake ~ ., 
-                      data = gdat,
-                      controls = cforest_control(ntree = 20000, mincriterion = 0.9, trace = TRUE))
+                      data = gdat %>% filter(!(is.na(n2o_lake))),
+                      controls = cforest_control(ntree = 25000, mincriterion = 0.9, trace = TRUE))
 
 # identify variables of importance from the forest
 varimp_n2o = varimp(cforest_n2o)
 
 # visualize
-windows(height=6, width=8); barplot(sort(abs(varimp_n2o), decreasing=TRUE), las=2)
+windows(height=6, width=12); barplot(sort(abs(varimp_n2o), decreasing=TRUE), las=2)
 
 ## Most important variables: 
-# surface do
-# doy
-# surface do sat
-# period
-# bottom temp
-# bottom do
-#  <- break point
-# NEP
-# bottom do sat
-# temp
 
 
-# Exclude the 'intermediate' food web treatment (ponds A + D)
-cforest_n2o = cforest(n2o_lake ~ ., 
-                      data = gdat %>% filter(!(trt_fw=="medium")),
-                      controls = cforest_control(ntree = 20000, mincriterion = 0.9, trace = TRUE))
+
+# Exclude pond A 
+cforest_n2o_noA = cforest(n2o_lake ~ ., 
+                      data = gdat %>% filter(!(is.na(n2o_lake)) & !(pond_id=='A')),
+                      controls = cforest_control(ntree = 25000, mincriterion = 0.9, trace = TRUE))
 
 # identify variables of importance from the forest
-varimp_n2o = varimp(cforest_n2o)
+varimp_n2o_noA = varimp(cforest_n2o_noA)
 
 # visualize
-windows(height=6, width=8); barplot(sort(abs(varimp_n2o), decreasing=TRUE), las=2)
+windows(height=6, width=12); barplot(sort(abs(varimp_n2o_noA), decreasing=TRUE), las=2)
 
 ## Most important variables: 
-# doy
-# surface do
-#  <- break point
-# surface do sat
-# period
-# bottom temp
-# bottom do
-#  <- break point
-# bottom do sat
-# temp
+
 
 
 
