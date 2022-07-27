@@ -14,7 +14,13 @@ set.seed(1987)
 # Data
 gdat = mdat %>%
    # select variables (i.e., remove unnecessary variables)
-   select(-date, -time, -contains("n2o"), -contains("co2"), -contains("flux"), -period, -period2)
+   select(
+      -date, -week, 
+      -contains("n2o"), -contains("co2"), -contains("flux"), 
+      -period, -period2,  # using "pulse_period" variable instead
+      -wind_speed,  # use wind_U10 instead
+      -doc_ppb  # use doc_ppm
+   )
 
 
 #---
