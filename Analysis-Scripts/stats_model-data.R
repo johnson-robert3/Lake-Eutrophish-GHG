@@ -26,8 +26,8 @@ pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
 
 # Data for GHG models
 mdat = fdat %>%
-   # factor variables
-   mutate(across(c(pond_id, treatment, period, period2), ~as_factor(.))) %>%
+   # factor variables (pond_id, treatment, period, period2, sonde stratification)
+   mutate(across(where(is.character), ~as_factor(.))) %>%
    # add a variable for 'nutrient treatment X pulse period'
    mutate(pulse_period = paste(treatment, period, sep = '_') %>% as_factor()) %>%
    # convert N2O flux and concentration data from units of micro-mole to nano-mole
