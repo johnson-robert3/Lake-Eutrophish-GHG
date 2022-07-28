@@ -150,6 +150,20 @@ windows(height=8, width=6); par(mfrow=c(3,2)); plot(gam4, pages=0, shade=T, scal
 summary(gam4)
 
 
+# set variable interactions based on best fit from models
+gam10 = gam(n2o_lake ~ 
+              s(do, by = treatment) + 
+              s(doy) + 
+              s(ph, by = treatment) + 
+              s(bottom_temp, by = treatment) + 
+              pulse_period +
+              treatment,
+           data = gdat, 
+           method = 'REML')
+
+windows(height=10, width=12); plot(gam10, pages=1, shade=T, scale=0, all.terms=T)
+
+summary(gam10)
 
 
 
