@@ -33,7 +33,7 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
 - [x] Can we get/use a single daily value of Z-mix from the t-chains? (e.g., daily mean, or mean of the few hours around when gas samples were collected)
 - [x] Add all other available variables (e.g., pH, DEA, Methanogenesis, Z-mix/stratification) into random forest models (random forests can handle missing data, so everything should be included)
 
-- [ ] Reach out to Jon Walter to discuss statistical analyses of the dataset
+- [x] Reach out to Jon Walter to discuss statistical analyses of the dataset
 
 
 
@@ -62,7 +62,7 @@ To recreate the full model dataset from all individual datasets, run scripts in 
    - [x] Remove alkalinity from the model (*alkalinity is used in the equation to calculate CO2, so of course it is a sig. effect*)
 
 
-- [ ] Try using conditional inference trees to determine which predictor variables are most likely important (to then use to create an initial model)
+- [x] Try using conditional inference trees to determine which predictor variables are most likely important (to then use to create an initial model)
 - [ ] Try using GAM instead of LME to analyzes GHG flux data
 - [ ] Use PCA or NMDS instead, since we have so many predictor variables?
 - [ ] Should any data be transformed prior to analysis?
