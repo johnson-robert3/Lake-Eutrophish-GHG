@@ -7,7 +7,7 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
 
 ### Data Processing Notes
 
-**Surface values** of pond limno variables taken from sonde profiles are the mean of all measurements between 5 & 50 cm (0.05 - 0.5 m)
+**Surface values** of pond limno variables taken from sonde profiles are the mean of all measurements between 5 & 50 cm (0.05 - 0.50 m)
 
 **Bottom values** of pond limno variables taken from sonde profiles are the mean of all measurements from the bottom 20 cm
 
@@ -19,21 +19,7 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
 
 **DOC data:** sample values were corrected by subtracting the mean value of the blanks within the corresponding run. the first blank in each run was excluded (carryover from flushing) from this mean, as well as two blanks that were outliers (one had TOC > 1000 ppb, one had TOC < 10 ppb) 
 
-**GHG Model Dataset:** days with erroneous metabolism values (i.e, negative GPP, positive R) are currently excluded from the total compiled dataset for use with GHG models; pond surface values of temperature and chlorophyll are calculated from sonde profiles and are each the mean of all values between 5 & 60 cm (0.05 - 0.6 m); *this has been updated to use sonde surface values (as above) instead of recalculating, so these values are now means from 0.05 - 0.5 m (instead of 0.6)*
-
-
-### Next Steps / To Do 
-
-- [x] How should we treat erroneous metabolism estimates (GPP<0, R>0)?
-
-- [x] Deal with effed up sonde profile data - DOY 217 Pond E 
-
-- [x] Calculate Z-mix/stratification from daily sonde profiles (gives us a pond-specific measure of mixing at the time of gas sampling)
-- [x] Compare sonde profile Z-mix to t-chain Z-mix (used in metabolism models). Are they similar?
-- [x] Can we get/use a single daily value of Z-mix from the t-chains? (e.g., daily mean, or mean of the few hours around when gas samples were collected)
-- [x] Add all other available variables (e.g., pH, DEA, Methanogenesis, Z-mix/stratification) into random forest models (random forests can handle missing data, so everything should be included)
-
-- [x] Reach out to Jon Walter to discuss statistical analyses of the dataset
+**GHG Model Dataset:** days with erroneous metabolism values (i.e, negative GPP, positive R) are currently excluded from the total compiled dataset for use with GHG models; pond surface values of temperature and chlorophyll are calculated from sonde profiles and are each the mean of all values between 5 & 50 cm (0.05 - 0.50 m)
 
 
 
@@ -52,28 +38,12 @@ To recreate the full model dataset from all individual datasets, run scripts in 
 
 ### Next Steps / To Do 
 
-- [ ] **CO2 LME model**
-   - [x] Create the full model
-   - [x] Iteratively remove components to find the best-fit model
-   - [x] Test the model using just the pulsed ponds (difference between periods?)
-   - [x] Compare treatments, but excluding the pre-pulse (i.e., BASE) period
-   - [x] Are there better models (higher R-squared) but that have non-sig. fixed effects?
-   - [ ] Add nutrient variables back to model, now that dates have been aligned so the full data are there
-   - [x] Remove alkalinity from the model (*alkalinity is used in the equation to calculate CO2, so of course it is a sig. effect*)
-
-
-- [x] Try using conditional inference trees to determine which predictor variables are most likely important (to then use to create an initial model)
-- [ ] Try using GAM instead of LME to analyzes GHG flux data
-- [ ] Use PCA or NMDS instead, since we have so many predictor variables?
-- [ ] Should any data be transformed prior to analysis?
-
 
 
 ## Figures
 
 ### Figs. To Make
 
-- [x] 6-panel GHG figure (gas X nutrient treatment)
-- [x] 6-panel fig; methano, DEA, ebullition (gas X nutrient treatment)
+- [ ] Ebullition time-series
 
 
