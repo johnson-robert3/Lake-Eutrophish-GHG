@@ -49,6 +49,40 @@ minidot = minidot %>%
    ungroup()
 
 
+### info about dropped points
+minidot %>%
+   # view just days that were part of the experiment
+   filter(doy >= 145, doy <= 240) %>%
+   # how many points were flagged to be dropped for each day for each pond
+   mutate(points_interp = case_when(drop_pt == 1 | 
+                                 lag(drop_pt, n=1) == 1 | 
+                                 lag(drop_pt, n=2) == 1 | 
+                                 lag(drop_pt, n=3) == 1 | 
+                                 lag(drop_pt, n=4) == 1 | 
+                                 lag(drop_pt, n=5) == 1 ~ 1,
+                             TRUE ~ 0)) %>%
+   group_by(pond_id, doy) %>%
+   summarize(total = n(),
+             drop = sum(drop_pt),
+             interp = sum(points_interp)) %>%
+   ungroup() %>%
+   mutate(perc_drop = drop / total * 100,
+          perc_interp = interp / total * 100) %>%
+   group_by(pond_id) %>%
+   summarize(min_perc_drop = min(perc_drop),
+             max_perc_drop = max(perc_drop),
+             mean_perc_drop = mean(perc_drop),
+             min_perc_interp = min(perc_interp),
+             max_perc_interp = max(perc_interp),
+             mean_perc_interp = mean(perc_interp)) %>%
+   ungroup() %>%
+   View
+#
+# next: view a distribution of number of points dropped across ponds and days, are there days where too much of the data is being removed with this 
+# method (w/ interpolation) and the entire day should be removed prior to metabolism calcs?
+   
+
+
 #-- Step 2: Add weather and surface limno data
 metab_data = minidot %>%
    # add weather
