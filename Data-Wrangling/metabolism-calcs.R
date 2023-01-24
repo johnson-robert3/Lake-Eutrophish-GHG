@@ -50,6 +50,7 @@ minidot = minidot %>%
 
 
 ### info about dropped points
+do_cleaning_pts = 
 minidot %>%
    # view just days that were part of the experiment
    filter(doy >= 145, doy <= 240) %>%
@@ -68,19 +69,75 @@ minidot %>%
    ungroup() %>%
    mutate(perc_drop = drop / total * 100,
           perc_interp = interp / total * 100) %>%
-   group_by(pond_id) %>%
-   summarize(min_perc_drop = min(perc_drop),
-             max_perc_drop = max(perc_drop),
-             mean_perc_drop = mean(perc_drop),
-             min_perc_interp = min(perc_interp),
-             max_perc_interp = max(perc_interp),
-             mean_perc_interp = mean(perc_interp)) %>%
-   ungroup() %>%
+   # group_by(pond_id) %>%
+   # summarize(min_perc_drop = min(perc_drop),
+   #           max_perc_drop = max(perc_drop),
+   #           mean_perc_drop = mean(perc_drop),
+   #           min_perc_interp = min(perc_interp),
+   #           max_perc_interp = max(perc_interp),
+   #           mean_perc_interp = mean(perc_interp)) %>%
+   # ungroup() %>%
    View
 #
 # next: view a distribution of number of points dropped across ponds and days, are there days where too much of the data is being removed with this 
 # method (w/ interpolation) and the entire day should be removed prior to metabolism calcs?
+
+# view histograms of number of points dropped within days by pond
+windows(); hist(do_cleaning_pts %>% filter(pond_id=="A") %>% .$drop)
+
+# number of points flagged and dropped (points that dropped by > 2.0 mg/l)
+windows(); ggplot(do_cleaning_pts) +
+   geom_histogram(aes(x = drop)) +
+   facet_wrap(facets = vars(pond_id), nrow=3) +
+   ylab("number of flagged and dropped points") +
+   theme_classic()
+
+windows(); hist(do_cleaning_pts %>% filter(pond_id=="A") %>% .$interp)
+
+# number of points dropped and interpolated over
+windows(); ggplot(do_cleaning_pts) +
+   geom_histogram(aes(x = interp)) +
+   facet_wrap(facets = vars(pond_id), nrow=3) +
+   ylab("number of points removed and interpolated") +
+   theme_classic()
+
+# time series points dropped per day
+windows(); ggplot(do_cleaning_pts) +
+   geom_line(aes(x=doy, y = drop)) +
+   facet_wrap(facets = vars(pond_id), nrow=3) +
+   ylab("number of points flagged and dropped") +
+   theme_classic()
+
+# time series points interpolated over per day
+windows(); ggplot(do_cleaning_pts) +
+   geom_line(aes(x=doy, y = interp)) +
+   facet_wrap(facets = vars(pond_id), nrow=3) +
+   ylab("number of points removed and interpolated") +
+   theme_classic()
+
+# rank plot of percentage of points removed and interpolated for each pond
+windows(); ggplot(do_cleaning_pts %>%
+                     group_by(pond_id) %>%
+                     arrange(perc_interp, .by_group=TRUE) %>%
+                     mutate(rank = row_number()) %>%
+                     ungroup()) +
+   geom_point(aes(x = rank, y = perc_interp), shape=21) +
    
+   geom_hline(yintercept = 33, color = "blue") +
+   # geom_hline(yintercept = 50, color = "red") +
+   # geom_hline(yintercept = 25, color = "green") +
+   
+   facet_wrap(facets = vars(pond_id), nrow=3) +
+   ylab("Percent of data points each day removed and backfilled via linear interpolation") +
+   theme_classic()
+
+# how many days in each pond over thresholds of percent of points interpolated
+
+do_cleaning_pts %>% filter(perc_interp > 50) %>% count(pond_id)
+do_cleaning_pts %>% filter(perc_interp > 40) %>% count(pond_id)
+do_cleaning_pts %>% filter(perc_interp > 33) %>% count(pond_id) # n = 10
+do_cleaning_pts %>% filter(perc_interp > 25) %>% count(pond_id) # n = 20
+
 
 
 #-- Step 2: Add weather and surface limno data
