@@ -372,4 +372,51 @@ metabolism = bind_rows(mle.a, mle.b, mle.c, mle.d, mle.e, mle.f)
    rm(list = ls(pattern="mle.[abcdef]"))
    ##
 
+# output total metabolism dataset (still containing erroneous estimates)
+write.csv(metabolism, file = "Data/metabolism_total.csv", row.names = FALSE)
+   
+   
+# number of days per pond with erroneous metabolism estimates
+metabolism %>% filter(GPP<0 | R>0) %>% count(pond_id)
+metabolism %>% filter(GPP<0 | R>0) %>% View
+
+# view number of dropped DO points on days with erroneous estimates
+metabolism %>% filter(GPP<0 | R>0) %>% left_join(test) %>% count(drop)
+metabolism %>% filter(GPP<0 | R>0) %>% left_join(test) %>% arrange(drop) %>% View
+# not as much overlap as I expected. 
+# none of the days with >25% of points removed (and interpolated) overlapped with days with erroneous metabolism estimates (perhaps b/c we "fixed" these?)
+# of 62 days with erroneous estimates, 40 were on days that did not have any DO data points dropped
+
+# 62 days with erroneous estimates using corrected DO data
+# 71 days with erroneous estimates using raw DO data
+# 16 days with >=3 flagged DO points
+# 20 days with >25% of points removed and interpolated
+
+
+# combined dataset to view metabolism around days when a higher percent of DO data points were cleaned
+test = full_join(metabolism, do_cleaning_pts) %>%
+   rename(n_total = total, n_drop = drop, n_interp = interp) %>%
+   mutate(flag_33 = case_when(perc_interp > 33 ~ 1,
+                              TRUE ~ 0))
+
+
+test %>% filter(flag_33 == 1) %>% count(pond_id)
+
+
+windows(); ggplot(test,
+                  aes(x = doy, y = NEP)) +
+   # all metabolism
+   geom_line() +
+   # circle days in red where >33% of DO points have been cleaned
+   geom_point(data = ~filter(.x, flag_33==1), shape = 21, color ="red", size=3) +
+   # circle days in blue that have erroneous metabolism estimates
+   geom_point(data = ~filter(.x, GPP<0 | R>0), shape = 21, color ="blue", size=3) +
+   # 0 line
+   geom_hline(yintercept = 0, linetype = 2) +
+   #
+   facet_wrap(facets = vars(pond_id)) +
+   theme_classic()
+
+ggsave(filename = "NEP-highlight-cleaning-pts.png", height=5, width=8, units ="in")
+
 
