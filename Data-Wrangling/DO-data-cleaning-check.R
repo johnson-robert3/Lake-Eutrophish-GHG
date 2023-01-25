@@ -53,9 +53,10 @@ windows(); hist(do_cleaning_pts %>% filter(pond_id=="A") %>% .$drop)
 
 # number of points flagged and dropped (points that dropped by > 2.0 mg/l)
 windows(); ggplot(do_cleaning_pts) +
-   geom_histogram(aes(x = drop)) +
+   geom_histogram(aes(x = drop), binwidth=1) +
    facet_wrap(facets = vars(pond_id), nrow=3) +
-   ylab("number of points flagged and dropped") +
+   xlab("number of points flagged and dropped") +
+   ylab("frequency") +
    theme_classic()
 
 # view histograms of number of points dropped and backfilled via linear interpolation within days by pond
@@ -63,9 +64,10 @@ windows(); hist(do_cleaning_pts %>% filter(pond_id=="A") %>% .$interp)
 
 # number of points dropped and backfilled via linear interpolation
 windows(); ggplot(do_cleaning_pts) +
-   geom_histogram(aes(x = interp)) +
+   geom_histogram(aes(x = interp), binwidth=3) +
    facet_wrap(facets = vars(pond_id), nrow=3) +
-   ylab("number of points removed and backfilled") +
+   xlab("number of points removed and backfilled") +
+   ylab("frequency") +
    theme_classic()
 
 # time series of number of points dropped per day
