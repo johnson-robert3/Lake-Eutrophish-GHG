@@ -54,7 +54,7 @@ for(var in varlist){
 
 
 
-pdf("../distro_comparison_rough.pdf", onefile=TRUE)
+#pdf("../distro_comparison_rough.pdf", onefile=TRUE)
 
 
 for(var in varlist){
@@ -119,6 +119,6 @@ for(var in varlist){
 
 
 
-dev.off()
+#dev.off()
 
 

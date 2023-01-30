@@ -64,3 +64,29 @@ for(var in varlist){
 
 dev.off()
 
+
+
+nreps <- 1000
+nvars <- length(varlist)
+
+
+nMatched <- rep(NA, nreps)
+
+for(ii in 1:nreps){
+  
+  tmpCount <- 0
+  
+  for(jj in 1:nvars){
+    xx <- sample(1:3, 3)
+    yy <- sample(1:3, 3)
+    
+    if(all(xx==yy)){tmpCount <- tmpCount + 1}
+    
+  }
+  nMatched[ii] <- tmpCount
+  
+}
+
+hist(nMatched)
+
+quantile(nMatched, 0.95)
