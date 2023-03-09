@@ -158,12 +158,13 @@ windows(height=4, width=6); ggplot(ebu_flux_pond %>%
             ymin = -Inf, ymax = Inf,
             fill = 'gray90') +
    #
-   geom_point(aes(color = trt_nutrients), size=3, shape=19) +
-   geom_errorbar(aes(ymin = mean - se, ymax = mean + se), width=0, color="gray60") +
-   geom_line(aes(color = trt_nutrients), size=0.6, linetype=2) +
+   geom_point(aes(color = trt_nutrients), size=2, shape=19) +
+   geom_ribbon(aes(x = doy, ymin = mean - se, ymax = mean + se, fill = trt_nutrients), alpha = 0.2, show.legend=F) +
+   geom_line(aes(color = trt_nutrients), size=1.25, linetype=1) +
    #
-   scale_y_continuous(name = expression(Ebullition)) +
+   scale_y_continuous(name = expression(Ebullition~(mmol~CH[4]~m^2~d^-1))) +
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_fill_manual(name = NULL, breaks = nut_breaks, values = nut_color) +
    #
    theme_classic()
 
