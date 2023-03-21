@@ -43,6 +43,7 @@ minidot %>%
 summarize(do_cleaning_pts, mean(perc_interp))   # mean = 7.1 %
 summarize(do_cleaning_pts, range(perc_interp))   # range = 0 - 54.2 %
 summarize(do_cleaning_pts, median(perc_interp))   # median = 0 %
+summarize(do_cleaning_pts %>% filter(perc_interp > 0), median(perc_interp))   # median = 12.5% (for days that had interpolated points)
 
 
 # next: view a distribution of number of points dropped across ponds and days, are there days where too much of the data is being removed with this 
