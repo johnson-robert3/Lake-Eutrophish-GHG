@@ -74,7 +74,8 @@ m17 = methano_rates %>%
 # Alkalinity
 m18 = alk_data %>%
    select(-sample_id, -notes) %>%
-   relocate(pond_id)
+   relocate(pond_id) %>%
+   rename(alk_ph = ph)
 
 
 # DOC
@@ -183,7 +184,7 @@ model_dataset = test %>%
 
 
 # output the complete model dataset
-write_csv(model_dataset, file = "Data/ghg-model-dataset_2022-07-26.csv")
+write_csv(model_dataset, file = "Data/ghg-model-dataset_2023-03-21.csv")
 
 
    ## remove temporary individual data sets
