@@ -182,12 +182,6 @@ doc_dat = doc_smpl %>%
 # output processed DOC data
 write.csv(doc_dat, file = "Data/doc_total.csv", row.names=F)
 
-# select just the Pond, day, and DOC columns
-write.csv(doc_dat %>%
-             select(pond_id, doy, doc_ppb) %>%
-             arrange(pond_id, doy), 
-          file = "Data/justdoc_total.csv", row.names=F)
-
 
 ## remove temporary objects
 rm(list = ls(pattern="run[01234]"), doc_all, doc_blk, doc_smpl, blk_means)
