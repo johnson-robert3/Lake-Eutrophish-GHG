@@ -287,7 +287,7 @@ windows(height=4, width=6); ggplot(fdat %>%
    # pulse days
    geom_vline(xintercept = c(176, 211), linetype=1, color="gray60") +
    # derecho, DOY 223 (Aug. 10, 2020)
-   geom_vline(xintercept = 223, linetype=1, color='gray60') +
+   geom_vline(xintercept = 223, linetype=2, color='gray60') +
    # heat wave, DOY 186-190 (July 4-8, 2020)
    annotate(geom = 'rect',
             xmin = 186, xmax = 190,
@@ -306,7 +306,108 @@ windows(height=4, width=6); ggplot(fdat %>%
    #
    theme_classic() +
    theme(legend.position = c(0.15, 0.88),
-         axis.text = element_text(color="black"))
+         panel.border = element_rect(color = "black", fill = NA),
+         axis.text = element_text(color = "black"))
+
+ggsave(file = "ebullition-time-series.png")
+
+
+
+#-
+### Methanogenesis
+#- 
+
+# 1 panel as points
+
+windows(height=4, width=6); ggplot(fdat %>% 
+                                      filter(!(is.na(methanogenesis))) %>%
+                                      # convert methano rate from umol to nmol/g/h
+                                      mutate(methano = methanogenesis * 1000) %>%
+                                      left_join(pond_data) %>%
+                                      group_by(trt_nutrients, doy) %>%
+                                      summarize(n = n(),
+                                                se = sd(methano)/sqrt(n),
+                                                mean = mean(methano)) %>%
+                                      ungroup(),
+                                   aes(x = doy, y = mean, group = trt_nutrients)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   # pulse days
+   geom_vline(xintercept = c(176, 211), linetype=1, color="gray60") +
+   # derecho, DOY 223 (Aug. 10, 2020)
+   geom_vline(xintercept = 223, linetype=2, color='gray60') +
+   # heat wave, DOY 186-190 (July 4-8, 2020)
+   annotate(geom = 'rect',
+            xmin = 186, xmax = 190,
+            ymin = -Inf, ymax = Inf,
+            fill = 'gray90') +
+   # SE ribbons
+   geom_ribbon(aes(x = doy, ymin = mean - se, ymax = mean + se, fill = trt_nutrients), alpha = 0.2, show.legend=F) +
+   # data
+   geom_point(aes(color = trt_nutrients), size=2, shape=19) +
+   geom_line(aes(color = trt_nutrients), size=1.25, linetype=1) +
+   #
+   scale_x_continuous(name = "Day of year") +
+   scale_y_continuous(name = expression(Methanogenesis~potential~(nmol~g^-1~h^-1))) +
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_fill_manual(name = NULL, breaks = nut_breaks, values = nut_color) +
+   #
+   theme_classic() +
+   theme(legend.position = c(0.15, 0.88),
+         panel.border = element_rect(color = "black", fill = NA),
+         axis.text = element_text(color = "black"))
+
+ggsave(file = "methanogenesis-time-series.png")
+
+
+
+#-
+### DEA
+#- 
+
+# 1 panel as points
+
+windows(height=4, width=6); ggplot(fdat %>% 
+                                      filter(!(is.na(DEA))) %>%
+                                      # convert DEA rate from umol to nmol/g/h
+                                      mutate(DEA = DEA * 1000) %>%
+                                      left_join(pond_data) %>%
+                                      group_by(trt_nutrients, doy) %>%
+                                      summarize(n = n(),
+                                                se = sd(DEA)/sqrt(n),
+                                                mean = mean(DEA)) %>%
+                                      ungroup(),
+                                   aes(x = doy, y = mean, group = trt_nutrients)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   # pulse days
+   geom_vline(xintercept = c(176, 211), linetype=1, color="gray60") +
+   # derecho, DOY 223 (Aug. 10, 2020)
+   geom_vline(xintercept = 223, linetype=2, color='gray60') +
+   # heat wave, DOY 186-190 (July 4-8, 2020)
+   annotate(geom = 'rect',
+            xmin = 186, xmax = 190,
+            ymin = -Inf, ymax = Inf,
+            fill = 'gray90') +
+   # SE ribbons
+   geom_ribbon(aes(x = doy, ymin = mean - se, ymax = mean + se, fill = trt_nutrients), alpha = 0.2, show.legend=F) +
+   # data
+   geom_point(aes(color = trt_nutrients), size=2, shape=19) +
+   geom_line(aes(color = trt_nutrients), size=1.25, linetype=1) +
+   #
+   scale_x_continuous(name = "Day of year") +
+   scale_y_continuous(name = expression(DEA~(nmol~g^-1~h^-1))) +
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_fill_manual(name = NULL, breaks = nut_breaks, values = nut_color) +
+   #
+   theme_classic() +
+   theme(legend.position = c(0.23, 0.9),
+         legend.background = element_rect(fill = NA),
+         panel.border = element_rect(color = "black", fill = NA),
+         axis.text = element_text(color = "black"))
+
+ggsave(file = "DEA-time-series.png")
+
 
 
 
