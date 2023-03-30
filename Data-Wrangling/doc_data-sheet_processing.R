@@ -179,6 +179,9 @@ doc_dat = doc_smpl %>%
           dc_ppb = tc_ppb - mean_blank_tc_ppb)
 
 
+# output processed DOC data
+write.csv(doc_dat, file = "Data/doc_total.csv", row.names=F)
+
 
 ## remove temporary objects
 rm(list = ls(pattern="run[01234]"), doc_all, doc_blk, doc_smpl, blk_means)

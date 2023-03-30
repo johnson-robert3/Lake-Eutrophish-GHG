@@ -281,4 +281,7 @@ metabolism = bind_rows(mle.a, mle.b, mle.c, mle.d, mle.e, mle.f)
    rm(list = ls(pattern="mle.[abcdef]"))
    ##
 
-
+# output total metabolism dataset (still containing erroneous estimates [GPP<0, R>0]) to easily read in without needing to re-run all code
+write.csv(metabolism, file = "Data/metabolism_total.csv", row.names = FALSE)
+   
+   
