@@ -41,9 +41,9 @@ ggplot(fdat %>%
    geom_vline(xintercept = c(as_date(176, origin='2019-12-31'), as_date(211, origin='2019-12-31')), linetype=2, color="gray60") +
    # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
-   # heat wave, DOY 186-190 (July 4-8, 2020)
+   # heat wave, DOY 185-190 (July 3-8, 2020)
    annotate(geom = 'rect', 
-            xmin = as_date(186, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
+            xmin = as_date(185, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
             ymin = -Inf, ymax = Inf,
             fill = 'gray90') +
    #
@@ -78,9 +78,9 @@ ggplot(fdat %>%
    geom_vline(xintercept = c(as_date(176, origin='2019-12-31'), as_date(211, origin='2019-12-31')), linetype=2, color="gray60") +
    # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
-   # heat wave, DOY 186-190 (July 4-8, 2020)
+   # heat wave, DOY 185-190 (July 3-8, 2020)
    annotate(geom = 'rect', 
-            xmin = as_date(186, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
+            xmin = as_date(185, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
             ymin = -Inf, ymax = Inf,
             fill = 'gray90') +
    #
@@ -119,9 +119,9 @@ ggplot(fdat %>%
    geom_vline(xintercept = c(as_date(176, origin='2019-12-31'), as_date(211, origin='2019-12-31')), linetype=2, color="gray60") +
    # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
-   # heat wave, DOY 186-190 (July 4-8, 2020)
+   # heat wave, DOY 185-190 (July 3-8, 2020)
    annotate(geom = 'rect', 
-            xmin = as_date(186, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
+            xmin = as_date(185, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
             ymin = -Inf, ymax = Inf,
             fill = 'gray90') +
    #
@@ -156,9 +156,9 @@ ggplot(fdat %>%
    geom_vline(xintercept = c(as_date(176, origin='2019-12-31'), as_date(211, origin='2019-12-31')), linetype=2, color="gray60") +
    # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
-   # heat wave, DOY 186-190 (July 4-8, 2020)
+   # heat wave, DOY 185-190 (July 3-8, 2020)
    annotate(geom = 'rect', 
-            xmin = as_date(186, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
+            xmin = as_date(185, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
             ymin = -Inf, ymax = Inf,
             fill = 'gray90') +
    #
@@ -194,9 +194,9 @@ ggplot(fdat %>%
    geom_vline(xintercept = c(as_date(176, origin='2019-12-31'), as_date(211, origin='2019-12-31')), linetype=2, color="gray60") +
    # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
-   # heat wave, DOY 186-190 (July 4-8, 2020)
+   # heat wave, DOY 185-190 (July 3-8, 2020)
    annotate(geom = 'rect', 
-            xmin = as_date(186, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
+            xmin = as_date(185, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
             ymin = -Inf, ymax = Inf,
             fill = 'gray90') +
    #
@@ -229,9 +229,9 @@ ggplot(fdat %>%
    geom_vline(xintercept = c(as_date(176, origin='2019-12-31'), as_date(211, origin='2019-12-31')), linetype=2, color="gray60") +
    # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
-   # heat wave, DOY 186-190 (July 4-8, 2020)
+   # heat wave, DOY 185-190 (July 3-8, 2020)
    annotate(geom = 'rect', 
-            xmin = as_date(186, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
+            xmin = as_date(185, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
             ymin = -Inf, ymax = Inf,
             fill = 'gray90') +
    #
@@ -283,9 +283,9 @@ windows(height=4, width=6); ggplot(fdat %>%
    geom_vline(xintercept = c(176, 211), linetype=1, color="gray60") +
    # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(xintercept = 223, linetype=2, color='gray60') +
-   # heat wave, DOY 186-190 (July 4-8, 2020)
+   # heat wave, DOY 185-190 (July 3-8, 2020)
    annotate(geom = 'rect',
-            xmin = 186, xmax = 190,
+            xmin = 185, xmax = 190,
             ymin = -Inf, ymax = Inf,
             fill = 'gray90') +
    # SE ribbons
@@ -319,9 +319,9 @@ windows(height=4, width=6); ggplot(fdat %>%
    geom_vline(xintercept = c(176, 211), linetype=1, color="gray60") +
    # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(xintercept = 223, linetype=2, color='gray60') +
-   # heat wave, DOY 186-190 (July 4-8, 2020)
+   # heat wave, DOY 185-190 (July 3-8, 2020)
    annotate(geom = 'rect',
-            xmin = 186, xmax = 190,
+            xmin = 185, xmax = 190,
             ymin = -Inf, ymax = Inf,
             fill = 'gray90') +
    # data
@@ -368,9 +368,9 @@ windows(height=4, width=6); ggplot(fdat %>%
    geom_vline(xintercept = c(176, 211), linetype=1, color="gray60") +
    # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(xintercept = 223, linetype=2, color='gray60') +
-   # heat wave, DOY 186-190 (July 4-8, 2020)
+   # heat wave, DOY 185-190 (July 3-8, 2020)
    annotate(geom = 'rect',
-            xmin = 186, xmax = 190,
+            xmin = 185, xmax = 190,
             ymin = -Inf, ymax = Inf,
             fill = 'gray90') +
    # SE ribbons
@@ -406,9 +406,9 @@ windows(height=4, width=6); ggplot(fdat %>%
    geom_vline(xintercept = c(176, 211), linetype=1, color="gray60") +
    # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(xintercept = 223, linetype=2, color='gray60') +
-   # heat wave, DOY 186-190 (July 4-8, 2020)
+   # heat wave, DOY 185-190 (July 3-8, 2020)
    annotate(geom = 'rect',
-            xmin = 186, xmax = 190,
+            xmin = 185, xmax = 190,
             ymin = -Inf, ymax = Inf,
             fill = 'gray90') +
    # data
@@ -456,9 +456,9 @@ windows(height=4, width=6); ggplot(fdat %>%
    geom_vline(xintercept = c(176, 211), linetype=1, color="gray60") +
    # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(xintercept = 223, linetype=2, color='gray60') +
-   # heat wave, DOY 186-190 (July 4-8, 2020)
+   # heat wave, DOY 185-190 (July 3-8, 2020)
    annotate(geom = 'rect',
-            xmin = 186, xmax = 190,
+            xmin = 185, xmax = 190,
             ymin = -Inf, ymax = Inf,
             fill = 'gray90') +
    # SE ribbons
@@ -495,9 +495,9 @@ windows(height=4, width=6); ggplot(fdat %>%
    geom_vline(xintercept = c(176, 211), linetype=1, color="gray60") +
    # derecho, DOY 223 (Aug. 10, 2020)
    geom_vline(xintercept = 223, linetype=2, color='gray60') +
-   # heat wave, DOY 186-190 (July 4-8, 2020)
+   # heat wave, DOY 185-190 (July 3-8, 2020)
    annotate(geom = 'rect',
-            xmin = 186, xmax = 190,
+            xmin = 185, xmax = 190,
             ymin = -Inf, ymax = Inf,
             fill = 'gray90') +
    # data
