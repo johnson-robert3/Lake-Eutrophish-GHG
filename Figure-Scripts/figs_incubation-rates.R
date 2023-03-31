@@ -17,12 +17,7 @@ source("Figure-Scripts/figs_functions.R")
 
 # Data
 
-# Pond/Site Data
-pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
-
-# Full dataset - contains DEA, Methanogenesis, and Ebullition rate measurements
-# (need to create 'fdat' dataset from 'stats_model-data' script first)
-fdat = fdat %>% mutate(date = ymd(date))
+# create the 'fdat' and 'pond_data' data sets from the "stats_model-data" script 
 
 
 
@@ -271,7 +266,7 @@ windows(height=8, width=14)
 ### Ebullition
 #-
 
-# 1 panel as points
+# 1 panel as points with error ribbons
 
 windows(height=4, width=6); ggplot(fdat %>% 
                                       filter(!(is.na(ch4_ebu_flux))) %>%
@@ -309,6 +304,43 @@ windows(height=4, width=6); ggplot(fdat %>%
          panel.border = element_rect(color = "black", fill = NA),
          axis.text = element_text(color = "black"))
 
+# ggsave(file = "ebullition-time-series.png")
+
+
+# 1 panel raw data points and smoothed means
+
+windows(height=4, width=6); ggplot(fdat %>% 
+                                      filter(!(is.na(ch4_ebu_flux))) %>%
+                                      left_join(pond_data),
+                                   aes(x = doy, y = ch4_ebu_flux)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   # pulse days
+   geom_vline(xintercept = c(176, 211), linetype=1, color="gray60") +
+   # derecho, DOY 223 (Aug. 10, 2020)
+   geom_vline(xintercept = 223, linetype=2, color='gray60') +
+   # heat wave, DOY 186-190 (July 4-8, 2020)
+   annotate(geom = 'rect',
+            xmin = 186, xmax = 190,
+            ymin = -Inf, ymax = Inf,
+            fill = 'gray90') +
+   # data
+   geom_point(aes(color = trt_nutrients), size=2, shape=19, alpha = 0.4) +
+   # mean
+   geom_smooth(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(ch4_ebu_flux)) %>% ungroup(),
+             aes(y = mean, color = trt_nutrients), 
+             size=1.5, linetype=1, span=0.4, se=FALSE) +
+   #
+   scale_x_continuous(name = "Day of year") +
+   scale_y_continuous(name = expression(Ebullition~(mmol~CH[4]~m^2~d^-1))) +
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_fill_manual(name = NULL, breaks = nut_breaks, values = nut_color) +
+   #
+   theme_classic() +
+   theme(legend.position = c(0.15, 0.88),
+         panel.border = element_rect(color = "black", fill = NA),
+         axis.text = element_text(color = "black"))
+
 ggsave(file = "ebullition-time-series.png")
 
 
@@ -317,7 +349,7 @@ ggsave(file = "ebullition-time-series.png")
 ### Methanogenesis
 #- 
 
-# 1 panel as points
+# 1 panel as points with error ribbons
 
 windows(height=4, width=6); ggplot(fdat %>% 
                                       filter(!(is.na(methanogenesis))) %>%
@@ -357,6 +389,46 @@ windows(height=4, width=6); ggplot(fdat %>%
          panel.border = element_rect(color = "black", fill = NA),
          axis.text = element_text(color = "black"))
 
+# ggsave(file = "methanogenesis-time-series.png")
+
+
+# 1 panel raw data points and smoothed means
+
+windows(height=4, width=6); ggplot(fdat %>% 
+                                      filter(!(is.na(methanogenesis))) %>%
+                                      # convert methano rate from umol to nmol/g/h
+                                      mutate(methano = methanogenesis * 1000) %>%
+                                      left_join(pond_data),
+                                   aes(x = doy, y = methano)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   # pulse days
+   geom_vline(xintercept = c(176, 211), linetype=1, color="gray60") +
+   # derecho, DOY 223 (Aug. 10, 2020)
+   geom_vline(xintercept = 223, linetype=2, color='gray60') +
+   # heat wave, DOY 186-190 (July 4-8, 2020)
+   annotate(geom = 'rect',
+            xmin = 186, xmax = 190,
+            ymin = -Inf, ymax = Inf,
+            fill = 'gray90') +
+   # data
+   geom_point(aes(color = trt_nutrients), size=2, shape=19, alpha = 0.4) +
+   # mean
+   geom_smooth(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(methano)) %>% ungroup(),
+             aes(y = mean, color = trt_nutrients), 
+             size=1.5, linetype=1, span=0.4, se=FALSE) +
+   #
+   scale_x_continuous(name = "Day of year") +
+   scale_y_continuous(name = expression(Methanogenesis~potential~(nmol~g^-1~h^-1))) +
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_fill_manual(name = NULL, breaks = nut_breaks, values = nut_color) +
+   #
+   theme_classic() +
+   theme(legend.position = c(0.15, 0.88),
+         legend.background = element_rect(fill = NA),
+         panel.border = element_rect(color = "black", fill = NA),
+         axis.text = element_text(color = "black"))
+
 ggsave(file = "methanogenesis-time-series.png")
 
 
@@ -365,7 +437,7 @@ ggsave(file = "methanogenesis-time-series.png")
 ### DEA
 #- 
 
-# 1 panel as points
+# 1 panel as points with error ribbons
 
 windows(height=4, width=6); ggplot(fdat %>% 
                                       filter(!(is.na(DEA))) %>%
@@ -406,8 +478,47 @@ windows(height=4, width=6); ggplot(fdat %>%
          panel.border = element_rect(color = "black", fill = NA),
          axis.text = element_text(color = "black"))
 
-ggsave(file = "DEA-time-series.png")
+# ggsave(file = "DEA-time-series.png")
 
+
+# 1 panel raw data points and smoothed means
+
+windows(height=4, width=6); ggplot(fdat %>% 
+                                      filter(!(is.na(DEA))) %>%
+                                      # convert DEA rate from umol to nmol/g/h
+                                      mutate(DEA = DEA * 1000) %>%
+                                      left_join(pond_data),
+                                   aes(x = doy, y = DEA)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   # pulse days
+   geom_vline(xintercept = c(176, 211), linetype=1, color="gray60") +
+   # derecho, DOY 223 (Aug. 10, 2020)
+   geom_vline(xintercept = 223, linetype=2, color='gray60') +
+   # heat wave, DOY 186-190 (July 4-8, 2020)
+   annotate(geom = 'rect',
+            xmin = 186, xmax = 190,
+            ymin = -Inf, ymax = Inf,
+            fill = 'gray90') +
+   # data
+   geom_point(aes(color = trt_nutrients), size=2, shape=19, alpha = 0.4) +
+   # mean
+   geom_smooth(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(DEA)) %>% ungroup(),
+             aes(y = mean, color = trt_nutrients), 
+             size=1.5, linetype=1, span=0.4, se=FALSE) +
+   #
+   scale_x_continuous(name = "Day of year") +
+   scale_y_continuous(name = expression(DEA~(nmol~g^-1~h^-1))) +
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_fill_manual(name = NULL, breaks = nut_breaks, values = nut_color) +
+   #
+   theme_classic() +
+   theme(legend.position = c(0.86, 0.88),
+         legend.background = element_rect(fill = NA),
+         panel.border = element_rect(color = "black", fill = NA),
+         axis.text = element_text(color = "black"))
+
+ggsave(file = "DEA-time-series.png")
 
 
 
