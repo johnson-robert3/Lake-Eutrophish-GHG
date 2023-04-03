@@ -127,12 +127,15 @@ metabolism %>% filter(GPP<0 | R>0) %>% count(pond_id) %>% mutate(perc = n / 96 *
 # view number of DO points removed and backfilled on days with erroneous estimates
 metabolism %>% filter(GPP<0 | R>0) %>% left_join(do_cleaning_pts) %>% count(drop)
 metabolism %>% filter(GPP<0 | R>0) %>% left_join(do_cleaning_pts) %>% arrange(drop) %>% View
+
 # not as much overlap as I expected. 
 # none of the days with >25% of points removed and backfilled overlapped with days producing erroneous metabolism estimates (perhaps b/c we "fixed" these?)
 # of 62 days with erroneous estimates, 40 were on days that did not have any DO data points dropped
 
-# 62 days with erroneous estimates using corrected DO data
-# 71 days with erroneous estimates using raw DO data
+# 71 days with erroneous estimates using raw DO data (no cleaning of points and large drops in concentration)
+# 62 days with erroneous estimates using corrected DO data (corrected = removing flagged DO points and backfilling w/ linear interpolation)
+# 62 days with erroneous estimates using corrected DO data (as above) and with removing days with >33% of points interpololated before calculating metabolism
+
 # 16 days with >=3 flagged DO points
 # 20 days with >25% of points removed and backfilled
 # 10 days with >33% of points removed and backfilled
