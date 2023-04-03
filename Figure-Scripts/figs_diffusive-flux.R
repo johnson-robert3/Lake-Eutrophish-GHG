@@ -15,11 +15,9 @@ library(viridis)
 source("Figure-Scripts/figs_functions.R")
 
 
-# Pond/Site Data
-pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
+# Data
 
-# Full variable data set
-# 'fdat' - need to run 'stats_model-data.R' script to create
+# create the 'fdat' and 'pond_data' data sets from the "stats_model-data" script 
 
 
 
@@ -449,4 +447,25 @@ windows(height=8, width=14)
 
 
 # ggsave(file = '6-panel_flux_by-pulse-trt.png')
+
+
+#--
+# Histogram of Flux Rates
+#-- 
+
+# CH4
+
+windows(); ggplot(fdat %>% filter(!(is.na(ch4_flux))) %>% left_join(pond_data)) +
+   #
+   # geom_histogram(aes(x = ch4_flux, fill = trt_nutrients), position = "dodge") +
+   # geom_freqpoly(aes(x = ch4_flux, color = trt_nutrients)) +
+   geom_area(aes(x = ch4_flux, fill = trt_nutrients), stat = "bin", alpha = 0.5) +
+   #
+   theme_classic()
+
+
+
+
+
+
 
