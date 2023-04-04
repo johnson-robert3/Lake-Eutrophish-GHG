@@ -107,21 +107,6 @@ metab_data = metab_data %>%
    add_count(pond_id, doy)
 
 
-#-- Step 5: Remove pond-days that have >33% of DO measurements cleaned and backfilled prior to running metabolism calculations
-
-## Create a data set identifying the 10 days for which >33% of DO measurements have been cleaned and backfilled
-# create the "do_cleaning_pts" data frame from the "DO-data-cleaning-check" script
-
-d33 = do_cleaning_pts %>% 
-   mutate(flag_33 = if_else(perc_interp > 33, 1, 0)) %>%
-   filter(flag_33 == 1) %>%
-   select(pond_id, doy)
-
-# remove these 10 pond days from the metab data set
-metab_data = anti_join(metab_data, d33)
-
-
-
 #---
 # Metabolism Calculations
 #---
@@ -291,9 +276,6 @@ mle.f = metab_data %>%
 # all ponds
 metabolism = bind_rows(mle.a, mle.b, mle.c, mle.d, mle.e, mle.f)
 
-# after removing days w/ >33% backfilled before calcs
-metabolism_d33 = bind_rows(mle.a, mle.b, mle.c, mle.d, mle.e, mle.f)
-
 
    ## remove temporary objects
    rm(list = ls(pattern="mle.[abcdef]"))
@@ -301,7 +283,5 @@ metabolism_d33 = bind_rows(mle.a, mle.b, mle.c, mle.d, mle.e, mle.f)
 
 # output total metabolism dataset (still containing erroneous estimates [GPP<0, R>0]) to easily read in without needing to re-run all code
 write.csv(metabolism, file = "Data/metabolism_total.csv", row.names = FALSE)
-
-write.csv(metabolism_d33, file = "Data/metabolism-drop33_total.csv", row.names = FALSE)
-
+   
    
