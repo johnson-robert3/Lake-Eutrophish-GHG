@@ -41,9 +41,14 @@ minidot %>%
 
 # percent of points removed and backfilled
 summarize(do_cleaning_pts, mean(perc_interp))   # mean = 7.1 %
+summarize(do_cleaning_pts %>% filter(drop > 0), mean(perc_interp))   # mean = 16.6% (for days that had at least one dropped measurement)
 summarize(do_cleaning_pts, range(perc_interp))   # range = 0 - 54.2 %
+summarize(do_cleaning_pts %>% filter(drop > 0), range(perc_interp))   # range = 2.1 - 54.2% (for days that had at least one dropped measurement)
 summarize(do_cleaning_pts, median(perc_interp))   # median = 0 %
-summarize(do_cleaning_pts %>% filter(perc_interp > 0), median(perc_interp))   # median = 12.5% (for days that had interpolated points)
+summarize(do_cleaning_pts %>% filter(drop > 0), median(perc_interp))   # median = 12.5% (for days that had at least one dropped measurement)
+
+# range of percentage of points removed and backfilled based on number of flagged points per day
+do_cleaning_pts %>% group_by(drop) %>% summarize(range(perc_interp))
 
 
 # next: view a distribution of number of points dropped across ponds and days, are there days where too much of the data is being removed with this 
@@ -167,6 +172,6 @@ windows(); ggplot(test,
    facet_wrap(facets = vars(pond_id)) +
    theme_classic()
 
-ggsave(filename = "NEP-highlight-cleaning-pts.png", height=5, width=8, units ="in")
+# ggsave(filename = "NEP-highlight-cleaning-pts.png", height=5, width=8, units ="in")
 
 
