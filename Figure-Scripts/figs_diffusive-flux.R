@@ -20,6 +20,135 @@ source("Figure-Scripts/figs_functions.R")
 # create the 'fdat' and 'pond_data' data sets from the "stats_model-data" script 
 
 
+#---
+# 3-panel, manuscript style
+#---
+
+## CH4
+# windows(height=3.5, width=5)
+m = 
+ggplot(fdat %>%
+          filter(!(is.na(ch4_flux))) %>%
+          left_join(pond_data), 
+       aes(x = doy, y = ch4_flux)) +
+   #
+   # add analysis windows
+   
+   # p1
+   annotate(geom = 'rect', xmin = 176, xmax = 176+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
+   # p2
+   annotate(geom = 'rect', xmin = 211, xmax = 211+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
+   # pulse days
+   geom_vline(xintercept = c(176, 211), linetype=1, color="gray50") +
+   
+   # heat wave, DOY 185-190 (July 3-8, 2020)
+   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+
+   # derecho, DOY 223 (Aug. 10, 2020)
+   annotate(geom = 'rect', xmin = 223, xmax = 223+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
+   geom_vline(xintercept = 223, linetype=2, color='gray50') +
+   
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   # pond data
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.65) +
+   # treatment mean 
+   geom_line(data = ~ .x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(ch4_flux)) %>% ungroup(),
+             aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) +
+   #
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^-1)),
+                      limits = c(0, 60), breaks = seq(0, 60, 10)) +
+   #
+   theme_classic() +
+   theme(panel.border = element_rect(fill=NA, color='black'),
+         # legend.position = c(0.82, 0.88),
+         legend.position = "none",
+         axis.ticks.length = unit(0.3, 'line'),
+         axis.text = element_text(color='black', size=rel(1)),
+         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line")),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
+
+
+## N2O
+# windows(height=3.5, width=5)
+n = 
+ggplot(fdat %>%
+          filter(!(is.na(n2o_flux))) %>%
+          # convert from mmol to umol
+          mutate(n2o_flux = n2o_flux * 1000) %>%
+          left_join(pond_data), 
+       aes(x = doy, y = n2o_flux)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   # pulse days
+   geom_vline(xintercept = c(176, 211), linetype=1, color="gray40") +
+   # derecho, DOY 223 (Aug. 10, 2020)
+   geom_vline(xintercept = 223, linetype=2, color='gray60') +
+   # heat wave, DOY 185-190 (July 3-8, 2020)
+   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray90') +
+   # pond data
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.65) +
+   # treatment mean 
+   geom_line(data = ~ .x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(n2o_flux)) %>% ungroup(),
+             aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) +
+   #
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)),
+                      limits = c(-4, 3), breaks = seq(-4, 3, 1)) +
+   #
+   theme_classic() +
+   theme(panel.border = element_rect(fill=NA, color='black'),
+         # legend.position = c(0.82, 0.88),
+         legend.position = "none",
+         axis.ticks.length = unit(0.3, 'line'),
+         axis.text = element_text(color='black', size=rel(1)),
+         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line")),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
+
+
+## CO2
+# windows(height=3.5, width=5)
+c = 
+ggplot(fdat %>%
+          filter(!(is.na(co2_flux))) %>%
+          left_join(pond_data), 
+       aes(x = doy, y = co2_flux)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   # pulse days
+   geom_vline(xintercept = c(176, 211), linetype=1, color="gray40") +
+   # derecho, DOY 223 (Aug. 10, 2020)
+   geom_vline(xintercept = 223, linetype=2, color='gray60') +
+   # heat wave, DOY 185-190 (July 3-8, 2020)
+   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray90') +
+   # pond data
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.65) +
+   # treatment mean 
+   geom_line(data = ~ .x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(co2_flux)) %>% ungroup(),
+             aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) +
+   #
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_y_continuous(name = expression(CO[2]~flux~(mmol~m^-2~d^-1)),
+                      limits = c(-20, 250), breaks = seq(0, 250, 50)) +
+   #
+   theme_classic() +
+   theme(panel.border = element_rect(fill=NA, color='black'),
+         legend.position = c(0.18, 0.86),
+         axis.ticks.length = unit(0.3, 'line'),
+         axis.text = element_text(color='black', size=rel(1)),
+         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line")),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
+
+
+windows(height=3.5*3, width=5); m / n / c
+
 
 #---
 #### Methane ####
