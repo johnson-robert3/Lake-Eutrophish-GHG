@@ -218,6 +218,48 @@ ggplot(fdat %>%
 #### Carbon Dioxide ####
 #---
 
+## Diffusive flux
+windows(height=4, width=5.5)
+ggplot(fdat %>%
+          filter(!(is.na(co2_flux))) %>%
+          left_join(pond_data), 
+       aes(x = date, y = co2_flux)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   # pulse days
+   geom_vline(data = ~filter(.x, doy %in% c(176, 211)),
+              aes(xintercept = date), linetype=2, color="gray60") +
+   # derecho, DOY 223 (Aug. 10, 2020)
+   geom_vline(aes(xintercept = as_date('2020-08-10')), linetype=1, color='gray60') +
+   # heat wave, DOY 186-190 (July 4-8, 2020)
+   annotate(geom = 'rect', 
+            xmin = as_date(186, origin='2019-12-31'), xmax = as_date(190, origin='2019-12-31'),
+            ymin = -Inf, ymax = Inf,
+            fill = 'gray90') +
+   # pond data
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.75) +
+   # treatment mean (loess smooth)
+   geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=1, se=F, span=0.15) +
+   #
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   # scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_x_date(name = NULL, 
+                breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
+                # date_labels = "%b %Y",
+                labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
+   scale_y_continuous(name = expression(CO[2]~flux~(mmol~m^-2~d^-1)),
+                      limits = c(-20, 250), breaks = seq(0, 250, 50)) +
+   #
+   ggtitle(expression(Diffusive~CO[2]~flux)) +
+   theme_classic() +
+   theme(panel.border = element_rect(fill=NA, color='black'),
+         legend.position = c(0.16, 0.88),
+         axis.ticks.length = unit(0.3, 'line'),
+         axis.text = element_text(color='black', size=rel(1)),
+         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
+         # axis.title.x = element_text(margin = margin(t=0.5, unit="line")),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
+
 
 
 #---
