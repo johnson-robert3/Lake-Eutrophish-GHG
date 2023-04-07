@@ -26,29 +26,28 @@ source("Figure-Scripts/figs_functions.R")
 
 ## CH4
 # windows(height=3.5, width=5)
-m = 
+m =
 ggplot(fdat %>%
           filter(!(is.na(ch4_flux))) %>%
           left_join(pond_data), 
        aes(x = doy, y = ch4_flux)) +
-   #
    # add analysis windows
-   
-   # p1
-   annotate(geom = 'rect', xmin = 176, xmax = 176+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
-   # p2
-   annotate(geom = 'rect', xmin = 211, xmax = 211+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
-   # pulse days
-   geom_vline(xintercept = c(176, 211), linetype=1, color="gray50") +
-   
-   # heat wave, DOY 185-190 (July 3-8, 2020)
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-
-   # derecho, DOY 223 (Aug. 10, 2020)
-   annotate(geom = 'rect', xmin = 223, xmax = 223+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
-   geom_vline(xintercept = 223, linetype=2, color='gray50') +
-   
-   #
+      # pulse windows
+      annotate(geom = 'rect', xmin = 176, xmax = 176+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
+      annotate(geom = 'rect', xmin = 211, xmax = 211+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
+      # pulse event lines
+      geom_vline(xintercept = c(176, 211), linetype=1, color="gray50") +
+      # heat event, DOY 185-190 (July 3-8, 2020)
+      annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+      # derecho, DOY 223 (Aug. 10, 2020)
+      annotate(geom = 'rect', xmin = 223, xmax = 223+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
+      geom_vline(xintercept = 223, linetype=2, color='gray50') +
+      # event labels
+      annotate(geom = "text", x=178.8, y=60, label = "P1", size=2.75) +
+      annotate(geom = "text", x=188, y=60, label = "H", size=2.75) +
+      annotate(geom = "text", x=213.6, y=60, label = "P2", size=2.75) +
+      annotate(geom = "text", x=226, y=60, label = "D", size=2.75) +
+   # zero line
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.65) +
@@ -81,14 +80,24 @@ ggplot(fdat %>%
           mutate(n2o_flux = n2o_flux * 1000) %>%
           left_join(pond_data), 
        aes(x = doy, y = n2o_flux)) +
-   #
+   # add analysis windows
+      # pulse windows
+      annotate(geom = 'rect', xmin = 176, xmax = 176+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
+      annotate(geom = 'rect', xmin = 211, xmax = 211+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
+      # pulse event lines
+      geom_vline(xintercept = c(176, 211), linetype=1, color="gray50") +
+      # heat event, DOY 185-190 (July 3-8, 2020)
+      annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+      # derecho, DOY 223 (Aug. 10, 2020)
+      annotate(geom = 'rect', xmin = 223, xmax = 223+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
+      geom_vline(xintercept = 223, linetype=2, color='gray50') +
+      # event labels
+      annotate(geom = "text", x=178.8, y=3, label = "P1", size=2.75) +
+      annotate(geom = "text", x=188, y=3, label = "H", size=2.75) +
+      annotate(geom = "text", x=213.6, y=3, label = "P2", size=2.75) +
+      annotate(geom = "text", x=226, y=3, label = "D", size=2.75) +
+   # zero line
    geom_hline(yintercept=0, linetype=3, color="gray60") +
-   # pulse days
-   geom_vline(xintercept = c(176, 211), linetype=1, color="gray40") +
-   # derecho, DOY 223 (Aug. 10, 2020)
-   geom_vline(xintercept = 223, linetype=2, color='gray60') +
-   # heat wave, DOY 185-190 (July 3-8, 2020)
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray90') +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.65) +
    # treatment mean 
@@ -118,14 +127,24 @@ ggplot(fdat %>%
           filter(!(is.na(co2_flux))) %>%
           left_join(pond_data), 
        aes(x = doy, y = co2_flux)) +
-   #
+   # add analysis windows
+      # pulse windows
+      annotate(geom = 'rect', xmin = 176, xmax = 176+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
+      annotate(geom = 'rect', xmin = 211, xmax = 211+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
+      # pulse event lines
+      geom_vline(xintercept = c(176, 211), linetype=1, color="gray50") +
+      # heat event, DOY 185-190 (July 3-8, 2020)
+      annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+      # derecho, DOY 223 (Aug. 10, 2020)
+      annotate(geom = 'rect', xmin = 223, xmax = 223+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
+      geom_vline(xintercept = 223, linetype=2, color='gray50') +
+      # event labels
+      annotate(geom = "text", x=178.8, y=250, label = "P1", size=2.75) +
+      annotate(geom = "text", x=188, y=250, label = "H", size=2.75) +
+      annotate(geom = "text", x=213.6, y=250, label = "P2", size=2.75) +
+      annotate(geom = "text", x=226, y=250, label = "D", size=2.75) +
+   # zero line
    geom_hline(yintercept=0, linetype=3, color="gray60") +
-   # pulse days
-   geom_vline(xintercept = c(176, 211), linetype=1, color="gray40") +
-   # derecho, DOY 223 (Aug. 10, 2020)
-   geom_vline(xintercept = 223, linetype=2, color='gray60') +
-   # heat wave, DOY 185-190 (July 3-8, 2020)
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray90') +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.65) +
    # treatment mean 
