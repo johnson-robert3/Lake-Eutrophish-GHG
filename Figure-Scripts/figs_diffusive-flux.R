@@ -24,29 +24,62 @@ source("Figure-Scripts/figs_functions.R")
 # 3-panel, manuscript style
 #---
 
+## Components for all plots
+
+# events and analysis windows
+fig_events = function(.fig, .gas = c('ch4', 'n2o', 'co2')) {
+   
+   # for y-axis height of event labels
+   .max = if(.gas == 'ch4') {60} else if(.gas == 'n2o') {3} else if(.gas == 'co2') {250}
+   
+   .fig +
+   # add analysis windows
+      # pulse windows (1-5 days after event)
+      annotate(geom = 'rect', xmin = 176+1, xmax = 176+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
+      annotate(geom = 'rect', xmin = 211+1, xmax = 211+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
+      # pulse events, DOY 176 and 211 (after all sampling had ocurred)
+      geom_vline(xintercept = c(176.8, 211.8), linetype=1, color="gray50") +
+      # heat event, DOY 185-190 (July 3-8, 2020)
+      annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+      # derecho, DOY 223 (Aug. 10, 2020)
+      annotate(geom = 'rect', xmin = 223+1, xmax = 223+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
+      geom_vline(xintercept = 223.8, linetype=2, color='gray50') +
+      # event labels
+      annotate(geom = "text", label = "P", x=178.8, y=.max, size=2.75) +
+      annotate(geom = "text", label = "H", x=187.8, y=.max, size=2.75) +
+      annotate(geom = "text", label = "P", x=214, y=.max, size=2.75) +
+      annotate(geom = "text", label = "D", x=226, y=.max, size=2.75)
+}
+
+# panel and axis aesthetics
+fig_theme = function(.fig) {
+   .fig +
+   theme(panel.border = element_rect(fill=NA, color='black'),
+         axis.ticks.length = unit(0.3, 'line'),
+         axis.text = element_text(color='black', size=rel(1)),
+         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line")),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
+}
+
+# treatment colors and labels
+t_breaks = c("yes", "no") 
+t_cols = c("yes" = "#5D3891", "no" = "#F99417") # pulse-purple, ref-orange
+t_labs = c("yes" = "Pulsed", "no" = "Reference")
+
+
+
 ## CH4
 # windows(height=3.5, width=5)
 m =
 ggplot(fdat %>%
           filter(!(is.na(ch4_flux))) %>%
           left_join(pond_data), 
-       aes(x = doy, y = ch4_flux)) +
+       aes(x = doy, y = ch4_flux)) %>%
+   
    # add analysis windows
-      # pulse windows
-      annotate(geom = 'rect', xmin = 176, xmax = 176+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
-      annotate(geom = 'rect', xmin = 211, xmax = 211+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
-      # pulse event lines
-      geom_vline(xintercept = c(176, 211), linetype=1, color="gray50") +
-      # heat event, DOY 185-190 (July 3-8, 2020)
-      annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-      # derecho, DOY 223 (Aug. 10, 2020)
-      annotate(geom = 'rect', xmin = 223, xmax = 223+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
-      geom_vline(xintercept = 223, linetype=2, color='gray50') +
-      # event labels
-      annotate(geom = "text", x=178.8, y=60, label = "P1", size=2.75) +
-      annotate(geom = "text", x=188, y=60, label = "H", size=2.75) +
-      annotate(geom = "text", x=213.6, y=60, label = "P2", size=2.75) +
-      annotate(geom = "text", x=226, y=60, label = "D", size=2.75) +
+   fig_events(., .gas = 'ch4') +
+   
    # zero line
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    # pond data
@@ -55,20 +88,14 @@ ggplot(fdat %>%
    geom_line(data = ~ .x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(ch4_flux)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) +
    #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_color_manual(name = NULL, breaks = t_breaks, values = t_cols, labels = t_labs) +
+   scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^-1)),
                       limits = c(0, 60), breaks = seq(0, 60, 10)) +
    #
    theme_classic() +
-   theme(panel.border = element_rect(fill=NA, color='black'),
-         # legend.position = c(0.82, 0.88),
-         legend.position = "none",
-         axis.ticks.length = unit(0.3, 'line'),
-         axis.text = element_text(color='black', size=rel(1)),
-         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
-         axis.title.x = element_text(margin = margin(t=0.5, unit="line")),
-         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
+   theme(legend.position = "none") %>%
+   fig_theme()
 
 
 ## N2O
@@ -79,23 +106,11 @@ ggplot(fdat %>%
           # convert from mmol to umol
           mutate(n2o_flux = n2o_flux * 1000) %>%
           left_join(pond_data), 
-       aes(x = doy, y = n2o_flux)) +
+       aes(x = doy, y = n2o_flux)) %>%
+   
    # add analysis windows
-      # pulse windows
-      annotate(geom = 'rect', xmin = 176, xmax = 176+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
-      annotate(geom = 'rect', xmin = 211, xmax = 211+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
-      # pulse event lines
-      geom_vline(xintercept = c(176, 211), linetype=1, color="gray50") +
-      # heat event, DOY 185-190 (July 3-8, 2020)
-      annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-      # derecho, DOY 223 (Aug. 10, 2020)
-      annotate(geom = 'rect', xmin = 223, xmax = 223+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
-      geom_vline(xintercept = 223, linetype=2, color='gray50') +
-      # event labels
-      annotate(geom = "text", x=178.8, y=3, label = "P1", size=2.75) +
-      annotate(geom = "text", x=188, y=3, label = "H", size=2.75) +
-      annotate(geom = "text", x=213.6, y=3, label = "P2", size=2.75) +
-      annotate(geom = "text", x=226, y=3, label = "D", size=2.75) +
+   fig_events(., .gas = 'n2o') +
+   
    # zero line
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    # pond data
@@ -104,20 +119,14 @@ ggplot(fdat %>%
    geom_line(data = ~ .x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(n2o_flux)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) +
    #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_color_manual(name = NULL, breaks = t_breaks, values = t_cols, labels = t_labs) +
+   scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)),
                       limits = c(-4, 3), breaks = seq(-4, 3, 1)) +
    #
    theme_classic() +
-   theme(panel.border = element_rect(fill=NA, color='black'),
-         # legend.position = c(0.82, 0.88),
-         legend.position = "none",
-         axis.ticks.length = unit(0.3, 'line'),
-         axis.text = element_text(color='black', size=rel(1)),
-         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
-         axis.title.x = element_text(margin = margin(t=0.5, unit="line")),
-         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
+   theme(legend.position = "none") %>%
+   fig_theme()
 
 
 ## CO2
@@ -126,23 +135,11 @@ c =
 ggplot(fdat %>%
           filter(!(is.na(co2_flux))) %>%
           left_join(pond_data), 
-       aes(x = doy, y = co2_flux)) +
+       aes(x = doy, y = co2_flux)) %>%
+   
    # add analysis windows
-      # pulse windows
-      annotate(geom = 'rect', xmin = 176, xmax = 176+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
-      annotate(geom = 'rect', xmin = 211, xmax = 211+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
-      # pulse event lines
-      geom_vline(xintercept = c(176, 211), linetype=1, color="gray50") +
-      # heat event, DOY 185-190 (July 3-8, 2020)
-      annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-      # derecho, DOY 223 (Aug. 10, 2020)
-      annotate(geom = 'rect', xmin = 223, xmax = 223+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
-      geom_vline(xintercept = 223, linetype=2, color='gray50') +
-      # event labels
-      annotate(geom = "text", x=178.8, y=250, label = "P1", size=2.75) +
-      annotate(geom = "text", x=188, y=250, label = "H", size=2.75) +
-      annotate(geom = "text", x=213.6, y=250, label = "P2", size=2.75) +
-      annotate(geom = "text", x=226, y=250, label = "D", size=2.75) +
+   fig_events(., .gas = 'co2') +
+   
    # zero line
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    # pond data
@@ -151,22 +148,20 @@ ggplot(fdat %>%
    geom_line(data = ~ .x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(co2_flux)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) +
    #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_color_manual(name = NULL, breaks = t_breaks, values = t_cols, labels = t_labs) +
+   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(CO[2]~flux~(mmol~m^-2~d^-1)),
                       limits = c(-20, 250), breaks = seq(0, 250, 50)) +
    #
    theme_classic() +
-   theme(panel.border = element_rect(fill=NA, color='black'),
-         legend.position = c(0.18, 0.86),
-         axis.ticks.length = unit(0.3, 'line'),
-         axis.text = element_text(color='black', size=rel(1)),
-         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
-         axis.title.x = element_text(margin = margin(t=0.5, unit="line")),
-         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
+   theme(legend.position = c(0.18, 0.86)) %>%
+   fig_theme()
 
 
-windows(height=3.5*3, width=5); m / n / c
+windows(height=3.5*3, width=5) #; m / n / c
+plot_grid(m, n, c, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99, label_x=0.01)
+
+# ggsave(filename = "diffusive-gas-flux.png")
 
 
 #---
