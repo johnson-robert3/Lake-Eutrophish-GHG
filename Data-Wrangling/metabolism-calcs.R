@@ -5,7 +5,6 @@
 
 
 library(LakeMetabolizer)
-library(slider)
 
 
 #---
@@ -38,14 +37,6 @@ minidot = minidot %>%
           corr_do = na_if(corr_do, -9999),
           # linearly interpolate across removed points
           corr_do = zoo::na.approx(corr_do, na.rm=FALSE)) %>%
-   
-   # another method for dealing with noisy DO time-series data
-   # 3-hour rolling window data
-   mutate(
-      # rolling window on original/raw data
-      roll_do = slide_dbl(do, ~mean(.), .before=3, .after=2, .complete=F),
-      # rolling window on new, corrected DO data (with large drops removed/interpolated)
-      roll_corr_do = slide_dbl(corr_do, ~mean(.), .before=3, .after=2, .complete=F)) %>%
    ungroup()
 
 
