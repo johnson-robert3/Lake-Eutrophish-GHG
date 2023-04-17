@@ -28,24 +28,30 @@ minidot %>%
              interp = sum(points_interp)) %>%
    ungroup() %>%
    mutate(perc_drop = drop / total * 100,
-          perc_interp = interp / total * 100) #%>%
-   # group_by(pond_id) %>%
-   # summarize(min_perc_drop = min(perc_drop),
-   #           max_perc_drop = max(perc_drop),
-   #           mean_perc_drop = mean(perc_drop),
-   #           min_perc_interp = min(perc_interp),
-   #           max_perc_interp = max(perc_interp),
-   #           mean_perc_interp = mean(perc_interp)) %>%
-   # ungroup() %>%
-   # View
+          perc_interp = interp / total * 100) 
+
+
+# How many pond-days required cleaning/interpolation?
+do_cleaning_pts %>% filter(drop!=0) %>% nrow()   # 231
+
+   # Breakdown of pond-days by number of flagged/dropped points
+   do_cleaning_pts %>% count(drop)
+
+# What was the average percent of DO measurements that needed to be interpolated on these days?
+do_cleaning_pts %>% filter(drop!=0) %>% summarize(mean(perc_interp))   # mean = 17.2%
+
+
 
 # percent of points removed and backfilled
 summarize(do_cleaning_pts, mean(perc_interp))   # mean = 7.1 %
-summarize(do_cleaning_pts %>% filter(drop > 0), mean(perc_interp))   # mean = 16.6% (for days that had at least one dropped measurement)
+summarize(do_cleaning_pts %>% filter(drop > 0), mean(perc_interp))   # mean = 17.2% (for days that had at least one dropped measurement)
+
 summarize(do_cleaning_pts, range(perc_interp))   # range = 0 - 54.2 %
 summarize(do_cleaning_pts %>% filter(drop > 0), range(perc_interp))   # range = 2.1 - 54.2% (for days that had at least one dropped measurement)
+
 summarize(do_cleaning_pts, median(perc_interp))   # median = 0 %
 summarize(do_cleaning_pts %>% filter(drop > 0), median(perc_interp))   # median = 12.5% (for days that had at least one dropped measurement)
+
 
 # range of percentage of points removed and backfilled based on number of flagged points per day
 do_cleaning_pts %>% group_by(drop) %>% summarize(range(perc_interp))
@@ -106,6 +112,7 @@ windows(); ggplot(do_cleaning_pts %>%
    facet_wrap(facets = vars(pond_id), nrow=3) +
    ylab("Percent of data points each day removed and backfilled via linear interpolation") +
    theme_classic()
+
 
 # how many days in each pond over a threshold percentage for number of data points removed and backfilled
 do_cleaning_pts %>% filter(perc_interp > 50) %>% count(pond_id)
