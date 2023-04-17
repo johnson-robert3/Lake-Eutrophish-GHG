@@ -46,7 +46,7 @@ fig_events = function(.fig, .gas = c('ch4', 'n2o', 'co2')) {
       geom_vline(xintercept = 223.8, linetype=2, color='gray50') +
       # event labels
       annotate(geom = "text", label = "P", x=178.8, y=.max, size=2.75) +
-      annotate(geom = "text", label = "H", x=187.8, y=.max, size=2.75) +
+      annotate(geom = "text", label = "H", x=187.7, y=.max, size=2.75) +
       annotate(geom = "text", label = "P", x=214, y=.max, size=2.75) +
       annotate(geom = "text", label = "D", x=226, y=.max, size=2.75)
 }
@@ -58,7 +58,7 @@ fig_theme = function(.fig) {
          axis.ticks.length = unit(0.3, 'line'),
          axis.text = element_text(color='black', size=rel(1)),
          axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
-         axis.title.x = element_text(margin = margin(t=0.5, unit="line")),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line"), size=rel(1.1)),
          axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
 }
 
@@ -83,7 +83,7 @@ ggplot(fdat %>%
    # zero line
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.65) +
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
    # treatment mean 
    geom_line(data = ~ .x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(ch4_flux)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) +
@@ -114,7 +114,7 @@ ggplot(fdat %>%
    # zero line
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.65) +
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
    # treatment mean 
    geom_line(data = ~ .x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(n2o_flux)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) +
@@ -143,7 +143,7 @@ ggplot(fdat %>%
    # zero line
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.65) +
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
    # treatment mean 
    geom_line(data = ~ .x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(co2_flux)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) +
@@ -154,14 +154,15 @@ ggplot(fdat %>%
                       limits = c(-20, 250), breaks = seq(0, 250, 50)) +
    #
    theme_classic() +
-   theme(legend.position = c(0.18, 0.86)) %>%
+   theme(legend.position = c(0.16, 0.88),
+         legend.background = element_blank()) %>%
    fig_theme()
 
 
 windows(height=3.5*3, width=5) #; m / n / c
 plot_grid(m, n, c, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99, label_x=0.01)
 
-# ggsave(filename = "diffusive-gas-flux.png")
+ggsave(filename = "diffusive-gas-flux.png")
 
 
 #---
