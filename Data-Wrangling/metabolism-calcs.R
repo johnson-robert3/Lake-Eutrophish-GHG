@@ -112,26 +112,6 @@ metab_data = metab_data %>%
 #---
 
 
-##__Bookkeeping method
-
-# metab_book = metab_data %>%
-#    # day/night for bookkeep
-#    mutate(daynight = is.day(date_time, lat = 42.11),
-#           daynight = as.character(daynight)) %>%
-#    mutate(daynight = case_when(.$daynight=="TRUE" ~ 1,
-#                                .$daynight=="FALSE" ~ 0)) %>%
-#    group_by(pond_id, doy) %>%
-#    group_modify(
-#       ~metab.bookkeep(do.obs = .$do,
-#                       do.sat = .$o2_eq_sat,
-#                       k.gas = .$k_gas,
-#                       z.mix = .$z_mix,
-#                       irr = .$daynight,
-#                       datetime = .$date_time)) %>%
-#    ungroup()
-
-
-
 ##__Kalman Filter method
 
   #--
