@@ -20,6 +20,132 @@ source("Figure-Scripts/figs_functions.R")
 # create the 'fdat' and 'pond_data' data sets from the "stats_model-data" script 
 
 
+#---
+# 3-panel, manuscript style
+#---
+
+## Methanogenesis
+windows(height=3.5, width=5)
+p = 
+ggplot(fdat %>% 
+          filter(!(is.na(methanogenesis))) %>%
+          # convert methano rate from umol to nmol/g/h
+          mutate(methano = methanogenesis * 1000) %>%
+          left_join(pond_data),
+       aes(x = doy, y = methano)) +
+   # pulse days
+   geom_vline(xintercept = c(176, 211), linetype=1, color="gray50") +
+   # derecho, DOY 223 (Aug. 10, 2020)
+   geom_vline(xintercept = 223, linetype=2, color='gray50') +
+   # heat wave, DOY 185-190 (July 3-8, 2020)
+   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   # data
+   geom_point(aes(color = trt_nutrients), size=2, shape=19, alpha = 0.4) +
+   # mean
+   geom_smooth(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(methano)) %>% ungroup(),
+             aes(y = mean, color = trt_nutrients), 
+             size=1.5, linetype=1, span=0.4, se=FALSE) +
+   #
+   scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_y_continuous(name = expression(Methanogenesis~(nmol~g^-1~h^-1)), limits = c(0, 15.5), breaks = seq(0, 15, 5)) +
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_fill_manual(name = NULL, breaks = nut_breaks, values = nut_color) +
+   #
+   theme_classic() +
+   theme(legend.position = c(0.15, 0.88),
+         legend.background = element_blank(),
+         panel.border = element_rect(color = "black", fill = NA),
+         axis.ticks.length = unit(0.3, 'line'),
+         axis.text = element_text(color='black', size=rel(0.9)),
+         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line"), size=rel(1)),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1)))
+
+
+## DEA
+windows(height=3.5, width=5)
+d = 
+ggplot(fdat %>% 
+          filter(!(is.na(DEA))) %>%
+          # convert DEA rate from umol to nmol/g/h
+          mutate(DEA = DEA * 1000) %>%
+          left_join(pond_data),
+       aes(x = doy, y = DEA)) +
+   # pulse days
+   geom_vline(xintercept = c(176, 211), linetype=1, color="gray50") +
+   # derecho, DOY 223 (Aug. 10, 2020)
+   geom_vline(xintercept = 223, linetype=2, color='gray50') +
+   # heat wave, DOY 185-190 (July 3-8, 2020)
+   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   # data
+   geom_point(aes(color = trt_nutrients), size=2, shape=19, alpha = 0.4) +
+   # mean
+   geom_smooth(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(DEA)) %>% ungroup(),
+             aes(y = mean, color = trt_nutrients), 
+             size=1.5, linetype=1, span=0.4, se=FALSE) +
+   #
+   scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_y_continuous(name = expression(DEA~(nmol~g^-1~h^-1)), limits = c(0, 1.2), breaks = seq(0, 1.2, 0.3)) +
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_fill_manual(name = NULL, breaks = nut_breaks, values = nut_color) +
+   #
+   theme_classic() +
+   theme(legend.position = "none",
+         panel.border = element_rect(color = "black", fill = NA),
+         axis.ticks.length = unit(0.3, 'line'),
+         axis.text = element_text(color='black', size=rel(0.9)),
+         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line"), size=rel(1)),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1)))
+
+
+## Ebullition
+windows(height=3.5, width=5)
+e =
+ggplot(fdat %>% 
+          filter(!(is.na(ch4_ebu_flux))) %>%
+          left_join(pond_data),
+       aes(x = doy, y = ch4_ebu_flux)) +
+   # pulse days
+   geom_vline(xintercept = c(176, 211), linetype=1, color="gray50") +
+   # derecho, DOY 223 (Aug. 10, 2020)
+   geom_vline(xintercept = 223, linetype=2, color='gray50') +
+   # heat wave, DOY 185-190 (July 3-8, 2020)
+   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   # data
+   geom_point(aes(color = trt_nutrients), size=2, shape=19, alpha = 0.4) +
+   # mean
+   geom_smooth(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(ch4_ebu_flux)) %>% ungroup(),
+             aes(y = mean, color = trt_nutrients), 
+             size=1.5, linetype=1, span=0.4, se=FALSE) +
+   #
+   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_y_continuous(name = expression(CH[4]~ebullition~(mmol~m^2~d^-1)), limits = c(-0.5, 15), breaks = seq(0, 15, 5)) +
+   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_fill_manual(name = NULL, breaks = nut_breaks, values = nut_color) +
+   #
+   theme_classic() +
+   theme(legend.position = "none",
+         panel.border = element_rect(color = "black", fill = NA),
+         axis.ticks.length = unit(0.3, 'line'),
+         axis.text = element_text(color='black', size=rel(0.9)),
+         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line"), size=rel(1)),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1)))
+
+
+# Figure
+windows(height = 3.5*3, width = 5)
+plot_grid(p, d, e, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99, label_x=0.01)
+
+ggsave(file = "GHG_process_measurements.png")
+
 
 #-
 ### Ebullition
