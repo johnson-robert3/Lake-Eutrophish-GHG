@@ -37,7 +37,7 @@ fig_events = function(.fig, .gas = c('ch4', 'n2o', 'co2')) {
       # pulse windows (1-5 days after event)
       annotate(geom = 'rect', xmin = 176+1, xmax = 176+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
       annotate(geom = 'rect', xmin = 211+1, xmax = 211+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
-      # pulse events, DOY 176 and 211 (after all sampling had ocurred)
+      # pulse events, DOY 176 and 211 (after all sampling had occurred)
       geom_vline(xintercept = c(176.8, 211.8), linetype=1, color="gray50") +
       # heat event, DOY 185-190 (July 3-8, 2020)
       annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
@@ -259,6 +259,25 @@ ggplot(fdat %>%
 # ggsave(filename="cumulative-diffusive-ch4-flux.png", height=4, width=5.5, units='in')
 
 
+## Time-series difference between pulsed and reference flux
+windows(height=4, width=5.5)
+ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
+          filter(!(is.na(ch4_flux))) %>%
+          group_by(trt_nutrients, doy) %>% summarize(mean = mean(ch4_flux)) %>% ungroup() %>%
+          pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
+          mutate(diff = yes - no)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=2, color="gray40") +
+   #
+   geom_point(aes(x = doy, y = diff), size=2) +
+   geom_line(aes(x = doy, y = diff)) +
+   #
+   labs(x = "Day of year", y = "CH4 flux difference (Puls - Ref)") +
+   #
+   theme_classic()
+
+
 
 #---
 #### Nitrous Oxide ####
@@ -358,6 +377,27 @@ ggplot(fdat %>%
 # ggsave(filename="cumulative-diffusive-n2o-flux.png", height=4, width=5.5, units='in')
 
 
+## Time-series difference between pulsed and reference flux
+windows(height=4, width=5.5)
+ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
+          filter(!(is.na(n2o_flux))) %>%
+          mutate(n2o_flux = n2o_flux * 1000) %>%
+          group_by(trt_nutrients, doy) %>% summarize(mean = mean(n2o_flux)) %>% ungroup() %>%
+          pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
+          mutate(diff = yes - no)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=2, color="gray40") +
+   #
+   geom_point(aes(x = doy, y = diff), size=2) +
+   geom_line(aes(x = doy, y = diff)) +
+   #
+   labs(x = "Day of year", y = "N2O flux difference (Puls - Ref)") +
+   #
+   theme_classic()
+
+
+
 #---
 #### Carbon Dioxide ####
 #---
@@ -403,6 +443,25 @@ ggplot(fdat %>%
          axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
          # axis.title.x = element_text(margin = margin(t=0.5, unit="line")),
          axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
+
+
+## Time-series difference between pulsed and reference flux
+windows(height=4, width=5.5)
+ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
+          filter(!(is.na(co2_flux))) %>%
+          group_by(trt_nutrients, doy) %>% summarize(mean = mean(co2_flux)) %>% ungroup() %>%
+          pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
+          mutate(diff = yes - no)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=2, color="gray40") +
+   #
+   geom_point(aes(x = doy, y = diff), size=2) +
+   geom_line(aes(x = doy, y = diff)) +
+   #
+   labs(x = "Day of year", y = "CO2 flux difference (Puls - Ref)") +
+   #
+   theme_classic()
 
 
 
@@ -651,7 +710,87 @@ windows(); ggplot(fdat %>% filter(!(is.na(ch4_flux))) %>% left_join(pond_data)) 
 
 
 
+#--
+# Difference in flux between pulsed and reference treatments
+#--
+
+# Methane
+windows(height=4, width=5.5)
+md =
+ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
+          filter(!(is.na(ch4_flux))) %>%
+          group_by(trt_nutrients, doy) %>% summarize(mean = mean(ch4_flux)) %>% ungroup() %>%
+          pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
+          mutate(diff = yes - no)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
+   geom_vline(xintercept = 223, linetype=2, color="gray40") +
+   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   #
+   geom_point(aes(x = doy, y = diff), size=2) +
+   geom_line(aes(x = doy, y = diff)) +
+   #
+   scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
+   ylab(expression(CH[4]~difference)) +
+   #
+   theme_classic() %>%
+   fig_theme()
 
 
+# Nitrous oxide
+windows(height=4, width=5.5)
+nd = 
+ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
+          filter(!(is.na(n2o_flux))) %>%
+          mutate(n2o_flux = n2o_flux * 1000) %>%
+          group_by(trt_nutrients, doy) %>% summarize(mean = mean(n2o_flux)) %>% ungroup() %>%
+          pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
+          mutate(diff = yes - no)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
+   geom_vline(xintercept = 223, linetype=2, color="gray40") +
+   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   #
+   geom_point(aes(x = doy, y = diff), size=2) +
+   geom_line(aes(x = doy, y = diff)) +
+   #
+   scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
+   ylab(expression(N[2]*O~difference)) +
+   #
+   theme_classic() %>%
+   fig_theme()
+
+
+# Carbon dioxide
+windows(height=4, width=5.5)
+cd =
+ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
+          filter(!(is.na(co2_flux))) %>%
+          group_by(trt_nutrients, doy) %>% summarize(mean = mean(co2_flux)) %>% ungroup() %>%
+          pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
+          mutate(diff = yes - no)) +
+   #
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
+   geom_vline(xintercept = 223, linetype=2, color="gray40") +
+   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   #
+   geom_point(aes(x = doy, y = diff), size=2) +
+   geom_line(aes(x = doy, y = diff)) +
+   #
+   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
+   ylab(expression(CO[2]~difference)) +
+   #
+   theme_classic() %>%
+   fig_theme()
+
+
+windows(height=3.5*3, width=5) #; md/nd/cd
+plot_grid(md, nd, cd, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99, label_x=0.01)
+
+
+ggsave(file = "diffusive-flux_treatment-difference.png")
 
 
