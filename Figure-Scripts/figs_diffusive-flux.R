@@ -728,8 +728,10 @@ ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
    geom_vline(xintercept = 223, linetype=2, color="gray40") +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
    #
-   geom_point(aes(x = doy, y = diff), size=2) +
    geom_line(aes(x = doy, y = diff)) +
+   geom_point(aes(x = doy, y = diff), size=2) +
+   #
+   # stat_smooth(aes(x = doy, y = diff), geom="line", size=1.25, span=0.25, alpha=0.9, color="#38A3A5") +
    #
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
    ylab(expression(CH[4]~difference)) +
@@ -753,8 +755,10 @@ ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
    geom_vline(xintercept = 223, linetype=2, color="gray40") +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
    #
-   geom_point(aes(x = doy, y = diff), size=2) +
    geom_line(aes(x = doy, y = diff)) +
+   geom_point(aes(x = doy, y = diff), size=2) +
+   #
+   # stat_smooth(aes(x = doy, y = diff), geom="line", size=1.25, span=0.25, alpha=0.9, color="#38A3A5") +
    #
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
    ylab(expression(N[2]*O~difference)) +
@@ -777,8 +781,10 @@ ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
    geom_vline(xintercept = 223, linetype=2, color="gray40") +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
    #
-   geom_point(aes(x = doy, y = diff), size=2) +
    geom_line(aes(x = doy, y = diff)) +
+   geom_point(aes(x = doy, y = diff), size=2) +
+   #
+   # stat_smooth(aes(x = doy, y = diff), geom="line", size=1.25, span=0.25, alpha=0.9, color="#38A3A5") +
    #
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
    ylab(expression(CO[2]~difference)) +
