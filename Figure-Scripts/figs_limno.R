@@ -12,11 +12,9 @@ library(slider)
 source("Figure-Scripts/figs_functions.R")
 
 
-# Pond/Site Data
-pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
-
 # Data for plotting
-#  Need to run "stats_model-data.R" script first
+source("Analysis-Scripts/stats_model-data.R")
+
 pdat = fdat %>% 
    mutate(date = ymd(date)) %>%
    left_join(pond_data %>% 
@@ -338,34 +336,41 @@ windows(height=7, width=6); a / b
 # Dissolved Oxygen
 #--
 
-## Surface DO  # doesn't work currently, surface DO not included in fdat dataset
+## Surface DO 
 
 # 1 panel (blue & red)
 windows(height=4, width=5.5)
 ggplot(pdat,
-       aes(x = date, y = do)) +
+       aes(x = doy, y = do)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
-   geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
-              aes(xintercept = date), linetype=2, color="gray60") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
+   geom_vline(xintercept = 223, linetype=2, color="gray40") +
+   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
+   #            aes(xintercept = date), linetype=2, color="gray60") +
    # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.3, size=1) +
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
    # treatment mean (loess smooth)
-   geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
+   # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, span=0.05) +
+   geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(do, na.rm=T)) %>% ungroup(),
+             aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) + 
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_date(name = NULL, 
-                breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
-                labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
-   scale_y_continuous(name = expression(DO~(mg~L^-1))) +
+   # scale_x_date(name = NULL, 
+   #              breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
+   #              labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
+   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_y_continuous(name = expression(Surface~water~DO~(mg~L^-1))) +
    #
-   ggtitle(expression(Surface~Water~Dissolved~O[2])) +
+   # ggtitle(expression(Surface~Water~Dissolved~O[2])) +
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
          legend.position = c(0.85, 0.85),
          axis.ticks.length = unit(0.3, 'line'),
          axis.text = element_text(color='black', size=rel(1)),
          axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line"), size=rel(1.1)),
          axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
 
 # ggsave(filename = "surface-water-DO.png")
@@ -374,30 +379,34 @@ ggplot(pdat,
 ## Bottom water DO
 windows(height=4, width=5.5)
 ggplot(pdat,
-       aes(x = date, y = bottom_do)) +
+       aes(x = doy, y = bottom_do)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
-   geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
-              aes(xintercept = date), linetype=2, color="gray60") +
+   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
+   #            aes(xintercept = date), linetype=2, color="gray60") +
+   geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
    # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.3, size=1) +
-   # geom_point(aes(color = trt_nutrients), size=1.5, alpha=0.4) +
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
    # treatment mean (loess smooth)
-   geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
+   # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, span=0.05) +
+   geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(bottom_do, na.rm=T)) %>% ungroup(),
+             aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) + 
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_date(name = NULL, 
-                breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
-                labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
-   scale_y_continuous(name = expression(DO~(mg~L^-1))) +
+   # scale_x_date(name = NULL, 
+   #              breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
+   #              labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
+   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_y_continuous(name = expression(Bottom~water~DO~(mg~L^-1))) +
    #
-   ggtitle(expression(Bottom~Water~Dissolved~O[2])) +
+   # ggtitle(expression(Bottom~Water~Dissolved~O[2])) +
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
          legend.position = c(0.85, 0.86),
          axis.ticks.length = unit(0.3, 'line'),
          axis.text = element_text(color='black', size=rel(1)),
          axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line"), size=rel(1.1)),
          axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
 
 # ggsave(filename = "bottom-water-DO.png")
@@ -495,24 +504,36 @@ windows(height=8, width=12); p1 / p2
 
 ## TN (mg/L)
 windows(height=4, width=5.5)
-ggplot(fdat %>% filter(!(is.na(tn))) %>% left_join(pond_data),
+# ggplot(fdat %>% filter(!(is.na(tn))) %>% left_join(pond_data),
+#        aes(x = doy, y = tn)) +
+ggplot(pdat %>% filter(!(is.na(tn))),
        aes(x = doy, y = tn)) +
    #
-   geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
+   geom_vline(xintercept = 223, linetype=2, color="gray40") +
+   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   #
    # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.3, size=1) +
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
    # treatment mean (loess smooth)
-   geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
+   # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, span=0.05) +
+   geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(tn, na.rm=T)) %>% ungroup(),
+             aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) + 
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(TN~(mg~L^-1)), limits = c(0, 1)) +
-   ggtitle("Total Nitrogen") +
+   # ggtitle("Total Nitrogen") +
+   #
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
          legend.position = c(0.18, 0.87),
-         axis.title.y = element_text(margin = margin(r=0.5, unit="line")),
-         axis.title.x = element_text(margin = margin(t=0.5, unit="line")))
+         axis.ticks.length = unit(0.3, 'line'),
+         axis.text = element_text(color='black', size=rel(1)),
+         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line"), size=rel(1.1)),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
 
 # ggsave(filename="total-nitrogen.png", height=4, width=5.5, units='in')
 
@@ -687,24 +708,36 @@ ggplot(fdat %>% filter(!(is.na(nox))) %>% left_join(pond_data),
 
 ## TP (ug/L)
 windows(height=4, width=5.5)
-ggplot(fdat %>% filter(!(is.na(tp))) %>% left_join(pond_data),
+# ggplot(fdat %>% filter(!(is.na(tp))) %>% left_join(pond_data),
+#        aes(x = doy, y = tp)) +
+ggplot(pdat %>% filter(!(is.na(tp))),
        aes(x = doy, y = tp)) +
    #
-   geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
+   geom_vline(xintercept = 223, linetype=2, color="gray40") +
+   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   #
    # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.3, size=1) +
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
    # treatment mean (loess smooth)
-   geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
+   # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, span=0.05) +
+   geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(tp, na.rm=T)) %>% ungroup(),
+             aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) + 
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(TP~(mu*g~L^-1)), limits = c(0, 250)) +
-   ggtitle("Total Phosphorus") +
+   # ggtitle("Total Phosphorus") +
+   #
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
          legend.position = c(0.82, 0.87),
-         axis.title.y = element_text(margin = margin(r=0.5, unit="line")),
-         axis.title.x = element_text(margin = margin(t=0.5, unit="line")))
+         axis.ticks.length = unit(0.3, 'line'),
+         axis.text = element_text(color='black', size=rel(1)),
+         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line"), size=rel(1.1)),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
 
 # ggsave(filename="total-phosphorus.png", height=4, width=5.5, units='in')
 
