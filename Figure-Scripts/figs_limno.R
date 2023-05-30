@@ -340,18 +340,19 @@ windows(height=7, width=6); a / b
 
 # 1 panel (blue & red)
 windows(height=4, width=5.5)
+sdo = 
 ggplot(pdat,
        aes(x = doy, y = do)) +
    #
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
+   #            aes(xintercept = date), linetype=2, color="gray60") +
    geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
    geom_vline(xintercept = 223, linetype=2, color="gray40") +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
-   #            aes(xintercept = date), linetype=2, color="gray60") +
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
-   # treatment mean (loess smooth)
+   # treatment mean
    # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, span=0.05) +
    geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(do, na.rm=T)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) + 
@@ -360,7 +361,7 @@ ggplot(pdat,
    # scale_x_date(name = NULL, 
    #              breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
    #              labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
-   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(Surface~water~DO~(mg~L^-1))) +
    #
    # ggtitle(expression(Surface~Water~Dissolved~O[2])) +
@@ -378,13 +379,16 @@ ggplot(pdat,
 
 ## Bottom water DO
 windows(height=4, width=5.5)
+bdo = 
 ggplot(pdat,
        aes(x = doy, y = bottom_do)) +
    #
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
    # geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
    #            aes(xintercept = date), linetype=2, color="gray60") +
-   geom_vline(xintercept = c(176, 211), linetype=2, color="gray60") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
+   geom_vline(xintercept = 223, linetype=2, color="gray40") +
+   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
    # treatment mean (loess smooth)
@@ -402,7 +406,8 @@ ggplot(pdat,
    # ggtitle(expression(Bottom~Water~Dissolved~O[2])) +
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
-         legend.position = c(0.85, 0.86),
+         # legend.position = c(0.85, 0.86),
+         legend.position = "none", 
          axis.ticks.length = unit(0.3, 'line'),
          axis.text = element_text(color='black', size=rel(1)),
          axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
@@ -410,6 +415,12 @@ ggplot(pdat,
          axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
 
 # ggsave(filename = "bottom-water-DO.png")
+
+
+# together
+windows(height=3.5*2, width=5); plot_grid(sdo, bdo, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99, label_x=0.01)
+
+# ggsave(file = "pond_DO.png")
 
 
 #===
@@ -504,15 +515,16 @@ windows(height=8, width=12); p1 / p2
 
 ## TN (mg/L)
 windows(height=4, width=5.5)
+tn =
 # ggplot(fdat %>% filter(!(is.na(tn))) %>% left_join(pond_data),
 #        aes(x = doy, y = tn)) +
 ggplot(pdat %>% filter(!(is.na(tn))),
        aes(x = doy, y = tn)) +
    #
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
    geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
    geom_vline(xintercept = 223, linetype=2, color="gray40") +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
    #
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
@@ -522,13 +534,14 @@ ggplot(pdat %>% filter(!(is.na(tn))),
              aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) + 
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(TN~(mg~L^-1)), limits = c(0, 1)) +
    # ggtitle("Total Nitrogen") +
    #
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
          legend.position = c(0.18, 0.87),
+         legend.background = element_blank(), 
          axis.ticks.length = unit(0.3, 'line'),
          axis.text = element_text(color='black', size=rel(1)),
          axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
@@ -570,15 +583,16 @@ ggplot(fdat %>% filter(!(is.na(nox))) %>% left_join(pond_data),
 
 ## TP (ug/L)
 windows(height=4, width=5.5)
+tp = 
 # ggplot(fdat %>% filter(!(is.na(tp))) %>% left_join(pond_data),
 #        aes(x = doy, y = tp)) +
 ggplot(pdat %>% filter(!(is.na(tp))),
        aes(x = doy, y = tp)) +
    #
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
    geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
    geom_vline(xintercept = 223, linetype=2, color="gray40") +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
    #
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
@@ -594,7 +608,8 @@ ggplot(pdat %>% filter(!(is.na(tp))),
    #
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
-         legend.position = c(0.82, 0.87),
+         # legend.position = c(0.82, 0.87),
+         legend.position = "none",
          axis.ticks.length = unit(0.3, 'line'),
          axis.text = element_text(color='black', size=rel(1)),
          axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
@@ -633,5 +648,11 @@ ggplot(pdat %>% filter(!(is.na(srp))),
          axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
 
 # ggsave(filename="SRP.png")
+
+
+## TN/TP together
+windows(height=3.5*2, width=5); plot_grid(tn, tp, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99, label_x=0.01)
+
+# ggsave(file = "tn-tp.png")
 
 
