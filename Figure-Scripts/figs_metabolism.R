@@ -150,6 +150,7 @@ ggsave(filename = "Figures/new-figs/roll-NEP_np-trt.png", height=7, width=6, uni
 
 # 1 panel (blue & red)
 windows(height=4, width=5.5)
+nep = 
 ggplot(pdat,
        aes(x = doy, y = NEP)) +
    #
@@ -176,7 +177,8 @@ ggplot(pdat,
    #
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
-         legend.position = c(0.16, 0.16),
+         # legend.position = c(0.16, 0.16),
+         legend.position = "none",
          legend.background = element_blank(), 
          axis.ticks.length = unit(0.3, 'line'),
          axis.text = element_text(color='black', size=rel(1)),
@@ -309,6 +311,7 @@ ggsave(filename = "Figures/new-figs/roll-R_np-trt.png", height=7, width=6, units
 
 # 1 panel (blue & red)
 windows(height=4, width=5.5)
+re = 
 ggplot(pdat,
        aes(x = doy, y = R)) +
    #
@@ -329,13 +332,14 @@ ggplot(pdat,
    # scale_x_date(name = NULL, 
    #              breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
    #              labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
-   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(R~(mg~O[2]~L^-1~d^-1)), limits = c(-20, 0), breaks = seq(-20, 0, 5)) +
    # ggtitle("Ecosystem Respiration") +
    #
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
-         legend.position = c(0.16, 0.16),
+         # legend.position = c(0.16, 0.16),
+         legend.position = "none", 
          axis.ticks.length = unit(0.3, 'line'),
          axis.text = element_text(color='black', size=rel(1)),
          axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
@@ -352,6 +356,7 @@ ggplot(pdat,
 
 # 1 panel (blue & red)
 windows(height=4, width=5.5)
+gpp = 
 ggplot(pdat,
        aes(x = doy, y = GPP)) +
    #
@@ -372,12 +377,13 @@ ggplot(pdat,
    # scale_x_date(name = NULL, 
    #              breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
    #              labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
-   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(GPP~(mg~O[2]~L^-1~d^-1)), limits = c(0, 20), breaks = seq(0, 20, 5)) +
    #
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
          legend.position = c(0.15, 0.88),
+         legend.background = element_blank(), 
          axis.ticks.length = unit(0.3, 'line'),
          axis.text = element_text(color='black', size=rel(1)),
          axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
@@ -386,6 +392,12 @@ ggplot(pdat,
 
 # ggsave(file = "GPP.png")
 
+
+
+## 3-panel all metabolism together
+windows(height=3.5*3, width=5); plot_grid(gpp, re, nep, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99, label_x=0.01)
+
+ggsave(file = "metabolism.png", height=3.5*3, width=5, units = "in")
 
 
 
