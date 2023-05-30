@@ -6,11 +6,11 @@
 
 
 library(tidyverse)
+library(lubridate)
 library(cowplot)
 library(patchwork)
-library(slider)
-library(lubridate)
-library(viridis)
+# library(slider)
+# library(viridis)
 
 source("Figure-Scripts/figs_functions.R")
 
@@ -18,6 +18,7 @@ source("Figure-Scripts/figs_functions.R")
 # Data
 
 # create the 'fdat' and 'pond_data' data sets from the "stats_model-data" script 
+source("Analysis-Scripts/stats_model-data.R")
 
 
 #---
@@ -162,7 +163,7 @@ ggplot(fdat %>%
 windows(height=3.5*3, width=5) #; m / n / c
 plot_grid(m, n, c, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99, label_x=0.01)
 
-ggsave(filename = "diffusive-gas-flux.png")
+# ggsave(filename = "diffusive-gas-flux.png", height=3.5*3, width=5, units='in')
 
 
 #---
@@ -723,10 +724,10 @@ ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
           pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
           mutate(diff = yes - no)) +
    #
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
    geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
    geom_vline(xintercept = 223, linetype=2, color="gray40") +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
    #
    geom_line(aes(x = doy, y = diff)) +
    geom_point(aes(x = doy, y = diff), size=2) +
@@ -750,10 +751,10 @@ ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
           pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
           mutate(diff = yes - no)) +
    #
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
    geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
    geom_vline(xintercept = 223, linetype=2, color="gray40") +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
    #
    geom_line(aes(x = doy, y = diff)) +
    geom_point(aes(x = doy, y = diff), size=2) +
@@ -776,10 +777,10 @@ ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
           pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
           mutate(diff = yes - no)) +
    #
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
    geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
    geom_vline(xintercept = 223, linetype=2, color="gray40") +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
    #
    geom_line(aes(x = doy, y = diff)) +
    geom_point(aes(x = doy, y = diff), size=2) +
@@ -797,6 +798,6 @@ windows(height=3.5*3, width=5) #; md/nd/cd
 plot_grid(md, nd, cd, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99, label_x=0.01)
 
 
-ggsave(file = "diffusive-flux_treatment-difference.png")
+# ggsave(file = "diffusive-flux_treatment-difference.png", height=3.5*3, width=5, units='in')
 
 

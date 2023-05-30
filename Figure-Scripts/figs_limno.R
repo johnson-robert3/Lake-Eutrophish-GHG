@@ -420,7 +420,7 @@ ggplot(pdat,
 # together
 windows(height=3.5*2, width=5); plot_grid(sdo, bdo, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99, label_x=0.01)
 
-# ggsave(file = "pond_DO.png")
+# ggsave(file = "pond_DO.png", height=3.5*2, width=5, units='in')
 
 
 #===
@@ -653,6 +653,6 @@ ggplot(pdat %>% filter(!(is.na(srp))),
 ## TN/TP together
 windows(height=3.5*2, width=5); plot_grid(tn, tp, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99, label_x=0.01)
 
-# ggsave(file = "tn-tp.png")
+# ggsave(file = "tn-tp.png", height=3.5*2, width=5, units='in')
 
 

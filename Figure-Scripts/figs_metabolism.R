@@ -397,7 +397,7 @@ ggplot(pdat,
 ## 3-panel all metabolism together
 windows(height=3.5*3, width=5); plot_grid(gpp, re, nep, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99, label_x=0.01)
 
-ggsave(file = "metabolism.png", height=3.5*3, width=5, units = "in")
+# ggsave(file = "metabolism.png", height=3.5*3, width=5, units = "in")
 
 
 
