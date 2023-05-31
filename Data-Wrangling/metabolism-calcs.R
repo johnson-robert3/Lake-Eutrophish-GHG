@@ -5,7 +5,6 @@
 
 
 library(LakeMetabolizer)
-library(slider)
 
 
 #---
@@ -38,14 +37,6 @@ minidot = minidot %>%
           corr_do = na_if(corr_do, -9999),
           # linearly interpolate across removed points
           corr_do = zoo::na.approx(corr_do, na.rm=FALSE)) %>%
-   
-   # another method for dealing with noisy DO time-series data
-   # 3-hour rolling window data
-   mutate(
-      # rolling window on original/raw data
-      roll_do = slide_dbl(do, ~mean(.), .before=3, .after=2, .complete=F),
-      # rolling window on new, corrected DO data (with large drops removed/interpolated)
-      roll_corr_do = slide_dbl(corr_do, ~mean(.), .before=3, .after=2, .complete=F)) %>%
    ungroup()
 
 
@@ -110,26 +101,6 @@ metab_data = metab_data %>%
 #---
 # Metabolism Calculations
 #---
-
-
-##__Bookkeeping method
-
-# metab_book = metab_data %>%
-#    # day/night for bookkeep
-#    mutate(daynight = is.day(date_time, lat = 42.11),
-#           daynight = as.character(daynight)) %>%
-#    mutate(daynight = case_when(.$daynight=="TRUE" ~ 1,
-#                                .$daynight=="FALSE" ~ 0)) %>%
-#    group_by(pond_id, doy) %>%
-#    group_modify(
-#       ~metab.bookkeep(do.obs = .$do,
-#                       do.sat = .$o2_eq_sat,
-#                       k.gas = .$k_gas,
-#                       z.mix = .$z_mix,
-#                       irr = .$daynight,
-#                       datetime = .$date_time)) %>%
-#    ungroup()
-
 
 
 ##__Kalman Filter method

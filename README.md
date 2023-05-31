@@ -36,14 +36,3 @@ To recreate the full model dataset from all individual datasets, run scripts in 
    6. data_model-dataset
 
 
-### Next Steps / To Do 
-
-
-
-## Figures
-
-### Figs. To Make
-
-- [ ] Ebullition time-series
-
-

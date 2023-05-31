@@ -47,7 +47,7 @@ mdat = mdat %>%
           contains("_lake"), contains("_flux"),
           GPP, R, NEP, 
           bottom_do, bottom_do_sat, bottom_temp, 
-          surface_do, surface_do_sat, temp, 
+          do, do_sat, temp, 
           chla, alkalinity, doc_ppm, 
           tp, srp, tn, nox, np_ratio) %>%
    # only keep rows that have values for all variables

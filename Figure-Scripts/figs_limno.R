@@ -12,11 +12,9 @@ library(slider)
 source("Figure-Scripts/figs_functions.R")
 
 
-# Pond/Site Data
-pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
-
 # Data for plotting
-#  Need to run "stats_model-data.R" script first
+source("Analysis-Scripts/stats_model-data.R")
+
 pdat = fdat %>% 
    mutate(date = ymd(date)) %>%
    left_join(pond_data %>% 
@@ -338,34 +336,42 @@ windows(height=7, width=6); a / b
 # Dissolved Oxygen
 #--
 
-## Surface DO  # doesn't work currently, surface DO not included in fdat dataset
+## Surface DO 
 
 # 1 panel (blue & red)
 windows(height=4, width=5.5)
+sdo = 
 ggplot(pdat,
-       aes(x = date, y = do)) +
+       aes(x = doy, y = do)) +
    #
+   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
+   #            aes(xintercept = date), linetype=2, color="gray60") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
+   geom_vline(xintercept = 223, linetype=2, color="gray40") +
+   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
    geom_hline(yintercept=0, linetype=3, color="gray60") +
-   geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
-              aes(xintercept = date), linetype=2, color="gray60") +
    # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.3, size=1) +
-   # treatment mean (loess smooth)
-   geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
+   # treatment mean
+   # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, span=0.05) +
+   geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(do, na.rm=T)) %>% ungroup(),
+             aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) + 
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_date(name = NULL, 
-                breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
-                labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
-   scale_y_continuous(name = expression(DO~(mg~L^-1))) +
+   # scale_x_date(name = NULL, 
+   #              breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
+   #              labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
+   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_y_continuous(name = expression(Surface~water~DO~(mg~L^-1))) +
    #
-   ggtitle(expression(Surface~Water~Dissolved~O[2])) +
+   # ggtitle(expression(Surface~Water~Dissolved~O[2])) +
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
          legend.position = c(0.85, 0.85),
          axis.ticks.length = unit(0.3, 'line'),
          axis.text = element_text(color='black', size=rel(1)),
          axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line"), size=rel(1.1)),
          axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
 
 # ggsave(filename = "surface-water-DO.png")
@@ -373,34 +379,48 @@ ggplot(pdat,
 
 ## Bottom water DO
 windows(height=4, width=5.5)
+bdo = 
 ggplot(pdat,
-       aes(x = date, y = bottom_do)) +
+       aes(x = doy, y = bottom_do)) +
    #
+   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
+   #            aes(xintercept = date), linetype=2, color="gray60") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
+   geom_vline(xintercept = 223, linetype=2, color="gray40") +
+   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
    geom_hline(yintercept=0, linetype=3, color="gray60") +
-   geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
-              aes(xintercept = date), linetype=2, color="gray60") +
    # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.3, size=1) +
-   # geom_point(aes(color = trt_nutrients), size=1.5, alpha=0.4) +
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
    # treatment mean (loess smooth)
-   geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
+   # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, span=0.05) +
+   geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(bottom_do, na.rm=T)) %>% ungroup(),
+             aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) + 
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_date(name = NULL, 
-                breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
-                labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
-   scale_y_continuous(name = expression(DO~(mg~L^-1))) +
+   # scale_x_date(name = NULL, 
+   #              breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
+   #              labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
+   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_y_continuous(name = expression(Bottom~water~DO~(mg~L^-1))) +
    #
-   ggtitle(expression(Bottom~Water~Dissolved~O[2])) +
+   # ggtitle(expression(Bottom~Water~Dissolved~O[2])) +
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
-         legend.position = c(0.85, 0.86),
+         # legend.position = c(0.85, 0.86),
+         legend.position = "none", 
          axis.ticks.length = unit(0.3, 'line'),
          axis.text = element_text(color='black', size=rel(1)),
          axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line"), size=rel(1.1)),
          axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
 
 # ggsave(filename = "bottom-water-DO.png")
+
+
+# together
+windows(height=3.5*2, width=5); plot_grid(sdo, bdo, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99, label_x=0.01)
+
+# ggsave(file = "pond_DO.png", height=3.5*2, width=5, units='in')
 
 
 #===
@@ -495,67 +515,40 @@ windows(height=8, width=12); p1 / p2
 
 ## TN (mg/L)
 windows(height=4, width=5.5)
-ggplot(fdat %>% filter(!(is.na(tn))) %>% left_join(pond_data),
+tn =
+# ggplot(fdat %>% filter(!(is.na(tn))) %>% left_join(pond_data),
+#        aes(x = doy, y = tn)) +
+ggplot(pdat %>% filter(!(is.na(tn))),
        aes(x = doy, y = tn)) +
    #
-   geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
+   geom_vline(xintercept = 223, linetype=2, color="gray40") +
+   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   #
    # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.3, size=1) +
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
    # treatment mean (loess smooth)
-   geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
+   # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, span=0.05) +
+   geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(tn, na.rm=T)) %>% ungroup(),
+             aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) + 
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(TN~(mg~L^-1)), limits = c(0, 1)) +
-   ggtitle("Total Nitrogen") +
+   # ggtitle("Total Nitrogen") +
+   #
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
          legend.position = c(0.18, 0.87),
-         axis.title.y = element_text(margin = margin(r=0.5, unit="line")),
-         axis.title.x = element_text(margin = margin(t=0.5, unit="line")))
+         legend.background = element_blank(), 
+         axis.ticks.length = unit(0.3, 'line'),
+         axis.text = element_text(color='black', size=rel(1)),
+         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line"), size=rel(1.1)),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
 
 # ggsave(filename="total-nitrogen.png", height=4, width=5.5, units='in')
-
-
-# Reference
-# a = 
-# ggplot(limno_field_data %>% filter(!(is.na(tn))) %>% left_join(pond_data) %>% filter(trt_nutrients=="no"),
-#        aes(x = doy, y = tn)) +
-#    #
-#    geom_line(aes(alpha = trt_fish, group = pond_id), size=1.25, color="cornflowerblue") +
-#    #
-#    scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
-#                       breaks = fish_breaks,
-#                       values = fish_alpha,
-#                       labels = fish_labs) +
-#    scale_x_continuous(name = "DOY", limits = c(140, 242)) +
-#    scale_y_continuous(name = expression(TN~(mg~L^-1)), limits = c(0, 1)) +
-#    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
-#    ggtitle("Reference") +
-#    theme_classic()
-
-# Pulsed
-# b = 
-# ggplot(limno_field_data %>% filter(!(is.na(tn))) %>% left_join(pond_data) %>% filter(trt_nutrients=="yes"),
-#        aes(x = doy, y = tn)) +
-#    #
-#    geom_line(aes(alpha = trt_fish, group = pond_id), size=1.25, color="seagreen3") +
-#    #
-#    scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
-#                       breaks = fish_breaks,
-#                       values = fish_alpha,
-#                       labels = fish_labs) +
-#    scale_x_continuous(name = "DOY", limits = c(140, 242)) +
-#    scale_y_continuous(name = expression(TN~(mg~L^-1)), limits = c(0, 1)) +
-#    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
-#    ggtitle("Pulsed") +
-#    theme_classic()
-
-
-# TN fig
-# windows(height=7, width=6); a / b
-
-# ggsave(filename = "Figures/new-figs/TN.png", height=7, width=6, units="in")
 
 
 ## NOx (mg/L)
@@ -583,103 +576,6 @@ ggplot(fdat %>% filter(!(is.na(nox))) %>% left_join(pond_data),
 # ggsave(filename="nitrate.png", height=4, width=5.5, units='in')
 
 
-# Reference
-# a = 
-# ggplot(limno_field_data %>% filter(!(is.na(nox))) %>% left_join(pond_data) %>% filter(trt_nutrients=="no"),
-#        aes(x = doy, y = nox)) +
-#    #
-#    geom_line(aes(alpha = trt_fish, group = pond_id), size=1.25, color="cornflowerblue") +
-#    #
-#    scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
-#                       breaks = fish_breaks,
-#                       values = fish_alpha,
-#                       labels = fish_labs) +
-#    scale_x_continuous(name = "DOY", limits = c(140, 242)) +
-#    scale_y_continuous(name = expression(NO[x]~(mg~L^-1)), limits = c(0, 0.5)) +
-#    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
-#    ggtitle("Reference") +
-#    theme_classic()
-
-# Pulsed
-# b = 
-# ggplot(limno_field_data %>% filter(!(is.na(nox))) %>% left_join(pond_data) %>% filter(trt_nutrients=="yes"),
-#        aes(x = doy, y = nox)) +
-#    #
-#    geom_line(aes(alpha = trt_fish, group = pond_id), size=1.25, color="seagreen3") +
-#    #
-#    scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
-#                       breaks = fish_breaks,
-#                       values = fish_alpha,
-#                       labels = fish_labs) +
-#    scale_x_continuous(name = "DOY", limits = c(140, 242)) +
-#    scale_y_continuous(name = expression(NO[x]~(mg~L^-1)), limits = c(0, 0.5)) +
-#    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
-#    ggtitle("Pulsed") +
-#    theme_classic()
-
-
-# NOx fig
-# windows(height=7, width=6); a / b
-
-# ggsave(filename = "Figures/new-figs/NOx.png", height=7, width=6, units="in")
-
-
-## NHx (mg/L)
-# windows()
-# ggplot(limno_field_data %>% filter(!(is.na(nhx))) %>% left_join(pond_data) %>%
-#           group_by(trt_nutrients, doy) %>%
-#           summarize(nhx = mean(nhx, na.rm=T)) %>%
-#           ungroup(),
-#        aes(x = doy, y = nhx)) +
-#    geom_line(aes(color = trt_nutrients, group = trt_nutrients), size=1.25) +
-#    geom_point(aes(color = trt_nutrients), shape=16, size=2) +
-#    scale_color_manual(values = c("no" = "cornflowerblue", "yes" = "seagreen3"),
-#                       labels = c("no" = "Ref", "yes" = "Pulse")) +
-#    scale_x_continuous(limits = c(140, 242)) +
-#    lims(y = c(0, 0.1)) +
-#    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
-#    theme_classic()
-
-# Reference
-# a = 
-# ggplot(limno_field_data %>% filter(!(is.na(nhx))) %>% left_join(pond_data) %>% filter(trt_nutrients=="no"),
-#        aes(x = doy, y = nhx)) +
-#    #
-#    geom_line(aes(alpha = trt_fish, group = pond_id), size=1.25, color="cornflowerblue") +
-#    #
-#    scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
-#                       breaks = fish_breaks,
-#                       values = fish_alpha,
-#                       labels = fish_labs) +
-#    scale_x_continuous(name = "DOY", limits = c(140, 242)) +
-#    scale_y_continuous(name = expression(NH[x]~(mg~L^-1)), limits = c(0, 0.075)) +
-#    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
-#    ggtitle("Reference") +
-#    theme_classic()
-
-# Pulsed
-# b = 
-# ggplot(limno_field_data %>% filter(!(is.na(nhx))) %>% left_join(pond_data) %>% filter(trt_nutrients=="yes"),
-#        aes(x = doy, y = nhx)) +
-#    #
-#    geom_line(aes(alpha = trt_fish, group = pond_id), size=1.25, color="seagreen3") +
-#    #
-#    scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
-#                       breaks = fish_breaks,
-#                       values = fish_alpha,
-#                       labels = fish_labs) +
-#    scale_x_continuous(name = "DOY", limits = c(140, 242)) +
-#    scale_y_continuous(name = expression(NH[x]~(mg~L^-1)), limits = c(0, 0.075)) +
-#    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
-#    ggtitle("Pulsed") +
-#    theme_classic()
-
-
-# NHx fig
-# windows(height=7, width=6); a / b
-
-# ggsave(filename = "Figures/new-figs/NHx.png", height=7, width=6, units="in")
-
 
 #--
 # Phosphorus
@@ -687,67 +583,40 @@ ggplot(fdat %>% filter(!(is.na(nox))) %>% left_join(pond_data),
 
 ## TP (ug/L)
 windows(height=4, width=5.5)
-ggplot(fdat %>% filter(!(is.na(tp))) %>% left_join(pond_data),
+tp = 
+# ggplot(fdat %>% filter(!(is.na(tp))) %>% left_join(pond_data),
+#        aes(x = doy, y = tp)) +
+ggplot(pdat %>% filter(!(is.na(tp))),
        aes(x = doy, y = tp)) +
    #
-   geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
+   geom_vline(xintercept = 223, linetype=2, color="gray40") +
+   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   #
    # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.3, size=1) +
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
    # treatment mean (loess smooth)
-   geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
+   # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, span=0.05) +
+   geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(tp, na.rm=T)) %>% ungroup(),
+             aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) + 
    #
    scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
+   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(TP~(mu*g~L^-1)), limits = c(0, 250)) +
-   ggtitle("Total Phosphorus") +
+   # ggtitle("Total Phosphorus") +
+   #
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
-         legend.position = c(0.82, 0.87),
-         axis.title.y = element_text(margin = margin(r=0.5, unit="line")),
-         axis.title.x = element_text(margin = margin(t=0.5, unit="line")))
+         # legend.position = c(0.82, 0.87),
+         legend.position = "none",
+         axis.ticks.length = unit(0.3, 'line'),
+         axis.text = element_text(color='black', size=rel(1)),
+         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
+         axis.title.x = element_text(margin = margin(t=0.5, unit="line"), size=rel(1.1)),
+         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
 
 # ggsave(filename="total-phosphorus.png", height=4, width=5.5, units='in')
-
-
-# Reference
-# a = 
-# ggplot(limno_field_data %>% filter(!(is.na(tp))) %>% left_join(pond_data) %>% filter(trt_nutrients=="no"),
-#        aes(x = doy, y = tp)) +
-#    #
-#    geom_line(aes(alpha = trt_fish, group = pond_id), size=1.25, color="cornflowerblue") +
-#    #
-#    scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
-#                       breaks = fish_breaks,
-#                       values = fish_alpha,
-#                       labels = fish_labs) +
-#    scale_x_continuous(name = "DOY", limits = c(140, 242)) +
-#    scale_y_continuous(name = expression(TP~(mu*g~L^-1)), limits = c(0, 250)) +
-#    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
-#    ggtitle("Reference") +
-#    theme_classic()
-
-# Pulsed
-# b = 
-# ggplot(limno_field_data %>% filter(!(is.na(tp))) %>% left_join(pond_data) %>% filter(trt_nutrients=="yes"),
-#        aes(x = doy, y = tp)) +
-#    #
-#    geom_line(aes(alpha = trt_fish, group = pond_id), size=1.25, color="seagreen3") +
-#    #
-#    scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
-#                       breaks = fish_breaks,
-#                       values = fish_alpha,
-#                       labels = fish_labs) +
-#    scale_x_continuous(name = "DOY", limits = c(140, 242)) +
-#    scale_y_continuous(name = expression(TP~(mu*g~L^-1)), limits = c(0, 250)) +
-#    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
-#    ggtitle("Pulsed") +
-#    theme_classic()
-
-
-# TP fig
-# windows(height=7, width=6); a / b
-
-# ggsave(filename = "Figures/new-figs/TP.png", height=7, width=6, units="in")
 
 
 ## SRP (ug/L)
@@ -781,45 +650,9 @@ ggplot(pdat %>% filter(!(is.na(srp))),
 # ggsave(filename="SRP.png")
 
 
+## TN/TP together
+windows(height=3.5*2, width=5); plot_grid(tn, tp, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99, label_x=0.01)
 
-# Reference
-# a = 
-# ggplot(limno_field_data %>% filter(!(is.na(srp))) %>% left_join(pond_data) %>% filter(trt_nutrients=="no"),
-#        aes(x = doy, y = srp)) +
-#    #
-#    geom_line(aes(alpha = trt_fish, group = pond_id), size=1.25, color="cornflowerblue") +
-#    #
-#    scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
-#                       breaks = fish_breaks,
-#                       values = fish_alpha,
-#                       labels = fish_labs) +
-#    scale_x_continuous(name = "DOY", limits = c(140, 242)) +
-#    scale_y_continuous(name = expression(SRP~(mu*g~L^-1)), limits = c(0, 30)) +
-#    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
-#    ggtitle("Reference") +
-#    theme_classic()
-
-# Pulsed
-# b = 
-# ggplot(limno_field_data %>% filter(!(is.na(srp))) %>% left_join(pond_data) %>% filter(trt_nutrients=="yes"),
-#        aes(x = doy, y = srp)) +
-#    #
-#    geom_line(aes(alpha = trt_fish, group = pond_id), size=1.25, color="seagreen3") +
-#    #
-#    scale_alpha_manual(name = "Benthic-Pelagic \nCoupling",
-#                       breaks = fish_breaks,
-#                       values = fish_alpha,
-#                       labels = fish_labs) +
-#    scale_x_continuous(name = "DOY", limits = c(140, 242)) +
-#    scale_y_continuous(name = expression(SRP~(mu*g~L^-1)), limits = c(0, 30)) +
-#    geom_vline(xintercept = c(176, 211), color="gray40", linetype=2) +
-#    ggtitle("Pulsed") +
-#    theme_classic()
-
-
-# SRP fig
-# windows(height=7, width=6); a / b
-# 
-# ggsave(filename = "Figures/new-figs/SRP.png", height=7, width=6, units="in")
+# ggsave(file = "tn-tp.png", height=3.5*2, width=5, units='in')
 
 

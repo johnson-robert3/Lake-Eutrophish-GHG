@@ -28,22 +28,33 @@ minidot %>%
              interp = sum(points_interp)) %>%
    ungroup() %>%
    mutate(perc_drop = drop / total * 100,
-          perc_interp = interp / total * 100) #%>%
-   # group_by(pond_id) %>%
-   # summarize(min_perc_drop = min(perc_drop),
-   #           max_perc_drop = max(perc_drop),
-   #           mean_perc_drop = mean(perc_drop),
-   #           min_perc_interp = min(perc_interp),
-   #           max_perc_interp = max(perc_interp),
-   #           mean_perc_interp = mean(perc_interp)) %>%
-   # ungroup() %>%
-   # View
+          perc_interp = interp / total * 100) 
+
+
+# How many pond-days required cleaning/interpolation?
+do_cleaning_pts %>% filter(drop!=0) %>% nrow()   # 231
+
+   # Breakdown of pond-days by number of flagged/dropped points
+   do_cleaning_pts %>% count(drop)
+
+# What was the average percent of DO measurements that needed to be interpolated on these days?
+do_cleaning_pts %>% filter(drop!=0) %>% summarize(mean(perc_interp))   # mean = 17.2%
+
+
 
 # percent of points removed and backfilled
 summarize(do_cleaning_pts, mean(perc_interp))   # mean = 7.1 %
+summarize(do_cleaning_pts %>% filter(drop > 0), mean(perc_interp))   # mean = 17.2% (for days that had at least one dropped measurement)
+
 summarize(do_cleaning_pts, range(perc_interp))   # range = 0 - 54.2 %
+summarize(do_cleaning_pts %>% filter(drop > 0), range(perc_interp))   # range = 2.1 - 54.2% (for days that had at least one dropped measurement)
+
 summarize(do_cleaning_pts, median(perc_interp))   # median = 0 %
-summarize(do_cleaning_pts %>% filter(perc_interp > 0), median(perc_interp))   # median = 12.5% (for days that had interpolated points)
+summarize(do_cleaning_pts %>% filter(drop > 0), median(perc_interp))   # median = 12.5% (for days that had at least one dropped measurement)
+
+
+# range of percentage of points removed and backfilled based on number of flagged points per day
+do_cleaning_pts %>% group_by(drop) %>% summarize(range(perc_interp))
 
 
 # next: view a distribution of number of points dropped across ponds and days, are there days where too much of the data is being removed with this 
@@ -102,6 +113,7 @@ windows(); ggplot(do_cleaning_pts %>%
    ylab("Percent of data points each day removed and backfilled via linear interpolation") +
    theme_classic()
 
+
 # how many days in each pond over a threshold percentage for number of data points removed and backfilled
 do_cleaning_pts %>% filter(perc_interp > 50) %>% count(pond_id)
 do_cleaning_pts %>% filter(perc_interp > 40) %>% count(pond_id)
@@ -127,12 +139,15 @@ metabolism %>% filter(GPP<0 | R>0) %>% count(pond_id) %>% mutate(perc = n / 96 *
 # view number of DO points removed and backfilled on days with erroneous estimates
 metabolism %>% filter(GPP<0 | R>0) %>% left_join(do_cleaning_pts) %>% count(drop)
 metabolism %>% filter(GPP<0 | R>0) %>% left_join(do_cleaning_pts) %>% arrange(drop) %>% View
+
 # not as much overlap as I expected. 
 # none of the days with >25% of points removed and backfilled overlapped with days producing erroneous metabolism estimates (perhaps b/c we "fixed" these?)
 # of 62 days with erroneous estimates, 40 were on days that did not have any DO data points dropped
 
-# 62 days with erroneous estimates using corrected DO data
-# 71 days with erroneous estimates using raw DO data
+# 71 days with erroneous estimates using raw DO data (no cleaning of points and large drops in concentration)
+# 62 days with erroneous estimates using corrected DO data (corrected = removing flagged DO points and backfilling w/ linear interpolation)
+# 62 days with erroneous estimates using corrected DO data (as above) and with removing days with >33% of points interpololated before calculating metabolism
+
 # 16 days with >=3 flagged DO points
 # 20 days with >25% of points removed and backfilled
 # 10 days with >33% of points removed and backfilled
@@ -164,6 +179,6 @@ windows(); ggplot(test,
    facet_wrap(facets = vars(pond_id)) +
    theme_classic()
 
-ggsave(filename = "NEP-highlight-cleaning-pts.png", height=5, width=8, units ="in")
+# ggsave(filename = "NEP-highlight-cleaning-pts.png", height=5, width=8, units ="in")
 
 

@@ -4,6 +4,39 @@ library(slider)
 
 
 #--
+# Change in diffusive flux from previous measurement
+#--
+
+source("Analysis-Scripts/stats_model-data.R")
+source("Figure-Scripts/figs_functions.R")
+
+# treatment means
+windows(height=4, width=7)
+ggplot(fdat %>% filter(!(is.na(n2o_flux))) %>%
+          left_join(pond_data) %>%
+          group_by(trt_nutrients, doy) %>% 
+          summarize(mean = mean(n2o_flux)) %>%
+          ungroup() %>% 
+          group_by(trt_nutrients) %>% arrange(doy, .by_group=T) %>%
+          mutate(change = mean - lag(mean)) %>%
+          ungroup()) +
+   #
+   geom_point(aes(x = doy, y = change, color = trt_nutrients)) +
+   geom_line(aes(x = doy, y = change, group = trt_nutrients, color = trt_nutrients)) +
+   
+   # geom_col(aes(x = doy, y = change, fill = trt_nutrients), position = 'dodge') +
+   
+   #
+   geom_hline(yintercept = 0, linetype=2, color="gray50") +
+   #
+   # scale_fill_manual(name = NULL, breaks = t_breaks, values = t_cols, labels = t_labs) +
+   scale_color_manual(name = NULL, breaks = t_breaks, values = t_cols, labels = t_labs) +   # t_breaks, cols, and labs from "figs_diffusive-flux" script
+   theme_classic() +
+   theme(legend.position = "none")
+
+
+
+#--
 # Methanogenesis vs Buoyancy Frequency
 #--
 
