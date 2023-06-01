@@ -196,10 +196,10 @@ for(var in varlist.main){
   }
   res <- NULL
   for(ii in 1:nrow(comp1)){
-    ecdf.comp1<- ecdf(comp1[ii,])
-    res <- c(res, ecdf.comp1(pulsetrt.pulse1[ii]))
+    ecdf.comp1<- ecdf(comp1[ii,])  # quantile for each pond
+    res <- c(res, ecdf.comp1(pulsetrt.pulse1[ii]))  # vector of quantiles for the three ponds
   }
-  result_otherTimes[varlist.main==var, 1] <- mean(res)
+  result_otherTimes[varlist.main==var, 1] <- mean(res)  # mean(res) = the mean quantile for the focal event window
   
   # P2
   pulsetrt.pulse2 <- rowMeans(tmp[pulse_ponds, time_doy %in% pulse2], na.rm=TRUE)
@@ -338,31 +338,35 @@ atx <- rep(1:4, each=length(varlist.main))
 aty <- rep(length(varlist.main):1, times=4)
 aty2 <- rep(1:length(varlist.main), times=4)
 
-png("event_quantiles_rj_absR_compA-prev-times-only.png", res=300, units="in", width=6.5, height=6.5)
+# png("event_quantiles_rj_absR.png", res=300, units="in", width=6.5, height=6.5)
+png("event_quantiles_rj_absR_comp1-window-update.png", res=300, units="in", width=6.5, height=6.5)
+# png("event_quantiles_rj_absR_comp1-prev-times-only.png", res=300, units="in", width=6.5, height=6.5)
 
 layout(matrix(1:3, ncol=3), widths=c(0.45,0.45,0.15))
 par(mar=c(6.1,1.1,2.1,0.6), oma=c(0,6,0,2), mgp=c(2.5,1,0))
 
+# Comparison 1
 image(x=1:4, y=1:length(varlist.main), z=t(result_otherTimes)[,rev(1:length(varlist.main))], col=pal(21), zlim=c(0,1),
       xaxt="n", yaxt="n", xlab="", ylab="")
-axis(1, at=1:4, labels=c("Pulse 1", "Heatwave", "Pulse 2", "Derecho"), las=2)
+axis(1, at=1:4, labels=c("Pulse 1", "Heat event", "Pulse 2", "Derecho"), las=2)
 axis(2, at=1:length(varlist.main), labels=rev(prettyNames), las=2)
-mtext("Comparison v. other times", cex=3/4, line=0.2)
-mtext("A)", cex=3/4, at=0.5, line=0.2)
+mtext("Comparison vs. other times", cex=3/4, line=0.2)
+mtext(expression(bold("A)")), cex=3/4, at=0.5, line=0.2)
 abline(h=c(2,6,9)+0.5)
 text(atx, aty, round(c(result_otherTimes), 2))
 
+# Comparison 2
 image(x=1:4, y=1:length(varlist.main), z=t(result_refPonds)[,rev(1:length(varlist.main))], col=pal(21), zlim=c(0,1),
       xaxt="n", yaxt="n", xlab="", ylab="")
-axis(1, at=1:4, labels=c("Pulse 1", "Heatwave", "Pulse 2", "Derecho"), las=2)
+axis(1, at=1:4, labels=c("Pulse 1", "Heat event", "Pulse 2", "Derecho"), las=2)
 axis(2, at=1:length(varlist.main), labels=NA, las=2)
-mtext("Comparison v. reference ponds", cex=3/4, line=0.2)
-mtext("B)", cex=3/4, at=0.5, line=0.2)
+mtext("Comparison vs. reference ponds", cex=3/4, line=0.2)
+mtext(expression(bold("B)")), cex=3/4, at=0.5, line=0.2)
 abline(h=c(2,6,9)+0.5)
 text(atx, aty, round(c(result_refPonds), 2))
 
 par(mar=c(6.1,3.6,2.1,1.1))
-image(t(matrix(1:21)), col=pal(21), xaxt="n", ylab="Quantile of experimental ponds at focal times versus comparison", cex.lab=1.1)
+image(t(matrix(1:21)), col=pal(21), xaxt="n", ylab="Quantile of pulsed pond event windows versus comparison", cex.lab=1.1)
 mtext("Values > comparison", side=4, at=0.9, line=0.75, cex=3/4)
 mtext("Values < comparison", side=4, at=0.1, line=0.75, cex=3/4)
 
