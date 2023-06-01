@@ -31,7 +31,8 @@ source("Analysis-Scripts/stats_model-data.R")
 fig_events = function(.fig, .gas = c('ch4', 'n2o', 'co2')) {
    
    # for y-axis height of event labels
-   .max = if(.gas == 'ch4') {60} else if(.gas == 'n2o') {3} else if(.gas == 'co2') {250}
+   # .max = if(.gas == 'ch4') {60} else if(.gas == 'n2o') {3} else if(.gas == 'co2') {250}
+   .max = if(.gas == 'ch4') {66} else if(.gas == 'n2o') {3.7} else if(.gas == 'co2') {277}
    
    .fig +
    # add analysis windows
@@ -46,10 +47,10 @@ fig_events = function(.fig, .gas = c('ch4', 'n2o', 'co2')) {
       annotate(geom = 'rect', xmin = 223+1, xmax = 223+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
       geom_vline(xintercept = 223.8, linetype=2, color='gray50') +
       # event labels
-      annotate(geom = "text", label = "P", x=178.8, y=.max, size=2.75) +
-      annotate(geom = "text", label = "H", x=187.7, y=.max, size=2.75) +
-      annotate(geom = "text", label = "P", x=214, y=.max, size=2.75) +
-      annotate(geom = "text", label = "D", x=226, y=.max, size=2.75)
+      annotate(geom = "text", label = "P", x=178.8, y=.max, size=3.5) +
+      annotate(geom = "text", label = "H", x=187.5, y=.max, size=3.5) +
+      annotate(geom = "text", label = "P", x=214, y=.max, size=3.5) +
+      annotate(geom = "text", label = "D", x=226, y=.max, size=3.5)
 }
 
 # panel and axis aesthetics
@@ -69,9 +70,8 @@ t_cols = c("yes" = "#5D3891", "no" = "#F99417") # pulse-purple, ref-orange
 t_labs = c("yes" = "Pulsed", "no" = "Reference")
 
 
-
 ## CH4
-# windows(height=3.5, width=5)
+windows(height=3.5, width=5)
 m =
 ggplot(fdat %>%
           filter(!(is.na(ch4_flux))) %>%
@@ -91,17 +91,18 @@ ggplot(fdat %>%
    #
    scale_color_manual(name = NULL, breaks = t_breaks, values = t_cols, labels = t_labs) +
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
-   scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^-1)),
-                      limits = c(0, 60), breaks = seq(0, 60, 10)) +
+   scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^-1)), breaks = seq(0, 60, 10)) +
+   coord_cartesian(ylim = c(0, 60), clip = "off") +
    #
    theme_classic() +
-   theme(legend.position = "none") %>%
-   fig_theme()
+   theme(legend.position = "none",
+         plot.margin = unit(c(1.25,0.5,0,0.5), "lines")) %>%
+   fig_theme() 
 
 
 ## N2O
-# windows(height=3.5, width=5)
-n = 
+windows(height=3.5, width=5)
+n =
 ggplot(fdat %>%
           filter(!(is.na(n2o_flux))) %>%
           # convert from mmol to umol
@@ -122,17 +123,18 @@ ggplot(fdat %>%
    #
    scale_color_manual(name = NULL, breaks = t_breaks, values = t_cols, labels = t_labs) +
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
-   scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)),
-                      limits = c(-4, 3), breaks = seq(-4, 3, 1)) +
+   scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), breaks = seq(-4, 3, 1)) +
+   coord_cartesian(ylim = c(-4, 3), clip = "off") +
    #
    theme_classic() +
-   theme(legend.position = "none") %>%
+   theme(legend.position = "none",
+         plot.margin = unit(c(1.25,0.5,0,0.5), "lines")) %>%
    fig_theme()
 
 
 ## CO2
-# windows(height=3.5, width=5)
-c = 
+windows(height=3.5, width=5)
+c =
 ggplot(fdat %>%
           filter(!(is.na(co2_flux))) %>%
           left_join(pond_data), 
@@ -151,12 +153,13 @@ ggplot(fdat %>%
    #
    scale_color_manual(name = NULL, breaks = t_breaks, values = t_cols, labels = t_labs) +
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
-   scale_y_continuous(name = expression(CO[2]~flux~(mmol~m^-2~d^-1)),
-                      limits = c(-20, 250), breaks = seq(0, 250, 50)) +
+   scale_y_continuous(name = expression(CO[2]~flux~(mmol~m^-2~d^-1)), breaks = seq(0, 250, 50)) +
+   coord_cartesian(ylim = c(-20, 250), clip = "off") +
    #
    theme_classic() +
    theme(legend.position = c(0.16, 0.88),
-         legend.background = element_blank()) %>%
+         legend.background = element_blank(),
+         plot.margin = unit(c(1.25,0.5,0.5,0.5), "lines")) %>%
    fig_theme()
 
 
