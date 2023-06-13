@@ -159,6 +159,8 @@ test = full_join(metabolism, do_cleaning_pts) %>%
    mutate(flag_33 = case_when(perc_interp > 33 ~ 1,
                               TRUE ~ 0))
 
+# write.csv(test, file = "metab_do-cleaning_viewing.csv", row.names=FALSE)
+
 
 # number of pond-days with >33% of DO data points removed and backfilled
 test %>% filter(flag_33 == 1) %>% count(pond_id)
