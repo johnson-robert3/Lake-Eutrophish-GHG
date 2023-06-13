@@ -6,16 +6,6 @@
 library(tidyverse)
 
 
-#- Stratification
-hobo_strat %>% 
-   mutate(doy = yday(date_time)) %>%
-   relocate(doy, .after=date_time) %>%
-   mutate(across(meta_top:thermocline, ~na_if(., "NaN"))) %>%
-   mutate(across(meta_top:buoy_freq, ~replace(., is.na(.), "mix"))) %>%
-   write.csv(., file = "stratification_data.csv", row.names=FALSE)
-
-
-
 #- Weather station
 # processed dataset from "data_import-and-process" script
 weather_data %>%
