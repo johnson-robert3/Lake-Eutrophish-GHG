@@ -3,7 +3,10 @@
 #~~~
 
 
-# Stratification
+library(tidyverse)
+
+
+#- Stratification
 hobo_strat %>% 
    mutate(doy = yday(date_time)) %>%
    relocate(doy, .after=date_time) %>%
@@ -13,13 +16,13 @@ hobo_strat %>%
 
 
 
-# Weather station
+#- Weather station
 weather_data %>%
    write.csv(., file = "weather-station_data.csv", row.names=FALSE)
 
 
 
-# GHG diffusive flux
+#- GHG diffusive flux
 lake_flux %>%
    select(pond_id, date, doy, surface_temp, ends_with("lake"), ch4_atmo:n2o_atmo, k_cole, ends_with("flux")) %>%
    relocate(n2o_lake, .after=co2_lake) %>%
@@ -28,7 +31,7 @@ lake_flux %>%
 
 
 
-# Metabolism
+#- Metabolism
 metabolism %>%
    # add data flag column to ID days with erroneous metabolism measurements
    mutate(flag = case_when(GPP < 0 | R > 0 ~ 1,
@@ -37,16 +40,18 @@ metabolism %>%
 
 
 
-# Sonde profiles
+#- Sonde profiles
 
 # just using file "Data/sonde-profiles_all-data_2022-07-20.csv", no further cleaning needed here
+read_csv("Data/sonde-profiles_all-data_2022-07-20.csv") %>%
+   write.csv(., file = "profiles_daily_deepsite.csv", row.names=FALSE)
 
 
-
-# High-frequency DO data (miniDOTs)
+#- High-frequency DO data (miniDOTs)
 
 # just using file "Data/miniDOT_total.csv", no further cleaning needed here
-
+read_csv("Data/miniDOT_total.csv") %>%
+   write.csv(., file = "do_sensor_hf.csv", row.names=FALSE)
 
 
 
