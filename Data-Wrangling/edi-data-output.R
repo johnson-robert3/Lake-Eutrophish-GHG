@@ -18,7 +18,7 @@ hobo_strat %>%
 
 #- Weather station
 weather_data %>%
-   write.csv(., file = "weather-station_data.csv", row.names=FALSE)
+   write.csv(., file = "meteorological_pondStation.csv", row.names=FALSE)
 
 
 
