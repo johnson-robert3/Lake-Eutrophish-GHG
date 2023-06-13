@@ -32,11 +32,14 @@ lake_flux %>%
 
 
 #- Metabolism
-metabolism %>%
+read_csv("Data/metabolism_total.csv") %>%
    # add data flag column to ID days with erroneous metabolism measurements
-   mutate(flag = case_when(GPP < 0 | R > 0 ~ 1,
-                           TRUE ~ 0)) %>%
-   write.csv(., file = "daily-metabolism_data.csv", row.names=FALSE)
+   mutate(flag = if_else(GPP < 0 | R > 0, "E", NULL)) %>%
+   # replace metabolism estimates on days with erroneous estimates with NA (but leave the day in the data set)
+   mutate(across(GPP:NEP, ~case_when(flag=="E" ~ -9999, 
+                                     TRUE ~ .)),
+          across(GPP:NEP, ~na_if(., -9999))) %>%
+   write.csv(., file = "daily_metabolism.csv", row.names=FALSE)
 
 
 
