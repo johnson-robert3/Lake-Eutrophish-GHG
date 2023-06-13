@@ -17,12 +17,14 @@ hobo_strat %>%
 
 
 #- Weather station
+# processed dataset from "data_import-and-process" script
 weather_data %>%
    write.csv(., file = "meteorological_pondStation.csv", row.names=FALSE)
 
 
 
 #- GHG diffusive flux
+# processed dataset from "data_import-and-process" script
 lake_flux %>%
    select(pond_id, date, doy, surface_temp, ends_with("lake"), ch4_atmo:n2o_atmo, k_cole, ends_with("flux")) %>%
    relocate(n2o_lake, .after=co2_lake) %>%
@@ -44,14 +46,28 @@ read_csv("Data/metabolism_total.csv") %>%
 
 
 #- Sonde profiles
-
 # just using file "Data/sonde-profiles_all-data_2022-07-20.csv", no further cleaning needed here
-read_csv("Data/sonde-profiles_all-data_2022-07-20.csv") %>%
    write.csv(., file = "profiles_daily_deepsite.csv", row.names=FALSE)
 
 
-#- High-frequency DO data (miniDOTs)
+# Surface Chl-a average from 10-30 cm (for file: "surface_nutrients_chla")
+read_csv("Data/sonde-profiles_all-data_2022-07-20.csv") %>%
+   group_by(pond_id, doy) %>%
+   filter(between(vert_m, 0.10, 0.30)) %>%
+   summarize(chla_10_30 = mean(chla, na.rm=T)) %>%
+   ungroup() %>%
+   # sonde profiles missing for Pond C (DOY 231) and Pond B (DOY 151)
+   # add these days and linearly interpolate for the missing chla values
+   add_row(pond_id = "B", doy = 151) %>%
+   add_row(pond_id = "C", doy = 231) %>%
+   group_by(pond_id) %>%
+   arrange(doy, .by_group=TRUE) %>%
+   mutate(chla_10_30 = zoo::na.approx(chla_10_30)) %>%
+   ungroup() %>%
+   write.csv(., file = "surface_chla_10_30.csv", row.names=FALSE)
 
+
+#- High-frequency DO data (miniDOTs)
 # just using file "Data/miniDOT_total.csv", no further cleaning needed here
 read_csv("Data/miniDOT_total.csv") %>%
    write.csv(., file = "do_sensor_hf.csv", row.names=FALSE)
