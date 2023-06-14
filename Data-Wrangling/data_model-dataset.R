@@ -142,19 +142,19 @@ m22 = read_csv("Data/ebullition_total.csv") %>%
 
 #- Combined
 
-test = m10 %>%  #full_join(t1, t10) %>%
-   full_join(m11) %>%
-   full_join(m12) %>%
-   full_join(m13) %>%
-   full_join(m14) %>%
-   full_join(m15) %>%
-   full_join(m16) %>%
-   full_join(m17) %>%
-   full_join(m18) %>%
-   full_join(m19) %>%
-   full_join(m20) %>%
-   full_join(m21) %>%
-   full_join(m22)
+test = m10 %>%          # GHG dissolved conc. and diffusive flux 
+   full_join(m11) %>%   # metabolism
+   full_join(m12) %>%   # limno samples
+   full_join(m13) %>%   # sonde surface
+   full_join(m14) %>%   # sonde bottom
+   full_join(m15) %>%   # weather
+   full_join(m16) %>%   # DEA
+   full_join(m17) %>%   # Methanogenesis
+   full_join(m18) %>%   # alkalinity
+   full_join(m19) %>%   # DOC
+   full_join(m20) %>%   # t-chain stratification
+   full_join(m21) %>%   # sonde stratification
+   full_join(m22)       # Ebullition
 
 
 test = test %>%
