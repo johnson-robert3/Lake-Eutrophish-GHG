@@ -490,6 +490,10 @@ weather_data = weather_data %>%
    mutate(wind_z = rep_len(4, n()))
 
 
+# Read in full, processed weather data set from the shared EDI submission folder on Box
+weather_data = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/meteorological_pondStation.csv")
+
+
 #---
 #### Lake Concentration GHG Samples ####
 #---
