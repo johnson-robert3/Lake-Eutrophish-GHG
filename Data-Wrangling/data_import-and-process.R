@@ -151,7 +151,8 @@ write.csv(sonde_profiles, file = "Data/sonde-profiles_all-data_2022-07-20.csv", 
 
    
 # Data (from full, processed sonde dataset)
-sonde_profiles = read_csv("Data/sonde-profiles_all-data_2022-07-20.csv")
+# Read the file from the shared EDI submission folder on Box
+sonde_profiles = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/profiles_daily_deepsite.csv")
    
 
 ##__Surface water means 
@@ -290,7 +291,8 @@ write.csv(hobo_temp, file = "Data/hobo_t-chain_profiles.csv", row.names=FALSE)
 
 
 # Use full, processed t-chain profile dataset from Ellen instead
-hobo_temp = read_csv("Data/temp_profiles_2020.csv") %>%
+# Read the file from the shared EDI submission folder on Box
+hobo_temp = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/temp_chains_hf.csv") %>%
    # DOY variable has already been created
    # data have already been filtered to days of the experiment (DOY 143-240)
    # temperature data have already been converted to Celcius
@@ -429,7 +431,8 @@ write.csv(minidot, file = "Data/miniDOT_total.csv", row.names=FALSE)
 
 
 # Data (from full, processed miniDOT dataset)
-minidot = read_csv("Data/miniDOT_total.csv")
+# Read the file from the shared EDI submission folder on Box
+minidot = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/do_sensor_hf.csv")
 
 
 #---
