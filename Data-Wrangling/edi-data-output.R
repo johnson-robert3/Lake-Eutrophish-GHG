@@ -9,6 +9,7 @@ library(tidyverse)
 #- Weather station
 # processed dataset from "data_import-and-process" script
 weather_data %>%
+   # output directly to the shared EDI submission folder in Box
    write.csv(., file = "C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/meteorological_pondStation.csv", row.names=FALSE)
 
 
@@ -31,6 +32,7 @@ read_csv("Data/metabolism_total.csv") %>%
    mutate(across(GPP:NEP, ~case_when(flag=="E" ~ -9999, 
                                      TRUE ~ .)),
           across(GPP:NEP, ~na_if(., -9999))) %>%
+   # output directly to the shared EDI submission folder in Box
    write.csv(., file = "C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/daily_metabolism.csv", row.names=FALSE)
 
 
@@ -38,6 +40,7 @@ read_csv("Data/metabolism_total.csv") %>%
 #- Sonde profiles
 # just using file "Data/sonde-profiles_all-data_2022-07-20.csv", no further cleaning needed here
 read_csv("Data/sonde-profiles_all-data_2022-07-20.csv") %>%
+   # output directly to the shared EDI submission folder in Box
    write.csv(., file = "C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/profiles_daily_deepsite.csv", row.names=FALSE)
 
 
@@ -62,6 +65,7 @@ read_csv("Data/sonde-profiles_all-data_2022-07-20.csv") %>%
 #- High-frequency DO data (miniDOTs)
 # just using file "Data/miniDOT_total.csv", no further cleaning needed here
 read_csv("Data/miniDOT_total.csv") %>%
+   # output directly to the shared EDI submission folder in Box
    write.csv(., file = "C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/do_sensor_hf.csv", row.names=FALSE)
 
 
