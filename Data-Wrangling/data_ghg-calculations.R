@@ -221,6 +221,14 @@ lake_flux = lake_flux %>%
           n2o_flux = k_n2o * (n2o_lake - n2o_exp))
 
 
+# Output file of total GHG dissolved concentration and diffusive flux data, so raw data don't need to be re-processed each time 
+write.csv(lake_flux, file = "Data/ghg_concentration_flux_total.csv", row.names=FALSE)
+
+
+# Read in full, processed GHG diffusive flux data set from the shared EDI submission folder on Box
+lake_flux = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/ghg_diffusive_flux.csv")
+
+
 #---
 #### Methanogenesis Potential ####
 #---
