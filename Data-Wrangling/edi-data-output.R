@@ -16,11 +16,14 @@ weather_data %>%
 
 #- GHG diffusive flux
 # processed dataset from "data_import-and-process" script
-lake_flux %>%
-   select(pond_id, date, doy, surface_temp, ends_with("lake"), ch4_atmo:n2o_atmo, k_cole, ends_with("flux")) %>%
+read_csv("Data/ghg_concentration_flux_total.csv") %>%
+   select(pond_id, doy, ends_with("flux"), ends_with("lake"), ch4_atmo:n2o_atmo, k_ch4:k_n2o) %>%
    relocate(n2o_lake, .after=co2_lake) %>%
-   rename(k600 = k_cole) %>%
-   write.csv(., file = "greenhouse-gas_data.csv", row.names=FALSE)
+   rename(ch4_concentration = ch4_lake, co2_concentration = co2_lake, n2o_concentration = n2o_lake,
+          ch4_atmosphere = ch4_atmo, co2_atmosphere = co2_atmo, n2o_atmosphere = n2o_atmo,
+          ch4_k600 = k_ch4, co2_k600 = k_co2, n2o_k600 = k_n2o) %>%
+   # output directly to the shared EDI submission folder in Box
+   write.csv(., file = "C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/ghg_diffusive_flux.csv", row.names=FALSE)
 
 
 
