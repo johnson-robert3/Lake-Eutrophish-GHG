@@ -38,6 +38,15 @@ read_csv("Data/methanogenesis_rates_total.csv") %>%
 
 
 
+#- GHG methane ebullition
+# processed dataset from "data_ghg-calculations" script
+read_csv("Data/ebullition_total.csv") %>%
+   rename(ch4_ebullitive_flux = ch4_ebu_flux) %>%
+   # output directly to the shared EDI submission folder in Box
+   write.csv(., file = "C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/ghg_ebullition.csv", row.names=FALSE)
+
+
+
 #- Metabolism
 read_csv("Data/metabolism_total.csv") %>%
    # add data flag column to ID days with erroneous metabolism measurements
