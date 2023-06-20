@@ -304,6 +304,11 @@ methano_rates = methano_samples %>%
    ungroup()
 
 
+# Output file of Methanogenesis rates, so raw data don't need to be re-processed each time 
+write.csv(methano_rates, file = "Data/methanogenesis_rates_total.csv", row.names=FALSE)
+
+
+
 #---
 #### DEA ####
 #---
@@ -373,6 +378,11 @@ dea_rates = dea_samples %>%
    group_by(pond_id, week, doy) %>%
    summarize(across(ends_with("rate"), ~mean(., na.rm=T))) %>%
    ungroup()
+
+
+# Output file of DEA rates, so raw data don't need to be re-processed each time 
+write.csv(dea_rates, file = "Data/DEA_rates_total.csv", row.names=FALSE)
+
 
 
 #===
