@@ -15,7 +15,7 @@ weather_data %>%
 
 
 #- GHG diffusive flux
-# processed dataset from "data_import-and-process" script
+# processed dataset from "data_import-and-process" and "data_ghg-calculations" scripts
 read_csv("Data/ghg_concentration_flux_total.csv") %>%
    select(pond_id, doy, ends_with("flux"), ends_with("lake"), ch4_atmo:n2o_atmo, k_ch4:k_n2o) %>%
    relocate(n2o_lake, .after=co2_lake) %>%
@@ -24,6 +24,17 @@ read_csv("Data/ghg_concentration_flux_total.csv") %>%
           ch4_k600 = k_ch4, co2_k600 = k_co2, n2o_k600 = k_n2o) %>%
    # output directly to the shared EDI submission folder in Box
    write.csv(., file = "C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/ghg_diffusive_flux.csv", row.names=FALSE)
+
+
+
+#- GHG process rate measurements
+# processed datasets from "data_ghg-calculations" script
+read_csv("Data/methanogenesis_rates_total.csv") %>%
+   select(pond_id, week, doy, methanogenesis_potential = ch4_rate) %>%
+   full_join(read_csv("Data/DEA_rates_total.csv") %>%
+                select(pond_id, week, doy, DEA = n2o_rate)) %>%
+   # output directly to the shared EDI submission folder in Box
+   write.csv(., file = "C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/ghg_production_assays.csv", row.names=FALSE)
 
 
 
