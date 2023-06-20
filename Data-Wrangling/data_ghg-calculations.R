@@ -4,6 +4,7 @@
 #~~~
 
 
+library(rLakeAnalyzer)
 library(LakeMetabolizer)
 
 
@@ -226,7 +227,10 @@ write.csv(lake_flux, file = "Data/ghg_concentration_flux_total.csv", row.names=F
 
 
 # Read in full, processed GHG diffusive flux data set from the shared EDI submission folder on Box
-lake_flux = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/ghg_diffusive_flux.csv")
+lake_flux = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/ghg_diffusive_flux.csv") %>%
+   # change variable names back to originals, so they match and work across scripts
+   rename(ch4_lake = ch4_concentration, co2_lake = co2_concentration, n2o_lake = n2o_concentration,
+          ch4_atmo = ch4_atmosphere, co2_atmo = co2_atmosphere, n2o_atmo = n2o_atmosphere)
 
 
 #---
