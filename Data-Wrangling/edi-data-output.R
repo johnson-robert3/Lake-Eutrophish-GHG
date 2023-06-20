@@ -15,7 +15,7 @@ weather_data %>%
 
 
 #- GHG diffusive flux
-# processed dataset from "data_import-and-process" and "data_ghg-calculations" scripts
+# processed dataset from "data_ghg-calculations" script
 read_csv("Data/ghg_concentration_flux_total.csv") %>%
    select(pond_id, doy, ends_with("flux"), ends_with("lake"), ch4_atmo:n2o_atmo, k_ch4:k_n2o) %>%
    relocate(n2o_lake, .after=co2_lake) %>%
@@ -48,6 +48,7 @@ read_csv("Data/ebullition_total.csv") %>%
 
 
 #- Metabolism
+# processed dataset from "metabolism-calcs" script
 read_csv("Data/metabolism_total.csv") %>%
    # add data flag column to ID days with erroneous metabolism measurements
    mutate(flag = if_else(GPP < 0 | R > 0, "E", NULL)) %>%
@@ -61,6 +62,7 @@ read_csv("Data/metabolism_total.csv") %>%
 
 
 #- Sonde profiles
+# processed dataset from "data_import-and-process" script
 # just using file "Data/sonde-profiles_all-data_2022-07-20.csv", no further cleaning needed here
 read_csv("Data/sonde-profiles_all-data_2022-07-20.csv") %>%
    # output directly to the shared EDI submission folder in Box
@@ -86,6 +88,7 @@ read_csv("Data/sonde-profiles_all-data_2022-07-20.csv") %>%
 
 
 #- High-frequency DO data (miniDOTs)
+# processed dataset from "data_import-and-process" script
 # just using file "Data/miniDOT_total.csv", no further cleaning needed here
 read_csv("Data/miniDOT_total.csv") %>%
    # output directly to the shared EDI submission folder in Box
