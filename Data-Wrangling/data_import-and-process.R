@@ -585,7 +585,7 @@ n.diff %>% arrange(doy) %>% filter(n2o_flag==1) %>% View
 # Remove flagged outlier GHG vials
 ghg_clean = ghg_lake_raw %>%
    # mutate(data_flag = if_else(is.na(data_flag), 0, data_flag)) %>%
-   filter(!(data_flag=="E"))
+   filter(is.na(data_flag))
 
 
 # Mean GHG concentration from syringes for lake samples (2 syringes per pond, 3 syringes for atmosphere)
@@ -633,7 +633,7 @@ methano_samples = methano_sample_data %>%
 # Remove flagged outlier GHG vials
 methano_samples = methano_samples %>%
    # mutate(data_flag = if_else(is.na(data_flag), 0, data_flag)) %>%
-   filter(!(data_flag=="E"))
+   filter(is.na(data_flag))
 
 
 #---
@@ -666,7 +666,7 @@ dea_samples = dea_sample_data %>%
 # Remove flagged outlier GHG vials
 dea_samples = dea_samples %>%
    # mutate(data_flag = if_else(is.na(data_flag), 0, data_flag)) %>%
-   filter(!(data_flag=="E"))
+   filter(is.na(data_flag))
 
 
 #---
