@@ -150,9 +150,7 @@ write.csv(sonde_profiles, file = "Data/sonde-profiles_all-data_2022-07-20.csv", 
 }
 
    
-# Data (from full, processed sonde dataset)
-# Read the file from the shared EDI submission folder on Box
-sonde_profiles = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/profiles_daily_deepsite.csv")
+#- Create the 'sonde_profiles' data set from the "data_import_EDI" script
    
 
 ##__Surface water means 
@@ -290,17 +288,7 @@ write.csv(hobo_temp, file = "Data/hobo_t-chain_profiles.csv", row.names=FALSE)
    # If rows containing a "logged" event in datasheets were filtered out, this could explain the omission of this final measurement. 
 
 
-# Use full, processed t-chain profile dataset from Ellen instead
-# Read the file from the shared EDI submission folder on Box
-hobo_temp = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/temp_chains_hf.csv") %>%
-   # DOY variable has already been created
-   # data have already been filtered to days of the experiment (DOY 143-240)
-   # temperature data have already been converted to Celcius
-   # Site 19 is the deep point of the ponds (Ellen had 3 t-chains in each pond)
-   filter(site_id==19) %>%
-   select(-doy_frac, -site_id) %>%
-   rename(pond_id = pond, depth = temp_depth_m, temp = temp_c, date_time = datetime) %>%
-   relocate(pond_id)
+#- Create the 'hobo_temp' data set from the "data_import_EDI" script
 
 
 #---
@@ -430,9 +418,7 @@ write.csv(minidot, file = "Data/miniDOT_total.csv", row.names=FALSE)
 }
 
 
-# Data (from full, processed miniDOT dataset)
-# Read the file from the shared EDI submission folder on Box
-minidot = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/do_sensor_hf.csv")
+#- Create the 'minidot' data set from the "data_import_EDI" script
 
 
 #---
@@ -490,8 +476,7 @@ weather_data = weather_data %>%
    mutate(wind_z = rep_len(4, n()))
 
 
-# Read in full, processed weather data set from the shared EDI submission folder on Box
-weather_data = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/meteorological_pondStation.csv")
+#- Create the 'weather_data' data set from the "data_import_EDI" script
 
 
 #---
