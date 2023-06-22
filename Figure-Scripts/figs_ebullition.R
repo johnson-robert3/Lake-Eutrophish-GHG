@@ -4,6 +4,7 @@
 #~~~
 
 
+library(ggplot2)
 library(cowplot)
 library(patchwork)
 
@@ -11,7 +12,7 @@ source("Figure-Scripts/figs_functions.R")
 
 
 # dataset
-ebu_flux_pond = read_csv("Data/ebullition_total.csv")
+ebu_flux_pond = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/ghg_ebullition.csv")
 
 
 # bars
@@ -20,8 +21,8 @@ ggplot(ebu_flux_pond %>%
           left_join(pond_data) %>%
           group_by(trt_nutrients, doy) %>%
           summarize(n = n(),
-                    se_ebu = sd(ch4_ebu_flux)/sqrt(n),
-                    mean_ebu = mean(ch4_ebu_flux)) %>%
+                    se_ebu = sd(ch4_ebullitive_flux)/sqrt(n),
+                    mean_ebu = mean(ch4_ebullitive_flux)) %>%
           ungroup(),
        aes(x = doy, y = mean_ebu, group = trt_nutrients)) +
    #
@@ -48,8 +49,8 @@ ggplot(ebu_flux_pond %>%
           filter(trt_nutrients=="no") %>%
           group_by(doy) %>%
           summarize(n = n(),
-                    se = sd(ch4_ebu_flux)/sqrt(n),
-                    mean = mean(ch4_ebu_flux)) %>%
+                    se = sd(ch4_ebullitive_flux)/sqrt(n),
+                    mean = mean(ch4_ebullitive_flux)) %>%
           ungroup(),
        aes(x = doy, y = mean)) +
    geom_hline(yintercept=0, linetype=2) +
@@ -67,8 +68,8 @@ ggplot(ebu_flux_pond %>%
           filter(trt_nutrients=="yes") %>%
           group_by(doy) %>%
           summarize(n = n(),
-                    se = sd(ch4_ebu_flux)/sqrt(n),
-                    mean = mean(ch4_ebu_flux)) %>%
+                    se = sd(ch4_ebullitive_flux)/sqrt(n),
+                    mean = mean(ch4_ebullitive_flux)) %>%
           ungroup(),
        aes(x = doy, y = mean)) +
    geom_hline(yintercept=0, linetype=2) +
@@ -92,8 +93,8 @@ ggplot(ebu_flux_pond %>%
           filter(trt_nutrients=="no") %>%
           group_by(doy) %>%
           summarize(n = n(),
-                    se = sd(ch4_ebu_flux)/sqrt(n),
-                    mean = mean(ch4_ebu_flux)) %>%
+                    se = sd(ch4_ebullitive_flux)/sqrt(n),
+                    mean = mean(ch4_ebullitive_flux)) %>%
           ungroup(),
        aes(x = doy, y = mean)) +
    geom_errorbar(aes(ymin = mean - se, 
@@ -115,8 +116,8 @@ ggplot(ebu_flux_pond %>%
           filter(trt_nutrients=="yes") %>%
           group_by(doy) %>%
           summarize(n = n(),
-                    se = sd(ch4_ebu_flux)/sqrt(n),
-                    mean = mean(ch4_ebu_flux)) %>%
+                    se = sd(ch4_ebullitive_flux)/sqrt(n),
+                    mean = mean(ch4_ebullitive_flux)) %>%
           ungroup(),
        aes(x = doy, y = mean)) +
    geom_errorbar(aes(ymin = mean - se, 
@@ -142,8 +143,8 @@ windows(height=4, width=6); ggplot(ebu_flux_pond %>%
                      left_join(pond_data) %>%
                      group_by(trt_nutrients, doy) %>%
                      summarize(n = n(),
-                               se = sd(ch4_ebu_flux)/sqrt(n),
-                               mean = mean(ch4_ebu_flux)) %>%
+                               se = sd(ch4_ebullitive_flux)/sqrt(n),
+                               mean = mean(ch4_ebullitive_flux)) %>%
                      ungroup(),
                   aes(x = doy, y = mean, group = trt_nutrients)) +
    #
