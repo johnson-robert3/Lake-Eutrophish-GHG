@@ -149,7 +149,6 @@ write.csv(sonde_profiles, file = "Data/sonde-profiles_all-data_2022-07-20.csv", 
    ##
 }
 
-   
 #- Create the 'sonde_profiles' data set from the "data_import_EDI" script
    
 
@@ -222,14 +221,6 @@ sonde_bottom = sonde_int %>%
    ungroup()
 
 
-# alternative way for bottom water (using measured max depth)
-# sonde_bottom2 = sonde_profiles %>%
-#    group_by(pond_id, doy) %>%
-#    filter(vert_m <= max(vert_m) & vert_m >= (max(vert_m) - 0.30)) %>%
-#    summarize(across(temp:salinity, ~mean(., na.rm=T))) %>%
-#    ungroup()
-
-
 #---
 # HOBO T-chains
 #---
@@ -275,18 +266,6 @@ hobo_temp = tibble(file_name = hobo_files) %>%
 # output processed t-chain data file, so raw files don't need to be read in and processed each time
 write.csv(hobo_temp, file = "Data/hobo_t-chain_profiles.csv", row.names=FALSE)
 }
-
-
-# Data (from full, processed t-chain dataset)
-# hobo_temp = read_csv("Data/hobo_t-chain_profiles.csv")
-
-   # This t-chain dataset (hobo_temp), processed by me, contains one additional measurement not present in the dataset from Ellen
-   # Extra measurement is from:  2020-08-21 14:00:00, Pond F, 0.5m depth
-   # The logger at 0.5m in pond F stopped logging at this time and didn't make it through the end of the experiment
-   # This caused a "logged" event in the datasheet next to this temp measurement (at 14:00), which would normally be logged in
-   #  a new row, after the final temperature measurement (when logging is manually stopped)
-   # If rows containing a "logged" event in datasheets were filtered out, this could explain the omission of this final measurement. 
-
 
 #- Create the 'hobo_temp' data set from the "data_import_EDI" script
 
@@ -416,7 +395,6 @@ minidot = minidot %>%
 # output processed miniDOT data, so raw files don't need to be read in and processed each time
 write.csv(minidot, file = "Data/miniDOT_total.csv", row.names=FALSE)
 }
-
 
 #- Create the 'minidot' data set from the "data_import_EDI" script
 
