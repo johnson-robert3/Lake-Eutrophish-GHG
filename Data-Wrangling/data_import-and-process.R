@@ -412,10 +412,6 @@ alk_data = read_csv("Data/R-Data/2020_alkalinity-data.csv") %>%
           ph = pH)
 
 
-#- Create the 'alk_data' data set from the "data_import_EDI" script
-#  (Create if needed. But, alk data are only used to calculate dissolved CO2, and these data are already in the GHG data set)
-
-
 #---
 # Field Samples
 #---
