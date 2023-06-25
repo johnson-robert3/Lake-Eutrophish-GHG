@@ -93,11 +93,5 @@ read_csv("Data/miniDOT_total.csv") %>%
    write.csv(., file = "C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/do_sensor_hf.csv", row.names=FALSE)
 
 
-#- Alkalinity (used in dissolved CO2 concentration calculation)
-read_csv("Data/R-Data/2020_alkalinity-data.csv") %>%
-   select(pond_id = Pond, doy = DOY, alkalinity = Alkalinity, ph = pH) %>%
-   # output directly to the shared EDI submission folder in Box
-   write.csv(., file = "C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/alkalinity_ph.csv", row.names=FALSE)
-
 
 
