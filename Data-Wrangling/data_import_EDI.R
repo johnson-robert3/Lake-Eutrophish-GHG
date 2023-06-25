@@ -58,4 +58,7 @@ ebu_flux_pond = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submi
 metabolism = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/daily_metabolism.csv")
 
 
+#-- Alkalinity --#
+alk_data = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/alkalinity_ph.csv")
+
 
