@@ -47,7 +47,7 @@ ggplot(pdat,
    geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(NEP, na.rm=T)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) +
    #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    # scale_x_date(name = NULL, 
    #              breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
    #              labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
@@ -93,7 +93,7 @@ ggplot(pdat,
    geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(R, na.rm=T)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) +
    #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    # scale_x_date(name = NULL, 
    #              breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
    #              labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
@@ -138,7 +138,7 @@ ggplot(pdat,
    geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(GPP, na.rm=T)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) +
    #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    # scale_x_date(name = NULL, 
    #              breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
    #              labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 

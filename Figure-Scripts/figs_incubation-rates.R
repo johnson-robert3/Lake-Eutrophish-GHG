@@ -50,8 +50,8 @@ ggplot(fdat %>%
    #
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(Methanogenesis~(nmol~g^-1~h^-1)), limits = c(0, 15.5), breaks = seq(0, 15, 5)) +
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_fill_manual(name = NULL, breaks = nut_breaks, values = nut_color) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
+   scale_fill_manual(name = NULL, breaks = pulse_breaks, values = pulse_color) +
    #
    theme_classic() +
    theme(legend.position = c(0.15, 0.88),
@@ -90,8 +90,8 @@ ggplot(fdat %>%
    #
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(DEA~(nmol~g^-1~h^-1)), limits = c(0, 1.2), breaks = seq(0, 1.2, 0.3)) +
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_fill_manual(name = NULL, breaks = nut_breaks, values = nut_color) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
+   scale_fill_manual(name = NULL, breaks = pulse_breaks, values = pulse_color) +
    #
    theme_classic() +
    theme(legend.position = "none",
@@ -127,8 +127,8 @@ ggplot(fdat %>%
    #
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(CH[4]~ebullition~(mmol~m^2~d^-1)), limits = c(-0.5, 15), breaks = seq(0, 15, 5)) +
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_fill_manual(name = NULL, breaks = nut_breaks, values = nut_color) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
+   scale_fill_manual(name = NULL, breaks = pulse_breaks, values = pulse_color) +
    #
    theme_classic() +
    theme(legend.position = "none",
@@ -177,8 +177,8 @@ windows(height=4, width=6); ggplot(fdat %>%
    #
    scale_x_continuous(name = "Day of year") +
    scale_y_continuous(name = expression(Ebullition~(mmol~CH[4]~m^2~d^-1))) +
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_fill_manual(name = NULL, breaks = nut_breaks, values = nut_color) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
+   scale_fill_manual(name = NULL, breaks = pulse_breaks, values = pulse_color) +
    #
    theme_classic() +
    theme(legend.position = c(0.15, 0.88),
@@ -218,8 +218,8 @@ windows(height=4, width=6); ggplot(fdat %>%
    #
    scale_x_continuous(name = "Day of year") +
    scale_y_continuous(name = expression(Ebullition~(mmol~CH[4]~m^2~d^-1))) +
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_fill_manual(name = NULL, breaks = nut_breaks, values = nut_color) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
+   scale_fill_manual(name = NULL, breaks = pulse_breaks, values = pulse_color) +
    #
    theme_classic() +
    theme(legend.position = c(0.15, 0.88),
@@ -262,8 +262,8 @@ windows(height=4, width=6); ggplot(fdat %>%
    #
    scale_x_continuous(name = "Day of year") +
    scale_y_continuous(name = expression(Methanogenesis~potential~(nmol~g^-1~h^-1))) +
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_fill_manual(name = NULL, breaks = nut_breaks, values = nut_color) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
+   scale_fill_manual(name = NULL, breaks = pulse_breaks, values = pulse_color) +
    #
    theme_classic() +
    theme(legend.position = c(0.15, 0.88),
@@ -306,8 +306,8 @@ windows(height=4, width=6); ggplot(fdat %>%
    #
    scale_x_continuous(name = "Day of year") +
    scale_y_continuous(name = expression(Methanogenesis~potential~(nmol~g^-1~h^-1))) +
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_fill_manual(name = NULL, breaks = nut_breaks, values = nut_color) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
+   scale_fill_manual(name = NULL, breaks = pulse_breaks, values = pulse_color) +
    #
    theme_classic() +
    theme(legend.position = c(0.15, 0.88),
@@ -350,8 +350,8 @@ windows(height=4, width=6); ggplot(fdat %>%
    #
    scale_x_continuous(name = "Day of year") +
    scale_y_continuous(name = expression(DEA~(nmol~g^-1~h^-1))) +
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_fill_manual(name = NULL, breaks = nut_breaks, values = nut_color) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
+   scale_fill_manual(name = NULL, breaks = pulse_breaks, values = pulse_color) +
    #
    theme_classic() +
    theme(legend.position = c(0.86, 0.88),
@@ -394,8 +394,8 @@ windows(height=4, width=6); ggplot(fdat %>%
    #
    scale_x_continuous(name = "Day of year") +
    scale_y_continuous(name = expression(DEA~(nmol~g^-1~h^-1))) +
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
-   scale_fill_manual(name = NULL, breaks = nut_breaks, values = nut_color) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
+   scale_fill_manual(name = NULL, breaks = pulse_breaks, values = pulse_color) +
    #
    theme_classic() +
    theme(legend.position = c(0.23, 0.9),

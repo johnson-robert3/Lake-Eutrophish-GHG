@@ -189,7 +189,7 @@ ggplot(fdat %>%
    # treatment mean (loess smooth)
    geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
    #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    # scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
    scale_x_date(name = NULL, 
                 breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
@@ -241,7 +241,7 @@ ggplot(fdat %>%
    # treatment mean (loess smooth)
    # geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
    #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    # scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
    scale_x_date(name = NULL, 
                 breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
@@ -305,7 +305,7 @@ ggplot(fdat %>%
    # treatment mean (loess smooth)
    geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
    #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    # scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
    scale_x_date(name = NULL, 
                 breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')),
@@ -359,7 +359,7 @@ ggplot(fdat %>%
    # treatment mean (loess smooth)
    # geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
    #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    # scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
    scale_x_date(name = NULL,
                 breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')),
@@ -429,7 +429,7 @@ ggplot(fdat %>%
    # treatment mean (loess smooth)
    geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=1, se=F, span=0.15) +
    #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    # scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
    scale_x_date(name = NULL, 
                 breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 

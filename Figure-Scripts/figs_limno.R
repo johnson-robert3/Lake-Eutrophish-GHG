@@ -53,7 +53,7 @@ ggplot(pdat,
    # treatment mean (loess smooth)
    geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
    #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_date(name = NULL, 
                 breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
                 labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
@@ -103,7 +103,7 @@ ggplot(pdat,
    geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(do, na.rm=T)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) + 
    #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    # scale_x_date(name = NULL, 
    #              breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
    #              labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
@@ -142,7 +142,7 @@ ggplot(pdat,
    geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(bottom_do, na.rm=T)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) + 
    #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    # scale_x_date(name = NULL, 
    #              breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
    #              labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
@@ -192,7 +192,7 @@ ggplot(fdat %>%
    # treatment mean (loess smooth)
    geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
    #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(DOC~(mg~L^-1)),
                       limits = c(0, 50), breaks = seq(0, 50, 10)) +
@@ -279,7 +279,7 @@ ggplot(pdat %>% filter(!(is.na(tn))),
    geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(tn, na.rm=T)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) + 
    #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(TN~(mg~L^-1)), limits = c(0, 1)) +
    # ggtitle("Total Nitrogen") +
@@ -308,7 +308,7 @@ ggplot(fdat %>% filter(!(is.na(nox))) %>% left_join(pond_data),
    # treatment mean (loess smooth)
    geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
    #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "Day of year", limits = c(140, 245), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(NO[x]~(mg~L^-1)), limits = c(0, 0.4)) +
    #
@@ -347,7 +347,7 @@ ggplot(pdat %>% filter(!(is.na(tp))),
    geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(tp, na.rm=T)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) + 
    #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(TP~(mu*g~L^-1)), limits = c(0, 250)) +
    # ggtitle("Total Phosphorus") +
@@ -378,7 +378,7 @@ ggplot(pdat %>% filter(!(is.na(srp))),
    # treatment mean (loess smooth)
    geom_smooth(aes(color = trt_nutrients), size=1.5, alpha=0.8, se=F, span=0.15) +
    #
-   scale_color_manual(name = NULL, breaks = nut_breaks, values = nut_color, labels = nut_labs) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_date(name = NULL, 
                 breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
                 labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
