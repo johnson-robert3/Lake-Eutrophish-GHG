@@ -64,11 +64,6 @@ fig_theme = function(.fig) {
          axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
 }
 
-# treatment colors and labels
-t_breaks = c("yes", "no") 
-t_cols = c("yes" = "#5D3891", "no" = "#F99417") # pulse-purple, ref-orange
-t_labs = c("yes" = "Pulsed", "no" = "Reference")
-
 
 ## CH4
 windows(height=3.5, width=5)
@@ -89,7 +84,7 @@ ggplot(fdat %>%
    geom_line(data = ~ .x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(ch4_flux)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) +
    #
-   scale_color_manual(name = NULL, breaks = t_breaks, values = t_cols, labels = t_labs) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^-1)), breaks = seq(0, 60, 10)) +
    coord_cartesian(ylim = c(0, 60), clip = "off") +
@@ -121,7 +116,7 @@ ggplot(fdat %>%
    geom_line(data = ~ .x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(n2o_flux)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) +
    #
-   scale_color_manual(name = NULL, breaks = t_breaks, values = t_cols, labels = t_labs) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), breaks = seq(-4, 3, 1)) +
    coord_cartesian(ylim = c(-4, 3), clip = "off") +
@@ -151,7 +146,7 @@ ggplot(fdat %>%
    geom_line(data = ~ .x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(co2_flux)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) +
    #
-   scale_color_manual(name = NULL, breaks = t_breaks, values = t_cols, labels = t_labs) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(CO[2]~flux~(mmol~m^-2~d^-1)), breaks = seq(0, 250, 50)) +
    coord_cartesian(ylim = c(-20, 250), clip = "off") +

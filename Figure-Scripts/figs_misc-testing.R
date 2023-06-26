@@ -29,8 +29,8 @@ ggplot(fdat %>% filter(!(is.na(n2o_flux))) %>%
    #
    geom_hline(yintercept = 0, linetype=2, color="gray50") +
    #
-   # scale_fill_manual(name = NULL, breaks = t_breaks, values = t_cols, labels = t_labs) +
-   scale_color_manual(name = NULL, breaks = t_breaks, values = t_cols, labels = t_labs) +   # t_breaks, cols, and labs from "figs_diffusive-flux" script
+   # scale_fill_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    theme_classic() +
    theme(legend.position = "none")
 
