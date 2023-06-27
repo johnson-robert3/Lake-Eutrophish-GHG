@@ -39,6 +39,12 @@ minidot = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/
 weather_data = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/meteorological_pondStation.csv")
 
 
+#-- Nutrients --# 
+limno_field_data = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/surface_nutrients_chla.csv") %>%
+   # select just the TP, TN, SRP, and NOx data
+   select(-contains("chla"), -contains("nhx"))
+
+
 #-- GHG Concentration and Flux --# 
 lake_flux = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/ghg_diffusive_flux.csv") %>%
    # change variable names back to originals, so they match and work across scripts
