@@ -425,6 +425,9 @@ limno_field_data = read_csv("Data/R-Data/2020_limno-field-data.csv") %>%
           phyco_filter = phycofil)
 
 
+#- Create the 'limno_field_data' data set from the "data_import_EDI" script
+
+
 #---
 #### Weather Data ####
 #---
