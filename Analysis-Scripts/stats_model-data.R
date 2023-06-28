@@ -7,7 +7,6 @@
 
 # Load packages
 if (!require(tidyverse)) install.packages('tidyverse'); library(tidyverse)
-if (!require(lubridate)) install.packages('lubridate'); library(lubridate)
 
 
 

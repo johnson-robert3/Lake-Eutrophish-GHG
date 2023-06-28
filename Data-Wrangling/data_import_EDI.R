@@ -7,9 +7,8 @@
 #~~~
 
 
-library(readr)
-library(dplyr)
-library(lubridate)
+# Load packages
+if (!require(tidyverse)) install.packages('tidyverse'); library(tidyverse)
 
 
 # Read in data from the shared EDI submission folder on Box

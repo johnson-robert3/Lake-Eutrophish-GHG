@@ -6,11 +6,8 @@
 
 
 library(tidyverse)
-library(lubridate)
 library(cowplot)
 library(patchwork)
-# library(slider)
-# library(viridis)
 
 source("Figure-Scripts/figs_functions.R")
 
@@ -222,7 +219,7 @@ ggplot(fdat %>%
           # linearly interpolate CH4 flux for days without measurements
           mutate(ch4_interp = zoo::na.approx(ch4_flux)) %>%
           # cumulative flux during experiment
-          mutate(ch4_net = slide_dbl(ch4_interp, ~sum(.), .before=Inf)) %>%
+          mutate(ch4_net = slider::slide_dbl(ch4_interp, ~sum(.), .before=Inf)) %>%
           ungroup() %>%
           left_join(pond_data),
        aes(x = date, y = ch4_net)) +
@@ -340,7 +337,7 @@ ggplot(fdat %>%
           # linearly interpolate CH4 flux for days without measurements
           mutate(n2o_interp = zoo::na.approx(n2o_flux)) %>%
           # cumulative flux during experiment
-          mutate(n2o_net = slide_dbl(n2o_interp, ~sum(.), .before=Inf)) %>%
+          mutate(n2o_net = slider::slide_dbl(n2o_interp, ~sum(.), .before=Inf)) %>%
           ungroup() %>%
           left_join(pond_data),
        aes(x = date, y = n2o_net)) +
