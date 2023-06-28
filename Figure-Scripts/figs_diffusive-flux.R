@@ -732,7 +732,8 @@ ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
    ylab(expression(CH[4]~difference)) +
    #
-   theme_classic() %>%
+   theme_classic() +
+   theme(plot.margin = unit(c(1.25,0.5,0,0.5), "lines")) %>%
    fig_theme()
 
 
@@ -759,7 +760,8 @@ ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
    ylab(expression(N[2]*O~difference)) +
    #
-   theme_classic() %>%
+   theme_classic() +
+   theme(plot.margin = unit(c(1.25,0.5,0,0.5), "lines")) %>%
    fig_theme()
 
 
@@ -785,12 +787,13 @@ ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
    ylab(expression(CO[2]~difference)) +
    #
-   theme_classic() %>%
+   theme_classic() +
+   theme(plot.margin = unit(c(1.25,0.5,0.5,0.5), "lines")) %>%
    fig_theme()
 
 
 windows(height=3.5*3, width=5) #; md/nd/cd
-plot_grid(md, nd, cd, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99, label_x=0.01)
+plot_grid(md, nd, cd, ncol=1, align='v', labels=c('D', 'E', 'F'), label_size=13, label_y=0.99, label_x=0.01)
 
 
 # ggsave(file = "diffusive-flux_treatment-difference.png", height=3.5*3, width=5, units='in')
