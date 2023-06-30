@@ -66,8 +66,7 @@ fig_theme = function(.fig) {
 windows(height=3.5, width=5)
 m =
 ggplot(fdat %>%
-          filter(!(is.na(ch4_flux))) %>%
-          left_join(pond_data), 
+          filter(!(is.na(ch4_flux))), 
        aes(x = doy, y = ch4_flux)) %>%
    
    # add analysis windows
@@ -98,8 +97,7 @@ n =
 ggplot(fdat %>%
           filter(!(is.na(n2o_flux))) %>%
           # convert from mmol to umol
-          mutate(n2o_flux = n2o_flux * 1000) %>%
-          left_join(pond_data), 
+          mutate(n2o_flux = n2o_flux * 1000), 
        aes(x = doy, y = n2o_flux)) %>%
    
    # add analysis windows
@@ -128,8 +126,7 @@ ggplot(fdat %>%
 windows(height=3.5, width=5)
 c =
 ggplot(fdat %>%
-          filter(!(is.na(co2_flux))) %>%
-          left_join(pond_data), 
+          filter(!(is.na(co2_flux))), 
        aes(x = doy, y = co2_flux)) %>%
    
    # add analysis windows
@@ -168,8 +165,7 @@ plot_grid(m, n, c, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99
 ## Diffusive flux
 windows(height=4, width=5.5)
 ggplot(fdat %>%
-          filter(!(is.na(ch4_flux))) %>%
-          left_join(pond_data), 
+          filter(!(is.na(ch4_flux))), 
        aes(x = date, y = ch4_flux)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
@@ -220,8 +216,7 @@ ggplot(fdat %>%
           mutate(ch4_interp = zoo::na.approx(ch4_flux)) %>%
           # cumulative flux during experiment
           mutate(ch4_net = slider::slide_dbl(ch4_interp, ~sum(.), .before=Inf)) %>%
-          ungroup() %>%
-          left_join(pond_data),
+          ungroup(),
        aes(x = date, y = ch4_net)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
@@ -257,11 +252,11 @@ ggplot(fdat %>%
 
 ## Time-series difference between pulsed and reference flux
 windows(height=4, width=5.5)
-ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
+ggplot(fdat %>%
           filter(!(is.na(ch4_flux))) %>%
           group_by(trt_nutrients, doy) %>% summarize(mean = mean(ch4_flux)) %>% ungroup() %>%
           pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
-          mutate(diff = yes - no)) +
+          mutate(diff = pulsed - reference)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    geom_vline(xintercept = c(176.5, 211.5), linetype=2, color="gray40") +
@@ -284,8 +279,7 @@ windows(height=4, width=5.5)
 ggplot(fdat %>%
           filter(!(is.na(n2o_flux))) %>%
           # convert from mmol to umol
-          mutate(n2o_flux = n2o_flux * 1000) %>%
-          left_join(pond_data), 
+          mutate(n2o_flux = n2o_flux * 1000), 
        aes(x = date, y = n2o_flux)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
@@ -338,8 +332,7 @@ ggplot(fdat %>%
           mutate(n2o_interp = zoo::na.approx(n2o_flux)) %>%
           # cumulative flux during experiment
           mutate(n2o_net = slider::slide_dbl(n2o_interp, ~sum(.), .before=Inf)) %>%
-          ungroup() %>%
-          left_join(pond_data),
+          ungroup(),
        aes(x = date, y = n2o_net)) +
    #
    geom_hline(yintercept=0, linetype=2, color="gray60", size=1) +
@@ -375,12 +368,12 @@ ggplot(fdat %>%
 
 ## Time-series difference between pulsed and reference flux
 windows(height=4, width=5.5)
-ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
+ggplot(fdat %>%
           filter(!(is.na(n2o_flux))) %>%
           mutate(n2o_flux = n2o_flux * 1000) %>%
           group_by(trt_nutrients, doy) %>% summarize(mean = mean(n2o_flux)) %>% ungroup() %>%
           pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
-          mutate(diff = yes - no)) +
+          mutate(diff = pulsed - reference)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    geom_vline(xintercept = c(176.5, 211.5), linetype=2, color="gray40") +
@@ -401,8 +394,7 @@ ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
 ## Diffusive flux
 windows(height=4, width=5.5)
 ggplot(fdat %>%
-          filter(!(is.na(co2_flux))) %>%
-          left_join(pond_data), 
+          filter(!(is.na(co2_flux))), 
        aes(x = date, y = co2_flux)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
@@ -443,11 +435,11 @@ ggplot(fdat %>%
 
 ## Time-series difference between pulsed and reference flux
 windows(height=4, width=5.5)
-ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
+ggplot(fdat %>%
           filter(!(is.na(co2_flux))) %>%
           group_by(trt_nutrients, doy) %>% summarize(mean = mean(co2_flux)) %>% ungroup() %>%
           pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
-          mutate(diff = yes - no)) +
+          mutate(diff = pulsed - reference)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    geom_vline(xintercept = c(176.5, 211.5), linetype=2, color="gray40") +
@@ -469,8 +461,7 @@ ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
 # windows(height=4, width=5.5)
 a =
 ggplot(fdat %>%
-          filter(!(is.na(ch4_flux)), treatment=="pulsed") %>%
-          left_join(pond_data), 
+          filter(!(is.na(ch4_flux)), treatment=="pulsed"), 
        aes(x = date, y = ch4_flux)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
@@ -504,8 +495,7 @@ ggplot(fdat %>%
 # windows(height=4, width=5.5)
 d =
 ggplot(fdat %>%
-          filter(!(is.na(ch4_flux)), treatment=="reference") %>%
-          left_join(pond_data), 
+          filter(!(is.na(ch4_flux)), treatment=="reference"), 
        aes(x = date, y = ch4_flux)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
@@ -543,8 +533,7 @@ b =
 ggplot(fdat %>%
           filter(!(is.na(n2o_flux)), treatment=="pulsed") %>%
           # convert from mmol to umol
-          mutate(n2o_flux = n2o_flux * 1000) %>%
-          left_join(pond_data), 
+          mutate(n2o_flux = n2o_flux * 1000), 
        aes(x = date, y = n2o_flux)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
@@ -580,8 +569,7 @@ e =
 ggplot(fdat %>%
           filter(!(is.na(n2o_flux)), treatment=="reference") %>%
           # convert from mmol to umol
-          mutate(n2o_flux = n2o_flux * 1000) %>%
-          left_join(pond_data), 
+          mutate(n2o_flux = n2o_flux * 1000), 
        aes(x = date, y = n2o_flux)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
@@ -616,8 +604,7 @@ ggplot(fdat %>%
 # windows(height=4, width=5.5)
 c = 
 ggplot(fdat %>%
-          filter(!(is.na(co2_flux)), treatment=="pulsed") %>%
-          left_join(pond_data), 
+          filter(!(is.na(co2_flux)), treatment=="pulsed"), 
        aes(x = date, y = co2_flux)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
@@ -650,8 +637,7 @@ ggplot(fdat %>%
 # windows(height=4, width=5.5)
 f =
 ggplot(fdat %>%
-          filter(!(is.na(co2_flux)), treatment=="reference") %>%
-          left_join(pond_data), 
+          filter(!(is.na(co2_flux)), treatment=="reference"), 
        aes(x = date, y = co2_flux)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
@@ -696,7 +682,7 @@ windows(height=8, width=14)
 
 # CH4
 
-windows(); ggplot(fdat %>% filter(!(is.na(ch4_flux))) %>% left_join(pond_data)) +
+windows(); ggplot(fdat %>% filter(!(is.na(ch4_flux)))) +
    #
    # geom_histogram(aes(x = ch4_flux, fill = trt_nutrients), position = "dodge") +
    # geom_freqpoly(aes(x = ch4_flux, color = trt_nutrients)) +
@@ -713,11 +699,11 @@ windows(); ggplot(fdat %>% filter(!(is.na(ch4_flux))) %>% left_join(pond_data)) 
 # Methane
 windows(height=4, width=5.5)
 md =
-ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
+ggplot(fdat %>%
           filter(!(is.na(ch4_flux))) %>%
           group_by(trt_nutrients, doy) %>% summarize(mean = mean(ch4_flux)) %>% ungroup() %>%
           pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
-          mutate(diff = yes - no)) +
+          mutate(diff = pulsed - reference)) +
    #
    geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
    geom_vline(xintercept = 223, linetype=2, color="gray40") +
@@ -739,13 +725,13 @@ ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
 
 # Nitrous oxide
 windows(height=4, width=5.5)
-nd = 
-ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
+nd =
+ggplot(fdat %>%
           filter(!(is.na(n2o_flux))) %>%
           mutate(n2o_flux = n2o_flux * 1000) %>%
           group_by(trt_nutrients, doy) %>% summarize(mean = mean(n2o_flux)) %>% ungroup() %>%
           pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
-          mutate(diff = yes - no)) +
+          mutate(diff = pulsed - reference)) +
    #
    geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
    geom_vline(xintercept = 223, linetype=2, color="gray40") +
@@ -768,11 +754,11 @@ ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
 # Carbon dioxide
 windows(height=4, width=5.5)
 cd =
-ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
+ggplot(fdat %>%
           filter(!(is.na(co2_flux))) %>%
           group_by(trt_nutrients, doy) %>% summarize(mean = mean(co2_flux)) %>% ungroup() %>%
           pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
-          mutate(diff = yes - no)) +
+          mutate(diff = pulsed - reference)) +
    #
    geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
    geom_vline(xintercept = 223, linetype=2, color="gray40") +
