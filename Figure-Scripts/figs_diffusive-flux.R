@@ -785,3 +785,14 @@ plot_grid(md, nd, cd, ncol=1, align='v', labels=c('D', 'E', 'F'), label_size=13,
 # ggsave(file = "diffusive-flux_treatment-difference.png", height=3.5*3, width=5, units='in')
 
 
+
+
+#-- Diffusive flux time-series and treatment difference together in 1 figure --#
+
+windows(height = 3.5*3, width = 5*2)
+plot_grid(m, n, c, md, nd, cd, ncol=2, align="v", byrow=FALSE, labels=c(LETTERS[1:6]), label_size=13, label_y=0.99, label_x=0.03)
+
+
+# ggsave(file = "diffusive-flux_ts-and-diff.png", height = 3.5*3, width = 5*2, units='in')
+
+
