@@ -8,13 +8,13 @@
 
 # Nutrient treatment
 
-pulse_breaks = c("yes", "no")
+pulse_breaks = c("pulsed", "reference")
 # nut_breaks = c("yes", "no")
 
-pulse_color = c("yes" = "#5D3891", "no" = "#F99417") # pulse = purple, ref = orange
+pulse_color = c("pulsed" = "#5D3891", "reference" = "#F99417") # pulse = purple, ref = orange
 # nut_color = c("yes" = "#5D3891", "no" = "#F99417") # pulse-purple, ref-orange
 
-pulse_labs = c("yes" = "Pulsed", "no" = "Reference")
+pulse_labs = c("pulsed" = "Pulsed", "reference" = "Reference")
 # nut_labs = c("yes" = "Pulsed", "no" = "Reference")
 
 # nut_color = c("yes" = "seagreen3", "no" = "cornflowerblue")
