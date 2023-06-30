@@ -15,11 +15,19 @@ if (!require(tidyverse)) install.packages('tidyverse'); library(tidyverse)
 # Full data set
 fdat = read_csv("Data/ghg-model-dataset_2023-03-21.csv") %>%
    # force date format (sometimes date format can be weird coming from Excel)
-   mutate(date = ymd(date))
+   mutate(date = ymd(date)) %>%
+   # add nutrient and foodweb treatment identifiers
+   mutate(trt_nutrients = case_when(pond_id %in% c("A", "B", "C") ~ "pulsed",
+                                    pond_id %in% c("D", "E", "F") ~ "reference"),
+          trt_fish = case_when(pond_id %in% c("B", "F") ~ "low",
+                               pond_id %in% c("A", "D") ~ "medium",
+                               pond_id %in% c("C", "E") ~ "high"))
 
 
-# Pond/Site Data
-pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
+# Pond/Site Data (create if needed, since lots of older code still calls this)
+pond_data = tibble(pond_id = c('A', 'B', 'C', 'D', 'E', 'F'),
+                   trt_nutrients = rep(c("yes", "no"), each=3),
+                   trt_fish = c('medium', 'low', 'high', 'medium', 'high', 'low'))
 
 
 
