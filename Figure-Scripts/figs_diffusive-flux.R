@@ -705,8 +705,8 @@ ggplot(fdat %>%
           pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
           mutate(diff = pulsed - reference)) +
    #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
-   geom_vline(xintercept = 223, linetype=2, color="gray40") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray50") +
+   geom_vline(xintercept = 223, linetype=2, color="gray50") +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    #
@@ -733,8 +733,8 @@ ggplot(fdat %>%
           pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
           mutate(diff = pulsed - reference)) +
    #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
-   geom_vline(xintercept = 223, linetype=2, color="gray40") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray50") +
+   geom_vline(xintercept = 223, linetype=2, color="gray50") +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    #
@@ -760,8 +760,8 @@ ggplot(fdat %>%
           pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
           mutate(diff = pulsed - reference)) +
    #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
-   geom_vline(xintercept = 223, linetype=2, color="gray40") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray50") +
+   geom_vline(xintercept = 223, linetype=2, color="gray50") +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    #
@@ -790,7 +790,7 @@ plot_grid(md, nd, cd, ncol=1, align='v', labels=c('D', 'E', 'F'), label_size=13,
 #-- Diffusive flux time-series and treatment difference together in 1 figure --#
 
 windows(height = 3.5*3, width = 5*2)
-plot_grid(m, n, c, md, nd, cd, ncol=2, align="v", byrow=FALSE, labels=c(LETTERS[1:6]), label_size=13, label_y=0.99, label_x=0.03)
+plot_grid(m, n, c, md, nd, cd, ncol=2, align="v", byrow=FALSE, labels="AUTO", label_size=13, label_y=0.99, label_x=0.03)
 
 
 # ggsave(file = "diffusive-flux_ts-and-diff.png", height = 3.5*3, width = 5*2, units='in')
