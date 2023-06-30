@@ -76,10 +76,10 @@ ggplot(fdat %>%
    # zero line
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.5) +
    # treatment mean 
    geom_line(data = ~ .x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(ch4_flux)) %>% ungroup(),
-             aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) +
+             aes(x = doy, y = mean, color = trt_nutrients), linewidth=1.3, alpha=1) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
@@ -108,10 +108,10 @@ ggplot(fdat %>%
    # zero line
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.5) +
    # treatment mean 
    geom_line(data = ~ .x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(n2o_flux)) %>% ungroup(),
-             aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) +
+             aes(x = doy, y = mean, color = trt_nutrients), linewidth=1.3, alpha=1) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
@@ -138,10 +138,10 @@ ggplot(fdat %>%
    # zero line
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.5) +
    # treatment mean 
    geom_line(data = ~ .x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(co2_flux)) %>% ungroup(),
-             aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) +
+             aes(x = doy, y = mean, color = trt_nutrients), linewidth=1.3, alpha=1) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
@@ -727,7 +727,7 @@ ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
    geom_line(aes(x = doy, y = diff)) +
    geom_point(aes(x = doy, y = diff), size=2) +
    #
-   # stat_smooth(aes(x = doy, y = diff), geom="line", size=1.25, span=0.25, alpha=0.9, color="#38A3A5") +
+   # stat_smooth(aes(x = doy, y = diff), geom="line", linewidth=1.25, span=0.25, alpha=0.9, color="#38A3A5") +
    #
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
    ylab(expression(CH[4]~difference)) +
@@ -755,7 +755,7 @@ ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
    geom_line(aes(x = doy, y = diff)) +
    geom_point(aes(x = doy, y = diff), size=2) +
    #
-   # stat_smooth(aes(x = doy, y = diff), geom="line", size=1.25, span=0.25, alpha=0.9, color="#38A3A5") +
+   # stat_smooth(aes(x = doy, y = diff), geom="line", linewidth=1.25, span=0.25, alpha=0.9, color="#38A3A5") +
    #
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
    ylab(expression(N[2]*O~difference)) +
@@ -782,7 +782,7 @@ ggplot(fdat %>% left_join(pond_data %>% select(pond_id, starts_with("trt"))) %>%
    geom_line(aes(x = doy, y = diff)) +
    geom_point(aes(x = doy, y = diff), size=2) +
    #
-   # stat_smooth(aes(x = doy, y = diff), geom="line", size=1.25, span=0.25, alpha=0.9, color="#38A3A5") +
+   # stat_smooth(aes(x = doy, y = diff), geom="line", linewidth=1.25, span=0.25, alpha=0.9, color="#38A3A5") +
    #
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
    ylab(expression(CO[2]~difference)) +
