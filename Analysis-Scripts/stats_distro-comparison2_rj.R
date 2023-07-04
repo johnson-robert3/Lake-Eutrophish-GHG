@@ -320,8 +320,13 @@ for(var in varlist.main){
 
 
 
+# pal <- colorRampPalette(colors=c("red","white","blue"))
+# pal <- colorRampPalette(colors=c('#009392', '#72aaa1', '#b1c7b3', '#f1eac8', '#e5b9ad', '#d98994', '#d0587e'))  # TealRose
+# pal <- colorRampPalette(colors=c('#009B9E','#42B7B9','#A7D3D4','#F1F1F1','#E4C1D9','#D691C1','#C75DAB'))  # Tropic
+# pal <- colorRampPalette(colors=c('#A16928','#bd925a','#d6bd8d','#edeac2','#b5c8b8','#79a7ac','#2887a1'))  # Earth
 
-pal <- colorRampPalette(colors=c("red","white","blue"))
+pal <- colorRampPalette(colors=c('#009392', '#fdfbe4', '#d0587e')) 
+
 prettyNames <- c(expression('CH'['4']~'flux'),
                  expression('N'['2']*'O'~'flux'),
                  expression('CO'['2']~'flux'),
@@ -349,18 +354,20 @@ aty2 <- rep(1:length(varlist.main), times=4)
 
 # png("event_quantiles_rj_absR.png", res=300, units="in", width=6.5, height=6.5)
 # png("event_quantiles_rj_absR_comp1-window-update.png", res=300, units="in", width=6.5, height=6.5)
-png("event_quantiles_rj_absR_comp1-prev-times-only.png", res=300, units="in", width=6.5, height=6.5)
+png("event_quantiles_rj_absR_comp1-prev-times-only.png", res=300, units="in", width=6.5, height=4.5)
+
+# windows(height = 4.5, width = 6.5)
 
 layout(matrix(1:3, ncol=3), widths=c(0.45,0.45,0.15))
-par(mar=c(6.1,1.1,2.1,0.6), oma=c(0,6,0,2), mgp=c(2.5,1,0))
+par(mar=c(6.1,1.1,3.1,0.6), oma=c(0,6,0,2), mgp=c(2.5,1,0))
 
 # Comparison 1
 image(x=1:4, y=1:length(varlist.main), z=t(result_otherTimes)[,rev(1:length(varlist.main))], col=pal(21), zlim=c(0,1),
       xaxt="n", yaxt="n", xlab="", ylab="")
 axis(1, at=1:4, labels=c("Pulse 1", "Heat event", "Pulse 2", "Derecho"), las=2)
 axis(2, at=1:length(varlist.main), labels=rev(prettyNames), las=2)
-mtext("Comparison vs. other times", cex=3/4, line=0.2)
-mtext(expression(bold("A)")), cex=3/4, at=0.5, line=0.2)
+mtext("Comparison to prior \nwindows in pulsed ponds", cex=3/4, line=0.2)
+mtext(expression(bold("A)")), cex=3/4, at=0.35, line=0.2)
 abline(h=c(2,6,9)+0.5)
 text(atx, aty, round(c(result_otherTimes), 2))
 
@@ -369,8 +376,8 @@ image(x=1:4, y=1:length(varlist.main), z=t(result_refPonds)[,rev(1:length(varlis
       xaxt="n", yaxt="n", xlab="", ylab="")
 axis(1, at=1:4, labels=c("Pulse 1", "Heat event", "Pulse 2", "Derecho"), las=2)
 axis(2, at=1:length(varlist.main), labels=NA, las=2)
-mtext("Comparison vs. reference ponds", cex=3/4, line=0.2)
-mtext(expression(bold("B)")), cex=3/4, at=0.5, line=0.2)
+mtext("Comparison to overlapping \nwindows in reference ponds", cex=3/4, line=0.2)
+mtext(expression(bold("B)")), cex=3/4, at=0.35, line=0.2)
 abline(h=c(2,6,9)+0.5)
 text(atx, aty, round(c(result_refPonds), 2))
 
@@ -382,39 +389,47 @@ mtext("Values < comparison", side=4, at=0.1, line=0.75, cex=3/4)
 dev.off()
 
 
+# Create boxplot and histogram examples as demonstrations to accompany comparison quantile figure
+
+# set the variable list used by the function to only the example variable
+varlist.main = c("n2o_flux")
+
+
+
+
+
+
 ## plot all time series
-
-
-pdf("all_timeseries.pdf", onefile=TRUE)
-
-for(var in varlist.main){
-  
-  tmp <- data_matrices[[var]]
-  
-  plot(NA, NA , xlim=range(time_doy), ylim=range(tmp, na.rm=T),
-       xlab="doy", ylab=var)
-  
-  rect(xleft=min(pulse1), xright=max(pulse1), ybottom=par("usr")[3], ytop=par("usr")[4], col="grey", border=NA) # pulse 1
-  rect(xleft=min(heatwave), xright=max(heatwave), ybottom=par("usr")[3], ytop=par("usr")[4], col="grey", border=NA) # heatwave
-  rect(xleft=min(pulse2), xright=max(pulse2), ybottom=par("usr")[3], ytop=par("usr")[4], col="grey", border=NA) # pulse 2
-  rect(xleft=min(derecho), xright=max(derecho), ybottom=par("usr")[3], ytop=par("usr")[4], col="grey", border=NA) # derecho
-  axis(side=3, at=c(mean(pulse1),mean(heatwave),mean(pulse2),mean(derecho)), tick=FALSE, labels=c("P1","H","P2","D"), line=-0.7, cex.axis=0.9, gap.axis=0)
-  
-  
-  lines(time_doy[!is.na(tmp[1,])], tmp[1,!is.na(tmp[1,])], col=t_col("purple"))
-  lines(time_doy[!is.na(tmp[2,])], tmp[2,!is.na(tmp[2,])], col=t_col("purple"))
-  lines(time_doy[!is.na(tmp[3,])], tmp[3,!is.na(tmp[3,])], col=t_col("purple"))
-  lines(time_doy[!is.na(tmp[4,])], tmp[4,!is.na(tmp[4,])], col=t_col("orange"))
-  lines(time_doy[!is.na(tmp[5,])], tmp[5,!is.na(tmp[5,])], col=t_col("orange"))
-  lines(time_doy[!is.na(tmp[6,])], tmp[6,!is.na(tmp[6,])], col=t_col("orange"))
-  lines(time_doy[!is.na(colMeans(tmp[pulse_ponds,]))], colMeans(tmp[pulse_ponds,])[!is.na(colMeans(tmp[pulse_ponds,]))], col="purple", lwd=2)
-  lines(time_doy[!is.na(colMeans(tmp[ref_ponds,]))], colMeans(tmp[ref_ponds,])[!is.na(colMeans(tmp[ref_ponds,]))], col="orange", lwd=2)
-  
-  
-  mtext(var, line=2)
-  
-}
-
-dev.off()
+# pdf("all_timeseries.pdf", onefile=TRUE)
+# 
+# for(var in varlist.main){
+#   
+#   tmp <- data_matrices[[var]]
+#   
+#   plot(NA, NA , xlim=range(time_doy), ylim=range(tmp, na.rm=T),
+#        xlab="doy", ylab=var)
+#   
+#   rect(xleft=min(pulse1), xright=max(pulse1), ybottom=par("usr")[3], ytop=par("usr")[4], col="grey", border=NA) # pulse 1
+#   rect(xleft=min(heatwave), xright=max(heatwave), ybottom=par("usr")[3], ytop=par("usr")[4], col="grey", border=NA) # heatwave
+#   rect(xleft=min(pulse2), xright=max(pulse2), ybottom=par("usr")[3], ytop=par("usr")[4], col="grey", border=NA) # pulse 2
+#   rect(xleft=min(derecho), xright=max(derecho), ybottom=par("usr")[3], ytop=par("usr")[4], col="grey", border=NA) # derecho
+#   axis(side=3, at=c(mean(pulse1),mean(heatwave),mean(pulse2),mean(derecho)), tick=FALSE, labels=c("P1","H","P2","D"), line=-0.7, cex.axis=0.9, gap.axis=0)
+#   
+#   
+#   lines(time_doy[!is.na(tmp[1,])], tmp[1,!is.na(tmp[1,])], col=t_col("purple"))
+#   lines(time_doy[!is.na(tmp[2,])], tmp[2,!is.na(tmp[2,])], col=t_col("purple"))
+#   lines(time_doy[!is.na(tmp[3,])], tmp[3,!is.na(tmp[3,])], col=t_col("purple"))
+#   lines(time_doy[!is.na(tmp[4,])], tmp[4,!is.na(tmp[4,])], col=t_col("orange"))
+#   lines(time_doy[!is.na(tmp[5,])], tmp[5,!is.na(tmp[5,])], col=t_col("orange"))
+#   lines(time_doy[!is.na(tmp[6,])], tmp[6,!is.na(tmp[6,])], col=t_col("orange"))
+#   lines(time_doy[!is.na(colMeans(tmp[pulse_ponds,]))], colMeans(tmp[pulse_ponds,])[!is.na(colMeans(tmp[pulse_ponds,]))], col="purple", lwd=2)
+#   lines(time_doy[!is.na(colMeans(tmp[ref_ponds,]))], colMeans(tmp[ref_ponds,])[!is.na(colMeans(tmp[ref_ponds,]))], col="orange", lwd=2)
+#   
+#   
+#   mtext(var, line=2)
+#   
+# }
+# 
+# dev.off()
 
 
