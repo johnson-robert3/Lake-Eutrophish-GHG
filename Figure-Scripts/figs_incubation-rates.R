@@ -8,9 +8,8 @@
 library(tidyverse)
 library(cowplot)
 library(patchwork)
-library(slider)
-library(lubridate)
-library(viridis)
+# library(slider)
+# library(viridis)
 
 source("Figure-Scripts/figs_functions.R")
 
@@ -18,6 +17,7 @@ source("Figure-Scripts/figs_functions.R")
 # Data
 
 # create the 'fdat' and 'pond_data' data sets from the "stats_model-data" script 
+source("Analysis-Scripts/stats_model-data.R")
 
 
 #---
@@ -30,8 +30,7 @@ p =
 ggplot(fdat %>% 
           filter(!(is.na(methanogenesis))) %>%
           # convert methano rate from umol to nmol/g/h
-          mutate(methano = methanogenesis * 1000) %>%
-          left_join(pond_data),
+          mutate(methano = methanogenesis * 1000),
        aes(x = doy, y = methano)) +
    # pulse days
    geom_vline(xintercept = c(176, 211), linetype=1, color="gray50") +
@@ -70,8 +69,7 @@ d =
 ggplot(fdat %>% 
           filter(!(is.na(DEA))) %>%
           # convert DEA rate from umol to nmol/g/h
-          mutate(DEA = DEA * 1000) %>%
-          left_join(pond_data),
+          mutate(DEA = DEA * 1000),
        aes(x = doy, y = DEA)) +
    # pulse days
    geom_vline(xintercept = c(176, 211), linetype=1, color="gray50") +
@@ -107,8 +105,7 @@ ggplot(fdat %>%
 windows(height=3.5, width=5)
 e =
 ggplot(fdat %>% 
-          filter(!(is.na(ch4_ebu_flux))) %>%
-          left_join(pond_data),
+          filter(!(is.na(ch4_ebu_flux))),
        aes(x = doy, y = ch4_ebu_flux)) +
    # pulse days
    geom_vline(xintercept = c(176, 211), linetype=1, color="gray50") +
@@ -144,7 +141,7 @@ ggplot(fdat %>%
 windows(height = 3.5*3, width = 5)
 plot_grid(p, d, e, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99, label_x=0.01)
 
-ggsave(file = "GHG_process_measurements.png")
+# ggsave(file = "GHG_process_measurements.png")
 
 
 #-
@@ -154,8 +151,7 @@ ggsave(file = "GHG_process_measurements.png")
 # 1 panel raw data points and smoothed means
 
 windows(height=4, width=6); ggplot(fdat %>% 
-                                      filter(!(is.na(ch4_ebu_flux))) %>%
-                                      left_join(pond_data),
+                                      filter(!(is.na(ch4_ebu_flux))),
                                    aes(x = doy, y = ch4_ebu_flux)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
@@ -185,14 +181,13 @@ windows(height=4, width=6); ggplot(fdat %>%
          panel.border = element_rect(color = "black", fill = NA),
          axis.text = element_text(color = "black"))
 
-ggsave(file = "ebullition-time-series.png")
+# ggsave(file = "ebullition-time-series.png")
 
 
 # 1 panel as points with error ribbons
 
 windows(height=4, width=6); ggplot(fdat %>% 
                                       filter(!(is.na(ch4_ebu_flux))) %>%
-                                      left_join(pond_data) %>%
                                       group_by(trt_nutrients, doy) %>%
                                       summarize(n = n(),
                                                 se = sd(ch4_ebu_flux)/sqrt(n),
@@ -239,8 +234,7 @@ windows(height=4, width=6); ggplot(fdat %>%
 windows(height=4, width=6); ggplot(fdat %>% 
                                       filter(!(is.na(methanogenesis))) %>%
                                       # convert methano rate from umol to nmol/g/h
-                                      mutate(methano = methanogenesis * 1000) %>%
-                                      left_join(pond_data),
+                                      mutate(methano = methanogenesis * 1000),
                                    aes(x = doy, y = methano)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
@@ -271,7 +265,7 @@ windows(height=4, width=6); ggplot(fdat %>%
          panel.border = element_rect(color = "black", fill = NA),
          axis.text = element_text(color = "black"))
 
-ggsave(file = "methanogenesis-time-series.png")
+# ggsave(file = "methanogenesis-time-series.png")
 
 
 # 1 panel as points with error ribbons
@@ -280,7 +274,6 @@ windows(height=4, width=6); ggplot(fdat %>%
                                       filter(!(is.na(methanogenesis))) %>%
                                       # convert methano rate from umol to nmol/g/h
                                       mutate(methano = methanogenesis * 1000) %>%
-                                      left_join(pond_data) %>%
                                       group_by(trt_nutrients, doy) %>%
                                       summarize(n = n(),
                                                 se = sd(methano)/sqrt(n),
@@ -327,8 +320,7 @@ windows(height=4, width=6); ggplot(fdat %>%
 windows(height=4, width=6); ggplot(fdat %>% 
                                       filter(!(is.na(DEA))) %>%
                                       # convert DEA rate from umol to nmol/g/h
-                                      mutate(DEA = DEA * 1000) %>%
-                                      left_join(pond_data),
+                                      mutate(DEA = DEA * 1000),
                                    aes(x = doy, y = DEA)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
@@ -359,7 +351,7 @@ windows(height=4, width=6); ggplot(fdat %>%
          panel.border = element_rect(color = "black", fill = NA),
          axis.text = element_text(color = "black"))
 
-ggsave(file = "DEA-time-series.png")
+# ggsave(file = "DEA-time-series.png")
 
 
 # 1 panel as points with error ribbons
@@ -368,7 +360,6 @@ windows(height=4, width=6); ggplot(fdat %>%
                                       filter(!(is.na(DEA))) %>%
                                       # convert DEA rate from umol to nmol/g/h
                                       mutate(DEA = DEA * 1000) %>%
-                                      left_join(pond_data) %>%
                                       group_by(trt_nutrients, doy) %>%
                                       summarize(n = n(),
                                                 se = sd(DEA)/sqrt(n),
@@ -419,8 +410,7 @@ a =
 ggplot(fdat %>% 
           filter(!(is.na(methanogenesis)), treatment=='pulsed') %>%
           # convert methano rate from umol to nmol/g/h
-          mutate(methano = methanogenesis * 1000) %>%
-          left_join(pond_data),
+          mutate(methano = methanogenesis * 1000),
        aes(x = date, y = methano)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
@@ -456,8 +446,7 @@ c =
 ggplot(fdat %>% 
           filter(!(is.na(methanogenesis)), treatment=='reference') %>%
           # convert methano rate from umol to nmol/g/h
-          mutate(methano = methanogenesis * 1000) %>%
-          left_join(pond_data),
+          mutate(methano = methanogenesis * 1000),
        aes(x = date, y = methano)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
@@ -497,8 +486,7 @@ b =
 ggplot(fdat %>% 
           filter(!(is.na(DEA)), treatment=='pulsed') %>%
           # convert DEA rate from umol to nmol/g/h
-          mutate(DEA = DEA * 1000) %>%
-          left_join(pond_data),
+          mutate(DEA = DEA * 1000),
        aes(x = date, y = DEA)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
@@ -534,8 +522,7 @@ d =
 ggplot(fdat %>% 
           filter(!(is.na(DEA)), treatment=='reference') %>%
           # convert DEA rate from umol to nmol/g/h
-          mutate(DEA = DEA * 1000) %>%
-          left_join(pond_data),
+          mutate(DEA = DEA * 1000),
        aes(x = date, y = DEA)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
@@ -572,8 +559,7 @@ ggplot(fdat %>%
 # windows(height=4, width=5.5)
 e = 
 ggplot(fdat %>% 
-          filter(!(is.na(ch4_ebu_flux)), treatment=="pulsed") %>%
-          left_join(pond_data),
+          filter(!(is.na(ch4_ebu_flux)), treatment=="pulsed"),
        aes(x = date, y = ch4_ebu_flux)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
@@ -607,8 +593,7 @@ ggplot(fdat %>%
 # windows(height=4, width=5.5)
 f = 
 ggplot(fdat %>% 
-          filter(!(is.na(ch4_ebu_flux)), treatment=="reference") %>%
-          left_join(pond_data),
+          filter(!(is.na(ch4_ebu_flux)), treatment=="reference"),
        aes(x = date, y = ch4_ebu_flux)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
