@@ -24,6 +24,12 @@ source("Analysis-Scripts/stats_model-data.R")
 
 ## Components for all plots
 
+# event days
+P1 = 176
+P2 = 211
+H = 185:190
+D = 223
+
 # events and analysis windows
 fig_events = function(.fig, .gas = c('ch4', 'n2o', 'co2')) {
    
@@ -34,20 +40,17 @@ fig_events = function(.fig, .gas = c('ch4', 'n2o', 'co2')) {
    .fig +
    # add analysis windows
       # pulse windows (1-5 days after event)
-      annotate(geom = 'rect', xmin = 176+1, xmax = 176+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
-      annotate(geom = 'rect', xmin = 211+1, xmax = 211+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
+      annotate(geom = 'rect', xmin = P1+1, xmax = P1+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
+      annotate(geom = 'rect', xmin = P2+1, xmax = P2+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
       # pulse events, DOY 176 and 211 (after all sampling had occurred)
-      geom_vline(xintercept = c(176.8, 211.8), linetype=1, color="gray50") +
+      geom_vline(xintercept = c(P1+0.8, P2+0.8), linetype=1, color="gray40", size=0.8) +
       # heat event, DOY 185-190 (July 3-8, 2020)
-      annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+      annotate(geom = 'rect', xmin = min(H), xmax = max(H), ymin = -Inf, ymax = Inf, fill = 'gray75') +
       # derecho, DOY 223 (Aug. 10, 2020)
-      annotate(geom = 'rect', xmin = 223+1, xmax = 223+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
-      geom_vline(xintercept = 223.8, linetype=2, color='gray50') +
+      annotate(geom = 'rect', xmin = D+1, xmax = D+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
+      geom_vline(xintercept = D+0.8, linetype=2, color='gray40', size=0.8) +
       # event labels
-      annotate(geom = "text", label = "P1", x=176.8, y=.max, size=3.5) +
-      annotate(geom = "text", label = "H", x=187.5, y=.max, size=3.5) +
-      annotate(geom = "text", label = "P2", x=211.8, y=.max, size=3.5) +
-      annotate(geom = "text", label = "D", x=223.8, y=.max, size=3.5)
+      annotate(geom = "text", label = c("P1", "H", "P2", "D"), x=c(P1+0.8, mean(H), P2+0.8, D+0.8), y=.max, size=3.5)
 }
 
 # panel and axis aesthetics
@@ -73,7 +76,7 @@ ggplot(fdat %>%
    fig_events(., .gas = 'ch4') +
    
    # zero line
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.5) +
    # treatment mean 
@@ -104,7 +107,7 @@ ggplot(fdat %>%
    fig_events(., .gas = 'n2o') +
    
    # zero line
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.5) +
    # treatment mean 
@@ -133,7 +136,7 @@ ggplot(fdat %>%
    fig_events(., .gas = 'co2') +
    
    # zero line
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.5) +
    # treatment mean 
@@ -165,7 +168,7 @@ plot_grid(m, n, c, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99
 #--
 
 # Methane
-windows(height=4, width=5.5)
+windows(height=3.5, width=5)
 md =
 ggplot(fdat %>%
           filter(!(is.na(ch4_flux))) %>%
@@ -174,10 +177,10 @@ ggplot(fdat %>%
           mutate(diff = pulsed - reference),
        aes(x = doy, y = diff)) +
    #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray50") +
-   geom_vline(xintercept = 223, linetype=2, color="gray50") +
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_vline(xintercept = c(P1+0.5, P2+0.5), linetype=1, color="gray40", size=0.8) +
+   geom_vline(xintercept = D, linetype=2, color="gray40", size=0.8) +
+   annotate(geom = 'rect', xmin = min(H), xmax = max(H), ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
    #
    geom_line() +
    geom_point(size=2) +
@@ -189,7 +192,7 @@ ggplot(fdat %>%
    scale_y_continuous(name = expression(CH[4]~difference*','~~Pulse~'\u2013'~Ref)) +
    coord_cartesian(ylim = c(-10, 21), clip = "off") +
    # event labels
-   annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176.5, 187.5, 211.5, 223), y = 21 + ((10+21)*0.1), size = 3.5) +
+   annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(P1+0.5, mean(H), P2+0.5, D), y = 21 + ((10+21)*0.1), size = 3.5) +
    #
    theme_classic() +
    theme(plot.margin = unit(c(1.25,0.5,0,0.5), "lines")) %>%
@@ -197,7 +200,7 @@ ggplot(fdat %>%
 
 
 # Nitrous oxide
-windows(height=4, width=5.5)
+windows(height=3.5, width=5)
 nd =
 ggplot(fdat %>%
           filter(!(is.na(n2o_flux))) %>%
@@ -207,10 +210,10 @@ ggplot(fdat %>%
           mutate(diff = pulsed - reference),
        aes(x = doy, y = diff)) +
    #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray50") +
-   geom_vline(xintercept = 223, linetype=2, color="gray50") +
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_vline(xintercept = c(P1+0.5, P2+0.5), linetype=1, color="gray40", size=0.8) +
+   geom_vline(xintercept = D, linetype=2, color="gray40", size=0.8) +
+   annotate(geom = 'rect', xmin = min(H), xmax = max(H), ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
    #
    geom_line() +
    geom_point(size=2) +
@@ -222,7 +225,7 @@ ggplot(fdat %>%
    scale_y_continuous(name = expression(N[2]*O~difference*','~~Pulse~'\u2013'~Ref)) +
    coord_cartesian(ylim = c(-2.5, 1.2), clip = "off") +
    # event labels
-   annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176.5, 187.5, 211.5, 223), y = 1.2 + ((2.5+1.2)*0.1), size = 3.5) +
+   annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(P1+0.5, mean(H), P2+0.5, D), y = 1.2 + ((2.5+1.2)*0.1), size = 3.5) +
    #
    theme_classic() +
    theme(plot.margin = unit(c(1.25,0.5,0,0.5), "lines")) %>%
@@ -230,7 +233,7 @@ ggplot(fdat %>%
 
 
 # Carbon dioxide
-windows(height=4, width=5.5)
+windows(height=3.5, width=5)
 cd =
 ggplot(fdat %>%
           filter(!(is.na(co2_flux))) %>%
@@ -239,10 +242,10 @@ ggplot(fdat %>%
           mutate(diff = pulsed - reference),
        aes(x = doy, y = diff)) +
    #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray50") +
-   geom_vline(xintercept = 223, linetype=2, color="gray50") +
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_vline(xintercept = c(P1+0.5, P2+0.5), linetype=1, color="gray40", size=0.8) +
+   geom_vline(xintercept = D, linetype=2, color="gray40", size=0.8) +
+   annotate(geom = 'rect', xmin = min(H), xmax = max(H), ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
    #
    geom_line() +
    geom_point(size=2) +
@@ -254,7 +257,7 @@ ggplot(fdat %>%
    scale_y_continuous(name = expression(CO[2]~difference*','~~Pulse~'\u2013'~Ref)) +
    coord_cartesian(ylim = c(-135, 65), clip = "off") +
    # event labels
-   annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176.5, 187.5, 211.5, 223), y = 65 + ((135+65)*0.1), size = 3.5) +
+   annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(P1+0.5, mean(H), P2+0.5, D), y = 65 + ((135+65)*0.1), size = 3.5) +
    #
    theme_classic() +
    theme(plot.margin = unit(c(1.25,0.5,0.5,0.5), "lines")) %>%
