@@ -19,7 +19,7 @@ source("Analysis-Scripts/stats_model-data.R")
 
 
 #---
-# 3-panel, manuscript style
+# Flux time-series, 3-panel, manuscript style
 #---
 
 ## Components for all plots
@@ -44,10 +44,10 @@ fig_events = function(.fig, .gas = c('ch4', 'n2o', 'co2')) {
       annotate(geom = 'rect', xmin = 223+1, xmax = 223+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
       geom_vline(xintercept = 223.8, linetype=2, color='gray50') +
       # event labels
-      annotate(geom = "text", label = "P", x=178.8, y=.max, size=3.5) +
+      annotate(geom = "text", label = "P1", x=176.8, y=.max, size=3.5) +
       annotate(geom = "text", label = "H", x=187.5, y=.max, size=3.5) +
-      annotate(geom = "text", label = "P", x=214, y=.max, size=3.5) +
-      annotate(geom = "text", label = "D", x=226, y=.max, size=3.5)
+      annotate(geom = "text", label = "P2", x=211.8, y=.max, size=3.5) +
+      annotate(geom = "text", label = "D", x=223.8, y=.max, size=3.5)
 }
 
 # panel and axis aesthetics
@@ -148,14 +148,135 @@ ggplot(fdat %>%
    theme_classic() +
    theme(legend.position = c(0.16, 0.88),
          legend.background = element_blank(),
+         legend.text = element_text(size=rel(0.9)),
          plot.margin = unit(c(1.25,0.5,0.5,0.5), "lines")) %>%
    fig_theme()
 
 
 windows(height=3.5*3, width=5) #; m / n / c
-plot_grid(m, n, c, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99, label_x=0.01)
+plot_grid(m, n, c, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99, label_x=0.03)
 
 # ggsave(filename = "diffusive-gas-flux.png", height=3.5*3, width=5, units='in')
+
+
+
+#--
+# Difference in flux between pulsed and reference treatments
+#--
+
+# Methane
+windows(height=4, width=5.5)
+md =
+ggplot(fdat %>%
+          filter(!(is.na(ch4_flux))) %>%
+          group_by(trt_nutrients, doy) %>% summarize(mean = mean(ch4_flux)) %>% ungroup() %>%
+          pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
+          mutate(diff = pulsed - reference),
+       aes(x = doy, y = diff)) +
+   #
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray50") +
+   geom_vline(xintercept = 223, linetype=2, color="gray50") +
+   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   #
+   geom_line() +
+   geom_point(size=2) +
+   #
+   # stat_smooth(aes(x = doy, y = diff), geom="line", linewidth=1.25, span=0.25, alpha=0.9, color="#38A3A5") +
+   #
+   scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
+   # scale_y_continuous(name = expression(Pulse~'\u2013'~Ref~~(mmol~CH[4]~m^-2~d^-1)), breaks = seq(-10, 20, 10)) +
+   scale_y_continuous(name = expression(CH[4]~difference*','~~Pulse~'\u2013'~Ref)) +
+   coord_cartesian(ylim = c(-10, 21), clip = "off") +
+   # event labels
+   annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176.5, 187.5, 211.5, 223), y = 21 + ((10+21)*0.1), size = 3.5) +
+   #
+   theme_classic() +
+   theme(plot.margin = unit(c(1.25,0.5,0,0.5), "lines")) %>%
+   fig_theme()
+
+
+# Nitrous oxide
+windows(height=4, width=5.5)
+nd =
+ggplot(fdat %>%
+          filter(!(is.na(n2o_flux))) %>%
+          mutate(n2o_flux = n2o_flux * 1000) %>%
+          group_by(trt_nutrients, doy) %>% summarize(mean = mean(n2o_flux)) %>% ungroup() %>%
+          pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
+          mutate(diff = pulsed - reference),
+       aes(x = doy, y = diff)) +
+   #
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray50") +
+   geom_vline(xintercept = 223, linetype=2, color="gray50") +
+   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   #
+   geom_line() +
+   geom_point(size=2) +
+   #
+   # stat_smooth(aes(x = doy, y = diff), geom="line", linewidth=1.25, span=0.25, alpha=0.9, color="#38A3A5") +
+   #
+   scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
+   # scale_y_continuous(name = expression(Pulse~'\u2013'~Ref~~(mu*mol~N[2]*O~m^-2~d^-1))) +
+   scale_y_continuous(name = expression(N[2]*O~difference*','~~Pulse~'\u2013'~Ref)) +
+   coord_cartesian(ylim = c(-2.5, 1.2), clip = "off") +
+   # event labels
+   annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176.5, 187.5, 211.5, 223), y = 1.2 + ((2.5+1.2)*0.1), size = 3.5) +
+   #
+   theme_classic() +
+   theme(plot.margin = unit(c(1.25,0.5,0,0.5), "lines")) %>%
+   fig_theme()
+
+
+# Carbon dioxide
+windows(height=4, width=5.5)
+cd =
+ggplot(fdat %>%
+          filter(!(is.na(co2_flux))) %>%
+          group_by(trt_nutrients, doy) %>% summarize(mean = mean(co2_flux)) %>% ungroup() %>%
+          pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
+          mutate(diff = pulsed - reference),
+       aes(x = doy, y = diff)) +
+   #
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray50") +
+   geom_vline(xintercept = 223, linetype=2, color="gray50") +
+   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   #
+   geom_line() +
+   geom_point(size=2) +
+   #
+   # stat_smooth(aes(x = doy, y = diff), geom="line", linewidth=1.25, span=0.25, alpha=0.9, color="#38A3A5") +
+   #
+   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
+   # scale_y_continuous(name = expression(Pulse~'\u2013'~Ref~~(mmol~CO[2]~m^-2~d^-1))) +
+   scale_y_continuous(name = expression(CO[2]~difference*','~~Pulse~'\u2013'~Ref)) +
+   coord_cartesian(ylim = c(-135, 65), clip = "off") +
+   # event labels
+   annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176.5, 187.5, 211.5, 223), y = 65 + ((135+65)*0.1), size = 3.5) +
+   #
+   theme_classic() +
+   theme(plot.margin = unit(c(1.25,0.5,0.5,0.5), "lines")) %>%
+   fig_theme()
+
+
+windows(height=3.5*3, width=5) #; md/nd/cd
+plot_grid(md, nd, cd, ncol=1, align='v', labels=c('D', 'E', 'F'), label_size=13, label_y=0.99, label_x=0.03)
+
+
+# ggsave(file = "diffusive-flux_treatment-difference.png", height=3.5*3, width=5, units='in')
+
+
+
+#-- Diffusive flux time-series and treatment difference together in 1 figure --#
+
+windows(height = 3.5*3, width = 5*2)
+plot_grid(m, n, c, md, nd, cd, ncol=2, align="v", byrow=FALSE, labels=c('A', 'D', 'B', 'E', 'C', 'F'), label_size=13, label_y=0.99, label_x=0.03)
+
+
+# ggsave(file = "diffusive-flux_ts-and-diff.png", height = 3.5*3, width = 5*2, units='in')
+
 
 
 #---
@@ -690,109 +811,5 @@ windows(); ggplot(fdat %>% filter(!(is.na(ch4_flux)))) +
    #
    theme_classic()
 
-
-
-#--
-# Difference in flux between pulsed and reference treatments
-#--
-
-# Methane
-windows(height=4, width=5.5)
-md =
-ggplot(fdat %>%
-          filter(!(is.na(ch4_flux))) %>%
-          group_by(trt_nutrients, doy) %>% summarize(mean = mean(ch4_flux)) %>% ungroup() %>%
-          pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
-          mutate(diff = pulsed - reference)) +
-   #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray50") +
-   geom_vline(xintercept = 223, linetype=2, color="gray50") +
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
-   #
-   geom_line(aes(x = doy, y = diff)) +
-   geom_point(aes(x = doy, y = diff), size=2) +
-   #
-   # stat_smooth(aes(x = doy, y = diff), geom="line", linewidth=1.25, span=0.25, alpha=0.9, color="#38A3A5") +
-   #
-   scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
-   ylab(expression(CH[4]~difference)) +
-   #
-   theme_classic() +
-   theme(plot.margin = unit(c(1.25,0.5,0,0.5), "lines")) %>%
-   fig_theme()
-
-
-# Nitrous oxide
-windows(height=4, width=5.5)
-nd =
-ggplot(fdat %>%
-          filter(!(is.na(n2o_flux))) %>%
-          mutate(n2o_flux = n2o_flux * 1000) %>%
-          group_by(trt_nutrients, doy) %>% summarize(mean = mean(n2o_flux)) %>% ungroup() %>%
-          pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
-          mutate(diff = pulsed - reference)) +
-   #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray50") +
-   geom_vline(xintercept = 223, linetype=2, color="gray50") +
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
-   #
-   geom_line(aes(x = doy, y = diff)) +
-   geom_point(aes(x = doy, y = diff), size=2) +
-   #
-   # stat_smooth(aes(x = doy, y = diff), geom="line", linewidth=1.25, span=0.25, alpha=0.9, color="#38A3A5") +
-   #
-   scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
-   ylab(expression(N[2]*O~difference)) +
-   #
-   theme_classic() +
-   theme(plot.margin = unit(c(1.25,0.5,0,0.5), "lines")) %>%
-   fig_theme()
-
-
-# Carbon dioxide
-windows(height=4, width=5.5)
-cd =
-ggplot(fdat %>%
-          filter(!(is.na(co2_flux))) %>%
-          group_by(trt_nutrients, doy) %>% summarize(mean = mean(co2_flux)) %>% ungroup() %>%
-          pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
-          mutate(diff = pulsed - reference)) +
-   #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray50") +
-   geom_vline(xintercept = 223, linetype=2, color="gray50") +
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
-   #
-   geom_line(aes(x = doy, y = diff)) +
-   geom_point(aes(x = doy, y = diff), size=2) +
-   #
-   # stat_smooth(aes(x = doy, y = diff), geom="line", linewidth=1.25, span=0.25, alpha=0.9, color="#38A3A5") +
-   #
-   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
-   ylab(expression(CO[2]~difference)) +
-   #
-   theme_classic() +
-   theme(plot.margin = unit(c(1.25,0.5,0.5,0.5), "lines")) %>%
-   fig_theme()
-
-
-windows(height=3.5*3, width=5) #; md/nd/cd
-plot_grid(md, nd, cd, ncol=1, align='v', labels=c('D', 'E', 'F'), label_size=13, label_y=0.99, label_x=0.01)
-
-
-# ggsave(file = "diffusive-flux_treatment-difference.png", height=3.5*3, width=5, units='in')
-
-
-
-
-#-- Diffusive flux time-series and treatment difference together in 1 figure --#
-
-windows(height = 3.5*3, width = 5*2)
-plot_grid(m, n, c, md, nd, cd, ncol=2, align="v", byrow=FALSE, labels=c('A', 'D', 'B', 'E', 'C', 'F'), label_size=13, label_y=0.99, label_x=0.03)
-
-
-# ggsave(file = "diffusive-flux_ts-and-diff.png", height = 3.5*3, width = 5*2, units='in')
 
 
