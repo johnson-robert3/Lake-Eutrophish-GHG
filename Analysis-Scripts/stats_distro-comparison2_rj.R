@@ -184,7 +184,8 @@ for(var in varlist.main){
   
   #- P1
   pulsetrt.pulse1 <- rowMeans(tmp[pulse_ponds, time_doy %in% pulse1], na.rm=TRUE)
-  comp1 <- NULL
+  
+  comp1.p1 <- NULL
   for(ii in 1:length(time_doy)){
     if(time_doy[ii]+(wwidth-1) > max(time_doy)) {break} #stop when we overlap the end of the time series
      
@@ -197,18 +198,19 @@ for(var in varlist.main){
     # only use windows prior to the focal event to build the reference distribution
     if(time_doy[ii]+(wwidth-1) >= min(pulse1)) {break} #stop when we reach the focal event window
     
-    comp1 <- cbind(comp1, rowMeans(tmp[pulse_ponds, ii:(ii+wwidth-1)], na.rm=TRUE))
+    comp1.p1 <- cbind(comp1.p1, rowMeans(tmp[pulse_ponds, ii:(ii+wwidth-1)], na.rm=TRUE))
   }
-  res <- NULL
-  for(ii in 1:nrow(comp1)){
-    ecdf.comp1<- ecdf(comp1[ii,])  # quantile for each pond
-    res <- c(res, ecdf.comp1(pulsetrt.pulse1[ii]))  # vector of quantiles for the three ponds
+  res.p1 <- NULL
+  for(ii in 1:nrow(comp1.p1)){
+    ecdf.comp1.p1<- ecdf(comp1.p1[ii,])  # quantile for each pond
+    res.p1 <- c(res.p1, ecdf.comp1.p1(pulsetrt.pulse1[ii]))  # vector of quantiles for the three ponds
   }
-  result_otherTimes[varlist.main==var, 1] <- mean(res)  # mean(res) = the mean quantile for the focal event window
+  result_otherTimes[varlist.main==var, 1] <- mean(res.p1)  # mean(res) = the mean quantile for the focal event window
   
   #- P2
   pulsetrt.pulse2 <- rowMeans(tmp[pulse_ponds, time_doy %in% pulse2], na.rm=TRUE)
-  comp1 <- NULL
+  
+  comp1.p2 <- NULL
   for(ii in 1:length(time_doy)){
     if(time_doy[ii]+(wwidth-1) > max(time_doy)){break} #stop when we overlap the end of the time series
     # if(time_doy[ii] %in% pulse2){next} #ignore obs in pulse 2
@@ -218,18 +220,19 @@ for(var in varlist.main){
     
     if(time_doy[ii]+(wwidth-1) >= min(pulse2)){break} #stop when we reach the focal event window
      
-    comp1 <- cbind(comp1, rowMeans(tmp[pulse_ponds, ii:(ii+wwidth-1)], na.rm=TRUE))
+    comp1.p2 <- cbind(comp1.p2, rowMeans(tmp[pulse_ponds, ii:(ii+wwidth-1)], na.rm=TRUE))
   }
-  res <- NULL
-  for(ii in 1:nrow(comp1)){
-    ecdf.comp1<- ecdf(comp1[ii,])
-    res <- c(res, ecdf.comp1(pulsetrt.pulse2[ii]))
+  res.p2 <- NULL
+  for(ii in 1:nrow(comp1.p2)){
+    ecdf.comp1.p2<- ecdf(comp1.p2[ii,])
+    res.p2 <- c(res.p2, ecdf.comp1.p2(pulsetrt.pulse2[ii]))
   }
-  result_otherTimes[varlist.main==var, 3] <- mean(res)
+  result_otherTimes[varlist.main==var, 3] <- mean(res.p2)
   
   #- Heatwave
   heatwaveobs <- rowMeans(tmp[pulse_ponds, time_doy %in% heatwave], na.rm=TRUE)
-  comp1 <- NULL
+  
+  comp1.h <- NULL
   for(ii in 1:length(time_doy)){
     if(time_doy[ii]+(wwidth-1) > max(time_doy)){break} #stop when we overlap the end of the time series
     # if(time_doy[ii] %in% heatwave){next} #ignore obs in heatwave
@@ -239,18 +242,19 @@ for(var in varlist.main){
     
     if(time_doy[ii]+(wwidth-1) >= min(heatwave)){break} #stop when we reach the focal event window
      
-    comp1 <- cbind(comp1, rowMeans(tmp[pulse_ponds, ii:(ii+wwidth-1)], na.rm=TRUE))
+    comp1.h <- cbind(comp1.h, rowMeans(tmp[pulse_ponds, ii:(ii+wwidth-1)], na.rm=TRUE))
   }
-  res <- NULL
-  for(ii in 1:nrow(comp1)){
-    ecdf.comp1<- ecdf(comp1[ii,])
-    res <- c(res, ecdf.comp1(heatwaveobs[ii]))
+  res.h <- NULL
+  for(ii in 1:nrow(comp1.h)){
+    ecdf.comp1.h<- ecdf(comp1.h[ii,])
+    res.h <- c(res.h, ecdf.comp1.h(heatwaveobs[ii]))
   }
-  result_otherTimes[varlist.main==var, 2] <- mean(res)
+  result_otherTimes[varlist.main==var, 2] <- mean(res.h)
   
   #- Derecho
   derechoobs <- rowMeans(tmp[pulse_ponds, time_doy %in% derecho], na.rm=TRUE)
-  comp1 <- NULL
+  
+  comp1.d <- NULL
   for(ii in 1:length(time_doy)){
     if(time_doy[ii]+(wwidth-1) > max(time_doy)){break} #stop when we overlap the end of the time series
     # if(time_doy[ii] %in% derecho){next} #ignore obs in derecho
@@ -260,61 +264,69 @@ for(var in varlist.main){
     
     if(time_doy[ii]+(wwidth-1) >= min(derecho)){break} #stop when we reach the focal event window
      
-    comp1 <- cbind(comp1, rowMeans(tmp[pulse_ponds, ii:(ii+wwidth-1)], na.rm=TRUE))
+    comp1.d <- cbind(comp1.d, rowMeans(tmp[pulse_ponds, ii:(ii+wwidth-1)], na.rm=TRUE))
   }
-  res <- NULL
-  for(ii in 1:nrow(comp1)){
-    ecdf.comp1<- ecdf(comp1[ii,])
-    res <- c(res, ecdf.comp1(derechoobs[ii]))
+  res.d <- NULL
+  for(ii in 1:nrow(comp1.d)){
+    ecdf.comp1.d<- ecdf(comp1.d[ii,])
+    res.d <- c(res.d, ecdf.comp1.d(derechoobs[ii]))
   }
-  result_otherTimes[varlist.main==var, 4] <- mean(res)
+  result_otherTimes[varlist.main==var, 4] <- mean(res.d)
  
   
   ## comparison 2: pulsed ponds to same time in reference ponds
   
   #- P1
-  comp2 <- NULL
+  comp2.p1 <- NULL
   for(ii in 1:length(time_doy)){
+     
     if(time_doy[ii]+(wwidth-1) > max(time_doy)){break} #stop when we overlap the end of the time series
     ww <- time_doy[ii]:(time_doy[ii] + wwidth - 1)
     if(!any(ww %in% pulse1)){next} #ignore windows that don't overlap pulses
-    comp2 <- cbind(comp2, rowMeans(tmp[ref_ponds, ii:(ii+wwidth-1)], na.rm=TRUE))
+    
+    comp2.p1 <- cbind(comp2.p1, rowMeans(tmp[ref_ponds, ii:(ii+wwidth-1)], na.rm=TRUE))
   }
-  ecdf.comp2<- ecdf(comp2)
-  result_refPonds[varlist.main==var, 1] <- mean(ecdf.comp2(pulsetrt.pulse1))
+  ecdf.comp2.p1<- ecdf(comp2.p1)
+  result_refPonds[varlist.main==var, 1] <- mean(ecdf.comp2.p1(pulsetrt.pulse1))
   
   #- P2
-  comp2 <- NULL
+  comp2.p2 <- NULL
   for(ii in 1:length(time_doy)){
+     
     if(time_doy[ii]+(wwidth-1) > max(time_doy)){break} #stop when we overlap the end of the time series
     ww <- time_doy[ii]:(time_doy[ii] + wwidth - 1)
     if(!any(ww %in% pulse2)){next} #ignore windows that don't overlap pulses
-    comp2 <- cbind(comp2, rowMeans(tmp[ref_ponds, ii:(ii+wwidth-1)], na.rm=TRUE))
+    
+    comp2.p2 <- cbind(comp2.p2, rowMeans(tmp[ref_ponds, ii:(ii+wwidth-1)], na.rm=TRUE))
   }
-  ecdf.comp2<- ecdf(comp2)
-  result_refPonds[varlist.main==var, 3] <- mean(ecdf.comp2(pulsetrt.pulse2))
+  ecdf.comp2.p2<- ecdf(comp2.p2)
+  result_refPonds[varlist.main==var, 3] <- mean(ecdf.comp2.p2(pulsetrt.pulse2))
   
   #- Heatwave
-  comp2 <- NULL
+  comp2.h <- NULL
   for(ii in 1:length(time_doy)){
+     
     if(time_doy[ii]+(wwidth-1) > max(time_doy)){break} #stop when we overlap the end of the time series
     ww <- time_doy[ii]:(time_doy[ii] + wwidth - 1)
     if(!any(ww %in% heatwave)){next} #ignore windows that don't overlap pulses
-    comp2 <- cbind(comp2, rowMeans(tmp[ref_ponds, ii:(ii+wwidth-1)], na.rm=TRUE))
+    
+    comp2.h <- cbind(comp2.h, rowMeans(tmp[ref_ponds, ii:(ii+wwidth-1)], na.rm=TRUE))
   }
-  ecdf.comp2<- ecdf(comp2)
-  result_refPonds[varlist.main==var, 2] <- mean(ecdf.comp2(heatwaveobs))
+  ecdf.comp2.h<- ecdf(comp2.h)
+  result_refPonds[varlist.main==var, 2] <- mean(ecdf.comp2.h(heatwaveobs))
   
   #- Derecho
-  comp2 <- NULL
+  comp2.d <- NULL
   for(ii in 1:length(time_doy)){
+     
     if(time_doy[ii]+(wwidth-1) > max(time_doy)){break} #stop when we overlap the end of the time series
     ww <- time_doy[ii]:(time_doy[ii] + wwidth - 1)
     if(!any(ww %in% derecho)){next} #ignore windows that don't overlap pulses
-    comp2 <- cbind(comp2, rowMeans(tmp[ref_ponds, ii:(ii+wwidth-1)], na.rm=TRUE))
+    
+    comp2.d <- cbind(comp2.d, rowMeans(tmp[ref_ponds, ii:(ii+wwidth-1)], na.rm=TRUE))
   }
-  ecdf.comp2<- ecdf(comp2)
-  result_refPonds[varlist.main==var, 4] <- mean(ecdf.comp2(derechoobs))
+  ecdf.comp2.d<- ecdf(comp2.d)
+  result_refPonds[varlist.main==var, 4] <- mean(ecdf.comp2.d(derechoobs))
   
 }
 
@@ -390,10 +402,6 @@ dev.off()
 
 
 # Create boxplot and histogram examples as demonstrations to accompany comparison quantile figure
-
-# set the variable list used by the function to only the example variable
-varlist.main = c("n2o_flux")
-
 
 
 
