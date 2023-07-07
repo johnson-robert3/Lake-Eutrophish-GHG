@@ -29,25 +29,22 @@ fig_events = function(.fig, .gas = c('ch4', 'n2o', 'co2')) {
    
    # for y-axis height of event labels
    # .max = if(.gas == 'ch4') {60} else if(.gas == 'n2o') {3} else if(.gas == 'co2') {250}
-   .max = if(.gas == 'ch4') {66} else if(.gas == 'n2o') {3.7} else if(.gas == 'co2') {277}
+   .max = if(.gas == 'ch4') {60 + ((60)*0.1)} else if(.gas == 'n2o') {3 + ((4+3)*0.1)} else if(.gas == 'co2') {250 + ((20+250)*0.1)}
    
    .fig +
    # add analysis windows
       # pulse windows (1-5 days after event)
-      annotate(geom = 'rect', xmin = 176+1, xmax = 176+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
-      annotate(geom = 'rect', xmin = 211+1, xmax = 211+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
+      annotate(geom = 'rect', xmin = 176+1, xmax = 176+5, ymin = -Inf, ymax = Inf, fill='gray90') +
+      annotate(geom = 'rect', xmin = 211+1, xmax = 211+5, ymin = -Inf, ymax = Inf, fill='gray90') +
       # pulse events, DOY 176 and 211 (after all sampling had occurred)
-      geom_vline(xintercept = c(176.8, 211.8), linetype=1, color="gray50") +
+      geom_vline(xintercept = c(176.8, 211.8), linetype=1, color="gray40", size=0.8) +
       # heat event, DOY 185-190 (July 3-8, 2020)
-      annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+      annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill='gray75') +
       # derecho, DOY 223 (Aug. 10, 2020)
-      annotate(geom = 'rect', xmin = 223+1, xmax = 223+5, ymin = -Inf, ymax = Inf, fill = 'gray90') +
-      geom_vline(xintercept = 223.8, linetype=2, color='gray50') +
+      annotate(geom = 'rect', xmin = 223+1, xmax = 223+5, ymin = -Inf, ymax = Inf, fill='gray90') +
+      geom_vline(xintercept = 223.8, linetype=2, color='gray40', size=0.8) +
       # event labels
-      annotate(geom = "text", label = "P1", x=176.8, y=.max, size=3.5) +
-      annotate(geom = "text", label = "H", x=187.5, y=.max, size=3.5) +
-      annotate(geom = "text", label = "P2", x=211.8, y=.max, size=3.5) +
-      annotate(geom = "text", label = "D", x=223.8, y=.max, size=3.5)
+      annotate(geom = "text", label = c('P1', 'H', 'P2', 'D'), x = c(176.8, 187.5, 211.8, 223.8), y = .max, size=3.5)
 }
 
 # panel and axis aesthetics
@@ -73,7 +70,7 @@ ggplot(fdat %>%
    fig_events(., .gas = 'ch4') +
    
    # zero line
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.5) +
    # treatment mean 
@@ -104,7 +101,7 @@ ggplot(fdat %>%
    fig_events(., .gas = 'n2o') +
    
    # zero line
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.5) +
    # treatment mean 
@@ -133,7 +130,7 @@ ggplot(fdat %>%
    fig_events(., .gas = 'co2') +
    
    # zero line
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.5) +
    # treatment mean 
@@ -174,10 +171,10 @@ ggplot(fdat %>%
           mutate(diff = pulsed - reference),
        aes(x = doy, y = diff)) +
    #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray50") +
-   geom_vline(xintercept = 223, linetype=2, color="gray50") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", size=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color="gray40", size=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
    #
    geom_line() +
    geom_point(size=2) +
@@ -207,10 +204,10 @@ ggplot(fdat %>%
           mutate(diff = pulsed - reference),
        aes(x = doy, y = diff)) +
    #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray50") +
-   geom_vline(xintercept = 223, linetype=2, color="gray50") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", size=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color="gray40", size=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
    #
    geom_line() +
    geom_point(size=2) +
@@ -239,10 +236,10 @@ ggplot(fdat %>%
           mutate(diff = pulsed - reference),
        aes(x = doy, y = diff)) +
    #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray50") +
-   geom_vline(xintercept = 223, linetype=2, color="gray50") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", size=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color="gray40", size=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
    #
    geom_line() +
    geom_point(size=2) +
