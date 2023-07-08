@@ -64,7 +64,7 @@ ggplot(fdat %>%
          axis.text = element_text(color='black', size=9),
          axis.text.x = element_text(hjust=0.3, margin = margin(t=2, 'line')),
          axis.title = element_text(color="black", size=9.5), 
-         axis.title.x = element_text(margin = margin(t=2, 'line')),
+         axis.title.x = element_text(margin = margin(t=3, 'line')),
          # axis.title.y = element_text(margin = margin(r=0.5, 'line')),
          axis.title.y = ggtext::element_markdown(),
          plot.margin = unit(c(1,0.5,0,0.5), 'lines'))
@@ -109,7 +109,7 @@ ggplot(fdat %>%
          axis.text = element_text(color='black', size=9),
          axis.text.x = element_text(hjust=0.3, margin = margin(t=2, 'line')),
          axis.title = element_text(color="black", size=9.5), 
-         axis.title.x = element_text(margin = margin(t=2, 'line')),
+         axis.title.x = element_text(margin = margin(t=3, 'line')),
          # axis.title.y = element_text(margin = margin(r=0.5, 'line')),
          plot.margin = unit(c(1,0.5,0.5,0.5), 'lines'))
 
@@ -149,13 +149,13 @@ ggplot(fdat %>%
    theme(legend.position = c(0.17, 0.88),
          legend.background = element_blank(), 
          legend.text = element_text(size=8),
-         legend.key.size = unit(0.8, "line"),
+         legend.key.size = unit(0.8, "lines"),
          panel.border = element_rect(color = "black", fill = NA),
          axis.ticks = element_line(color='black'), 
          axis.text = element_text(color='black', size=9),
          axis.text.x = element_text(hjust=0.3, margin = margin(t=2, 'line')),
          axis.title = element_text(color="black", size=9.5), 
-         axis.title.x = element_text(margin = margin(t=2, 'line')),
+         axis.title.x = element_text(margin = margin(t=3, 'line')),
          # axis.title.y = element_text(margin = margin(r=0.5, 'line')),
          axis.title.y = ggtext::element_markdown(),
          plot.margin = unit(c(1,0.5,0,0.5), 'lines'))
@@ -163,7 +163,7 @@ ggplot(fdat %>%
 
 # Figure
 windows(height = 7, width = 3.25)
-plot_grid(e, p, d, ncol=1, align='v', labels="AUTO", label_size=11, label_y=0.99, label_x=0.03)
+plot_grid(e, p, d, ncol=1, align='v', labels="AUTO", label_size=11, label_y=0.99, label_x=0.04)
 
 # ggsave(file = "GHG_process_measurements.png", height = 7, width = 3.25, units = "in")
 
