@@ -387,6 +387,14 @@ write.csv(dea_rates, file = "Data/DEA_rates_total.csv", row.names=FALSE)
 # Prep data
 #--
 
+# Remove instances when chamber samples were not collected
+ebu_samples = ebu_samples %>%
+   # pond C, week 5, chamber 2
+   filter(!(pond_id=="C" & week==5 & replicate=="P2")) %>%
+   # pond F, week 11, chamber 3
+   filter(!(pond_id=="F" & week==11 & replicate=="P3"))
+
+
 # Convert measured chamber headspace to partial pressure (units = atm)
 ebu_samples = ebu_samples %>%
    mutate(pch4 = ch4_ppm / 10^6 * 0.97,
@@ -424,7 +432,7 @@ ebu_end = ebu_samples %>%
 ebu_data = ebu_end %>%
    select(-sample_id) %>%
    left_join(ebu_start %>%
-                select(-sample_id, -date_time, -notes)) %>%
+                select(pond_id, replicate, week, ends_with("_t0"))) %>%
    relocate(ends_with("_t0"), .before="pch4_t1")
 
 
@@ -528,10 +536,8 @@ ebu_data = ebu_data %>%
    # remove unnecessary columns
    select(-contains("co2"), -contains("n2o"),
           -site_id, -date_time, -notes_gc, -data_flag) %>%
-   # remove the chamber for which data are missing
-   filter(!(is.na(deployment_length))) %>%
    # change "NaN" to NA
-   mutate(k_chamber = na_if(k_chamber, "NaN")) %>%
+   mutate(k_chamber = if_else(k_chamber=="NaN", NA_real_, k_chamber)) %>%
    # convert chamber-specific k to k600 for comparisons (units = m / d)
    mutate(Sc_ch4 = getSchmidt(temperature = surface_temp, gas = "CH4"),
           k600 = ((600 / Sc_ch4)^(-0.5)) * k_chamber)
@@ -780,9 +786,15 @@ ebu_flux = full_join(ebullition_chambers, diffusion_chambers) %>%
    # change ebullition from NA to 0 for diffusion chambers
    mutate(ch4_ebu_flux = if_else(received_ebu==0, 0, ch4_ebu_flux)) %>%
    arrange(pond_id, doy, replicate) %>%
+   
    # remove chambers with a negative ebullition rate
    #  from when estimated diffusive mass flux into chamber was greater than actual mass flux into chamber
-   filter(!(ch4_ebu_flux < 0))
+   
+   # filter(!(ch4_ebu_flux < 0))
+   
+   # ebullition should be changed to 0 for these chambers, the chambers shouldn't be removed
+   # the 0 value should still contribute to the pond mean value, b/c the chamber just didn't receive ebullition
+   mutate(ch4_ebu_flux = if_else(ch4_ebu_flux < 0, 0, ch4_ebu_flux))
 
 
 # mean ebullitive flux rate from all chambers for each pond
@@ -792,9 +804,21 @@ ebu_flux_pond = ebu_flux %>%
    ungroup()
 
 
+# add data flags to final dataset
+ebu_flux_pond = ebu_flux_pond %>%
+   # add data flag for when ebullition could not be calculated (e.g., not enough chambers deployed)
+   #  only 1 chamber was deployed on ponds A, C, D, and E for the first 3 weeks
+   mutate(flag = if_else(pond_id %in% c('A', 'C', 'D', 'E') & week %in% c(2, 3, 4), "E", NA_character_)) %>% 
+   # replace ebullition rates for these 4 ponds for the first 3 weeks (currently all 0's) with NA
+   mutate(ch4_ebu_flux = replace(ch4_ebu_flux, flag=="E", NA_real_))
+
+
    ## remove all temporary data sets from ebullition calculations
    rm(list=ls(pattern="test"))
    ##
 
+   
 write.csv(ebu_flux_pond, file="Data/ebullition_total.csv", row.names=FALSE)
+
+
 
