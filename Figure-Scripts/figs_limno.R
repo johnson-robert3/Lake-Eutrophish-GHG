@@ -4,10 +4,11 @@
 #~~~
 
 
+library(tidyverse)
 library(cowplot)
 library(patchwork)
-library(viridis)
-library(slider)
+# library(viridis)
+# library(slider)
 
 source("Figure-Scripts/figs_functions.R")
 
@@ -15,10 +16,7 @@ source("Figure-Scripts/figs_functions.R")
 # Data for plotting
 source("Analysis-Scripts/stats_model-data.R")
 
-pdat = fdat %>% 
-   mutate(date = ymd(date)) %>%
-   left_join(pond_data %>% 
-                select(pond_id, starts_with("trt")))
+pdat = fdat 
 
 
 
@@ -72,11 +70,6 @@ ggplot(pdat,
 # ggsave(filename = "surface-chla.png")
 
 
-#--
-# Phycocyanin
-#--
-
-
 
 #--
 # Dissolved Oxygen
@@ -85,88 +78,89 @@ ggplot(pdat,
 ## Surface DO 
 
 # 1 panel (blue & red)
-windows(height=4, width=5.5)
-sdo = 
+windows(height=7/3, width=3.25)
+sdo =
 ggplot(pdat,
        aes(x = doy, y = do)) +
    #
-   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
-   #            aes(xintercept = date), linetype=2, color="gray60") +
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
-   geom_vline(xintercept = 223, linetype=2, color="gray40") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", size=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color="gray40", size=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
    # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean
    # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, span=0.05) +
    geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(do, na.rm=T)) %>% ungroup(),
-             aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) + 
+             aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   # scale_x_date(name = NULL, 
-   #              breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
-   #              labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
-   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
-   scale_y_continuous(name = expression(Surface~water~DO~(mg~L^-1))) +
+   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   scale_y_continuous(name = expression(Surface~DO~(mg~L^-1)), breaks = seq(0, 15, 5)) +
+   coord_cartesian(ylim = c(0, 17), clip = "off") +
+   # event labels
+   annotate(geom = "text", label = c('P1', 'H', 'P2', 'D'), x = c(176.5, 187.5, 211.5, 223), y = 17 + ((17)*0.1), size=3) +
+   # white box beneath legend
+   annotate(geom = "rect", xmin = 205, xmax = 241, ymin = 12, ymax = 17, fill="white", color="white") +
    #
-   # ggtitle(expression(Surface~Water~Dissolved~O[2])) +
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
-         legend.position = c(0.85, 0.85),
-         axis.ticks.length = unit(0.3, 'line'),
-         axis.text = element_text(color='black', size=rel(1)),
-         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
-         axis.title.x = element_text(margin = margin(t=0.5, unit="line"), size=rel(1.1)),
-         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
+         legend.position = c(0.79, 0.85),
+         legend.background = element_blank(),
+         legend.key.size = unit(0.5, "cm"),
+         axis.ticks = element_line(color='black'), 
+         axis.text = element_text(color='black', size=9),
+         axis.text.x = element_text(hjust=0.3, margin = margin(t=2, 'line')),
+         axis.title = element_text(color="black", size=9.5), 
+         axis.title.x = element_text(margin = margin(t=3, 'line')),
+         axis.title.y = element_text(margin = margin(r=1, 'line')),
+         plot.margin = unit(c(1,0.5,0,0.5), "lines"))
 
 # ggsave(filename = "surface-water-DO.png")
 
 
 ## Bottom water DO
-windows(height=4, width=5.5)
-bdo = 
+windows(height=7/3, width=3.25)
+bdo =
 ggplot(pdat,
        aes(x = doy, y = bottom_do)) +
    #
-   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
-   #            aes(xintercept = date), linetype=2, color="gray60") +
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
-   geom_vline(xintercept = 223, linetype=2, color="gray40") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", size=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color="gray40", size=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
    # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean (loess smooth)
    # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, span=0.05) +
    geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(bottom_do, na.rm=T)) %>% ungroup(),
-             aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) + 
+             aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   # scale_x_date(name = NULL, 
-   #              breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
-   #              labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
-   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
-   scale_y_continuous(name = expression(Bottom~water~DO~(mg~L^-1))) +
+   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   scale_y_continuous(name = expression(Bottom~DO~(mg~L^-1)), breaks = seq(0, 20, 5)) +
+   coord_cartesian(ylim = c(0, 20), clip = "off") +
+   # event labels
+   annotate(geom = "text", label = c('P1', 'H', 'P2', 'D'), x = c(176.5, 187.5, 211.5, 223), y = 20 + ((20)*0.1), size=3) +
    #
-   # ggtitle(expression(Bottom~Water~Dissolved~O[2])) +
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
-         # legend.position = c(0.85, 0.86),
          legend.position = "none", 
-         axis.ticks.length = unit(0.3, 'line'),
-         axis.text = element_text(color='black', size=rel(1)),
-         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
-         axis.title.x = element_text(margin = margin(t=0.5, unit="line"), size=rel(1.1)),
-         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
+         axis.ticks = element_line(color='black'), 
+         axis.text = element_text(color='black', size=9),
+         axis.text.x = element_text(hjust=0.3, margin = margin(t=2, 'line')),
+         axis.title = element_text(color="black", size=9.5), 
+         axis.title.x = element_text(margin = margin(t=3, 'line')),
+         axis.title.y = element_text(margin = margin(r=1, 'line')),
+         plot.margin = unit(c(1,0.5,0.5,0.5), "lines"))
 
 # ggsave(filename = "bottom-water-DO.png")
 
 
 # together
-windows(height=3.5*2, width=5); plot_grid(sdo, bdo, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99, label_x=0.01)
+windows(height=7/3*2, width=3.25); plot_grid(sdo, bdo, ncol=1, align='v', rel_heights = c(0.95, 1), labels="AUTO", label_size=11, label_y=0.99, label_x=0.01)
 
-# ggsave(file = "pond_DO.png", height=3.5*2, width=5, units='in')
+ggsave(file = "pond_DO.png", height=7/3*2, width=3.25, units='in')
 
 
 #===
