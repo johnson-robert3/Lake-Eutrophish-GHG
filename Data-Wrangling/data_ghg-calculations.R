@@ -808,9 +808,9 @@ ebu_flux_pond = ebu_flux %>%
 ebu_flux_pond = ebu_flux_pond %>%
    # add data flag for when ebullition could not be calculated (e.g., not enough chambers deployed)
    #  only 1 chamber was deployed on ponds A, C, D, and E for the first 3 weeks
-   mutate(flag = if_else(pond_id %in% c('A', 'C', 'D', 'E') & week %in% c(2, 3, 4), "E", NA_character_)) %>% 
+   mutate(flag = if_else(pond_id %in% c('A', 'C', 'D', 'E') & week %in% c(2, 3, 4), "a", NA_character_)) %>% 
    # replace ebullition rates for these 4 ponds for the first 3 weeks (currently all 0's) with NA
-   mutate(ch4_ebu_flux = replace(ch4_ebu_flux, flag=="E", NA_real_))
+   mutate(ch4_ebu_flux = replace(ch4_ebu_flux, flag=="a", NA_real_))
 
 
    ## remove all temporary data sets from ebullition calculations
