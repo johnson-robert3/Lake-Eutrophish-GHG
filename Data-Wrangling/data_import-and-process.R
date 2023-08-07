@@ -195,7 +195,7 @@ sonde_int = sonde_profiles %>%
                                 vert_m > 2.0 ~ 2.1)) %>%
    # mean values within each depth interval
    group_by(pond_id, doy, depth_int) %>%
-   summarize(across(temp:salinity, mean, na.rm=T)) %>%
+   summarize(across(temp:salinity, ~mean(., na.rm=T))) %>%
    ungroup() 
 
 
@@ -568,6 +568,9 @@ lake_samples = left_join(lake_sample_data, lake_ghg) %>%
    left_join(sonde_surface %>% select(pond_id, doy, surface_temp=temp))
 
 
+#- Create the 'lake_flux' data set, which contains these concentration data, from the "data_import_EDI" script
+
+
 #---
 #### Methanogenesis GHG Samples ####
 #---
@@ -599,6 +602,9 @@ methano_samples = methano_sample_data %>%
 methano_samples = methano_samples %>%
    # mutate(data_flag = if_else(is.na(data_flag), 0, data_flag)) %>%
    filter(is.na(data_flag))
+
+
+#- Create the 'methano_dea' data set from the "data_import_EDI" script
 
 
 #---
@@ -634,6 +640,9 @@ dea_samples = dea_samples %>%
    filter(is.na(data_flag))
 
 
+#- Create the 'methano_dea' data set from the "data_import_EDI" script
+
+
 #---
 #### Ebullition Chamber GHG Samples ####
 #---
@@ -667,6 +676,9 @@ ebu_samples = ebu_samples %>%
    mutate(deployment_length = difftime(last(date_time), first(date_time), units="days"),
           deployment_length = as.numeric(deployment_length)) %>%
    ungroup()
+
+
+#- Create the 'ebu_flux_pond' data set from the "data_import_EDI" script
 
 
 #---
