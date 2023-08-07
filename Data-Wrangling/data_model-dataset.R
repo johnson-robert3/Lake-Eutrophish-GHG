@@ -27,11 +27,11 @@
 ## Prep the individual data sets
 
 # Dissolved gas concentration and diffusive flux
-m10 = lake_flux %>%
+m10 = read_csv("Data/ghg_concentration_flux_total.csv") %>%
    select(pond_id, doy, week, ends_with("flux"), ends_with("lake"))
 
 
-# Daily metabolism estimates
+# Daily metabolism estimates (from 'data_import_EDI' script)
 m11 = metabolism %>%
    # filter(!(GPP < 0 | R > 0)) %>%
    filter(!(if_all(.cols = c(GPP, R, NEP), .fns = is.na)))
@@ -75,6 +75,11 @@ m15 = weather_data %>%
 # m17 = methano_rates %>%
 #    select(pond_id, doy, ch4_rate) %>%
 #    rename(methanogenesis = ch4_rate)
+
+
+# Methanogenesis and DEA
+m16 = methano_dea %>%
+   rename(methanogenesis = ch4_rate, DEA = n2o_rate)
 
 
 # Alkalinity
@@ -141,9 +146,9 @@ m21 = sonde_strat %>%
    select(pond_id, doy, sonde_zmix = z_mix, sonde_strat = stratification)
 
 
-# Ebullition
-# m22 = read_csv("Data/ebullition_total.csv") %>%
-#    select(-week)
+# Ebullition (from 'data_import_EDI' script)
+m22 = ebu_flux_pond %>%
+   select(-week, -flag)
 
 
 #- Combined
@@ -154,13 +159,13 @@ test = m10 %>%          # GHG dissolved conc. and diffusive flux
    full_join(m13) %>%   # sonde surface
    full_join(m14) %>%   # sonde bottom
    full_join(m15) %>%   # weather
-   # full_join(m16) %>%   # DEA
+   full_join(m16) %>%   # DEA and Methanogenesis
    # full_join(m17) %>%   # Methanogenesis
    # full_join(m18) %>%   # alkalinity
    # full_join(m19) %>%   # DOC
    # full_join(m20) %>%   # t-chain stratification
-   full_join(m21) #%>%   # sonde stratification
-   # full_join(m22)       # Ebullition
+   full_join(m21) %>%   # sonde stratification
+   full_join(m22)       # Ebullition
 
 
 test = test %>%
@@ -193,7 +198,7 @@ model_dataset = test %>%
 
 
 # output the complete model dataset
-write_csv(model_dataset, file = "Data/ghg-model-dataset_2023-03-21.csv")
+write_csv(model_dataset, file = "Data/ghg-model-dataset_2023-08-07.csv")
 
 
    ## remove temporary individual data sets
