@@ -436,9 +436,16 @@ ebu_data = ebu_end %>%
    relocate(ends_with("_t0"), .before="pch4_t1")
 
 
+# The Rheadspace() function no longer works with most recent versions of R, so can't recreate the 'lake_conc" data set without a bit of work
+# 
+# If ebullition data need to be worked with or re-calculated for anything, the 'lake_flux' data set from above - which was output and saved 
+#  as 'ghg_concentration_flux_total' - contains all the variables needed for ebullition calcs here, so can just read that file in as needed. 
+
+lake_flux = read_csv("Data/ghg_concentration_flux_total.csv")
+
 # Add lake surface water dissolved gas data to ebullition data set
 ebu_data = ebu_data %>%
-   left_join(lake_conc %>%
+   left_join(lake_flux %>%
                 select(pond_id, doy, surface_temp, ends_with("lake"), starts_with("tKH_")))
 
 
