@@ -77,7 +77,7 @@ m15 = weather_data %>%
 #    rename(methanogenesis = ch4_rate)
 
 
-# Methanogenesis and DEA
+# Methanogenesis and DEA (from 'data_import_EDI' script)
 m16 = methano_dea %>%
    rename(methanogenesis = ch4_rate, DEA = n2o_rate)
 
