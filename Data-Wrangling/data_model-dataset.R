@@ -11,13 +11,13 @@
 # sonde_bottom  [all vars - temp, do, chla, phyco, cond, salinity]
 # weather_data  [wind speed]
 # sonde_strat [profile z_mix; profile mixed/stratified status]
+# dea_rates  [DEA N2O]
+# methano_rates  [methanogenesis]
+# ebullition
 
 
 # No longer needed/used
 
-# dea_rates  [DEA N2O]
-# methano_rates  [methanogenesis]
-# ebullition
 # doc_data [DOC]
 # hobo_strat  [daily mean z_mix; daily mean z_mix between 900a-1130a; mean z_mix of previous 24h; percent of previous 24h mixed/stratified]
 # alk_data  [alkalinity]
@@ -26,7 +26,7 @@
 
 ## Prep the individual data sets
 
-# Dissolved gas concentration and diffusive flux
+# Dissolved gas concentration and diffusive flux (from data set created and output in 'data_ghg-calculations' script)
 m10 = read_csv("Data/ghg_concentration_flux_total.csv") %>%
    select(pond_id, doy, week, ends_with("flux"), ends_with("lake"))
 
@@ -37,25 +37,25 @@ m11 = metabolism %>%
    filter(!(if_all(.cols = c(GPP, R, NEP), .fns = is.na)))
 
 
-# Surface water limno samples
+# Surface water limno samples (from 'data_import_EDI' script)
 m12 = limno_field_data %>%
    select(pond_id, doy, period, tn, tp, nox, srp) %>%
    # align dates of nutrient samples with GHG samples (became offset after DOY 220; nutrients were sampled the day after GHGs)
    mutate(doy = if_else(doy > 221, doy - 1, doy))
 
 
-# Sonde surface water values
+# Sonde surface water values (from 'data_import_EDI' script then 'data_import-and-process' script)
 m13 = sonde_surface %>%
    select(-contains("_rfu"))
 
 
-# Sonde bottom water values
+# Sonde bottom water values (from 'data_import_EDI' script then 'data_import-and-process' script)
 m14 = sonde_bottom %>%
    select(-contains("_rfu")) %>%
    rename_with(.fn = ~paste("bottom", ., sep="_"), .cols = temp:last_col())
 
 
-# Weather
+# Weather (from 'data_import_EDI' script)
 m15 = weather_data %>%
    mutate(U10 = wind_speed * ((10 / wind_z)^(1/7))) %>%
    select(doy, wind_speed, U10) %>%
@@ -141,7 +141,7 @@ m16 = methano_dea %>%
 # m20 = full_join(t1, t2) %>% full_join(t3) %>% full_join(t4)
 
 
-# Sonde profile stratification
+# Sonde profile stratification (from 'data_import_EDI' script then 'data_stratification' script)
 m21 = sonde_strat %>%
    select(pond_id, doy, sonde_zmix = z_mix, sonde_strat = stratification)
 
@@ -149,6 +149,7 @@ m21 = sonde_strat %>%
 # Ebullition (from 'data_import_EDI' script)
 m22 = ebu_flux_pond %>%
    select(-week, -flag)
+
 
 
 #- Combined
@@ -168,12 +169,14 @@ test = m10 %>%          # GHG dissolved conc. and diffusive flux
    full_join(m22)       # Ebullition
 
 
+
 test = test %>%
    mutate(treatment = case_when(pond_id %in% c("A", "B", "C") ~ "pulsed",
                                 pond_id %in% c("D", "E", "F") ~ "reference")) %>%
    relocate(treatment, .after=pond_id) %>%
    # remove 3 blank rows with extra wind speed data
    filter(!(is.na(pond_id)))
+
 
 
 model_dataset = test %>%

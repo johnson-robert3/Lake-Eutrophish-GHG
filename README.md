@@ -13,7 +13,7 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
 
 **DO cleaning:** there were a few times when miniDOT loggers were removed from ponds for >30 minutes for data download (leading to a missed measurement), and DO data were linearly interpolated to backfill these gaps; for metabolism calculations, any time DO concentration (from miniDOT loggers) drops by 2.0 mg/L or more from the previous measurement, that point, along with the following 5 points (i.e., 3 hours total) are dropped, and DO concentration data are then backfilled via linear interpolation 
 
-**Metabolism functions:** currently, the corrected/interpolated DO concentration data (as above) are used to calculate metabolism (not rolling window data, but this is another possibility)
+**Metabolism functions:** currently, the corrected/interpolated DO concentration data (as above) are used to calculate metabolism
 
 **Z-mix:** currently the mixed-layer depth is set as the depth of the thermocline (from t-chains in ponds B and F), but during times of mixing/turnover or when the function couldn't correctly calculate a thermocline depth, Z-mix is set to 1.5 m
 
@@ -28,11 +28,12 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
 ### Modeling Notes
 To recreate the full model dataset from all individual datasets, run scripts in this order:
 
-   1. data_import-and-process
-   2. data_stratification
-   3. data_ghg-calculations
-   4. doc_data-sheet-processing
-   5. metabolism-calcs
-   6. data_model-dataset
+   1. data_import_EDI
+   2. data_import-and-process
+   3. data_stratification
+   4. data_ghg-calculations
+   5. doc_data-sheet-processing
+   6. metabolism-calcs
+   7. data_model-dataset
 
 
