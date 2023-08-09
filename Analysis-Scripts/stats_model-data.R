@@ -13,7 +13,7 @@ if (!require(tidyverse)) install.packages('tidyverse'); library(tidyverse)
 #-- Step 1: Prepare the data
 
 # Full data set
-fdat = read_csv("Data/ghg-model-dataset_2023-03-21.csv") %>%
+fdat = read_csv("Data/ghg-model-dataset_2023-08-07.csv") %>%
    # force date format (sometimes date format can be weird coming from Excel)
    mutate(date = ymd(date)) %>%
    # add nutrient and foodweb treatment identifiers

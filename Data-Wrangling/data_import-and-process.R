@@ -21,6 +21,9 @@ pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
 # Daily Sonde Profiles
 #---
 
+#- Create the 'sonde_profiles' data set from the "data_import_EDI" script
+   
+
 # Import, process, and combine individual sonde profiles
 {
 # Function to wrangle each sonde profile data sheet as it is read in
@@ -148,8 +151,6 @@ write.csv(sonde_profiles, file = "Data/sonde-profiles_all-data_2022-07-20.csv", 
    ##
 }
 
-#- Create the 'sonde_profiles' data set from the "data_import_EDI" script
-   
 
 ##__Surface water means 
 #  Depth: 5-50 cm
@@ -195,7 +196,7 @@ sonde_int = sonde_profiles %>%
                                 vert_m > 2.0 ~ 2.1)) %>%
    # mean values within each depth interval
    group_by(pond_id, doy, depth_int) %>%
-   summarize(across(temp:salinity, mean, na.rm=T)) %>%
+   summarize(across(temp:salinity, ~mean(., na.rm=T))) %>%
    ungroup() 
 
 
@@ -223,6 +224,9 @@ sonde_bottom = sonde_int %>%
 #---
 # HOBO T-chains
 #---
+
+#- Create the 'hobo_temp' data set from the "data_import_EDI" script
+
 
 # Import, process, and combine individual Hobo data files
 {
@@ -266,12 +270,13 @@ hobo_temp = tibble(file_name = hobo_files) %>%
 write.csv(hobo_temp, file = "Data/hobo_t-chain_profiles.csv", row.names=FALSE)
 }
 
-#- Create the 'hobo_temp' data set from the "data_import_EDI" script
-
 
 #---
 # MiniDOT Surface Temp DO Time-Series Data
 #---
+
+#- Create the 'minidot' data set from the "data_import_EDI" script
+
 
 # Import, process, and combine all miniDOT temp/DO files
 {
@@ -395,8 +400,6 @@ minidot = minidot %>%
 write.csv(minidot, file = "Data/miniDOT_total.csv", row.names=FALSE)
 }
 
-#- Create the 'minidot' data set from the "data_import_EDI" script
-
 
 #---
 # Alkalinity
@@ -415,6 +418,9 @@ alk_data = read_csv("Data/R-Data/2020_alkalinity-data.csv") %>%
 # Field Samples
 #---
 
+#- Create the 'limno_field_data' data set from the "data_import_EDI" script
+
+
 # Field data
 limno_field_data = read_csv("Data/R-Data/2020_limno-field-data.csv") %>%
    rename(pond_id = pond,
@@ -424,12 +430,12 @@ limno_field_data = read_csv("Data/R-Data/2020_limno-field-data.csv") %>%
           phyco_filter = phycofil)
 
 
-#- Create the 'limno_field_data' data set from the "data_import_EDI" script
-
-
 #---
 #### Weather Data ####
 #---
+
+#- Create the 'weather_data' data set from the "data_import_EDI" script
+
 
 # Data
 weather_data_raw = read.csv("Data/R-Data/2020_weather-data.csv", skip=1)
@@ -456,12 +462,12 @@ weather_data = weather_data %>%
    mutate(wind_z = rep_len(4, n()))
 
 
-#- Create the 'weather_data' data set from the "data_import_EDI" script
-
-
 #---
 #### Lake Concentration GHG Samples ####
 #---
+
+#- Create the 'lake_flux' data set, which contains these concentration data, from the "data_import_EDI" script
+
 
 # GHG data
 ghg_lake_raw = read_csv("Data/R-Data/2020_ghg-data_lake-conc.csv")
@@ -572,6 +578,9 @@ lake_samples = left_join(lake_sample_data, lake_ghg) %>%
 #### Methanogenesis GHG Samples ####
 #---
 
+#- Create the 'methano_dea' data set from the "data_import_EDI" script
+
+
 # GHG data
 ghg_methano_raw = read_csv("Data/R-Data/2020_ghg-data_methanogenesis.csv")
 
@@ -605,6 +614,9 @@ methano_samples = methano_samples %>%
 #### Denitrification Enzyme Activity GHG Samples ####
 #---
 
+#- Create the 'methano_dea' data set from the "data_import_EDI" script
+
+
 # GHG data
 ghg_dea_raw = read_csv("Data/R-Data/2020_ghg-data_DEA.csv")
 
@@ -637,6 +649,9 @@ dea_samples = dea_samples %>%
 #---
 #### Ebullition Chamber GHG Samples ####
 #---
+
+#- Create the 'ebu_flux_pond' data set from the "data_import_EDI" script
+
 
 # GHG data
 ghg_ebu_raw = read_csv("Data/R-Data/2020_ghg-data_ebullition.csv")
@@ -672,6 +687,9 @@ ebu_samples = ebu_samples %>%
 #---
 #### Sediment Data ####
 #---
+
+# Only needed for calculating slurry mass for methanogenesis and DEA rats
+
 
 # Data
 bulk_density_raw = read_csv("Data/R-Data/2020_sediment_bulk-density.csv")

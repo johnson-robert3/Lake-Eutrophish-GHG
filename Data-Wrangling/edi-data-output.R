@@ -51,9 +51,9 @@ read_csv("Data/ebullition_total.csv") %>%
 # processed dataset from "metabolism-calcs" script
 read_csv("Data/metabolism_total.csv") %>%
    # add data flag column to ID days with erroneous metabolism measurements
-   mutate(flag = if_else(GPP < 0 | R > 0, "E", NULL)) %>%
+   mutate(flag = if_else(GPP < 0 | R > 0, "e", NULL)) %>%
    # replace metabolism estimates on days with erroneous estimates with NA (but leave the day in the data set)
-   mutate(across(GPP:NEP, ~replace(., flag=="E", NA_real_))) %>%
+   mutate(across(GPP:NEP, ~replace(., flag=="e", NA_real_))) %>%
    # output directly to the shared EDI submission folder in Box
    write.csv(., file = "C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/daily_metabolism.csv", row.names=FALSE)
 

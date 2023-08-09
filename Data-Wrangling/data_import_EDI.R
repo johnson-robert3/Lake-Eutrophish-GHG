@@ -52,11 +52,16 @@ lake_flux = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submissio
 
 
 #-- GHG Methanogenesis and DEA --#
-methano_dea = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/ghg_production_assays.csv")
+methano_dea = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/ghg_production_assays.csv") %>%
+   # change variable names back to originals, so they match and work across scripts
+   rename(ch4_rate = methanogenesis_potential,
+          n2o_rate = DEA)
 
 
 #-- GHG Ebullition --#
-ebu_flux_pond = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/ghg_ebullition.csv")
+ebu_flux_pond = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/ghg_ebullition.csv") %>%
+   # change variable names back to originals, so they match and work across scripts
+   rename(ch4_ebu_flux = ch4_ebullitive_flux)
 
 
 #-- Metabolism --#
