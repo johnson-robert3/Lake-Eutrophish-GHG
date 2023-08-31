@@ -9,7 +9,7 @@ rm(list=ls())
 
 # setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-dat.raw <- read.csv("Data/ghg-model-dataset_2023-03-21.csv")
+dat.raw <- read.csv("Data/ghg-model-dataset_2023-08-07.csv")
 
 # absolute value of ecosystem respiration values (lower values of R denote higher rates of respiration)
 dat.raw <- dat.raw |> dplyr::mutate(R = abs(R))
@@ -266,7 +266,7 @@ aty2 <- rep(1:length(varlist.main), times=4)
 # png("event_quantiles_rj_absR_comp1-window-update.png", res=300, units="in", width=6.5, height=6.5)
 png("event_quantiles_rj_absR_comp1-prev-times-only.png", res=300, units="in", width=6.5, height=4.5)
 
-# windows(height = 4.5, width = 6.5)
+windows(height = 4.5, width = 6.5)
 
 layout(matrix(1:3, ncol=3), widths=c(0.45,0.45,0.15))
 par(mar=c(6.1,1.1,3.1,0.6), oma=c(0,6,0,2), mgp=c(2.5,1,0))
@@ -332,10 +332,10 @@ ggplot(comp1.p2 %>% as.data.frame() %>%
 
 #---
 
-# t_col <- function(color, percent = 50) {
-  #      color = color name
-  #    percent = % transparency
-  #       name = an optional name for the color
+t_col <- function(color, percent = 50) {
+   #   color = color name
+   # percent = % transparency
+   #    name = an optional name for the color
   
   ## Get RGB values for named color
   rgb.val <- col2rgb(color)
