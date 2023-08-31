@@ -52,7 +52,7 @@ ggplot(fdat %>%
    #
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140, 240, 20)) +
    # scale_y_continuous(name = expression(CH[4]~'potential'~(nmol~g^-1~h^-1)), breaks = seq(0, 15, 5)) +
-   scale_y_continuous(name = "Methanogenesis potential<br>( nmol CH<sub>4</sub> g<sup>-1</sup>h<sup>-1</sup>)", breaks = seq(0, 15, 5)) +
+   scale_y_continuous(name = "Methanogenesis potential<br>(nmol CH<sub>4</sub> g<sup>-1</sup>h<sup>-1</sup>)", breaks = seq(0, 15, 5)) +
    coord_cartesian(ylim = c(0, 15.5), clip = "off") +
    # event labels
    annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176, 187.5, 211, 223), y = 15.5 + ((15.5)*0.1), size=3) +
@@ -97,7 +97,7 @@ ggplot(fdat %>%
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    #
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
-   scale_y_continuous(name = expression(DEA~~(' '*nmol~N[2]*O~g^-1~h^-1*' ')), breaks = seq(0, 1.2, 0.3)) +
+   scale_y_continuous(name = expression(DEA~~(nmol~N[2]*O~g^-1~h^-1)), breaks = seq(0, 1.2, 0.3)) +
    coord_cartesian(ylim = c(0, 1.2), clip = "off") +
    # event labels
    annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176, 187.5, 211, 223), y = 1.2 + ((1.2)*0.1), size=3) +
@@ -140,7 +140,7 @@ ggplot(fdat %>%
    #
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140, 240, 20)) +
    # scale_y_continuous(name = expression(Ebullition~(mmol~m^2~d^-1)), breaks = seq(0, 15, 5)) +
-   scale_y_continuous(name = "Ebullition<br>( mmol CH<sub>4</sub> m<sup>-2</sup>d<sup>-1</sup>)", breaks = seq(0, 15, 5)) +
+   scale_y_continuous(name = "Ebullition<br>(mmol CH<sub>4</sub> m<sup>-2</sup>d<sup>-1</sup>)", breaks = seq(0, 15, 5)) +
    coord_cartesian(ylim = c(-0.5, 15), clip = "off") +
    # event labels
    annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176, 187.5, 211, 223), y = 15 + ((0.5+15)*0.1), size=3) +
