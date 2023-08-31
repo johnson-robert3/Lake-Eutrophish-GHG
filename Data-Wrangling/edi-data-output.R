@@ -68,7 +68,7 @@ read_csv("Data/sonde-profiles_all-data_2022-07-20.csv") %>%
 
 
 # Surface Chl-a average from 10-30 cm (for file: "surface_nutrients_chla")
-read_csv("Data/sonde-profiles_all-data_2022-07-20.csv") %>%
+read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/profiles_daily_deepsite.csv") %>%
    group_by(pond_id, doy) %>%
    filter(between(vert_m, 0.10, 0.30)) %>%
    summarize(chla_10_30 = mean(chla, na.rm=T)) %>%
@@ -91,7 +91,6 @@ read_csv("Data/sonde-profiles_all-data_2022-07-20.csv") %>%
 read_csv("Data/miniDOT_total.csv") %>%
    # output directly to the shared EDI submission folder in Box
    write.csv(., file = "C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/do_sensor_hf.csv", row.names=FALSE)
-
 
 
 
