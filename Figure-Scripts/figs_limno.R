@@ -158,7 +158,7 @@ ggplot(pdat,
 # 2-panel, DO concentration
 windows(height=7/3*2, width=3.25); plot_grid(sdo, bdo, ncol=1, align='v', rel_heights = c(0.95, 1), labels="AUTO", label_size=11, label_y=0.99, label_x=0.01)
 
-ggsave(file = "pond_DO.png", height=7/3*2, width=3.25, units='in')
+# ggsave(file = "pond_DO.png", height=7/3*2, width=3.25, units='in')
 
 
 
@@ -181,12 +181,13 @@ ggplot(pdat,
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140, 240, 20)) +
-   scale_y_continuous(name = expression(Surface~DO~('%')), breaks = seq(0, 200, 50)) +
-   coord_cartesian(ylim = c(0, 200), clip = "off") +
+   scale_y_continuous(name = expression(Surface~DO~('%')), breaks = seq(0, 250, 50)) +
+   coord_cartesian(ylim = c(0, 250), clip = "off") +
    # event labels
-   annotate(geom = "text", label = c('P1', 'H', 'P2', 'D'), x = c(176.5, 187.5, 211.5, 223), y = 200 + ((200)*0.1), size=3) +
+   annotate(geom = "text", label = c('P1', 'H', 'P2', 'D'), x = c(176.5, 187.5, 211.5, 223), y = 250 + ((250)*0.1), size=3) +
    # white box beneath legend
-   annotate(geom = "rect", xmin = 205, xmax = 241, ymin = 140, ymax = 200, fill="white", color="white") +
+   # annotate(geom = "rect", xmin = 205, xmax = 241, ymin = 140, ymax = 200, fill="white", color="white") +
+   annotate(geom = "rect", xmin = 205, xmax = 241, ymin = 180, ymax = 250, fill="white", color="white") +
    #
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
@@ -245,7 +246,7 @@ ggplot(pdat,
 # 2-panel, DO saturation
 windows(height=7/3*2, width=3.25); plot_grid(sdo, bdo, ncol=1, align='v', rel_heights = c(0.95, 1), labels="AUTO", label_size=11, label_y=0.99, label_x=0.01)
 
-ggsave(file = "pond_DO_sat.png", height=7/3*2, width=3.25, units='in')
+# ggsave(file = "pond_DO_sat.png", height=7/3*2, width=3.25, units='in')
 
 
 
