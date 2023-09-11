@@ -185,8 +185,8 @@ ggplot(fdat %>%
    # stat_smooth(aes(x = doy, y = diff), geom="line", linewidth=1.25, span=0.25, alpha=0.9, color="#38A3A5") +
    #
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
-   # scale_y_continuous(name = expression(Pulse~'\u2013'~Ref~~(mmol~CH[4]~m^-2~d^-1)), breaks = seq(-10, 20, 10)) +
-   scale_y_continuous(name = expression(CH[4]~diff*'.'*','~~Pulse~'\u2013'~Ref)) +
+   scale_y_continuous(name = expression(CH[4]~diff*'.'~(mmol~m^-2~d^-1)), breaks = seq(-10, 20, 10)) +
+   # scale_y_continuous(name = expression(CH[4]~diff*'.'*','~~Pulse~'\u2013'~Ref)) +
    coord_cartesian(ylim = c(-10, 21), clip = "off") +
    # event labels
    annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176.5, 187.5, 211.5, 223), y = 21 + ((10+21)*0.1), size=3) +
@@ -218,8 +218,8 @@ ggplot(fdat %>%
    # stat_smooth(aes(x = doy, y = diff), geom="line", linewidth=1.25, span=0.25, alpha=0.9, color="#38A3A5") +
    #
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
-   # scale_y_continuous(name = expression(Pulse~'\u2013'~Ref~~(mu*mol~N[2]*O~m^-2~d^-1))) +
-   scale_y_continuous(name = expression(N[2]*O~diff*'.'*','~~Pulse~'\u2013'~Ref)) +
+   scale_y_continuous(name = expression(N[2]*O~diff*'.'~(mu*mol~m^-2~d^-1))) +
+   # scale_y_continuous(name = expression(N[2]*O~diff*'.'*','~~Pulse~'\u2013'~Ref)) +
    coord_cartesian(ylim = c(-2.5, 1.2), clip = "off") +
    # event labels
    annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176.5, 187.5, 211.5, 223), y = 1.2 + ((2.5+1.2)*0.1), size=3) +
@@ -250,8 +250,8 @@ ggplot(fdat %>%
    # stat_smooth(aes(x = doy, y = diff), geom="line", linewidth=1.25, span=0.25, alpha=0.9, color="#38A3A5") +
    #
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
-   # scale_y_continuous(name = expression(Pulse~'\u2013'~Ref~~(mmol~CO[2]~m^-2~d^-1))) +
-   scale_y_continuous(name = expression(CO[2]~diff*'.,'~~Pulse~'\u2013'~Ref)) +
+   scale_y_continuous(name = expression(CO[2]~diff*'.'~(mmol~m^-2~d^-1))) +
+   # scale_y_continuous(name = expression(CO[2]~diff*'.,'~~Pulse~'\u2013'~Ref)) +
    coord_cartesian(ylim = c(-135, 65), clip = "off") +
    # event labels
    annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176.5, 187.5, 211.5, 223), y = 65 + ((135+65)*0.1), size=3) +
