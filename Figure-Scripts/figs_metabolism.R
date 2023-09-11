@@ -4,23 +4,22 @@
 #~~~
 
 
+library(tidyverse)
 library(cowplot)
 library(patchwork)
-library(viridis)
-library(slider)
+# library(viridis)
+# library(slider)
+
 
 source("Figure-Scripts/figs_functions.R")
 
 
-# Pond/Site Data
-pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
+# Data
 
-# Data for plotting
-#  Need to run "stats_model-data.R" script first
-pdat = fdat %>% 
-   mutate(date = ymd(date)) %>%
-   left_join(pond_data %>% 
-                select(pond_id, starts_with("trt")))
+# create the 'fdat' and 'pond_data' data sets from the "stats_model-data" script 
+source("Analysis-Scripts/stats_model-data.R")
+
+pdat = fdat
 
 
 
