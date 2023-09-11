@@ -33,12 +33,12 @@ fig_events = function(.fig) {
       annotate(geom = 'rect', xmin = 176+1, xmax = 176+5, ymin = -Inf, ymax = Inf, fill='gray90') +
       annotate(geom = 'rect', xmin = 211+1, xmax = 211+5, ymin = -Inf, ymax = Inf, fill='gray90') +
       # pulse events, DOY 176 and 211 (after all sampling had occurred)
-      geom_vline(xintercept = c(176.8, 211.8), linetype=1, color="gray40", size=0.8) +
+      geom_vline(xintercept = c(176.8, 211.8), linetype=1, color="gray40", linewidth=0.8) +
       # heat event, DOY 185-190 (July 3-8, 2020)
       annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill='gray75') +
       # derecho, DOY 223 (Aug. 10, 2020)
       annotate(geom = 'rect', xmin = 223+1, xmax = 223+5, ymin = -Inf, ymax = Inf, fill='gray90') +
-      geom_vline(xintercept = 223.8, linetype=2, color='gray40', size=0.8)
+      geom_vline(xintercept = 223.8, linetype=2, color='gray40', linewidth=0.8)
 }
 
 # panel and axis aesthetics
@@ -66,7 +66,7 @@ ggplot(fdat %>%
    fig_events() +
    
    # zero line
-   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
+   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean 
@@ -99,7 +99,7 @@ ggplot(fdat %>%
    fig_events() +
    
    # zero line
-   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
+   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean 
@@ -130,7 +130,7 @@ ggplot(fdat %>%
    fig_events() +
    
    # zero line
-   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
+   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean 
@@ -174,10 +174,10 @@ ggplot(fdat %>%
           mutate(diff = pulsed - reference),
        aes(x = doy, y = diff)) +
    #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", size=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", size=0.8) +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
+   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    #
    geom_line() +
    geom_point() +
@@ -207,10 +207,10 @@ ggplot(fdat %>%
           mutate(diff = pulsed - reference),
        aes(x = doy, y = diff)) +
    #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", size=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", size=0.8) +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
+   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    #
    geom_line() +
    geom_point() +
@@ -239,10 +239,10 @@ ggplot(fdat %>%
           mutate(diff = pulsed - reference),
        aes(x = doy, y = diff)) +
    #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", size=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", size=0.8) +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
+   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    #
    geom_line() +
    geom_point() +
