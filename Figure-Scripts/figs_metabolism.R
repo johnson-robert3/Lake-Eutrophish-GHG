@@ -28,42 +28,41 @@ pdat = fdat
 #--
 
 # 1 panel (blue & red)
-windows(height=4, width=5.5)
-nep = 
+windows(height=7/3, width=3.25)
+nep =
 ggplot(pdat,
        aes(x = doy, y = NEP)) +
    #
-   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
-   #            aes(xintercept = date), linetype=2, color="gray60") +
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
-   geom_vline(xintercept = 223, linetype=2, color="gray40") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", size=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color="gray40", size=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
    # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean 
    # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, alpha=0.8, span=0.05) +
    geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(NEP, na.rm=T)) %>% ungroup(),
-             aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) +
+             aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   # scale_x_date(name = NULL, 
-   #              breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
-   #              labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
-   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
-   scale_y_continuous(name = expression(NEP~(mg~O[2]~L^-1~d^-1)), limits = c(-8, 8), breaks = seq(-8, 8, 2)) +
-   # ggtitle("Net Ecosystem Production") +
+   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   scale_y_continuous(name = expression(NEP~(mg~O[2]~L^-1~d^-1)), breaks = seq(-8, 8, 2)) +
+   coord_cartesian(ylim = c(-8, 8), clip = "off") +
+   # event labels
+   annotate(geom = "text", label = c('P1', 'H', 'P2', 'D'), x = c(176.5, 187.5, 211.5, 223), y = 8 + ((8+8)*0.1), size=3) +
    #
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
          # legend.position = c(0.16, 0.16),
+         # legend.background = element_blank(), 
          legend.position = "none",
-         legend.background = element_blank(), 
-         axis.ticks.length = unit(0.3, 'line'),
-         axis.text = element_text(color='black', size=rel(1)),
-         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
-         axis.title.x = element_text(margin = margin(t=0.5, unit="line"), size=rel(1.1)),
-         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
+         axis.ticks = element_line(color='black'), 
+         axis.text = element_text(color='black', size=9),
+         axis.text.x = element_text(hjust=0.3, margin = margin(t=2, 'line')),
+         axis.title = element_text(color="black", size=9.5), 
+         axis.title.x = element_text(margin = margin(t=3, 'line')),
+         axis.title.y = element_text(margin = margin(r=1, 'line')),
+         plot.margin = unit(c(1,0.5,0.5,0.5), "lines"))
 
 # ggsave(file = "NEP.png")
 
@@ -74,41 +73,40 @@ ggplot(pdat,
 #--
 
 # 1 panel (blue & red)
-windows(height=4, width=5.5)
-re = 
+windows(height=7/3, width=3.25)
+re =
 ggplot(pdat,
        aes(x = doy, y = R)) +
    #
-   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
-   #            aes(xintercept = date), linetype=2, color="gray60") +
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
-   geom_vline(xintercept = 223, linetype=2, color="gray40") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", size=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color="gray40", size=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
    # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean
    # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, alpha=0.8, span=0.15) +
    geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(R, na.rm=T)) %>% ungroup(),
-             aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) +
+             aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   # scale_x_date(name = NULL, 
-   #              breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
-   #              labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
    scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
-   scale_y_continuous(name = expression(R~(mg~O[2]~L^-1~d^-1)), limits = c(-20, 0), breaks = seq(-20, 0, 5)) +
-   # ggtitle("Ecosystem Respiration") +
+   scale_y_continuous(name = expression(R~(mg~O[2]~L^-1~d^-1)), breaks = seq(-20, 0, 5)) +
+   coord_cartesian(ylim = c(-20, 0), clip = "off") +
+   # event labels
+   annotate(geom = "text", label = c('P1', 'H', 'P2', 'D'), x = c(176.5, 187.5, 211.5, 223), y = 0 + ((20)*0.1), size=3) +
    #
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
          # legend.position = c(0.16, 0.16),
          legend.position = "none", 
-         axis.ticks.length = unit(0.3, 'line'),
-         axis.text = element_text(color='black', size=rel(1)),
-         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
-         axis.title.x = element_text(margin = margin(t=0.5, unit="line"), size=rel(1.1)),
-         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
+         axis.ticks = element_line(color='black'), 
+         axis.text = element_text(color='black', size=9),
+         axis.text.x = element_text(hjust=0.3, margin = margin(t=2, 'line')),
+         axis.title = element_text(color="black", size=9.5), 
+         axis.title.x = element_text(margin = margin(t=3, 'line')),
+         axis.title.y = element_text(margin = margin(r=1, 'line')),
+         plot.margin = unit(c(1,0.5,0,0.5), "lines"))
 
 # ggsave(file = "Re.png")
 
@@ -119,49 +117,51 @@ ggplot(pdat,
 #--
 
 # 1 panel (blue & red)
-windows(height=4, width=5.5)
-gpp = 
+windows(height=7/3, width=3.25)
+gpp =
 ggplot(pdat,
        aes(x = doy, y = GPP)) +
    #
-   # geom_vline(data = ~filter(.x, doy %in% c(176, 211)), 
-   #            aes(xintercept = date), linetype=2, color="gray60") +
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
-   geom_vline(xintercept = 223, linetype=2, color="gray40") +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", size=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color="gray40", size=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray60") +
+   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
    # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, size=0.5) +
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean
    # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, alpha=0.8, span=0.15) +
    geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(GPP, na.rm=T)) %>% ungroup(),
-             aes(x = doy, y = mean, color = trt_nutrients), size=1.3, alpha=1) +
+             aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   # scale_x_date(name = NULL, 
-   #              breaks = as_date(c('2020-06-01', '2020-06-15', '2020-07-01', '2020-07-15', '2020-08-01', '2020-08-15', '2020-09-01')), 
-   #              labels = c('Jun 1', '', 'Jul 1', '', 'Aug 1', '', " ")) + 
    scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
-   scale_y_continuous(name = expression(GPP~(mg~O[2]~L^-1~d^-1)), limits = c(0, 20), breaks = seq(0, 20, 5)) +
+   scale_y_continuous(name = expression(GPP~(mg~O[2]~L^-1~d^-1)), breaks = seq(0, 20, 5)) +
+   coord_cartesian(ylim = c(0, 20), clip = "off") +
+   # event labels
+   annotate(geom = "text", label = c('P1', 'H', 'P2', 'D'), x = c(176.5, 187.5, 211.5, 223), y = 20 + ((20)*0.1), size=3) +
    #
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
-         legend.position = c(0.15, 0.88),
+         legend.position = c(0.17, 0.88),
          legend.background = element_blank(), 
-         axis.ticks.length = unit(0.3, 'line'),
-         axis.text = element_text(color='black', size=rel(1)),
-         axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
-         axis.title.x = element_text(margin = margin(t=0.5, unit="line"), size=rel(1.1)),
-         axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
+         legend.text = element_text(size=8),
+         legend.key.size = unit(0.8, "lines"),
+         axis.ticks = element_line(color='black'), 
+         axis.text = element_text(color='black', size=9),
+         axis.text.x = element_text(hjust=0.3, margin = margin(t=2, 'line')),
+         axis.title = element_text(color="black", size=9.5), 
+         axis.title.x = element_text(margin = margin(t=3, 'line')),
+         axis.title.y = element_text(margin = margin(r=1, 'line')),
+         plot.margin = unit(c(1,0.5,0,0.5), "lines"))
 
 # ggsave(file = "GPP.png")
 
 
 
 ## 3-panel all metabolism together
-windows(height=3.5*3, width=5); plot_grid(gpp, re, nep, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99, label_x=0.01)
+windows(height=7, width=3.25); plot_grid(gpp, re, nep, ncol=1, align='v', labels="AUTO", label_size=11, label_y=0.99, label_x=0.02)
 
-# ggsave(file = "metabolism.png", height=3.5*3, width=5, units = "in")
+# ggsave(file = "metabolism.png", height=7, width=3.25, units = "in")
 
 
 
