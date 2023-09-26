@@ -250,6 +250,51 @@ windows(height=7/3*2, width=3.25); plot_grid(sdo, bdo, ncol=1, align='v', rel_he
 
 
 
+#--
+# Temperature
+#--
+
+# pond surface temp (data used in comparison analysis)
+windows(height=7/3, width=3.25)
+ggplot(pdat,
+       aes(x = doy, y = temp)) +
+   #
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", size=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color="gray40", size=0.8) +
+   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+   # pond data
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
+   # treatment mean
+   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
+   # geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(temp, na.rm=T)) %>% ungroup(),
+   #           aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
+   #
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
+   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   scale_y_continuous(name = expression(Surface~temp~(degree*C))) +
+   coord_cartesian(ylim = c(15, 30), clip = "off") +
+   # event labels
+   annotate(geom = "text", label = c('P1', 'H', 'P2', 'D'), x = c(176.5, 187.5, 211.5, 223), y = 30 + ((30-15)*0.1), size=3) +
+   # white box beneath legend
+   # annotate(geom = "rect", xmin = 205, xmax = 241, ymin = 12, ymax = 17, fill="white", color="white") +
+   #
+   theme_classic() +
+   theme(panel.border = element_rect(fill=NA, color="black"),
+         # legend.position = c(0.79, 0.85),
+         legend.position = 'none',
+         # legend.background = element_blank(),
+         # legend.key.size = unit(0.5, "cm"),
+         axis.ticks = element_line(color='black'), 
+         axis.text = element_text(color='black', size=9),
+         axis.text.x = element_text(hjust=0.3, margin = margin(t=2, 'line')),
+         axis.title = element_text(color="black", size=9.5), 
+         axis.title.x = element_text(margin = margin(t=3, 'line')),
+         axis.title.y = element_text(margin = margin(r=1, 'line')),
+         plot.margin = unit(c(1,0.5,0.5,0.5), "lines"))
+
+# ggsave(file = "surface temp.png")
+
+
 #===
 # Field Samples
 #===
