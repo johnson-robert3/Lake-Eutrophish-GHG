@@ -7,8 +7,6 @@
 library(tidyverse)
 library(cowplot)
 library(patchwork)
-# library(viridis)
-# library(slider)
 
 source("Figure-Scripts/figs_functions.R")
 
@@ -23,16 +21,6 @@ pdat = fdat
 #===
 # Sonde Profile Data
 #===
-
-# daily surface limno values from sonde profiles
-# ldat = left_join(sonde_surface, pond_data)  # no longer needed, the full dataset (fdat) now directly uses the sonde_surface values
-
-
-# rolling window data (3-day)
-# rdat = sonde_surface %>%
-#    mutate(across(temp:salinity, ~slide_dbl(., mean, .before=2, .complete=T))) %>%
-#    left_join(pond_data)
-
 
 #--
 # Chlorophyll
@@ -75,7 +63,7 @@ ggplot(pdat,
 # Dissolved Oxygen
 #--
 
-## Surface DO concentration
+#- Surface DO concentration
 windows(height=7/3, width=3.25)
 sdo =
 ggplot(pdat,
@@ -114,10 +102,8 @@ ggplot(pdat,
          axis.title.y = element_text(margin = margin(r=1, 'line')),
          plot.margin = unit(c(1,0.5,0,0.5), "lines"))
 
-# ggsave(filename = "surface-water-DO.png")
 
-
-## Bottom water DO concentration 
+#- Bottom water DO concentration 
 windows(height=7/3, width=3.25)
 bdo =
 ggplot(pdat,
@@ -152,8 +138,6 @@ ggplot(pdat,
          axis.title.y = element_text(margin = margin(r=1, 'line')),
          plot.margin = unit(c(1,0.5,0.5,0.5), "lines"))
 
-# ggsave(filename = "bottom-water-DO.png")
-
 
 # 2-panel, DO concentration
 windows(height=7/3*2, width=3.25); plot_grid(sdo, bdo, ncol=1, align='v', rel_heights = c(0.95, 1), labels="AUTO", label_size=11, label_y=0.99, label_x=0.01)
@@ -162,7 +146,7 @@ windows(height=7/3*2, width=3.25); plot_grid(sdo, bdo, ncol=1, align='v', rel_he
 
 
 
-## Surface DO saturation
+#- Surface DO saturation
 windows(height=7/3, width=3.25)
 sdo =
 ggplot(pdat,
@@ -202,10 +186,8 @@ ggplot(pdat,
          axis.title.y = element_text(margin = margin(r=1, 'line')),
          plot.margin = unit(c(1,0.5,0,0.5), "lines"))
 
-# ggsave(filename = "surface-water-DO-sat.png")
 
-
-## Bottom DO saturation
+#- Bottom DO saturation
 windows(height=7/3, width=3.25)
 bdo =
 ggplot(pdat,
@@ -239,8 +221,6 @@ ggplot(pdat,
          axis.title.x = element_text(margin = margin(t=3, 'line')),
          axis.title.y = element_text(margin = margin(r=1, 'line')),
          plot.margin = unit(c(1,0.5,0.5,0.5), "lines"))
-
-# ggsave(filename = "bottom-water-DO-sat.png")
 
 
 # 2-panel, DO saturation
@@ -303,7 +283,7 @@ ggplot(pdat,
 # DOC
 #--
 
-## 1-panel (blue & red)
+#- 1-panel (blue & red)
 windows(height=3.5, width=5)
 ggplot(fdat %>% 
           filter(!(is.na(doc_ppm))) %>% 
@@ -328,8 +308,6 @@ ggplot(fdat %>%
          legend.position = c(0.85, 0.87),
          axis.title.y = element_text(margin = margin(r=0.5, unit="line")),
          axis.title.x = element_text(margin = margin(t=0.5, unit="line")))
-
-# ggsave(filename = "doc.png", height=3.5, width=5, units="in")
 
 
 # doc over time in exp ponds
@@ -385,11 +363,9 @@ windows(height=8, width=12); p1 / p2
 # Nitrogen
 #--
 
-## TN (mg/L)
+#- TN (mg/L)
 windows(height=4, width=5.5)
 tn =
-# ggplot(fdat %>% filter(!(is.na(tn))) %>% left_join(pond_data),
-#        aes(x = doy, y = tn)) +
 ggplot(pdat %>% filter(!(is.na(tn))),
        aes(x = doy, y = tn)) +
    #
@@ -420,10 +396,8 @@ ggplot(pdat %>% filter(!(is.na(tn))),
          axis.title.x = element_text(margin = margin(t=0.5, unit="line"), size=rel(1.1)),
          axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
 
-# ggsave(filename="total-nitrogen.png", height=4, width=5.5, units='in')
 
-
-## NOx (mg/L)
+#- NOx (mg/L)
 windows(height=4, width=5.5)
 ggplot(fdat %>% filter(!(is.na(nox))) %>% left_join(pond_data),
        aes(x = doy, y = nox)) +
@@ -445,19 +419,15 @@ ggplot(fdat %>% filter(!(is.na(nox))) %>% left_join(pond_data),
          axis.title.y = element_text(margin = margin(r=0.5, unit="line")),
          axis.title.x = element_text(margin = margin(t=0.5, unit="line")))
 
-# ggsave(filename="nitrate.png", height=4, width=5.5, units='in')
-
 
 
 #--
 # Phosphorus
 #--
 
-## TP (ug/L)
+#- TP (ug/L)
 windows(height=4, width=5.5)
 tp = 
-# ggplot(fdat %>% filter(!(is.na(tp))) %>% left_join(pond_data),
-#        aes(x = doy, y = tp)) +
 ggplot(pdat %>% filter(!(is.na(tp))),
        aes(x = doy, y = tp)) +
    #
@@ -488,10 +458,8 @@ ggplot(pdat %>% filter(!(is.na(tp))),
          axis.title.x = element_text(margin = margin(t=0.5, unit="line"), size=rel(1.1)),
          axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
 
-# ggsave(filename="total-phosphorus.png", height=4, width=5.5, units='in')
 
-
-## SRP (ug/L)
+#- SRP (ug/L)
 windows(height=4, width=5.5)
 ggplot(pdat %>% filter(!(is.na(srp))),
        aes(x = date, y = srp)) +
@@ -518,8 +486,6 @@ ggplot(pdat %>% filter(!(is.na(srp))),
          axis.text = element_text(color='black', size=rel(1)),
          axis.text.x = element_text(hjust=0.2, margin = margin(t=0.5, unit='line')),
          axis.title.y = element_text(margin = margin(r=0.5, unit="line"), size=rel(1.1)))
-
-# ggsave(filename="SRP.png")
 
 
 ## TN/TP together
