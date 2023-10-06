@@ -40,9 +40,9 @@ ggplot(pdat,
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean 
-   # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, alpha=0.8, span=0.05) +
-   geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(NEP, na.rm=T)) %>% ungroup(),
-             aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
+   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=1, alpha=0.8, span=0.1) +
+   # geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(NEP, na.rm=T)) %>% ungroup(),
+   #           aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
@@ -61,8 +61,8 @@ ggplot(pdat,
          axis.text.x = element_text(hjust=0.3, margin = margin(t=2, 'line')),
          axis.title = element_text(color="black", size=9.5), 
          axis.title.x = element_text(margin = margin(t=3, 'line')),
-         axis.title.y = element_text(margin = margin(r=1, 'line')),
-         plot.margin = unit(c(1,0.5,0.5,0.5), "lines"))
+         axis.title.y = element_text(margin = margin(r=2, 'line')),
+         plot.margin = unit(c(0.75,0.25,0.25,0.25), "lines"))
 
 # ggsave(file = "NEP.png")
 
@@ -85,9 +85,9 @@ ggplot(pdat,
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean
-   # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, alpha=0.8, span=0.15) +
-   geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(R, na.rm=T)) %>% ungroup(),
-             aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
+   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=1, alpha=0.8, span=0.1) +
+   # geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(R, na.rm=T)) %>% ungroup(),
+   #           aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
@@ -105,8 +105,8 @@ ggplot(pdat,
          axis.text.x = element_text(hjust=0.3, margin = margin(t=2, 'line')),
          axis.title = element_text(color="black", size=9.5), 
          axis.title.x = element_text(margin = margin(t=3, 'line')),
-         axis.title.y = element_text(margin = margin(r=1, 'line')),
-         plot.margin = unit(c(1,0.5,0,0.5), "lines"))
+         axis.title.y = element_text(margin = margin(r=2, 'line')),
+         plot.margin = unit(c(1,0.25,0,0.25), "lines"))
 
 # ggsave(file = "Re.png")
 
@@ -129,9 +129,9 @@ ggplot(pdat,
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean
-   # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, alpha=0.8, span=0.15) +
-   geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(GPP, na.rm=T)) %>% ungroup(),
-             aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
+   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=1, alpha=0.8, span=0.1) +
+   # geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(GPP, na.rm=T)) %>% ungroup(),
+   #           aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
@@ -151,8 +151,8 @@ ggplot(pdat,
          axis.text.x = element_text(hjust=0.3, margin = margin(t=2, 'line')),
          axis.title = element_text(color="black", size=9.5), 
          axis.title.x = element_text(margin = margin(t=3, 'line')),
-         axis.title.y = element_text(margin = margin(r=1, 'line')),
-         plot.margin = unit(c(1,0.5,0,0.5), "lines"))
+         axis.title.y = element_text(margin = margin(r=2, 'line')),
+         plot.margin = unit(c(1,0.25,0,0.25), "lines"))
 
 # ggsave(file = "GPP.png")
 
