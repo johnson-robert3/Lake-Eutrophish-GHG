@@ -15,11 +15,11 @@ if (!require(tidyverse)) install.packages('tidyverse'); library(tidyverse)
 
 
 #-- Sonde Profiles --#
-sonde_profiles = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/profiles_daily_deepsite.csv")
+sonde_profiles = read_csv("C:/Users/rajohnson6/Box/Hort Farm Experiment/EDI Data Submission/profiles_daily_deepsite.csv")
 
 
 #-- T-Chains --#
-hobo_temp = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/temp_chains_hf.csv") %>%
+hobo_temp = read_csv("C:/Users/rajohnson6/Box/Hort Farm Experiment/EDI Data Submission/temp_chains_hf.csv") %>%
    # DOY variable has already been created
    # data have already been filtered to days of the experiment (DOY 143-240)
    # temperature data have already been converted to Celcius
@@ -31,41 +31,41 @@ hobo_temp = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submissio
 
 
 #-- miniDOT DO --#
-minidot = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/do_sensor_hf.csv")
+minidot = read_csv("C:/Users/rajohnson6/Box/Hort Farm Experiment/EDI Data Submission/do_sensor_hf.csv")
 
 
 #-- Weather --#
-weather_data = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/meteorological_pondStation.csv")
+weather_data = read_csv("C:/Users/rajohnson6/Box/Hort Farm Experiment/EDI Data Submission/meteorological_pondStation.csv")
 
 
 #-- Nutrients --# 
-limno_field_data = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/surface_nutrients_chla.csv") %>%
+limno_field_data = read_csv("C:/Users/rajohnson6/Box/Hort Farm Experiment/EDI Data Submission/surface_nutrients_chla.csv") %>%
    # select just the TP, TN, SRP, and NOx data
    select(-contains("chla"), -contains("nhx"))
 
 
 #-- GHG Concentration and Flux --# 
-lake_flux = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/ghg_diffusive_flux.csv") %>%
+lake_flux = read_csv("C:/Users/rajohnson6/Box/Hort Farm Experiment/EDI Data Submission/ghg_diffusive_flux.csv") %>%
    # change variable names back to originals, so they match and work across scripts
    rename(ch4_lake = ch4_concentration, co2_lake = co2_concentration, n2o_lake = n2o_concentration,
           ch4_atmo = ch4_atmosphere, co2_atmo = co2_atmosphere, n2o_atmo = n2o_atmosphere)
 
 
 #-- GHG Methanogenesis and DEA --#
-methano_dea = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/ghg_production_assays.csv") %>%
+methano_dea = read_csv("C:/Users/rajohnson6/Box/Hort Farm Experiment/EDI Data Submission/ghg_production_assays.csv") %>%
    # change variable names back to originals, so they match and work across scripts
    rename(ch4_rate = methanogenesis_potential,
           n2o_rate = DEA)
 
 
 #-- GHG Ebullition --#
-ebu_flux_pond = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/ghg_ebullition.csv") %>%
+ebu_flux_pond = read_csv("C:/Users/rajohnson6/Box/Hort Farm Experiment/EDI Data Submission/ghg_ebullition.csv") %>%
    # change variable names back to originals, so they match and work across scripts
    rename(ch4_ebu_flux = ch4_ebullitive_flux)
 
 
 #-- Metabolism --#
-metabolism = read_csv("C:/Users/johns/Box/Hort Farm Experiment/EDI Data Submission/daily_metabolism.csv")
+metabolism = read_csv("C:/Users/rajohnson6/Box/Hort Farm Experiment/EDI Data Submission/daily_metabolism.csv")
 
 
 
