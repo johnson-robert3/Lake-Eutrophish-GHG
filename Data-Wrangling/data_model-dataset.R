@@ -99,8 +99,6 @@ test = test %>%
    relocate(treatment, .after=pond_id) %>%
    # remove 3 blank rows with extra wind speed data
    filter(!(is.na(pond_id))) %>%
-   # filter to days of experiment
-   filter(doy %in% c(145:242)) %>%
    # add a variable for "week" of experiment here (df's were joining weird when 'week' was kept in "m" df's above)
    left_join(data.frame(doy = c(145:242), week = rep(1:14, each=7)))
 
