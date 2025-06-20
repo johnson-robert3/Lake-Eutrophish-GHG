@@ -5,7 +5,7 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
 
 ## Script Notes
 
-**'data_import_EDI'** script: Use this to import any/all data into R. Do not use other scripts to import datasets any longer. 
+**'data_import_EDI'** script: Use this to import any/all data into R. _Other scripts should no longer be used to import datasets._ 
 
 **'edi_data_output'** script: Where all dfs created throughout other R scripts are output in their final form into the shared EDI Box folder. Contains notes about in which scripts the OG dfs were created. 
 
