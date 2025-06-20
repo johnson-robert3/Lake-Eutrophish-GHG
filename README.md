@@ -2,8 +2,10 @@
 
 Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nutrient Addition
 
+### - Notes - 
 
-### Data and Script Notes
+
+## Data Scripts
 
 **'data_import_EDI'** script: Use this to import any/all data into R. Do not use other scripts to import datasets any longer. 
 
@@ -15,9 +17,7 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
 
 
 
-## Data
-
-### Data Processing Notes
+## Data Processing
 
 **Surface values** of pond limno variables taken from sonde profiles are the mean of all measurements between 5 & 50 cm (0.05 - 0.50 m)
 
@@ -37,15 +37,14 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
 
 ## Modeling
 
-### Modeling Notes
 To recreate the full model dataset from all individual datasets, run scripts in this order:
 
    1. data_import_EDI
-   2. data_import-and-process  # for creating 'sonde_surface' and 'sonde_bottom'
+   2. data_import-and-process  # for creating 'sonde_surface' and 'sonde_bottom' dfs
    3. data_stratification  # for creating stratification variables from sonde profiles
-   4. data_ghg-calculations  # no longer needed, all data now pulled in step 1.
-   5. doc_data-sheet-processing  # no longer used
-   6. metabolism-calcs  # no longer needed, all data now pulled in step 1.
+   4. ~data_ghg-calculations~  # no longer needed, all data now pulled in step 1.
+   5. ~doc_data-sheet-processing~  # no longer used
+   6. ~metabolism-calcs~  # no longer needed, all data now pulled in step 1.
    7. data_model-dataset
 
 
