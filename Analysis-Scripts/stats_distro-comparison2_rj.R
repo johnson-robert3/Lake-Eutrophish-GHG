@@ -9,7 +9,9 @@ rm(list=ls())
 
 # setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-dat.raw <- read.csv("Data/ghg-model-dataset_2023-08-07.csv")
+# dat.raw <- read.csv("Data/ghg-model-dataset_2023-08-07.csv")
+dat.raw <- read.csv("Data/ghg-model-dataset_2024-07-26.csv")
+
 
 # absolute value of ecosystem respiration values (lower values of R denote higher rates of respiration)
 dat.raw <- dat.raw |> dplyr::mutate(R = abs(R))
@@ -51,7 +53,7 @@ varlist.main <- c("ch4_flux","n2o_flux","co2_flux",
                   "temp","sonde_zmix")
 
 # set the variable list used by the function to only the example variable
-varlist.main = c("n2o_flux")
+# varlist.main = c("n2o_flux")
 
 
 data_matrices <- list()
