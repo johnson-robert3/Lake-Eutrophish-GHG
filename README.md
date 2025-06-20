@@ -3,6 +3,18 @@
 Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nutrient Addition
 
 
+### Data and Script Notes
+
+**'data_import_EDI'** script: Use this to import any/all data into R. Do not use other scripts to import datasets any longer. 
+
+**'edi_data_output'** script: Where all dfs created throughout other R scripts are output in their final form into the shared EDI Box folder. Contains notes about in which scripts the OG dfs were created. 
+
+**'data_model-dataset'** script: Use this to recreate the full, combined dataset to use in statistical models. The script also contains notes about parts of other scripts that have to be run after importing individual datasets from the 'data_import_EDI' script to perform any necessary calculations before combining all dfs into the full model dataset. 
+
+**'stats_distro-comparison2_rj'** script: Use this to run the empirical cumulative distribution function analysis created by Jon used in the manuscript.
+
+
+
 ## Data
 
 ### Data Processing Notes
