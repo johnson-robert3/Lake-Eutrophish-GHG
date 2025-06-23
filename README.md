@@ -5,13 +5,13 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
 
 ## Script Notes
 
-**'data_import_EDI'** script: Use this to import any/all data into R. _Other scripts should no longer be used to import datasets._ 
+**'data_import_EDI'**: Use this script to import any/all data into R. _Other scripts should no longer be used to import datasets._ 
 
-**'edi_data_output'** script: Where all dfs created throughout other R scripts are output in their final form into the shared EDI Box folder. Contains notes about in which scripts the OG dfs were created. 
+**'edi_data_output'**: Where all dfs created throughout other R scripts are output in their final form into the shared EDI Box folder. Contains notes about which scripts the OG dfs were created in.  
 
-**'data_model-dataset'** script: Use this to recreate the full, combined dataset to use in statistical models. The script also contains notes about parts of other scripts that have to be run after importing individual datasets from the 'data_import_EDI' script to perform any necessary calculations before combining all dfs into the full model dataset. 
+**'data_model-dataset'**: Use this script to recreate the full, combined dataset to use in statistical models. The script also contains notes about parts of other scripts that have to be run after importing individual datasets from the 'data_import_EDI' script to perform any necessary calculations before combining all dfs into the full model dataset. 
 
-**'stats_distro-comparison2_rj'** script: Use this to run the empirical cumulative distribution function analysis created by Jon used in the manuscript.
+**'stats_distro-comparison2_rj'**: Use this script to run the empirical cumulative distribution function analysis created by Jon used in the manuscript.
 
 
 
