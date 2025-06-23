@@ -1,7 +1,0 @@
-location,site,site_id,latitude,longitude,max_depth,notes
-ISU Hort Farm,experimental ponds,Pond A,42.110176,-93.580688,,control
-ISU Hort Farm,experimental ponds,Pond B,42.110074,-93.580462,,HI fish
-ISU Hort Farm,experimental ponds,Pond C,42.109963,-93.580252,,LO fish
-ISU Hort Farm,experimental ponds,Pond D,42.10984,-93.580052,,"control, +nutrients"
-ISU Hort Farm,experimental ponds,Pond E,42.109726,-93.579835,,"LO fish, +nutrients"
-ISU Hort Farm,experimental ponds,Pond F,42.109619,-93.579637,,"HI fish, +nutrients"
