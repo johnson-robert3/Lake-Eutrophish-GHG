@@ -20,6 +20,7 @@ source("Figure-Scripts/figs_functions.R")
 source("Analysis-Scripts/stats_model-data.R")
 
 
+
 #---
 # 3-panel, manuscript style
 #---
@@ -33,20 +34,20 @@ ggplot(fdat %>%
           mutate(methano = methanogenesis * 1000),
        aes(x = doy, y = methano)) +
    # pulse days
-   geom_vline(xintercept = c(176, 211), linetype=1, color="gray40", size=0.8) +
+   geom_vline(xintercept = c(176, 211), linetype=1, color="gray40", linewidth=0.8) +
    # derecho, DOY 223 (Aug. 10, 2020)
-   geom_vline(xintercept = 223, linetype=2, color='gray40', size=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color='gray40', linewidth=0.8) +
    # heat wave, DOY 185-190 (July 3-8, 2020)
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
    #
-   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
+   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # data
    geom_point(aes(color = trt_nutrients), size=1.5, shape=1, alpha=0.2) +  # just to make the point outlines a little darker
    geom_point(aes(color = trt_nutrients), size=1.5, shape=19, alpha=0.4) +
    # mean
    stat_smooth(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(methano)) %>% ungroup(),
                aes(y = mean, color = trt_nutrients), 
-               geom='line', size=1, linetype=1, span=0.4, alpha = 0.8) +
+               geom='line', linewidth=1, linetype=1, span=0.4, alpha = 0.8) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    #
@@ -79,20 +80,20 @@ ggplot(fdat %>%
           mutate(DEA = DEA * 1000),
        aes(x = doy, y = DEA)) +
    # pulse days
-   geom_vline(xintercept = c(176, 211), linetype=1, color="gray40", size=0.8) +
+   geom_vline(xintercept = c(176, 211), linetype=1, color="gray40", linewidth=0.8) +
    # derecho, DOY 223 (Aug. 10, 2020)
-   geom_vline(xintercept = 223, linetype=2, color='gray40', size=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color='gray40', linewidth=0.8) +
    # heat wave, DOY 185-190 (July 3-8, 2020)
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
    #
-   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
+   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # data
    geom_point(aes(color = trt_nutrients), size=1.5, shape=1, alpha=0.2) +  # just to make the point outlines a little darker
    geom_point(aes(color = trt_nutrients), size=1.5, shape=19, alpha=0.4) +
    # mean
    stat_smooth(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(DEA)) %>% ungroup(),
                aes(y = mean, color = trt_nutrients), 
-               geom='line', size=1, linetype=1, span=0.4, alpha = 0.8) +
+               geom='line', linewidth=1, linetype=1, span=0.4, alpha = 0.8) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    #
@@ -121,20 +122,20 @@ ggplot(fdat %>%
           filter(!(is.na(ch4_ebu_flux))),
        aes(x = doy, y = ch4_ebu_flux)) +
    # pulse days
-   geom_vline(xintercept = c(176, 211), linetype=1, color="gray40", size=0.8) +
+   geom_vline(xintercept = c(176, 211), linetype=1, color="gray40", linewidth=0.8) +
    # derecho, DOY 223 (Aug. 10, 2020)
-   geom_vline(xintercept = 223, linetype=2, color='gray40', size=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color='gray40', linewidth=0.8) +
    # heat wave, DOY 185-190 (July 3-8, 2020)
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
    #
-   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
+   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # data
    geom_point(aes(color = trt_nutrients), size=1.5, shape=1, alpha=0.2) +  # just to make the point outlines a little darker
    geom_point(aes(color = trt_nutrients), size=1.5, shape=19, alpha=0.4) +
    # mean
    stat_smooth(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(ch4_ebu_flux)) %>% ungroup(),
                aes(y = mean, color = trt_nutrients), 
-               geom='line', size=1, linetype=1, span=0.4, alpha = 0.8) +
+               geom='line', linewidth=1, linetype=1, span=0.4, alpha = 0.8) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    #
@@ -194,7 +195,7 @@ windows(height=4, width=6); ggplot(fdat %>%
    # mean
    geom_smooth(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(ch4_ebu_flux)) %>% ungroup(),
              aes(y = mean, color = trt_nutrients), 
-             size=1.5, linetype=1, span=0.4, se=FALSE) +
+             linewidth=1.5, linetype=1, span=0.4, se=FALSE) +
    #
    scale_x_continuous(name = "Day of year") +
    scale_y_continuous(name = expression(Ebullition~(mmol~CH[4]~m^2~d^-1))) +
@@ -234,7 +235,7 @@ windows(height=4, width=6); ggplot(fdat %>%
    geom_ribbon(aes(x = doy, ymin = mean - se, ymax = mean + se, fill = trt_nutrients), alpha = 0.2, show.legend=F) +
    # data
    geom_point(aes(color = trt_nutrients), size=2, shape=19) +
-   geom_line(aes(color = trt_nutrients), size=1.25, linetype=1) +
+   geom_line(aes(color = trt_nutrients), linewidth=1.25, linetype=1) +
    #
    scale_x_continuous(name = "Day of year") +
    scale_y_continuous(name = expression(Ebullition~(mmol~CH[4]~m^2~d^-1))) +
@@ -277,7 +278,7 @@ windows(height=4, width=6); ggplot(fdat %>%
    # mean
    geom_smooth(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(methano)) %>% ungroup(),
              aes(y = mean, color = trt_nutrients), 
-             size=1.5, linetype=1, span=0.4, se=FALSE) +
+             linewidth=1.5, linetype=1, span=0.4, se=FALSE) +
    #
    scale_x_continuous(name = "Day of year") +
    scale_y_continuous(name = expression(Methanogenesis~potential~(nmol~g^-1~h^-1))) +
@@ -320,7 +321,7 @@ windows(height=4, width=6); ggplot(fdat %>%
    geom_ribbon(aes(x = doy, ymin = mean - se, ymax = mean + se, fill = trt_nutrients), alpha = 0.2, show.legend=F) +
    # data
    geom_point(aes(color = trt_nutrients), size=2, shape=19) +
-   geom_line(aes(color = trt_nutrients), size=1.25, linetype=1) +
+   geom_line(aes(color = trt_nutrients), linewidth=1.25, linetype=1) +
    #
    scale_x_continuous(name = "Day of year") +
    scale_y_continuous(name = expression(Methanogenesis~potential~(nmol~g^-1~h^-1))) +
@@ -363,7 +364,7 @@ windows(height=4, width=6); ggplot(fdat %>%
    # mean
    geom_smooth(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(DEA)) %>% ungroup(),
              aes(y = mean, color = trt_nutrients), 
-             size=1.5, linetype=1, span=0.4, se=FALSE) +
+             linewidth=1.5, linetype=1, span=0.4, se=FALSE) +
    #
    scale_x_continuous(name = "Day of year") +
    scale_y_continuous(name = expression(DEA~(nmol~g^-1~h^-1))) +
@@ -406,7 +407,7 @@ windows(height=4, width=6); ggplot(fdat %>%
    geom_ribbon(aes(x = doy, ymin = mean - se, ymax = mean + se, fill = trt_nutrients), alpha = 0.2, show.legend=F) +
    # data
    geom_point(aes(color = trt_nutrients), size=2, shape=19) +
-   geom_line(aes(color = trt_nutrients), size=1.25, linetype=1) +
+   geom_line(aes(color = trt_nutrients), linewidth=1.25, linetype=1) +
    #
    scale_x_continuous(name = "Day of year") +
    scale_y_continuous(name = expression(DEA~(nmol~g^-1~h^-1))) +

@@ -19,8 +19,6 @@ source("Figure-Scripts/figs_functions.R")
 # create the 'fdat' and 'pond_data' data sets from the "stats_model-data" script 
 source("Analysis-Scripts/stats_model-data.R")
 
-pdat = fdat
-
 
 
 #--
@@ -30,13 +28,13 @@ pdat = fdat
 # 1 panel (blue & red)
 windows(height=7/3, width=3.25)
 nep =
-ggplot(pdat,
+ggplot(fdat,
        aes(x = doy, y = NEP)) +
    #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", size=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", size=0.8) +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
+   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean 
@@ -75,13 +73,13 @@ ggplot(pdat,
 # 1 panel (blue & red)
 windows(height=7/3, width=3.25)
 re =
-ggplot(pdat,
+ggplot(fdat,
        aes(x = doy, y = R)) +
    #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", size=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", size=0.8) +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
+   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean
@@ -119,13 +117,13 @@ ggplot(pdat,
 # 1 panel (blue & red)
 windows(height=7/3, width=3.25)
 gpp =
-ggplot(pdat,
+ggplot(fdat,
        aes(x = doy, y = GPP)) +
    #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", size=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", size=0.8) +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
+   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean

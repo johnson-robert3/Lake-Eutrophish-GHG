@@ -14,8 +14,6 @@ source("Figure-Scripts/figs_functions.R")
 # Data for plotting
 source("Analysis-Scripts/stats_model-data.R")
 
-pdat = fdat 
-
 
 
 #===
@@ -29,17 +27,17 @@ pdat = fdat
 #- Surface DO concentration
 windows(height=7/3, width=3.25)
 sdo =
-ggplot(pdat,
+ggplot(fdat,
        aes(x = doy, y = do)) +
    #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", size=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", size=0.8) +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
+   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean
-   # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, span=0.05) +
+   # stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=1.5, span=0.05) +
    geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(do, na.rm=T)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
    #
@@ -69,17 +67,17 @@ ggplot(pdat,
 #- Bottom water DO concentration 
 windows(height=7/3, width=3.25)
 bdo =
-ggplot(pdat,
+ggplot(fdat,
        aes(x = doy, y = bottom_do)) +
    #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", size=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", size=0.8) +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
+   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean (loess smooth)
-   # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, span=0.05) +
+   # stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=1.5, span=0.05) +
    geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(bottom_do, na.rm=T)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
    #
@@ -112,17 +110,17 @@ windows(height=7/3*2, width=3.25); plot_grid(sdo, bdo, ncol=1, align='v', rel_he
 #- Surface DO saturation
 windows(height=7/3, width=3.25)
 sdo =
-ggplot(pdat,
+ggplot(fdat,
        aes(x = doy, y = do_sat)) +
    #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", size=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", size=0.8) +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
+   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean
-   # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, span=0.05) +
+   # stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=1.5, span=0.05) +
    geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(do_sat, na.rm=T)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
    #
@@ -154,17 +152,17 @@ ggplot(pdat,
 #- Bottom DO saturation
 windows(height=7/3, width=3.25)
 bdo =
-ggplot(pdat,
+ggplot(fdat,
        aes(x = doy, y = bottom_do_sat)) +
    #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", size=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", size=0.8) +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
+   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean (loess smooth)
-   # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, span=0.05) +
+   # stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=1.5, span=0.05) +
    geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(bottom_do_sat, na.rm=T)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
    #
@@ -200,11 +198,11 @@ windows(height=7/3*2, width=3.25); plot_grid(sdo, bdo, ncol=1, align='v', rel_he
 
 # pond surface temp (data used in comparison analysis)
 windows(height=7/3, width=3.25)
-ggplot(pdat,
+ggplot(fdat,
        aes(x = doy, y = temp)) +
    #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", size=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", size=0.8) +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
@@ -247,17 +245,17 @@ ggplot(pdat,
 
 # 1 panel (blue & red)
 windows(height=7/3, width=3.25)
-ggplot(pdat,
+ggplot(fdat,
        aes(x = doy, y = chla)) +
    #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", size=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", size=0.8) +
+   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
+   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   geom_hline(yintercept=0, linetype=3, color="gray50", size=0.8) +
+   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean
-   # stat_smooth(aes(color = trt_nutrients), geom="line", size=1.5, span=0.05) +
+   # stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=1.5, span=0.05) +
    geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(chla, na.rm=T)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
    #
@@ -379,7 +377,7 @@ windows(height=8, width=12); p1 / p2
 #- TN (mg/L)
 windows(height=4, width=5.5)
 tn =
-ggplot(pdat %>% filter(!(is.na(tn))),
+ggplot(fdat %>% filter(!(is.na(tn))),
        aes(x = doy, y = tn)) +
    #
    geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
@@ -441,7 +439,7 @@ ggplot(fdat %>% filter(!(is.na(nox))) %>% left_join(pond_data),
 #- TP (ug/L)
 windows(height=4, width=5.5)
 tp = 
-ggplot(pdat %>% filter(!(is.na(tp))),
+ggplot(fdat %>% filter(!(is.na(tp))),
        aes(x = doy, y = tp)) +
    #
    geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
@@ -474,7 +472,7 @@ ggplot(pdat %>% filter(!(is.na(tp))),
 
 #- SRP (ug/L)
 windows(height=4, width=5.5)
-ggplot(pdat %>% filter(!(is.na(srp))),
+ggplot(fdat %>% filter(!(is.na(srp))),
        aes(x = date, y = srp)) +
    #
    geom_hline(yintercept=0, linetype=3, color="gray60") +
