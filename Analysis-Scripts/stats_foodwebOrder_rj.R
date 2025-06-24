@@ -21,8 +21,11 @@ unique(dat.raw$treatment)
 ## add food web treatment
 dat.raw$foodweb <- NA
 dat.raw$foodweb[dat.raw$pond_id %in% c("B","F")] <- "low"
-dat.raw$foodweb[dat.raw$pond_id %in% c("A","D")] <- "mid"
-dat.raw$foodweb[dat.raw$pond_id %in% c("C","E")] <- "high"
+dat.raw$foodweb[dat.raw$pond_id %in% c("A","D")] <- "int"
+dat.raw$foodweb[dat.raw$pond_id %in% c("C","E")] <- "hi"
+
+dat.raw = dat.raw |> dplyr::mutate(treatment = dplyr::case_when(treatment=="reference" ~ "ref",
+                                                                treatment=="pulsed" ~ "puls"))
 
 # define some time periods of interest
 wwidth <- 5 #days: width of windows, e.g. following nutrient pulses
@@ -56,20 +59,20 @@ par(mfrow=c(4,2), mar=c(2.5,2.5,2.5,0.5))
 for(var in varlist){
   
   tmp <- dat.raw
-  tmp$treatment = factor(tmp$treatment, levels=c("reference","pulsed"))
-  tmp$foodweb = factor(tmp$foodweb, levels=c("low","mid","high"))
+  tmp$treatment = factor(tmp$treatment, levels=c("ref", "puls"))
+  tmp$foodweb = factor(tmp$foodweb, levels=c("low","int","hi"))
   colnames(tmp)[colnames(tmp)==var] <- "var"
   boxplot(var ~ treatment + foodweb, data=tmp)
   mtext(paste0(var), line=1.1, cex=2/3)
 
-  pondmean.ref <- aggregate(dat.raw[dat.raw$treatment=="reference", var], 
-                            by=list(dat.raw[dat.raw$treatment=="reference", "foodweb"]), FUN="mean", na.rm=TRUE)
-  pondmean.pulse <- aggregate(dat.raw[dat.raw$treatment=="pulsed", var], 
-                            by=list(dat.raw[dat.raw$treatment=="pulsed", "foodweb"]), FUN="mean", na.rm=TRUE)
+  pondmean.ref <- aggregate(dat.raw[dat.raw$treatment=="ref", var], 
+                            by=list(dat.raw[dat.raw$treatment=="ref", "foodweb"]), FUN="mean", na.rm=TRUE)
+  pondmean.pulse <- aggregate(dat.raw[dat.raw$treatment=="puls", var], 
+                            by=list(dat.raw[dat.raw$treatment=="puls", "foodweb"]), FUN="mean", na.rm=TRUE)
   
-  plotmat <- cbind(rank(pondmean.ref$x), rank(pondmean.pulse$x))[c(2,3,1),]
+  plotmat <- cbind(rank(pondmean.ref$x), rank(pondmean.pulse$x))[c(3,2,1),]  # need to update this order [c(3,2,1)] if names (and alphabetical order) of fw levels change
   image(x=1:3, y=1:2, z=plotmat, col=cols, xaxt="n", yaxt="n", xlab="", ylab="")
-  axis(1, at=1:3, labels=c("low","mid","high"))
+  axis(1, at=1:3, labels=c("low","intermediate","high"))
   axis(2, at=1:2, labels=c("ref","pulse"))
   mtext(paste0("Spearman correlation = ", cor(pondmean.ref$x, pondmean.pulse$x, method="spearman", 
                                               use="pairwise.complete.obs")), line=0.1, cex=2/3)
