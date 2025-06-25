@@ -166,24 +166,30 @@ plot_grid(m, n, c, ncol=1, align='v', labels="AUTO", label_size=11, label_y=0.99
 #--
 
 # Methane
-# windows(height=4, width=5.5)
+# windows(height=7/3, width=3.25)
 md =
 ggplot(fdat %>%
           filter(!(is.na(ch4_flux))) %>%
-          group_by(trt_nutrients, doy) %>% summarize(mean = mean(ch4_flux)) %>% ungroup() %>%
-          pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
-          mutate(diff = pulsed - reference),
+          summarize(mean = mean(ch4_flux), sd = sd(ch4_flux), .by = c(trt_nutrients, doy)) %>%
+          pivot_longer(cols = c(mean, sd), names_to = "stat", values_to = "value") %>%
+          pivot_wider(id_cols = doy, names_from = c(trt_nutrients, stat), values_from = value) %>%
+          mutate(diff = pulsed_mean - reference_mean,
+                 # propagated standard error
+                 diff_se = sqrt((pulsed_sd^2 + reference_sd^2) / 3)),
        aes(x = doy, y = diff)) +
    #
    geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
    geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
-   #
+   # error ribbon
+   geom_ribbon(aes(ymin = pmax(diff-diff_se, -10-1.5), ymax = pmin(diff+diff_se, 21+1.5)), fill="gray70", alpha=0.4) +
+   # data
    geom_line() +
    geom_point() +
-   #
-   # stat_smooth(aes(x = doy, y = diff), geom="line", linewidth=1.25, span=0.25, alpha=0.9, color="#38A3A5") +
+   # error lines
+   # geom_line(aes(y = pmin(diff+diff_se, 21+1.5)), color='blue') +
+   # geom_line(aes(y = pmax(diff-diff_se, -10-1.5)), color='red') +
    #
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(CH[4]~diff*'.'~(mmol~m^-2~d^-1)), breaks = seq(-10, 20, 10)) +
@@ -198,25 +204,31 @@ ggplot(fdat %>%
 
 
 # Nitrous oxide
-# windows(height=4, width=5.5)
+# windows(height=7/3, width=3.25)
 nd =
 ggplot(fdat %>%
           filter(!(is.na(n2o_flux))) %>%
           mutate(n2o_flux = n2o_flux * 1000) %>%
-          group_by(trt_nutrients, doy) %>% summarize(mean = mean(n2o_flux)) %>% ungroup() %>%
-          pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
-          mutate(diff = pulsed - reference),
+          summarize(mean = mean(n2o_flux), sd = sd(n2o_flux), .by = c(trt_nutrients, doy)) %>%
+          pivot_longer(cols = c(mean, sd), names_to = "stat", values_to = "value") %>%
+          pivot_wider(id_cols = doy, names_from = c(trt_nutrients, stat), values_from = value) %>%
+          mutate(diff = pulsed_mean - reference_mean,
+                 # propagated standard error
+                 diff_se = sqrt((pulsed_sd^2 + reference_sd^2) / 3)),
        aes(x = doy, y = diff)) +
    #
    geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
    geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
-   #
+   # error ribbon
+   geom_ribbon(aes(ymin = pmax(diff-diff_se, -2.5-0.185), ymax = pmin(diff+diff_se, 1.2+0.185)), fill="gray70", alpha=0.4) +
+   # data
    geom_line() +
    geom_point() +
-   #
-   # stat_smooth(aes(x = doy, y = diff), geom="line", linewidth=1.25, span=0.25, alpha=0.9, color="#38A3A5") +
+   # error lines
+   # geom_line(aes(y = pmin(diff+diff_se, 1.2+0.185)), color='blue') +
+   # geom_line(aes(y = pmax(diff-diff_se, -2.5-0.185)), color='red') +
    #
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(N[2]*O~diff*'.'~(mu*mol~m^-2~d^-1))) +
@@ -235,20 +247,26 @@ ggplot(fdat %>%
 cd =
 ggplot(fdat %>%
           filter(!(is.na(co2_flux))) %>%
-          group_by(trt_nutrients, doy) %>% summarize(mean = mean(co2_flux)) %>% ungroup() %>%
-          pivot_wider(id_cols = doy, names_from = trt_nutrients, values_from = mean) %>%
-          mutate(diff = pulsed - reference),
+          summarize(mean = mean(co2_flux), sd = sd(co2_flux), .by = c(trt_nutrients, doy)) %>%
+          pivot_longer(cols = c(mean, sd), names_to = "stat", values_to = "value") %>%
+          pivot_wider(id_cols = doy, names_from = c(trt_nutrients, stat), values_from = value) %>%
+          mutate(diff = pulsed_mean - reference_mean,
+                 # propagated standard error
+                 diff_se = sqrt((pulsed_sd^2 + reference_sd^2) / 3)),
        aes(x = doy, y = diff)) +
    #
    geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
    geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
-   #
+   # error ribbon
+   geom_ribbon(aes(ymin = pmax(diff-diff_se, -135-10), ymax = pmin(diff+diff_se, 65+10)), fill="gray70", alpha=0.4) +
+   # data
    geom_line() +
    geom_point() +
-   #
-   # stat_smooth(aes(x = doy, y = diff), geom="line", linewidth=1.25, span=0.25, alpha=0.9, color="#38A3A5") +
+   # error lines
+   # geom_line(aes(y = pmin(diff+diff_se, 65+10)), color='blue') +
+   # geom_line(aes(y = pmax(diff-diff_se, -135-10)), color='red') +
    #
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(CO[2]~diff*'.'~(mmol~m^-2~d^-1))) +
