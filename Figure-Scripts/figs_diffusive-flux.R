@@ -165,17 +165,26 @@ plot_grid(m, n, c, ncol=1, align='v', labels="AUTO", label_size=11, label_y=0.99
 # Difference in flux between pulsed and reference treatments
 #--
 
+# Function to calculate the mean difference between treatment and propagated standard error 
+flux_diff = function(.dat, .var) {
+   
+   .dat %>%
+      filter(!(is.na({{.var}}))) %>%  # enclose within {{}} to specify the argument supports <tidy-select>
+      summarize(mean = mean({{.var}}), sd = sd({{.var}}), .by = c(trt_nutrients, doy)) %>%
+      pivot_longer(cols = c(mean, sd), names_to = "stat", values_to = "value") %>%
+      pivot_wider(id_cols = doy, names_from = c(trt_nutrients, stat), values_from = value) %>%
+      mutate(diff = pulsed_mean - reference_mean,
+             # propagated standard error
+             diff_se = sqrt((pulsed_sd^2 + reference_sd^2) / 3))
+   
+}
+
+
 # Methane
 # windows(height=7/3, width=3.25)
 md =
 ggplot(fdat %>%
-          filter(!(is.na(ch4_flux))) %>%
-          summarize(mean = mean(ch4_flux), sd = sd(ch4_flux), .by = c(trt_nutrients, doy)) %>%
-          pivot_longer(cols = c(mean, sd), names_to = "stat", values_to = "value") %>%
-          pivot_wider(id_cols = doy, names_from = c(trt_nutrients, stat), values_from = value) %>%
-          mutate(diff = pulsed_mean - reference_mean,
-                 # propagated standard error
-                 diff_se = sqrt((pulsed_sd^2 + reference_sd^2) / 3)),
+          flux_diff(ch4_flux),
        aes(x = doy, y = diff)) +
    #
    geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
@@ -187,9 +196,6 @@ ggplot(fdat %>%
    # data
    geom_line() +
    geom_point() +
-   # error lines
-   # geom_line(aes(y = pmin(diff+diff_se, 21+1.5)), color='blue') +
-   # geom_line(aes(y = pmax(diff-diff_se, -10-1.5)), color='red') +
    #
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(CH[4]~diff*'.'~(mmol~m^-2~d^-1)), breaks = seq(-10, 20, 10)) +
@@ -207,14 +213,8 @@ ggplot(fdat %>%
 # windows(height=7/3, width=3.25)
 nd =
 ggplot(fdat %>%
-          filter(!(is.na(n2o_flux))) %>%
           mutate(n2o_flux = n2o_flux * 1000) %>%
-          summarize(mean = mean(n2o_flux), sd = sd(n2o_flux), .by = c(trt_nutrients, doy)) %>%
-          pivot_longer(cols = c(mean, sd), names_to = "stat", values_to = "value") %>%
-          pivot_wider(id_cols = doy, names_from = c(trt_nutrients, stat), values_from = value) %>%
-          mutate(diff = pulsed_mean - reference_mean,
-                 # propagated standard error
-                 diff_se = sqrt((pulsed_sd^2 + reference_sd^2) / 3)),
+          flux_diff(n2o_flux),
        aes(x = doy, y = diff)) +
    #
    geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
@@ -226,9 +226,6 @@ ggplot(fdat %>%
    # data
    geom_line() +
    geom_point() +
-   # error lines
-   # geom_line(aes(y = pmin(diff+diff_se, 1.2+0.185)), color='blue') +
-   # geom_line(aes(y = pmax(diff-diff_se, -2.5-0.185)), color='red') +
    #
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(N[2]*O~diff*'.'~(mu*mol~m^-2~d^-1))) +
@@ -246,13 +243,7 @@ ggplot(fdat %>%
 # windows(height=4, width=5.5)
 cd =
 ggplot(fdat %>%
-          filter(!(is.na(co2_flux))) %>%
-          summarize(mean = mean(co2_flux), sd = sd(co2_flux), .by = c(trt_nutrients, doy)) %>%
-          pivot_longer(cols = c(mean, sd), names_to = "stat", values_to = "value") %>%
-          pivot_wider(id_cols = doy, names_from = c(trt_nutrients, stat), values_from = value) %>%
-          mutate(diff = pulsed_mean - reference_mean,
-                 # propagated standard error
-                 diff_se = sqrt((pulsed_sd^2 + reference_sd^2) / 3)),
+          flux_diff(co2_flux),
        aes(x = doy, y = diff)) +
    #
    geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
@@ -264,9 +255,6 @@ ggplot(fdat %>%
    # data
    geom_line() +
    geom_point() +
-   # error lines
-   # geom_line(aes(y = pmin(diff+diff_se, 65+10)), color='blue') +
-   # geom_line(aes(y = pmax(diff-diff_se, -135-10)), color='red') +
    #
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(CO[2]~diff*'.'~(mmol~m^-2~d^-1))) +
