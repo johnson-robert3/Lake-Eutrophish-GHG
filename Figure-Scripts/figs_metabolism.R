@@ -11,13 +11,11 @@ library(patchwork)
 # library(slider)
 
 
-source("Figure-Scripts/figs_functions.R")
-
-
-# Data
-
 # create the 'fdat' and 'pond_data' data sets from the "stats_model-data" script 
 source("Analysis-Scripts/stats_model-data.R")
+
+# get figure values, functions, and aesthetics from the 'figs_functions' script
+source("Figure-Scripts/figs_functions.R")
 
 
 
@@ -29,11 +27,10 @@ source("Analysis-Scripts/stats_model-data.R")
 windows(height=7/3, width=3.25)
 nep =
 ggplot(fdat,
-       aes(x = doy, y = NEP)) +
-   #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+       aes(x = doy, y = NEP)) %>%
+   # add events 
+   fig_events() +
+   # zero line
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
@@ -47,7 +44,7 @@ ggplot(fdat,
    scale_y_continuous(name = expression(NEP~(mg~O[2]~L^-1~d^-1)), breaks = seq(-8, 8, 2)) +
    coord_cartesian(ylim = c(-8, 8), clip = "off") +
    # event labels
-   annotate(geom = "text", label = c('P1', 'H', 'P2', 'D'), x = c(176.5, 187.5, 211.5, 223), y = 8 + ((8+8)*0.1), size=3) +
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 8 + ((8+8)*0.1), size=3) +
    #
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
@@ -74,11 +71,10 @@ ggplot(fdat,
 windows(height=7/3, width=3.25)
 re =
 ggplot(fdat,
-       aes(x = doy, y = R)) +
-   #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+       aes(x = doy, y = R)) %>%
+   # add events 
+   fig_events() +
+   # zero line
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
@@ -92,7 +88,7 @@ ggplot(fdat,
    scale_y_continuous(name = expression(R~(mg~O[2]~L^-1~d^-1)), breaks = seq(-20, 0, 5)) +
    coord_cartesian(ylim = c(-20, 0), clip = "off") +
    # event labels
-   annotate(geom = "text", label = c('P1', 'H', 'P2', 'D'), x = c(176.5, 187.5, 211.5, 223), y = 0 + ((20)*0.1), size=3) +
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 0 + ((20)*0.1), size=3) +
    #
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
@@ -118,11 +114,10 @@ ggplot(fdat,
 windows(height=7/3, width=3.25)
 gpp =
 ggplot(fdat,
-       aes(x = doy, y = GPP)) +
-   #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+       aes(x = doy, y = GPP)) %>%
+   # add events 
+   fig_events() +
+   # zero line
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
@@ -136,7 +131,7 @@ ggplot(fdat,
    scale_y_continuous(name = expression(GPP~(mg~O[2]~L^-1~d^-1)), breaks = seq(0, 20, 5)) +
    coord_cartesian(ylim = c(0, 20), clip = "off") +
    # event labels
-   annotate(geom = "text", label = c('P1', 'H', 'P2', 'D'), x = c(176.5, 187.5, 211.5, 223), y = 20 + ((20)*0.1), size=3) +
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 20 + ((20)*0.1), size=3) +
    #
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
