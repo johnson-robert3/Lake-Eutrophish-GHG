@@ -181,28 +181,30 @@ flux_diff = function(.dat, .var) {
 
 
 # Methane
+ylim_md = c(-10, 21)
 # windows(height=7/3, width=3.25)
 md =
 ggplot(fdat %>%
           flux_diff(ch4_flux),
        aes(x = doy, y = diff)) +
-   #
+   # events
    geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
    geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # error ribbon
-   geom_ribbon(aes(ymin = pmax(diff-diff_se, -10-1.5), ymax = pmin(diff+diff_se, 21+1.5)), fill="gray70", alpha=0.4) +
+   geom_ribbon(aes(ymin = pmax(diff - diff_se, (min(ylim_md) - (diff(ylim_md) * 0.05))), 
+                   ymax = pmin(diff + diff_se, (max(ylim_md) + (diff(ylim_md) * 0.05)))), 
+               fill="gray70", alpha=0.4) +
    # data
    geom_line() +
    geom_point() +
    #
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(CH[4]~diff*'.'~(mmol~m^-2~d^-1)), breaks = seq(-10, 20, 10)) +
-   # scale_y_continuous(name = expression(CH[4]~diff*'.'*','~~Pulse~'\u2013'~Ref)) +
-   coord_cartesian(ylim = c(-10, 21), clip = "off") +
+   coord_cartesian(ylim = ylim_md, clip = "off") +
    # event labels
-   annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176.5, 187.5, 211.5, 223), y = 21 + ((10+21)*0.1), size=3) +
+   annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176.5, 187.5, 211.5, 223), y = (max(ylim_md) + (diff(ylim_md) * 0.1)), size=3) +
    #
    theme_classic() +
    theme(plot.margin = unit(c(1,0.5,0,0.5), "lines")) %>%
@@ -210,29 +212,31 @@ ggplot(fdat %>%
 
 
 # Nitrous oxide
+ylim_nd = c(-2.5, 1.2)
 # windows(height=7/3, width=3.25)
 nd =
 ggplot(fdat %>%
           mutate(n2o_flux = n2o_flux * 1000) %>%
           flux_diff(n2o_flux),
        aes(x = doy, y = diff)) +
-   #
+   # events
    geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
    geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # error ribbon
-   geom_ribbon(aes(ymin = pmax(diff-diff_se, -2.5-0.185), ymax = pmin(diff+diff_se, 1.2+0.185)), fill="gray70", alpha=0.4) +
+   geom_ribbon(aes(ymin = pmax(diff - diff_se, (min(ylim_nd) - (diff(ylim_nd) * 0.05))), 
+                   ymax = pmin(diff + diff_se, (max(ylim_nd) + (diff(ylim_nd) * 0.05)))), 
+               fill="gray70", alpha=0.4) +
    # data
    geom_line() +
    geom_point() +
    #
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(N[2]*O~diff*'.'~(mu*mol~m^-2~d^-1))) +
-   # scale_y_continuous(name = expression(N[2]*O~diff*'.'*','~~Pulse~'\u2013'~Ref)) +
-   coord_cartesian(ylim = c(-2.5, 1.2), clip = "off") +
+   coord_cartesian(ylim = ylim_nd, clip = "off") +
    # event labels
-   annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176.5, 187.5, 211.5, 223), y = 1.2 + ((2.5+1.2)*0.1), size=3) +
+   annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176.5, 187.5, 211.5, 223), y = (max(ylim_nd) + (diff(ylim_nd) * 0.1)), size=3) +
    #
    theme_classic() +
    theme(plot.margin = unit(c(1,0.5,0,0.5), "lines")) %>%
@@ -240,28 +244,30 @@ ggplot(fdat %>%
 
 
 # Carbon dioxide
-# windows(height=4, width=5.5)
+ylim_cd = c(-135, 65)
+# windows(height=4, width=5)
 cd =
 ggplot(fdat %>%
           flux_diff(co2_flux),
        aes(x = doy, y = diff)) +
-   #
+   # events
    geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
    geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
    annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # error ribbon
-   geom_ribbon(aes(ymin = pmax(diff-diff_se, -135-10), ymax = pmin(diff+diff_se, 65+10)), fill="gray70", alpha=0.4) +
+   geom_ribbon(aes(ymin = pmax(diff - diff_se, (min(ylim_cd) - (diff(ylim_cd) * 0.05))), 
+                   ymax = pmin(diff + diff_se, (max(ylim_cd) + (diff(ylim_cd) * 0.05)))), 
+               fill="gray70", alpha=0.4) +
    # data
    geom_line() +
    geom_point() +
    #
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(CO[2]~diff*'.'~(mmol~m^-2~d^-1))) +
-   # scale_y_continuous(name = expression(CO[2]~diff*'.,'~~Pulse~'\u2013'~Ref)) +
-   coord_cartesian(ylim = c(-135, 65), clip = "off") +
+   coord_cartesian(ylim = ylim_cd, clip = "off") +
    # event labels
-   annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176.5, 187.5, 211.5, 223), y = 65 + ((135+65)*0.1), size=3) +
+   annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176.5, 187.5, 211.5, 223), y = (max(ylim_cd) + (diff(ylim_cd) * 0.1)), size=3) +
    #
    annotate(geom = "text", label = "Pulse > Ref", x = 142, y = 45, hjust=0, size=3) +
    annotate(geom = "text", label = "Ref > Pulse", x = 142, y = -45, hjust=0, size=3) +
