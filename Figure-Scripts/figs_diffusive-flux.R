@@ -55,8 +55,11 @@ fig_theme = function(.fig) {
          axis.title.y = element_text(margin = margin(r=1, 'line')))
 }
 
+# event labels
+event_labs = c('P1', 'H', 'P2', 'D')
 
-## CH4
+
+# -- Methane -- 
 # windows(height=3.5, width=5)
 m =
 ggplot(fdat %>%
@@ -79,7 +82,7 @@ ggplot(fdat %>%
    scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^-1)), breaks = seq(0, 60, 10)) +
    coord_cartesian(ylim = c(0, 60), clip = "off") +
    # event labels
-   annotate(geom = "text", label = c('P1', 'H', 'P2', 'D'), x = c(176.8, 187.5, 211.8, 223.8), y = 60 + ((60)*0.1), size=3) +
+   annotate(geom = "text", label = event_labs, x = c(176.8, 187.5, 211.8, 223.8), y = 60 + ((60)*0.1), size=3) +
    #
    theme_classic() +
    theme(legend.position = "none",
@@ -87,7 +90,7 @@ ggplot(fdat %>%
    fig_theme() 
 
 
-## N2O
+# -- Nitrous oxide --
 # windows(height=3.5, width=5)
 n =
 ggplot(fdat %>%
@@ -112,7 +115,7 @@ ggplot(fdat %>%
    scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), breaks = seq(-4, 3, 1)) +
    coord_cartesian(ylim = c(-4, 3), clip = "off") +
    # event labels
-   annotate(geom = "text", label = c('P1', 'H', 'P2', 'D'), x = c(176.8, 187.5, 211.8, 223.8), y = 3 + ((4+3)*0.1), size=3) +
+   annotate(geom = "text", label = event_labs, x = c(176.8, 187.5, 211.8, 223.8), y = 3 + ((4+3)*0.1), size=3) +
    #
    theme_classic() +
    theme(legend.position = "none",
@@ -120,7 +123,7 @@ ggplot(fdat %>%
    fig_theme()
 
 
-## CO2
+# -- Carbon dioxide --
 # windows(height=3.5, width=5)
 c =
 ggplot(fdat %>%
@@ -143,7 +146,7 @@ ggplot(fdat %>%
    scale_y_continuous(name = expression(CO[2]~flux~(mmol~m^-2~d^-1)), breaks = seq(0, 250, 50)) +
    coord_cartesian(ylim = c(-20, 250), clip = "off") +
    # event labels
-   annotate(geom = "text", label = c('P1', 'H', 'P2', 'D'), x = c(176.8, 187.5, 211.8, 223.8), y = 250 + ((20+250)*0.1), size=3) +
+   annotate(geom = "text", label = event_labs, x = c(176.8, 187.5, 211.8, 223.8), y = 250 + ((20+250)*0.1), size=3) +
    #
    theme_classic() +
    theme(legend.position = c(0.18, 0.86),
@@ -180,7 +183,7 @@ flux_diff = function(.dat, .var) {
 }
 
 
-# Methane
+# -- Methane -- 
 ylim_md = c(-10, 21)
 # windows(height=7/3, width=3.25)
 md =
@@ -204,14 +207,14 @@ ggplot(fdat %>%
    scale_y_continuous(name = expression(CH[4]~diff*'.'~(mmol~m^-2~d^-1)), breaks = seq(-10, 20, 10)) +
    coord_cartesian(ylim = ylim_md, clip = "off") +
    # event labels
-   annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176.5, 187.5, 211.5, 223), y = (max(ylim_md) + (diff(ylim_md) * 0.1)), size=3) +
+   annotate(geom = "text", label = event_labs, x = c(176.5, 187.5, 211.5, 223), y = (max(ylim_md) + (diff(ylim_md) * 0.1)), size=3) +
    #
    theme_classic() +
    theme(plot.margin = unit(c(1,0.5,0,0.5), "lines")) %>%
    fig_theme()
 
 
-# Nitrous oxide
+# -- Nitrous oxide --
 ylim_nd = c(-2.5, 1.2)
 # windows(height=7/3, width=3.25)
 nd =
@@ -236,14 +239,14 @@ ggplot(fdat %>%
    scale_y_continuous(name = expression(N[2]*O~diff*'.'~(mu*mol~m^-2~d^-1))) +
    coord_cartesian(ylim = ylim_nd, clip = "off") +
    # event labels
-   annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176.5, 187.5, 211.5, 223), y = (max(ylim_nd) + (diff(ylim_nd) * 0.1)), size=3) +
+   annotate(geom = "text", label = event_labs, x = c(176.5, 187.5, 211.5, 223), y = (max(ylim_nd) + (diff(ylim_nd) * 0.1)), size=3) +
    #
    theme_classic() +
    theme(plot.margin = unit(c(1,0.5,0,0.5), "lines")) %>%
    fig_theme()
 
 
-# Carbon dioxide
+# -- Carbon dioxide --
 ylim_cd = c(-135, 65)
 # windows(height=4, width=5)
 cd =
@@ -267,7 +270,7 @@ ggplot(fdat %>%
    scale_y_continuous(name = expression(CO[2]~diff*'.'~(mmol~m^-2~d^-1))) +
    coord_cartesian(ylim = ylim_cd, clip = "off") +
    # event labels
-   annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176.5, 187.5, 211.5, 223), y = (max(ylim_cd) + (diff(ylim_cd) * 0.1)), size=3) +
+   annotate(geom = "text", label = event_labs, x = c(176.5, 187.5, 211.5, 223), y = (max(ylim_cd) + (diff(ylim_cd) * 0.1)), size=3) +
    #
    annotate(geom = "text", label = "Pulse > Ref", x = 142, y = 45, hjust=0, size=3) +
    annotate(geom = "text", label = "Ref > Pulse", x = 142, y = -45, hjust=0, size=3) +
