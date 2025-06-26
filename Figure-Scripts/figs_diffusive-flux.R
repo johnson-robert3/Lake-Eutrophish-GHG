@@ -9,57 +9,18 @@ library(tidyverse)
 library(cowplot)
 library(patchwork)
 
-source("Figure-Scripts/figs_functions.R")
-
-
-# Data
 
 # create the 'fdat' and 'pond_data' data sets from the "stats_model-data" script 
 source("Analysis-Scripts/stats_model-data.R")
+
+# get figure values, functions, and aesthetics from the 'figs_functions' script
+source("Figure-Scripts/figs_functions.R")
 
 
 
 #---
 # Flux time-series, 3-panel, manuscript style
 #---
-
-## Components for all plots
-
-# events and analysis windows
-fig_events = function(.fig) {
-   
-   .fig +
-   # add analysis windows
-      # pulse windows (1-5 days after event)
-      annotate(geom = 'rect', xmin = 176+1, xmax = 176+5, ymin = -Inf, ymax = Inf, fill='gray90') +
-      annotate(geom = 'rect', xmin = 211+1, xmax = 211+5, ymin = -Inf, ymax = Inf, fill='gray90') +
-      # pulse events, DOY 176 and 211 (after all sampling had occurred)
-      geom_vline(xintercept = c(176.8, 211.8), linetype=1, color="gray40", linewidth=0.8) +
-      # heat event, DOY 185-190 (July 3-8, 2020)
-      annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill='gray75') +
-      # derecho, DOY 223 (Aug. 10, 2020)
-      annotate(geom = 'rect', xmin = 223+1, xmax = 223+5, ymin = -Inf, ymax = Inf, fill='gray90') +
-      geom_vline(xintercept = 223.8, linetype=2, color='gray40', linewidth=0.8)
-}
-
-# panel and axis aesthetics
-fig_theme = function(.fig) {
-   .fig +
-   theme(panel.border = element_rect(fill=NA, color='black'),
-         # axis.ticks.length = unit(0.3, 'line'),
-         axis.ticks = element_line(color='black'), 
-         axis.text = element_text(color='black', size=9),
-         axis.text.x = element_text(hjust=0.3, margin = margin(t=2, 'line')),
-         axis.title = element_text(color="black", size=9.5), 
-         axis.title.x = element_text(margin = margin(t=3, 'line')),
-         axis.title.y = element_text(margin = margin(r=1, 'line')))
-}
-
-# event labels
-event_labs = c('P1', 'H', 'P2', 'D')
-event_lab.x = c(176.5, 187.5, 211.5, 223)  # x values for event labels above plots
-event_lab.xts = event_lab_x + c(0.3, 0, 0.3, 0.8)  # adjustment for flux time-series labels
-
 
 
 # -- Methane -- 
@@ -69,10 +30,9 @@ m =
 ggplot(fdat %>%
           filter(!(is.na(ch4_flux))), 
        aes(x = doy, y = ch4_flux)) %>%
-   
-   # add analysis windows
+   # add events and analysis windows
+   fig_windows() %>%
    fig_events() +
-   
    # zero line
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
@@ -86,7 +46,7 @@ ggplot(fdat %>%
    scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^-1)), breaks = seq(0, 60, 10)) +
    coord_cartesian(ylim = ylim_m, clip = "off") +
    # event labels
-   annotate(geom = "text", label = event_labs, x = event_lab.xts, y = (max(ylim_m) + (diff(ylim_m) * 0.1)), size=3) +
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = (max(ylim_m) + (diff(ylim_m) * 0.1)), size=3) +
    #
    theme_classic() +
    theme(legend.position = "none",
@@ -103,10 +63,9 @@ ggplot(fdat %>%
           # convert from mmol to umol
           mutate(n2o_flux = n2o_flux * 1000), 
        aes(x = doy, y = n2o_flux)) %>%
-   
-   # add analysis windows
+   # add events and analysis windows
+   fig_windows() %>%
    fig_events() +
-   
    # zero line
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
@@ -120,7 +79,7 @@ ggplot(fdat %>%
    scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), breaks = seq(-4, 3, 1)) +
    coord_cartesian(ylim = ylim_n, clip = "off") +
    # event labels
-   annotate(geom = "text", label = event_labs, x = event_lab.xts, y = (max(ylim_n) + (diff(ylim_n) * 0.1)), size=3) +
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = (max(ylim_n) + (diff(ylim_n) * 0.1)), size=3) +
    #
    theme_classic() +
    theme(legend.position = "none",
@@ -135,10 +94,9 @@ c =
 ggplot(fdat %>%
           filter(!(is.na(co2_flux))), 
        aes(x = doy, y = co2_flux)) %>%
-   
-   # add analysis windows
+   # add events and analysis windows
+   fig_windows() %>%
    fig_events() +
-   
    # zero line
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
@@ -152,7 +110,7 @@ ggplot(fdat %>%
    scale_y_continuous(name = expression(CO[2]~flux~(mmol~m^-2~d^-1)), breaks = seq(0, 250, 50)) +
    coord_cartesian(ylim = ylim_c, clip = "off") +
    # event labels
-   annotate(geom = "text", label = event_labs, x = event_lab.xts, y = (max(ylim_c) + (diff(ylim_c) * 0.1)), size=3) +
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = (max(ylim_c) + (diff(ylim_c) * 0.1)), size=3) +
    #
    theme_classic() +
    theme(legend.position = c(0.18, 0.86),
@@ -195,11 +153,10 @@ ylim_md = c(-10, 21)
 md =
 ggplot(fdat %>%
           flux_diff(ch4_flux),
-       aes(x = doy, y = diff)) +
-   # events
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+       aes(x = doy, y = diff)) %>%
+   # add events 
+   fig_events() +
+   # zero line
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # error ribbon
    geom_ribbon(aes(ymin = pmax(diff - diff_se, (min(ylim_md) - (diff(ylim_md) * 0.05))), 
@@ -227,11 +184,10 @@ nd =
 ggplot(fdat %>%
           mutate(n2o_flux = n2o_flux * 1000) %>%
           flux_diff(n2o_flux),
-       aes(x = doy, y = diff)) +
-   # events
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+       aes(x = doy, y = diff)) %>%
+   # add events 
+   fig_events() +
+   # zero line
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # error ribbon
    geom_ribbon(aes(ymin = pmax(diff - diff_se, (min(ylim_nd) - (diff(ylim_nd) * 0.05))), 
@@ -258,11 +214,10 @@ ylim_cd = c(-135, 65)
 cd =
 ggplot(fdat %>%
           flux_diff(co2_flux),
-       aes(x = doy, y = diff)) +
-   # events
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+       aes(x = doy, y = diff)) %>%
+   # add events 
+   fig_events() +
+   # zero line
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # error ribbon
    geom_ribbon(aes(ymin = pmax(diff - diff_se, (min(ylim_cd) - (diff(ylim_cd) * 0.05))), 
