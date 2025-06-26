@@ -8,11 +8,12 @@ library(tidyverse)
 library(cowplot)
 library(patchwork)
 
-source("Figure-Scripts/figs_functions.R")
 
-
-# Data for plotting
+# create the 'fdat' and 'pond_data' data sets from the "stats_model-data" script 
 source("Analysis-Scripts/stats_model-data.R")
+
+# get figure values, functions, and aesthetics from the 'figs_functions' script
+source("Figure-Scripts/figs_functions.R")
 
 
 
@@ -28,11 +29,10 @@ source("Analysis-Scripts/stats_model-data.R")
 windows(height=7/3, width=3.25)
 sdo =
 ggplot(fdat,
-       aes(x = doy, y = do)) +
-   #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+       aes(x = doy, y = do)) %>%
+   # add events 
+   fig_events() +
+   # zero line
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
@@ -46,7 +46,7 @@ ggplot(fdat,
    scale_y_continuous(name = expression(Surface~DO~(mg~L^-1)), breaks = seq(0, 15, 5)) +
    coord_cartesian(ylim = c(0, 17), clip = "off") +
    # event labels
-   annotate(geom = "text", label = c('P1', 'H', 'P2', 'D'), x = c(176.5, 187.5, 211.5, 223), y = 17 + ((17)*0.1), size=3) +
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 17 + ((17)*0.1), size=3) +
    # white box beneath legend
    annotate(geom = "rect", xmin = 205, xmax = 241, ymin = 12, ymax = 17, fill="white", color="white") +
    #
@@ -68,11 +68,10 @@ ggplot(fdat,
 windows(height=7/3, width=3.25)
 bdo =
 ggplot(fdat,
-       aes(x = doy, y = bottom_do)) +
-   #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+       aes(x = doy, y = bottom_do)) %>%
+   # add events 
+   fig_events() +
+   # zero line
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
@@ -86,7 +85,7 @@ ggplot(fdat,
    scale_y_continuous(name = expression(Bottom~DO~(mg~L^-1)), breaks = seq(0, 20, 5)) +
    coord_cartesian(ylim = c(0, 20), clip = "off") +
    # event labels
-   annotate(geom = "text", label = c('P1', 'H', 'P2', 'D'), x = c(176.5, 187.5, 211.5, 223), y = 20 + ((20)*0.1), size=3) +
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 20 + ((20)*0.1), size=3) +
    #
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
@@ -111,11 +110,10 @@ windows(height=7/3*2, width=3.25); plot_grid(sdo, bdo, ncol=1, align='v', rel_he
 windows(height=7/3, width=3.25)
 sdo =
 ggplot(fdat,
-       aes(x = doy, y = do_sat)) +
-   #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+       aes(x = doy, y = do_sat)) %>%
+   # add events 
+   fig_events() +
+   # zero line
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
@@ -129,7 +127,7 @@ ggplot(fdat,
    scale_y_continuous(name = expression(Surface~DO~('%')), breaks = seq(0, 250, 50)) +
    coord_cartesian(ylim = c(0, 250), clip = "off") +
    # event labels
-   annotate(geom = "text", label = c('P1', 'H', 'P2', 'D'), x = c(176.5, 187.5, 211.5, 223), y = 250 + ((250)*0.1), size=3) +
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 250 + ((250)*0.1), size=3) +
    # white box beneath legend
    # annotate(geom = "rect", xmin = 205, xmax = 241, ymin = 140, ymax = 200, fill="white", color="white") +
    annotate(geom = "rect", xmin = 205, xmax = 241, ymin = 180, ymax = 250, fill="white", color="white") +
@@ -153,11 +151,10 @@ ggplot(fdat,
 windows(height=7/3, width=3.25)
 bdo =
 ggplot(fdat,
-       aes(x = doy, y = bottom_do_sat)) +
-   #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+       aes(x = doy, y = bottom_do_sat)) %>%
+   # add events 
+   fig_events() +
+   # zero line
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
@@ -171,7 +168,7 @@ ggplot(fdat,
    scale_y_continuous(name = expression(Bottom~DO~('%')), breaks = seq(0, 250, 50)) +
    coord_cartesian(ylim = c(0, 250), clip = "off") +
    # event labels
-   annotate(geom = "text", label = c('P1', 'H', 'P2', 'D'), x = c(176.5, 187.5, 211.5, 223), y = 250 + ((250)*0.1), size=3) +
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 250 + ((250)*0.1), size=3) +
    #
    theme_classic() +
    theme(panel.border = element_rect(fill=NA, color="black"),
@@ -199,11 +196,9 @@ windows(height=7/3*2, width=3.25); plot_grid(sdo, bdo, ncol=1, align='v', rel_he
 # pond surface temp (data used in comparison analysis)
 windows(height=7/3, width=3.25)
 ggplot(fdat,
-       aes(x = doy, y = temp)) +
-   #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+       aes(x = doy, y = temp)) %>%
+   # add events 
+   fig_events() +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean
@@ -216,7 +211,7 @@ ggplot(fdat,
    scale_y_continuous(name = expression(Surface~temp~(degree*C))) +
    coord_cartesian(ylim = c(15, 30), clip = "off") +
    # event labels
-   annotate(geom = "text", label = c('P1', 'H', 'P2', 'D'), x = c(176.5, 187.5, 211.5, 223), y = 30 + ((30-15)*0.1), size=3) +
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 30 + ((30-15)*0.1), size=3) +
    # white box beneath legend
    # annotate(geom = "rect", xmin = 205, xmax = 241, ymin = 12, ymax = 17, fill="white", color="white") +
    #
@@ -246,11 +241,10 @@ ggplot(fdat,
 # 1 panel (blue & red)
 windows(height=7/3, width=3.25)
 ggplot(fdat,
-       aes(x = doy, y = chla)) +
-   #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40", linewidth=0.8) +
-   geom_vline(xintercept = 223, linetype=2, color="gray40", linewidth=0.8) +
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+       aes(x = doy, y = chla)) %>%
+   # add events 
+   fig_events() +
+   # zero line
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
@@ -265,7 +259,7 @@ ggplot(fdat,
                       breaks = seq(0, 60, 10)) +
    coord_cartesian(ylim = c(0, 65), clip = "off") +
    # event labels
-   annotate(geom = "text", label = c('P1', 'H', 'P2', 'D'), x = c(176.5, 187.5, 211.5, 223), y = 65 + ((65)*0.1), size=3) +
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 65 + ((65)*0.1), size=3) +
    # ggtitle(expression(Surface~Water~Chlorophyll~italic("a"))) +
    #
    theme_classic() +
@@ -378,11 +372,10 @@ windows(height=8, width=12); p1 / p2
 windows(height=4, width=5.5)
 tn =
 ggplot(fdat %>% filter(!(is.na(tn))),
-       aes(x = doy, y = tn)) +
-   #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
-   geom_vline(xintercept = 223, linetype=2, color="gray40") +
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+       aes(x = doy, y = tn)) %>%
+   # add events 
+   fig_events() +
+   # zero line
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    #
    # pond data
@@ -440,11 +433,10 @@ ggplot(fdat %>% filter(!(is.na(nox))) %>% left_join(pond_data),
 windows(height=4, width=5.5)
 tp = 
 ggplot(fdat %>% filter(!(is.na(tp))),
-       aes(x = doy, y = tp)) +
-   #
-   geom_vline(xintercept = c(176.5, 211.5), linetype=1, color="gray40") +
-   geom_vline(xintercept = 223, linetype=2, color="gray40") +
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
+       aes(x = doy, y = tp)) %>%
+   # add events 
+   fig_events() +
+   # zero line
    geom_hline(yintercept=0, linetype=3, color="gray60") +
    #
    # pond data
