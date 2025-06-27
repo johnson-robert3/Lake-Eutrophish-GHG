@@ -88,7 +88,7 @@ ggplot(fdat,
 
 
 # 2-panel, DO concentration
-windows(height=7/3*2, width=3.25); plot_grid(sdo, bdo, ncol=1, align='v', rel_heights = c(0.95, 1), labels="AUTO", label_size=11, label_y=0.99, label_x=0.01)
+windows(height=7/3*2, width=3.25); plot_grid(sdo, bdo, ncol=1, align='v', rel_heights = c(0.95, 1), labels="AUTO", label_size=11, label_y=0.99, label_x=0.02)
 
 # ggsave(file = "pond_DO.png", height=7/3*2, width=3.25, units='in')
 
@@ -159,7 +159,7 @@ ggplot(fdat,
 
 
 # 2-panel, DO saturation
-windows(height=7/3*2, width=3.25); plot_grid(sdo, bdo, ncol=1, align='v', rel_heights = c(0.95, 1), labels="AUTO", label_size=11, label_y=0.99, label_x=0.01)
+windows(height=7/3*2, width=3.25); plot_grid(sdo, bdo, ncol=1, align='v', rel_heights = c(0.95, 1), labels="AUTO", label_size=11, label_y=0.99, label_x=0.02)
 
 # ggsave(file = "pond_DO_sat.png", height=7/3*2, width=3.25, units='in')
 
@@ -200,7 +200,7 @@ ggplot(fdat,
          plot.margin = unit(c(0.75,0.25,0.25,0.25), "lines")) %>%
    fig_theme()
 
-# ggsave(file = "surface temp.png")
+# ggsave(file = "surface temp.png", height=7/3, width=3.25, units='in')
 
 
 
@@ -240,7 +240,7 @@ ggplot(fdat,
          plot.margin = unit(c(0.75,0.25,0.25,0.25), "lines")) %>%
    fig_theme()
 
-# ggsave(filename = "surface-chla.png")
+# ggsave(filename = "surface-chla.png", height=7/3, width=3.25, units='in')
 
 
 
@@ -375,9 +375,9 @@ ggplot(fdat %>% filter(!(is.na(srp))),
 
 
 ## TN/TP together
-windows(height=7/3*2, width=3.25); plot_grid(tn, tp, ncol=1, align='v', labels="AUTO", label_size=13, label_y=0.99, label_x=0.01)
+windows(height=7/3*2, width=3.25); plot_grid(tn, tp, ncol=1, align='v', labels="AUTO", label_size=11, label_y=0.99, label_x=0.02)
 
-# ggsave(file = "tn-tp.png", height=3.5*2, width=5, units='in')
+# ggsave(file = "tn-tp.png", height=7/3*2, width=3.25, units='in')
 
 
 
