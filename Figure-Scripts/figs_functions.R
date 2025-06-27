@@ -16,7 +16,6 @@ derecho = 223.5
 # Event labels
 event_labs = c('P1', 'H', 'P2', 'D')
 event_lab.x = c(p1, mean(heatwave), p2, derecho)  # x values for event labels above plots
-# event_lab.xts = event_lab.x + c(0, 0, 0, 0)  # adjustment for flux time-series labels
 
 
 # Add Events to a figure
