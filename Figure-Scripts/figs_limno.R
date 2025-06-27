@@ -333,9 +333,9 @@ ggplot(fdat %>% filter(!(is.na(tp))),
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(TP~(mu*g~L^-1)), breaks = seq(0, 250, 50)) +
-   coord_cartesian(ylim = c(0, 250), clip = "off") +
+   coord_cartesian(ylim = c(0, 270), clip = "off") +
    # event labels
-   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 250 + ((250)*0.1), size=3) +
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 270 + ((270)*0.1), size=3) +
    # ggtitle("Total Phosphorus") +
    #
    theme_classic() +
@@ -343,6 +343,10 @@ ggplot(fdat %>% filter(!(is.na(tp))),
          legend.position = "none",
          plot.margin = unit(c(1,0.5,0.5,0.5), "lines")) %>%
    fig_theme()
+
+
+# view TP outliers
+# windows(height=4, width=5); ggplot(fdat) + geom_boxplot(aes(x=pond_id, y=tp, group=pond_id)) + theme_bw(); ggsave(file="tp_outliers_boxplot.png", height=4, width=5, units='in')
 
 
 #- SRP (ug/L)
