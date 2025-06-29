@@ -35,9 +35,9 @@ ggplot(fdat,
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean 
-   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=1, alpha=0.9, span=0.1) +
+   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, alpha=0.9, span=0.1) +
    # geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(NEP, na.rm=T)) %>% ungroup(),
-   #           aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
+   #           aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
@@ -73,9 +73,9 @@ ggplot(fdat,
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean
-   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=1, alpha=0.9, span=0.1) +
+   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, alpha=0.9, span=0.1) +
    # geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(R, na.rm=T)) %>% ungroup(),
-   #           aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
+   #           aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
@@ -110,9 +110,9 @@ ggplot(fdat,
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean
-   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=1, alpha=0.9, span=0.1) +
+   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, alpha=0.9, span=0.1) +
    # geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(GPP, na.rm=T)) %>% ungroup(),
-   #           aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
+   #           aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
