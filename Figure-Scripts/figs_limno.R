@@ -83,12 +83,12 @@ ggplot(fdat,
    #
    theme_classic() +
    theme(legend.position = "none", 
-         plot.margin = unit(c(1,0.5,0.5,0.5), "lines")) %>%
+         plot.margin = unit(c(0.5,0.5,0.5,0.5), "lines")) %>%
    fig_theme()
 
 
 # 2-panel, DO concentration
-windows(height=7/3*2, width=3.25); plot_grid(sdo, bdo, ncol=1, align='v', rel_heights = c(0.95, 1), labels="AUTO", label_size=11, label_y=0.99, label_x=0.02)
+windows(height=7/3*2, width=3.25); plot_grid(sdo, bdo, ncol=1, align='v', labels="AUTO", label_size=11, label_y=0.99, label_x=0.02)
 
 # ggsave(file = "pond_DO.png", height=7/3*2, width=3.25, units='in')
 
@@ -154,12 +154,12 @@ ggplot(fdat,
    #
    theme_classic() +
    theme(legend.position = "none", 
-         plot.margin = unit(c(1,0.5,0.5,0.5), "lines")) %>%
+         plot.margin = unit(c(0.5,0.5,0.5,0.5), "lines")) %>%
    fig_theme()
 
 
 # 2-panel, DO saturation
-windows(height=7/3*2, width=3.25); plot_grid(sdo, bdo, ncol=1, align='v', rel_heights = c(0.95, 1), labels="AUTO", label_size=11, label_y=0.99, label_x=0.02)
+windows(height=7/3*2, width=3.25); plot_grid(sdo, bdo, ncol=1, align='v', labels="AUTO", label_size=11, label_y=0.99, label_x=0.02)
 
 # ggsave(file = "pond_DO_sat.png", height=7/3*2, width=3.25, units='in')
 
