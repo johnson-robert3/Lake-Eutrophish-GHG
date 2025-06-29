@@ -39,7 +39,7 @@ ggplot(fdat %>%
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean 
    geom_line(data = ~ .x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(ch4_flux)) %>% ungroup(),
-             aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
+             aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
@@ -72,7 +72,7 @@ ggplot(fdat %>%
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean 
    geom_line(data = ~ .x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(n2o_flux)) %>% ungroup(),
-             aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
+             aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
@@ -103,7 +103,7 @@ ggplot(fdat %>%
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean 
    geom_line(data = ~ .x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(co2_flux)) %>% ungroup(),
-             aes(x = doy, y = mean, color = trt_nutrients), linewidth=1, alpha=0.9) +
+             aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
@@ -164,7 +164,7 @@ ggplot(fdat %>%
                fill="gray70", alpha=0.4) +
    # data
    geom_line() +
-   geom_point() +
+   geom_point(size=1) +
    #
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(CH[4]~diff*'.'~(mmol~m^-2~d^-1)), breaks = seq(-10, 20, 10)) +
@@ -195,7 +195,7 @@ ggplot(fdat %>%
                fill="gray70", alpha=0.4) +
    # data
    geom_line() +
-   geom_point() +
+   geom_point(size=1) +
    #
    scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(N[2]*O~diff*'.'~(mu*mol~m^-2~d^-1))) +
@@ -225,7 +225,7 @@ ggplot(fdat %>%
                fill="gray70", alpha=0.4) +
    # data
    geom_line() +
-   geom_point() +
+   geom_point(size=1) +
    #
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
    scale_y_continuous(name = expression(CO[2]~diff*'.'~(mmol~m^-2~d^-1))) +
