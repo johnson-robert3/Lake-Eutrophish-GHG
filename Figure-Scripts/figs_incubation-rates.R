@@ -11,13 +11,12 @@ library(patchwork)
 # library(slider)
 # library(viridis)
 
-source("Figure-Scripts/figs_functions.R")
-
-
-# Data
 
 # create the 'fdat' and 'pond_data' data sets from the "stats_model-data" script 
 source("Analysis-Scripts/stats_model-data.R")
+
+# get figure values, functions, and aesthetics from the 'figs_functions' script
+source("Figure-Scripts/figs_functions.R")
 
 
 
@@ -27,19 +26,15 @@ source("Analysis-Scripts/stats_model-data.R")
 
 ## Methanogenesis
 # windows(height=3.5, width=5)
-p = 
+p =
 ggplot(fdat %>% 
           filter(!(is.na(methanogenesis))) %>%
           # convert methano rate from umol to nmol/g/h
           mutate(methano = methanogenesis * 1000),
-       aes(x = doy, y = methano)) +
-   # pulse days
-   geom_vline(xintercept = c(176, 211), linetype=1, color="gray40", linewidth=0.8) +
-   # derecho, DOY 223 (Aug. 10, 2020)
-   geom_vline(xintercept = 223, linetype=2, color='gray40', linewidth=0.8) +
-   # heat wave, DOY 185-190 (July 3-8, 2020)
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   #
+       aes(x = doy, y = methano)) %>%
+   # add events 
+   fig_events() +
+   # zero line
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # data
    geom_point(aes(color = trt_nutrients), size=1.5, shape=1, alpha=0.2) +  # just to make the point outlines a little darker
@@ -47,16 +42,15 @@ ggplot(fdat %>%
    # mean
    stat_smooth(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(methano)) %>% ungroup(),
                aes(y = mean, color = trt_nutrients), 
-               geom='line', linewidth=1, linetype=1, span=0.4, alpha = 0.8) +
+               geom='line', linewidth=0.75, linetype=1, span=0.4, alpha = 0.8) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   #
-   scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140, 240, 20)) +
    # scale_y_continuous(name = expression(CH[4]~'potential'~(nmol~g^-1~h^-1)), breaks = seq(0, 15, 5)) +
    scale_y_continuous(name = "Methanogenesis potential<br>(nmol CH<sub>4</sub> g<sup>-1</sup>h<sup>-1</sup>)", breaks = seq(0, 15, 5)) +
    coord_cartesian(ylim = c(0, 15.5), clip = "off") +
    # event labels
-   annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176, 187.5, 211, 223), y = 15.5 + ((15.5)*0.1), size=3) +
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 15.5 + ((15.5)*0.1), size=3) +
    #
    theme_classic() +
    theme(legend.position = "none",
@@ -78,14 +72,10 @@ ggplot(fdat %>%
           filter(!(is.na(DEA))) %>%
           # convert DEA rate from umol to nmol/g/h
           mutate(DEA = DEA * 1000),
-       aes(x = doy, y = DEA)) +
-   # pulse days
-   geom_vline(xintercept = c(176, 211), linetype=1, color="gray40", linewidth=0.8) +
-   # derecho, DOY 223 (Aug. 10, 2020)
-   geom_vline(xintercept = 223, linetype=2, color='gray40', linewidth=0.8) +
-   # heat wave, DOY 185-190 (July 3-8, 2020)
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   #
+       aes(x = doy, y = DEA)) %>%
+   # add events 
+   fig_events() +
+   # zero line
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # data
    geom_point(aes(color = trt_nutrients), size=1.5, shape=1, alpha=0.2) +  # just to make the point outlines a little darker
@@ -93,15 +83,14 @@ ggplot(fdat %>%
    # mean
    stat_smooth(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(DEA)) %>% ungroup(),
                aes(y = mean, color = trt_nutrients), 
-               geom='line', linewidth=1, linetype=1, span=0.4, alpha = 0.8) +
+               geom='line', linewidth=0.75, linetype=1, span=0.4, alpha = 0.8) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   #
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
    scale_y_continuous(name = expression(DEA~~(nmol~N[2]*O~g^-1~h^-1)), breaks = seq(0, 1.2, 0.3)) +
    coord_cartesian(ylim = c(0, 1.2), clip = "off") +
    # event labels
-   annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176, 187.5, 211, 223), y = 1.2 + ((1.2)*0.1), size=3) +
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 1.2 + ((1.2)*0.1), size=3) +
    #
    theme_classic() +
    theme(legend.position = "none",
@@ -120,14 +109,10 @@ ggplot(fdat %>%
 e =
 ggplot(fdat %>% 
           filter(!(is.na(ch4_ebu_flux))),
-       aes(x = doy, y = ch4_ebu_flux)) +
-   # pulse days
-   geom_vline(xintercept = c(176, 211), linetype=1, color="gray40", linewidth=0.8) +
-   # derecho, DOY 223 (Aug. 10, 2020)
-   geom_vline(xintercept = 223, linetype=2, color='gray40', linewidth=0.8) +
-   # heat wave, DOY 185-190 (July 3-8, 2020)
-   annotate(geom = 'rect', xmin = 185, xmax = 190, ymin = -Inf, ymax = Inf, fill = 'gray75') +
-   #
+       aes(x = doy, y = ch4_ebu_flux)) %>%
+   # add events 
+   fig_events() +
+   # zero line
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
    # data
    geom_point(aes(color = trt_nutrients), size=1.5, shape=1, alpha=0.2) +  # just to make the point outlines a little darker
@@ -135,16 +120,15 @@ ggplot(fdat %>%
    # mean
    stat_smooth(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(ch4_ebu_flux)) %>% ungroup(),
                aes(y = mean, color = trt_nutrients), 
-               geom='line', linewidth=1, linetype=1, span=0.4, alpha = 0.8) +
+               geom='line', linewidth=0.75, linetype=1, span=0.4, alpha = 0.8) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   #
-   scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
    # scale_y_continuous(name = expression(Ebullition~(mmol~m^2~d^-1)), breaks = seq(0, 15, 5)) +
    scale_y_continuous(name = "Ebullition<br>(mmol CH<sub>4</sub> m<sup>-2</sup>d<sup>-1</sup>)", breaks = seq(0, 15, 5)) +
    coord_cartesian(ylim = c(-0.5, 15), clip = "off") +
    # event labels
-   annotate(geom = "text", label = c("P1", "H", "P2", "D"), x = c(176, 187.5, 211, 223), y = 15 + ((0.5+15)*0.1), size=3) +
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 15 + ((0.5+15)*0.1), size=3) +
    #
    theme_classic() +
    theme(legend.position = c(0.17, 0.88),
@@ -159,14 +143,14 @@ ggplot(fdat %>%
          axis.title.x = element_text(margin = margin(t=3, 'line')),
          # axis.title.y = element_text(margin = margin(r=0.5, 'line')),
          axis.title.y = ggtext::element_markdown(),
-         plot.margin = unit(c(1,0.5,0,0.5), 'lines'))
+         plot.margin = unit(c(0.5,0.5,0.5,0.5), 'lines'))
 
 
 # Figure
-windows(height = 7, width = 3.25)
-plot_grid(e, p, d, ncol=1, align='v', labels="AUTO", label_size=11, label_y=0.99, label_x=0.04)
+windows(height = 7/3*2, width = 3.25)
+plot_grid(p, e, ncol=1, align='v', labels="AUTO", label_size=11, label_y=0.99, label_x=0.04)
 
-# ggsave(file = "GHG_process_measurements.png", height = 7, width = 3.25, units = "in")
+# ggsave(file = "GHG_process_measurements.png", height = 7/3*2, width = 3.25, units = "in")
 
 
 
