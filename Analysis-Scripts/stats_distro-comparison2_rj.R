@@ -46,7 +46,7 @@ pulse_ponds <- pond_id %in% unique(dat.raw$pond_id[dat.raw$treatment=="pulsed"])
 
 # varlist <- colnames(dat.raw)
 # varlist <- varlist[!varlist %in% c("pond_id","treatment","date","doy","period","period2","week","sonde_strat")]
-varlist.main <- c("ch4_flux","n2o_flux","co2_flux",
+varlist.main <- c("ch4_flux","co2_flux",
                   "GPP","R","NEP",
                   "do_sat","bottom_do_sat",
                   "tn","tp",
@@ -240,7 +240,7 @@ for(var in varlist.main){
 pal <- colorRampPalette(colors=c('#009392', '#fdfbe4', '#d0587e')) 
 
 prettyNames <- c(expression('CH'['4']~'flux'),
-                 expression('N'['2']*'O'~'flux'),
+                 # expression('N'['2']*'O'~'flux'),
                  expression('CO'['2']~'flux'),
                  #'Chlorophyll-a',
                  'GPP',
@@ -268,7 +268,7 @@ aty2 <- rep(1:length(varlist.main), times=4)
 # png("event_quantiles_rj_absR_comp1-window-update.png", res=300, units="in", width=6.5, height=6.5)
 png("event_quantiles_rj_absR_comp1-prev-times-only.png", res=300, units="in", width=6.5, height=4.5)
 
-windows(height = 4.5, width = 6.5)
+# windows(height = 4.5, width = 6.5)
 
 layout(matrix(1:3, ncol=3), widths=c(0.45,0.45,0.15))
 par(mar=c(6.1,1.1,3.1,0.6), oma=c(0,6,0,2), mgp=c(2.5,1,0))
