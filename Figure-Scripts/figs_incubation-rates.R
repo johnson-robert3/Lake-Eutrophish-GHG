@@ -42,7 +42,7 @@ ggplot(fdat %>%
    # mean
    stat_smooth(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(methano)) %>% ungroup(),
                aes(y = mean, color = trt_nutrients), 
-               geom='line', linewidth=0.75, linetype=1, span=0.4, alpha = 0.8) +
+               geom='line', linewidth=0.75, linetype=1, span=0.4, alpha = 0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140, 240, 20)) +
@@ -83,7 +83,7 @@ ggplot(fdat %>%
    # mean
    stat_smooth(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(DEA)) %>% ungroup(),
                aes(y = mean, color = trt_nutrients), 
-               geom='line', linewidth=0.75, linetype=1, span=0.4, alpha = 0.8) +
+               geom='line', linewidth=0.75, linetype=1, span=0.4, alpha = 0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
@@ -120,7 +120,7 @@ ggplot(fdat %>%
    # mean
    stat_smooth(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(ch4_ebu_flux)) %>% ungroup(),
                aes(y = mean, color = trt_nutrients), 
-               geom='line', linewidth=0.75, linetype=1, span=0.4, alpha = 0.8) +
+               geom='line', linewidth=0.75, linetype=1, span=0.4, alpha = 0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
