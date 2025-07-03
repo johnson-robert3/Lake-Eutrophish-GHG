@@ -1,6 +1,8 @@
 #--
 # Calculate the mean and SE of each variable used in the ecdf() comparison analysis 
 # for both pulsed and reference ponds for the analysis window for each disturbance event
+#
+# Output as Table S1 for manuscript
 #-- 
 
 
@@ -56,8 +58,35 @@ df = bind_rows(v1, vh, v2, vd) %>%
 # treatment mean and SE
 se = function(.x) { sd(.x) / sqrt(length(.x)) }
 
-df2 = df %>%
-  summarize(across(where(is.numeric), list(mean=mean, se=se)), .by=c(treatment, event))
+df = df %>%
+  summarize(across(where(is.numeric), list(mean=mean, se=se)), .by=c(treatment, event)) %>%
+  mutate(across(where(is.numeric), ~round(., 2)))
+
+
+# turn into a nice table
+
+tab.s1 = df %>%
+  # means
+  select(!contains("_se")) %>%
+  rename_with(.cols = ends_with("_mean"), .fn = ~str_remove(., pattern="_mean")) %>%
+  pivot_longer(cols = where(is.numeric), names_to="var", values_to="mean") %>%
+  # SE
+  full_join(df %>%
+              select(!contains("_mean")) %>%
+              rename_with(.cols = ends_with("_se"), .fn = ~str_remove(., pattern="_se")) %>%
+              pivot_longer(cols = where(is.numeric), names_to="var", values_to="se")) %>%
+  # combine into single table
+  unite(col = result, mean, se, sep = " \u00B1 ") %>%
+  pivot_wider(id_cols = c(treatment, var), names_from = event, values_from = result) %>%
+  mutate(order = rep(1:11, times=2)) %>%
+  arrange(order) %>%
+  select(-order) %>%
+  relocate(var)
+
+
+# output
+write.csv(tab.s1, file = "event window means.csv", row.names=FALSE, fileEncoding = "UTF-8")
+
 
 
 
