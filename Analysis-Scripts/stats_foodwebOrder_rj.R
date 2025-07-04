@@ -40,7 +40,7 @@ varlist <- colnames(dat.raw)
 #                                    "sonde_strat","sonde_strat","sonde_zmix","salinity", "bottom_salinity",
 #                                    "wind_speed","wind_U10","ph","bottom_ph","nox","phyco","bottom_phyco")]
 
-varlist <- varlist[varlist %in% c("ch4_flux","n2o_flux","co2_flux",
+varlist <- varlist[varlist %in% c("ch4_flux","co2_flux",
                                   "GPP","R","NEP",
                                   "do_sat","bottom_do_sat",
                                   "tn","tp",
