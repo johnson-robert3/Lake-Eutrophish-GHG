@@ -279,7 +279,7 @@ image(x=1:4, y=1:length(varlist.main), z=t(result_otherTimes)[,rev(1:length(varl
 axis(1, at=1:4, labels=c("Pulse 1", "Heat event", "Pulse 2", "Derecho"), las=2)
 axis(2, at=1:length(varlist.main), labels=rev(prettyNames), las=2)
 mtext("Comparison to prior \nwindows in pulsed ponds", cex=3/4, line=0.2)
-mtext(expression(bold("A)")), cex=3/4, at=0.35, line=0.2)
+mtext(expression(bold("B")), cex=3/4, at=0.3, line=0.3)
 abline(h=c(2,6,9)+0.5)
 text(atx, aty, round(c(result_otherTimes), 2))
 
@@ -289,7 +289,7 @@ image(x=1:4, y=1:length(varlist.main), z=t(result_refPonds)[,rev(1:length(varlis
 axis(1, at=1:4, labels=c("Pulse 1", "Heat event", "Pulse 2", "Derecho"), las=2)
 axis(2, at=1:length(varlist.main), labels=NA, las=2)
 mtext("Comparison to overlapping \nwindows in reference ponds", cex=3/4, line=0.2)
-mtext(expression(bold("B)")), cex=3/4, at=0.35, line=0.2)
+mtext(expression(bold("C")), cex=3/4, at=0.3, line=0.3)
 abline(h=c(2,6,9)+0.5)
 text(atx, aty, round(c(result_refPonds), 2))
 
