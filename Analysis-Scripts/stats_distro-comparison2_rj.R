@@ -2,14 +2,13 @@
 ## and begin prototyping new analyses
 
 
-# Robert playing around
+# Updated by RA Johnson
+# main update was to comparison 1 - only using windows prior to event to build ref distribution
 
 
 rm(list=ls())
 
-# setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-
-# dat.raw <- read.csv("Data/ghg-model-dataset_2023-08-07.csv")
+# data
 dat.raw <- read.csv("Data/ghg-model-dataset_2024-07-26.csv")
 
 
@@ -25,8 +24,8 @@ unique(dat.raw$treatment)
 
 ## define some time periods & units of comparison/grouping
 
-# nutrients pulses were DOYs 176 and 211; nutrients added after all sampling occurred 
-# heatwave was DOYs 185-190
+# Nutrients pulses were DOYs 176 and 211; nutrients added after all sampling occurred 
+# Heat event was DOYs 185-190
 # Derecho on DOY 223 (Aug. 10, 2020)
 
 wwidth <- 5 #days: width of windows, e.g. following nutrient pulses
@@ -41,11 +40,7 @@ ref_ponds <- pond_id %in% unique(dat.raw$pond_id[dat.raw$treatment=="reference"]
 pulse_ponds <- pond_id %in% unique(dat.raw$pond_id[dat.raw$treatment=="pulsed"])
 
 
-## turn data into matrices --  mostly because Jon likes things this way
-
-
-# varlist <- colnames(dat.raw)
-# varlist <- varlist[!varlist %in% c("pond_id","treatment","date","doy","period","period2","week","sonde_strat")]
+# focal variables
 varlist.main <- c("ch4_flux","co2_flux",
                   "GPP","R","NEP",
                   "do_sat","bottom_do_sat",
@@ -53,9 +48,12 @@ varlist.main <- c("ch4_flux","co2_flux",
                   "temp","sonde_zmix")
 
 # set the variable list used by the function to only the example variable
-# varlist.main = c("n2o_flux")
+# varlist.main = c("ch4_flux")
 
 
+## turn data into matrices --  mostly because Jon likes things this way
+
+# Create a matrix of all mean daily values for each pond for each focal variable
 data_matrices <- list()
 
 for(var in varlist.main){
@@ -74,12 +72,17 @@ for(var in varlist.main){
 }
 
 
-## Look at quantiles of pulse ponds relative to focal comparisons
+##- Comparison Analyses -##
 
+# Look at quantiles of pulse ponds relative to focal comparisons
+
+#- Comparison 1: comparison to previous times in same pulsed pond
 result_otherTimes <- matrix(NA, nrow=length(varlist.main), ncol=4)
+#- Comparison 2: comparison to same time in reference ponds
 result_refPonds <- matrix(NA, nrow=length(varlist.main), ncol=4)
 
 
+# Run the comparison analyses using the matrices of focal variable mean daily values created above and fill into the empty 'result_' matrices
 for(var in varlist.main){
 
   tmp <- data_matrices[[paste0(var)]]
@@ -92,12 +95,6 @@ for(var in varlist.main){
   comp1.p1 <- NULL
   for(ii in 1:length(time_doy)){
     if(time_doy[ii]+(wwidth-1) > max(time_doy)) {break} #stop when we overlap the end of the time series
-     
-    # if(time_doy[ii] %in% pulse1) {next} #ignore obs in pulse 1  # RAJ: I think this still allows overlap w/ the focal window, it only skips if the 1st day of the window overlaps the focal window
-    
-    # RAJ update to window overlap
-    # ww <- time_doy[ii]:(time_doy[ii] + wwidth - 1) # borrowed syntax from comp2
-    # if(any(ww %in% pulse1)) {next} # ignore windows that have any overlap with the focal event window
     
     # only use windows prior to the focal event to build the reference distribution
     if(time_doy[ii]+(wwidth-1) >= min(pulse1)) {break} #stop when we reach the focal event window
@@ -117,10 +114,6 @@ for(var in varlist.main){
   comp1.p2 <- NULL
   for(ii in 1:length(time_doy)){
     if(time_doy[ii]+(wwidth-1) > max(time_doy)){break} #stop when we overlap the end of the time series
-    # if(time_doy[ii] %in% pulse2){next} #ignore obs in pulse 2
-    
-    # ww <- time_doy[ii]:(time_doy[ii] + wwidth - 1) # borrowed syntax from comp2
-    # if(any(ww %in% pulse2)) {next} # ignore windows that have any overlap with the focal event window
     
     if(time_doy[ii]+(wwidth-1) >= min(pulse2)){break} #stop when we reach the focal event window
      
@@ -133,16 +126,12 @@ for(var in varlist.main){
   }
   result_otherTimes[varlist.main==var, 3] <- mean(res.p2)
   
-  #- Heatwave
+  #- Heat event
   heatwaveobs <- rowMeans(tmp[pulse_ponds, time_doy %in% heatwave], na.rm=TRUE)
   
   comp1.h <- NULL
   for(ii in 1:length(time_doy)){
     if(time_doy[ii]+(wwidth-1) > max(time_doy)){break} #stop when we overlap the end of the time series
-    # if(time_doy[ii] %in% heatwave){next} #ignore obs in heatwave
-    
-    # ww <- time_doy[ii]:(time_doy[ii] + wwidth - 1) # borrowed syntax from comp2
-    # if(any(ww %in% heatwave)) {next} # ignore windows that have any overlap with the focal event window
     
     if(time_doy[ii]+(wwidth-1) >= min(heatwave)){break} #stop when we reach the focal event window
      
@@ -161,10 +150,6 @@ for(var in varlist.main){
   comp1.d <- NULL
   for(ii in 1:length(time_doy)){
     if(time_doy[ii]+(wwidth-1) > max(time_doy)){break} #stop when we overlap the end of the time series
-    # if(time_doy[ii] %in% derecho){next} #ignore obs in derecho
-    
-    # ww <- time_doy[ii]:(time_doy[ii] + wwidth - 1) # borrowed syntax from comp2
-    # if(any(ww %in% derecho)) {next} # ignore windows that have any overlap with the focal event window
     
     if(time_doy[ii]+(wwidth-1) >= min(derecho)){break} #stop when we reach the focal event window
      
@@ -236,7 +221,10 @@ for(var in varlist.main){
 
 
 
-# pal <- colorRampPalette(colors=c("red","white","blue"))
+#--
+# Figures
+#--
+
 pal <- colorRampPalette(colors=c('#009392', '#fdfbe4', '#d0587e')) 
 
 prettyNames <- c(expression('CH'['4']~'flux'),
@@ -259,13 +247,11 @@ prettyNames <- c(expression('CH'['4']~'flux'),
                  )
 
 
-
 atx <- rep(1:4, each=length(varlist.main))
 aty <- rep(length(varlist.main):1, times=4)
 aty2 <- rep(1:length(varlist.main), times=4)
 
-# png("event_quantiles_rj_absR.png", res=300, units="in", width=6.5, height=6.5)
-# png("event_quantiles_rj_absR_comp1-window-update.png", res=300, units="in", width=6.5, height=6.5)
+
 png("event_quantiles_rj_absR_comp1-prev-times-only.png", res=300, units="in", width=6.5, height=4.5)
 
 # windows(height = 4.5, width = 6.5)
