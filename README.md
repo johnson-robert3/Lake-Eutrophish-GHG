@@ -38,11 +38,7 @@ Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nut
 To recreate the full model dataset from all individual datasets, run scripts in this order:
 
    1. data_import_EDI
-   2. data_import-and-process  # for creating 'sonde_surface' and 'sonde_bottom'
-   3. data_stratification  # for creating stratification variables from sonde profiles
-   4. ~data_ghg-calculations~  # no longer needed, all data now pulled in step 1.
-   5. ~doc_data-sheet-processing~  # no longer used
-   6. ~metabolism-calcs~  # no longer needed, all data now pulled in step 1.
-   7. data_model-dataset
+   2. data_model-dataset
+   3. stats_model-data
 
 
