@@ -15,44 +15,101 @@
 # ebu_flux_pond
 
 
+#- All datasets created using the 'data_import_EDI' script
+source("Data-Wrangling/data_import_EDI.R")
+
 
 ## Prep the individual data sets
 
-# Dissolved gas concentration and diffusive flux (from data set created and output in 'data_ghg-calculations' script)
-# m10 = read_csv("Data/ghg_concentration_flux_total.csv") %>%
-#    select(pond_id, doy, week, ends_with("flux"), ends_with("lake"))
-
-
-# Dissolved gas concentration and diffusive flux (from 'data_import_EDI' script)
+# Dissolved gas concentration and diffusive flux 
 m10 = lake_flux %>%
    select(pond_id, doy, ends_with("flux"), ends_with("lake"))
 
 
-# Daily metabolism estimates (from 'data_import_EDI' script)
+# Daily metabolism estimates 
 m11 = metabolism %>%
    # filter(!(GPP < 0 | R > 0)) %>%
    filter(!(if_all(.cols = c(GPP, R, NEP), .fns = is.na)))
 
 
-# Surface water limno samples (from 'data_import_EDI' script)
+# Surface water limno samples 
 m12 = limno_field_data %>%
    select(pond_id, doy, period, tn, tp, nox, srp) %>%
    # align dates of nutrient samples with GHG samples (became offset after DOY 220; nutrients were sampled the day after GHGs)
    mutate(doy = if_else(doy > 221, doy - 1, doy))
 
 
-# Sonde surface water values (from 'data_import_EDI' script then 'data_import-and-process' script)
-m13 = sonde_surface %>%
+# Surface water values from sonde profiles 
+#  means from 5-50 cm depth
+m13 = sonde_profiles %>%
+   group_by(pond_id, doy) %>%
+   filter(vert_m >= 0.05 & vert_m <= 0.50) %>%
+   summarize(across(temp:salinity, ~mean(., na.rm=T))) %>%
+   ungroup() %>%
+   # sonde profiles missing for Pond C (DOY 231) and Pond B (DOY 151)
+   # add these days and linearly interpolate for all variables, so that surface values aren't missing
+   add_row(pond_id = "B", doy = 151) %>%
+   add_row(pond_id = "C", doy = 231) %>%
+   group_by(pond_id) %>%
+   arrange(doy, .by_group=TRUE) %>%
+   mutate(across(temp:salinity, ~zoo::na.approx(.))) %>%
+   ungroup() %>%
    select(-contains("_rfu"))
 
 
-# Sonde bottom water values (from 'data_import_EDI' script then 'data_import-and-process' script)
-m14 = sonde_bottom %>%
+#--
+   # set up temporary df of sonde profiles split into 10cm depth intervals
+   sonde_int = sonde_profiles %>%
+      # 10cm depth intervals
+      mutate(depth_int = case_when(between(vert_m, -0.1, 0.1) ~ 0.1,
+                                   between(vert_m, 0.1, 0.2) ~ 0.2,
+                                   between(vert_m, 0.2, 0.3) ~ 0.3,
+                                   between(vert_m, 0.3, 0.4) ~ 0.4,
+                                   between(vert_m, 0.4, 0.5) ~ 0.5,
+                                   between(vert_m, 0.5, 0.6) ~ 0.6,
+                                   between(vert_m, 0.6, 0.7) ~ 0.7,
+                                   between(vert_m, 0.7, 0.8) ~ 0.8,
+                                   between(vert_m, 0.8, 0.9) ~ 0.9,
+                                   between(vert_m, 0.9, 1.0) ~ 1.0,
+                                   between(vert_m, 1.0, 1.1) ~ 1.1,
+                                   between(vert_m, 1.1, 1.2) ~ 1.2,
+                                   between(vert_m, 1.2, 1.3) ~ 1.3,
+                                   between(vert_m, 1.3, 1.4) ~ 1.4,
+                                   between(vert_m, 1.4, 1.5) ~ 1.5,
+                                   between(vert_m, 1.5, 1.6) ~ 1.6,
+                                   between(vert_m, 1.6, 1.7) ~ 1.7,
+                                   between(vert_m, 1.7, 1.8) ~ 1.8,
+                                   between(vert_m, 1.8, 1.9) ~ 1.9,
+                                   between(vert_m, 1.9, 2.0) ~ 2.0,
+                                   vert_m > 2.0 ~ 2.1)) %>%
+      # mean values within each depth interval
+      group_by(pond_id, doy, depth_int) %>%
+      summarize(across(temp:salinity, ~mean(., na.rm=T))) %>%
+      ungroup() 
+#--
+
+
+# Bottom water values from sonde profiles 
+#  means from bottom 20 cm
+m14 = sonde_int %>%
+   group_by(pond_id, doy) %>%
+   arrange(depth_int, .by_group=T) %>%
+   slice_tail(n=2) %>%
+   summarize(across(temp:salinity, ~mean(., na.rm=T))) %>%
+   ungroup() %>%
+   # sonde profiles missing for Pond C (DOY 231) and Pond B (DOY 151)
+   # add these days and linearly interpolate for all variables, so that bottom values aren't missing
+   add_row(pond_id = "B", doy = 151) %>%
+   add_row(pond_id = "C", doy = 231) %>%
+   group_by(pond_id) %>%
+   arrange(doy, .by_group=TRUE) %>%
+   mutate(across(temp:salinity, ~zoo::na.approx(.))) %>%
+   ungroup() %>%
    select(-contains("_rfu")) %>%
    rename_with(.fn = ~paste("bottom", ., sep="_"), .cols = temp:last_col())
 
 
-# Weather (from 'data_import_EDI' script)
+# Weather 
 m15 = weather_data %>%
    mutate(U10 = wind_speed * ((10 / wind_z)^(1/7))) %>%
    select(doy, wind_speed, U10) %>%
@@ -62,14 +119,30 @@ m15 = weather_data %>%
    rename(wind_U10 = U10)
 
 
-# Methanogenesis and DEA (from 'data_import_EDI' script)
+# Methanogenesis and DEA 
 m16 = methano_dea %>%
    rename(methanogenesis = ch4_rate, DEA = n2o_rate) %>%
    select(-week)
 
 
-# Sonde profile stratification (from 'data_import_EDI' script then 'data_stratification' script)
-m21 = sonde_strat %>%
+# Sonde profile stratification 
+library(rLakeAnalyzer)
+
+m21 = sonde_int %>%
+   select(pond_id:temp) %>%
+   group_by(pond_id, doy) %>%
+   summarize(pond_depth = max(depth_int),
+             thermocline = thermo.depth(wtr = temp, depths = depth_int),
+             meta_top = meta.depths(wtr = temp, depths = depth_int)[[1]],
+             meta_bottom = meta.depths(wtr = temp, depths = depth_int)[[2]]) %>%
+   ungroup() %>%
+   # correct for when thermocline couldn't be calculated, or when meta was the whole water column
+   mutate(z_mix = case_when(thermocline == 'NaN' ~ pond_depth,
+                            meta_top < 0.3 & meta_bottom == pond_depth ~ pond_depth,
+                            TRUE ~ thermocline)) %>%
+   # add binary variable for if water column is mixed or stratified at time of profile
+   mutate(stratification = case_when(z_mix == pond_depth ~ 'mixed',
+                                     TRUE ~ 'stratified')) %>%
    select(pond_id, doy, sonde_zmix = z_mix, sonde_strat = stratification)
 
 
@@ -121,7 +194,7 @@ write_csv(model_dataset, file = "Data/ghg-model-dataset_2024-07-26.csv")
 
 
    ## remove temporary individual data sets
-   rm(list = ls(pattern = "m[[:digit:]]"), test)
+   rm(list = ls(pattern = "m[[:digit:]]"), test, sonde_int)
    ##
 
 
