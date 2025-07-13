@@ -169,8 +169,9 @@ windows(height=7/3*2, width=3.25); plot_grid(sdo, bdo, ncol=1, align='v', labels
 # Temperature
 #--
 
-# pond surface temp (data used in comparison analysis)
+# Surface temp (data used in comparison analysis)
 windows(height=7/3, width=3.25)
+st = 
 ggplot(fdat,
        aes(x = doy, y = temp)) %>%
    # add events 
@@ -197,10 +198,51 @@ ggplot(fdat,
          # legend.background = element_blank(),
          # legend.text = element_text(size=8),
          # legend.key.size = unit(0.8, "lines"),
-         plot.margin = unit(c(0.75,0.25,0.25,0.25), "lines")) %>%
+         plot.margin = unit(mar_top, "lines")) %>%
    fig_theme()
 
 # ggsave(file = "surface temp.png", height=7/3, width=3.25, units='in')
+
+
+# Bottom temp 
+windows(height=7/3, width=3.25)
+bt =
+ggplot(fdat,
+       aes(x = doy, y = bottom_temp)) %>%
+   # add events 
+   fig_events() +
+   # pond data
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
+   # treatment mean
+   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
+   # geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(temp, na.rm=T)) %>% ungroup(),
+   #           aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
+   #
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
+   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   scale_y_continuous(name = expression(Bottom~temp~(degree*C))) +
+   coord_cartesian(ylim = c(14, 28), clip = "off") +
+   # event labels
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 28 + ((28-14)*0.1), size=3) +
+   # white box beneath legend
+   annotate(geom = "rect", xmin = 205, xmax = 241, ymin = 14, ymax = 17, fill="white", color="white") +
+   #
+   theme_classic() +
+   theme(legend.position = c(0.79, 0.15),
+         # legend.position = 'none',
+         legend.background = element_blank(),
+         # legend.text = element_text(size=8),
+         legend.key.size = unit(0.8, "lines"),
+         plot.margin = unit(mar_bot, "lines")) %>%
+   fig_theme()
+
+# ggsave(file = "bottom temp.png", height=7/3, width=3.25, units='in')
+
+
+# 2-panel, temperature
+windows(height=7/3*2, width=3.25); plot_grid(st, bt, ncol=1, align='v', labels="AUTO", label_size=11, label_y=0.99, label_x=0.02)
+
+# ggsave(file = "temperature.png", height=7/3*2, width=3.25, units='in')
 
 
 
