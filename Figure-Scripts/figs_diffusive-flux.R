@@ -50,7 +50,7 @@ ggplot(fdat %>%
    #
    theme_classic() +
    theme(legend.position = "none",
-         plot.margin = unit(c(1,0.5,0,0.5), "lines")) %>%
+         plot.margin = unit(mar_top, "lines")) %>%
    fig_theme() 
 
 
@@ -117,7 +117,7 @@ ggplot(fdat %>%
          legend.background = element_blank(),
          legend.text = element_text(size=8),
          legend.key.size = unit(0.8, "lines"),
-         plot.margin = unit(c(1,0.5,0.5,0.5), "lines")) %>%
+         plot.margin = unit(mar_bot, "lines")) %>%
    fig_theme()
 
 
@@ -173,7 +173,7 @@ ggplot(fdat %>%
    annotate(geom = "text", label = event_labs, x = event_lab.x, y = (max(ylim_md) + (diff(ylim_md) * 0.1)), size=3) +
    #
    theme_classic() +
-   theme(plot.margin = unit(c(1,0.5,0,0.5), "lines")) %>%
+   theme(plot.margin = unit(mar_top, "lines")) %>%
    fig_theme()
 
 
@@ -237,7 +237,7 @@ ggplot(fdat %>%
    annotate(geom = "text", label = "Ref > Pulse", x = 142, y = -45, hjust=0, size=3) +
    #
    theme_classic() +
-   theme(plot.margin = unit(c(1,0.5,0.5,0.5), "lines")) %>%
+   theme(plot.margin = unit(mar_bot, "lines")) %>%
    fig_theme()
 
 

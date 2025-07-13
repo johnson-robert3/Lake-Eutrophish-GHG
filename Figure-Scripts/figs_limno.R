@@ -54,7 +54,7 @@ ggplot(fdat,
    theme(legend.position = c(0.79, 0.85),
          legend.background = element_blank(),
          legend.key.size = unit(0.5, "cm"),
-         plot.margin = unit(c(1,0.5,0,0.5), "lines")) %>%
+         plot.margin = unit(mar_top, "lines")) %>%
    fig_theme()
 
 
@@ -83,7 +83,7 @@ ggplot(fdat,
    #
    theme_classic() +
    theme(legend.position = "none", 
-         plot.margin = unit(c(0.5,0.5,0.5,0.5), "lines")) %>%
+         plot.margin = unit(mar_bot, "lines")) %>%
    fig_theme()
 
 
@@ -117,7 +117,6 @@ ggplot(fdat,
    # event labels
    annotate(geom = "text", label = event_labs, x = event_lab.x, y = 250 + ((250)*0.1), size=3) +
    # white box beneath legend
-   # annotate(geom = "rect", xmin = 205, xmax = 241, ymin = 140, ymax = 200, fill="white", color="white") +
    annotate(geom = "rect", xmin = 205, xmax = 241, ymin = 180, ymax = 250, fill="white", color="white") +
    #
    theme_classic() +
@@ -125,7 +124,7 @@ ggplot(fdat,
          legend.background = element_blank(),
          # legend.text = element_text(size=8),
          legend.key.size = unit(0.8, "lines"),
-         plot.margin = unit(c(1,0.5,0,0.5), "lines")) %>%
+         plot.margin = unit(mar_top, "lines")) %>%
    fig_theme()
 
 
@@ -154,7 +153,7 @@ ggplot(fdat,
    #
    theme_classic() +
    theme(legend.position = "none", 
-         plot.margin = unit(c(0.5,0.5,0.5,0.5), "lines")) %>%
+         plot.margin = unit(mar_bot, "lines")) %>%
    fig_theme()
 
 
@@ -184,7 +183,7 @@ ggplot(fdat,
    #           aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140, 240, 20)) +
    scale_y_continuous(name = expression(Surface~temp~(degree*C))) +
    coord_cartesian(ylim = c(15, 30), clip = "off") +
    # event labels
@@ -279,7 +278,7 @@ ggplot(fdat,
          legend.background = element_blank(),
          legend.text = element_text(size=8),
          legend.key.size = unit(0.8, "lines"),
-         plot.margin = unit(c(0.75,0.25,0.25,0.25), "lines")) %>%
+         plot.margin = unit(mar_ind, "lines")) %>%
    fig_theme()
 
 # ggsave(filename = "surface-chla.png", height=7/3, width=3.25, units='in')
@@ -317,7 +316,7 @@ ggplot(fdat,
          # legend.background = element_blank(),
          # legend.text = element_text(size=8),
          # legend.key.size = unit(0.8, "lines"),
-         plot.margin = unit(c(0.75,0.25,0.25,0.25), "lines")) %>%
+         plot.margin = unit(mar_ind, "lines")) %>%
    fig_theme()
 
 # ggsave(file = "z_mix.png", height=7/3, width=3.25, units='in')
