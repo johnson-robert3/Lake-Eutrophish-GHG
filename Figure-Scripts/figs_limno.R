@@ -249,7 +249,7 @@ windows(height=7/3*2, width=3.25); plot_grid(st, bt, ncol=1, align='v', labels="
 # Chlorophyll
 #--
 
-# 1 panel (blue & red)
+# Surface Chlorophyll-a
 windows(height=7/3, width=3.25)
 ggplot(fdat,
        aes(x = doy, y = chla)) %>%
@@ -266,7 +266,7 @@ ggplot(fdat,
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
-   scale_y_continuous(name = expression(Chl~italic("a")~(mu*g~L^-1)),
+   scale_y_continuous(name = expression(Surface~chl~italic("a")~(mu*g~L^-1)),
                       breaks = seq(0, 60, 10)) +
    coord_cartesian(ylim = c(0, 65), clip = "off") +
    # event labels
@@ -282,6 +282,42 @@ ggplot(fdat,
    fig_theme()
 
 # ggsave(filename = "surface-chla.png", height=7/3, width=3.25, units='in')
+
+
+# Bottom Chlorophyll-a
+windows(height=7/3, width=3.25)
+ggplot(fdat,
+       aes(x = doy, y = bottom_chla)) %>%
+   # add events 
+   fig_events() +
+   # zero line
+   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
+   # pond data
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
+   # treatment mean
+   # stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.05) +
+   geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(bottom_chla, na.rm=T)) %>% ungroup(),
+             aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
+   #
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
+   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   scale_y_continuous(name = expression(Bottom~chl~italic("a")~(mu*g~L^-1)),
+                      breaks = seq(0, 300, 50)) +
+   coord_cartesian(ylim = c(0, 325), clip = "off") +
+   # event labels
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 325 + ((325)*0.1), size=3) +
+   # ggtitle(expression(Surface~Water~Chlorophyll~italic("a"))) +
+   #
+   theme_classic() +
+   theme(legend.position = c(0.18, 0.88),
+         legend.background = element_blank(),
+         legend.text = element_text(size=8),
+         legend.key.size = unit(0.8, "lines"),
+         plot.margin = unit(mar_ind, "lines")) %>%
+   fig_theme()
+
+# ggsave(filename = "bottom-chla.png", height=7/3, width=3.25, units='in')
+
 
 
 #--
