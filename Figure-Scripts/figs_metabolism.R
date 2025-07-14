@@ -50,7 +50,7 @@ ggplot(fdat,
    theme(# legend.position = c(0.16, 0.16),
          # legend.background = element_blank(), 
          legend.position = "none",
-         plot.margin = unit(c(0.75,0.25,0.25,0.25), "lines")) %>%
+         plot.margin = unit(mar_bot, "lines")) %>%
    fig_theme()
 
 # ggsave(file = "NEP.png")
@@ -87,7 +87,7 @@ ggplot(fdat,
    theme_classic() +
    theme(# legend.position = c(0.16, 0.16),
          legend.position = "none", 
-         plot.margin = unit(c(1,0.25,0,0.25), "lines")) %>%
+         plot.margin = unit(mar_mid, "lines")) %>%
    fig_theme()
 
 # ggsave(file = "Re.png")
@@ -126,7 +126,7 @@ ggplot(fdat,
          legend.background = element_blank(), 
          legend.text = element_text(size=8),
          legend.key.size = unit(0.8, "lines"),
-         plot.margin = unit(c(1,0.25,0,0.25), "lines")) %>%
+         plot.margin = unit(mar_top, "lines")) %>%
    fig_theme()
 
 # ggsave(file = "GPP.png")

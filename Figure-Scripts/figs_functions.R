@@ -72,6 +72,7 @@ fig_theme = function(.fig) {
 # panel margins/padding
 mar_top = c(1,0.5,0,0.5)  # for top panels (no x-axis label, padding on top)
 mar_bot = c(0.5,0.5,0.5,0.5)  # for bottom panels (w/ x-axis label)
+mar_mid = c(0.75,0.5,0.25,0.5)  # for middle panels (no x-axis label)
 
 mar_ind = c(0.75,0.25,0.25,0.25)  # for individual/single panel figures
 
