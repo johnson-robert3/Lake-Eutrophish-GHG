@@ -44,8 +44,8 @@ pulse_ponds <- pond_id %in% unique(dat.raw$pond_id[dat.raw$treatment=="pulsed"])
 varlist.main <- c("ch4_flux","co2_flux",
                   "GPP","R","NEP",
                   "do_sat","bottom_do_sat",
-                  "tn","tp",
-                  "temp","sonde_zmix")
+                  "temp", "bottom_temp",
+                  "tn","tp")
 
 # set the variable list used by the function to only the example variable
 # varlist.main = c("ch4_flux")
@@ -236,14 +236,16 @@ prettyNames <- c(expression('CH'['4']~'flux'),
                  'NEP',
                  'Surface DO',
                  'Bottom DO',
+                 'Surface Temp.',
+                 'Bottom Temp.',
                  #'SRP',
                  #expression('NO'['2']+'NO'['3']),
                  'Total N',
-                 'Total P',
+                 'Total P'
                  #'DOC',
-                 'Temperature',
+                 # 'Temperature',
                  #'Spec. cond.',
-                 expression('Z'['mix'])
+                 # expression('Z'['mix'])
                  )
 
 
@@ -252,7 +254,7 @@ aty <- rep(length(varlist.main):1, times=4)
 aty2 <- rep(1:length(varlist.main), times=4)
 
 
-png("event_quantiles_rj_absR_comp1-prev-times-only.png", res=300, units="in", width=6.5, height=4.5)
+png("event_quantiles_rj_var-update.png", res=300, units="in", width=6.5, height=4.5)
 
 # windows(height = 4.5, width = 6.5)
 
