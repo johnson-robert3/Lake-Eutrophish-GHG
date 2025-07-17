@@ -15,8 +15,8 @@ source("Analysis-Scripts/stats_model-data.R")
 varlist.main <- c("ch4_flux","co2_flux",
                   "GPP","R","NEP",
                   "do_sat","bottom_do_sat",
-                  "tn","tp",
-                  "temp","sonde_zmix")
+                  "temp", "bottom_temp",
+                  "tn","tp")
 
 wwidth <- 5 #days: width of windows, e.g. following nutrient pulses
 pulse1 <- 177: (177 + wwidth - 1)#doy
