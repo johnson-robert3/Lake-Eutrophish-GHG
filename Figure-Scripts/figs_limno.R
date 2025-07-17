@@ -250,15 +250,6 @@ windows(height=7/3*2, width=3.25); plot_grid(st, bt, ncol=1, align='v', labels="
 # ggsave(file = "temperature.png", height=7/3*2, width=3.25, units='in')
 
 
-##
-# 3-panel figure - temperature and bottom DO sat. for manuscript
-##
-
-windows(height=7, width=3.25); plot_grid(st, bt, bdo, ncol=1, align='v', labels="AUTO", label_size=11, label_y=0.99, label_x=0.02)
-
-# ggsave(file = "temperature_and_bottom-DO.png", height=7, width=3.25, units='in')
-
-
 
 #--
 # Chlorophyll
