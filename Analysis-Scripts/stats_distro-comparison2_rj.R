@@ -254,7 +254,8 @@ aty <- rep(length(varlist.main):1, times=4)
 aty2 <- rep(1:length(varlist.main), times=4)
 
 
-png("event_quantiles_rj_var-update.png", res=300, units="in", width=6.5, height=4.5)
+# png("event_quantiles_rj_var-update.png", res=300, units="in", width=6.5, height=4.5)
+pdf("event_quantiles_rj_var-update.pdf", width=6.5, height=4.5)
 
 # windows(height = 4.5, width = 6.5)
 
