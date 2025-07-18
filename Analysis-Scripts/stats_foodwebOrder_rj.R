@@ -40,11 +40,26 @@ varlist <- colnames(dat.raw)
 #                                    "sonde_strat","sonde_strat","sonde_zmix","salinity", "bottom_salinity",
 #                                    "wind_speed","wind_U10","ph","bottom_ph","nox","phyco","bottom_phyco")]
 
-varlist <- varlist[varlist %in% c("ch4_flux","co2_flux",
-                                  "GPP","R","NEP",
-                                  "do_sat","bottom_do_sat",
-                                  "tn","tp",
-                                  "temp","sonde_zmix")]
+# varlist <- varlist[varlist %in% c("ch4_flux","co2_flux",
+#                                   "GPP","R","NEP",
+#                                   "do_sat","bottom_do_sat",
+#                                   "temp", "bottom_temp",
+#                                   "tn","tp")]
+
+varlist.main <- c("ch4_flux","co2_flux",
+                  "GPP","R","NEP",
+                  "do_sat","bottom_do_sat",
+                  "temp", "bottom_temp",
+                  "tn","tp")
+
+units <- c("(mmol CH4 m-2 d-1)", "(mmol CO2 m-2 d-1)", 
+               "(mg O2 m-2 d-1)", "(mg O2 m-2 d-1)", "(mg O2 m-2 d-1)", 
+               "(% sat.)", "(% sat.)",
+               "(C)", "(C)", 
+               "(mg N L-1)", "(ug P L-1)")
+
+var.units = setNames(as.data.frame(as.list(units)), varlist.main)
+
 
 
 # cols <- c("green","yellow","red")
@@ -52,11 +67,13 @@ varlist <- varlist[varlist %in% c("ch4_flux","co2_flux",
 cols <- c("#B9E5E8","#7AB2D3","#4A628A")  # blue ramp, light blue is lowest (rank 1) and dark blue is highest (rank 3)
 
 
-pdf("foodweb_consistency.pdf", onefile=TRUE)
+# pdf("foodweb_consistency2.pdf", onefile=TRUE)
 
-par(mfrow=c(4,2), mar=c(2.5,2.5,2.5,0.5))
+png("foodweb_test1.png", width=6, height=7, units="in", res=300)
 
-for(var in varlist){
+par(mfrow=c(4,2), mar=c(2.5,2.5,2.5,0.5), oma=c(0,1.2,0,0.5))
+
+for(var in varlist.main[1:4]){
   
   tmp <- dat.raw
   tmp$treatment = factor(tmp$treatment, levels=c("ref", "puls"))
@@ -64,6 +81,7 @@ for(var in varlist){
   colnames(tmp)[colnames(tmp)==var] <- "var"
   boxplot(var ~ treatment + foodweb, data=tmp)
   mtext(paste0(var), line=1.1, cex=2/3)
+  mtext(paste0(var.units[,var]), side=2, line=2.2, cex=2/3)
 
   pondmean.ref <- aggregate(dat.raw[dat.raw$treatment=="ref", var], 
                             by=list(dat.raw[dat.raw$treatment=="ref", "foodweb"]), FUN="mean", na.rm=TRUE)
