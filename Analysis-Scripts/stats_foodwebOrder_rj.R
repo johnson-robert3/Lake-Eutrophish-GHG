@@ -53,7 +53,7 @@ varlist.main <- c("ch4_flux","co2_flux",
                   "tn","tp")
 
 units <- c("(mmol CH4 m-2 d-1)", "(mmol CO2 m-2 d-1)", 
-               "(mg O2 m-2 d-1)", "(mg O2 m-2 d-1)", "(mg O2 m-2 d-1)", 
+               "(mg O2 L-1 d-1)", "(mg O2 L-1 d-1)", "(mg O2 L-1 d-1)", 
                "(% sat.)", "(% sat.)",
                "(C)", "(C)", 
                "(mg N L-1)", "(ug P L-1)")
