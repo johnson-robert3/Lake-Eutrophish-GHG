@@ -19,7 +19,7 @@ source("Figure-Scripts/figs_functions.R")
 
 
 #---
-# Figure 1: CH4 and CO2 diffusive flux
+# Figure 2: CH4 and CO2 diffusive flux
 #---
 
 # Function to calculate the mean difference between treatment and propagated standard error 
@@ -37,7 +37,7 @@ flux_diff = function(.dat, .var) {
 }
 
 
-#-- 1a: CH4 flux --#
+#-- 2a: CH4 flux --#
 ylim_m = c(0, 60)
 m =
 ggplot(fdat %>%
@@ -67,7 +67,7 @@ ggplot(fdat %>%
    fig_theme() 
 
 
-#-- 1b: CO2 flux --#
+#-- 2b: CO2 flux --#
 ylim_c = c(-20, 250)
 c =
 ggplot(fdat %>%
@@ -100,7 +100,7 @@ ggplot(fdat %>%
    fig_theme()
 
 
-#-- 1c: CH4 difference --#
+#-- 2c: CH4 difference --#
 ylim_md = c(-10, 21)
 md =
 ggplot(fdat %>%
@@ -129,7 +129,7 @@ ggplot(fdat %>%
    fig_theme()
 
 
-#-- 1d: CO2 difference --#
+#-- 2d: CO2 difference --#
 ylim_cd = c(-135, 65)
 cd =
 ggplot(fdat %>%
@@ -161,35 +161,36 @@ ggplot(fdat %>%
    fig_theme()
 
 
-#-- Build the complete Figure 1 --#
+#-- Build the complete Figure 2 --#
 windows(height = 7/3*2, width = 3.25*2)
-plot_grid(m, c, md, cd, ncol=2, align="v", byrow=FALSE, labels=c('A', 'C', 'B', 'D'), label_size=11, label_y=0.99, label_x=0.02)
+plot_grid(m, c, md, cd, ncol=2, align="v", byrow=FALSE, labels=c('A', 'C', 'B', 'D'), label_size=11, label_y=c(0.98, 0.98, 1.03, 1.03), label_x=0.02)
 
-# ggsave(file = "diffusive-flux_ts-and-diff.png", height = 7/3*2, width = 3.25*2, units='in')
+# ggsave(file = "ms_ghg-flux.png", height = 7/3*2, width = 3.25*2, units='in')
 
 
 
 #---
-# Figure 3: Water column temperature and DO
+# Figure 1: Physicochemical parameters
 #---
 
-#-- 3a: Surface temp --#
-st = 
-ggplot(fdat,
-       aes(x = doy, y = temp)) %>%
+#-- 1a: Temp: treatment means only, surface/bottom together --#
+# windows(height=7/3, width=3.25)
+sbt =
+ggplot(fdat) %>%
    # add events 
    fig_events() +
-   # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
-   # treatment mean
-   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
+   # surface treatment means
+   stat_smooth(aes(x=doy, y=temp, color = trt_nutrients), geom="line", linetype=1, linewidth=0.75, span=0.1, alpha=0.9) +
+   # bottom treatment means
+   stat_smooth(aes(x=doy, y=bottom_temp, color = trt_nutrients), geom="line", linetype=1, linewidth=0.5, span=0.1, alpha=0.25) +  # pale, solid
+   stat_smooth(aes(x=doy, y=bottom_temp, color = trt_nutrients), geom="line", linetype=3, linewidth=0.5, span=0.1, alpha=1) +  # dark, dashed
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140, 240, 20)) +
-   scale_y_continuous(name = expression(Surface~temp.~(degree*C))) +
-   coord_cartesian(ylim = c(15, 30), clip = "off") +
+   scale_y_continuous(name = expression(Temperature~(degree*C))) +
+   coord_cartesian(ylim = c(14, 30), clip = "off") +
    # event labels
-   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 30 + ((30-15)*0.1), size=3) +
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 30 + ((30-14)*0.1), size=3) +
    #
    theme_classic() +
    theme(legend.position = 'none',
@@ -197,23 +198,27 @@ ggplot(fdat,
    fig_theme()
 
 
-#-- 3b: Bottom temp --#
-bt =
-ggplot(fdat,
-       aes(x = doy, y = bottom_temp)) %>%
+
+#-- 1b: DO sat: treatment means only, surface/bottom together --#
+# windows(height=7/3, width=3.25)
+sbdo =
+ggplot(fdat) %>%
    # add events 
    fig_events() +
-   # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
-   # treatment mean
-   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
+   # zero line
+   geom_hline(yintercept=100, linetype=3, color="gray50", linewidth=0.8) +
+   # surface treatment means
+   stat_smooth(aes(x=doy, y=do_sat, color = trt_nutrients), geom="line", linetype=1, linewidth=0.75, span=0.1, alpha=0.9) +
+   # bottom treatment means
+   stat_smooth(aes(x=doy, y=bottom_do_sat, color = trt_nutrients), geom="line", linetype=1, linewidth=0.5, span=0.1, alpha=0.25) +  # pale, solid
+   stat_smooth(aes(x=doy, y=bottom_do_sat, color = trt_nutrients), geom="line", linetype=3, linewidth=0.5, span=0.1, alpha=1) +  # dark, dashed
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140, 240, 20)) +
-   scale_y_continuous(name = expression(Bottom~temp.~(degree*C))) +
-   coord_cartesian(ylim = c(14, 28), clip = "off") +
+   scale_y_continuous(name = expression(DO~saturation~('%'))) +
+   coord_cartesian(ylim = c(0, 200), clip = "off") +
    # event labels
-   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 28 + ((28-14)*0.1), size=3) +
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 200 + ((200)*0.1), size=3) +
    #
    theme_classic() +
    theme(legend.position = 'none',
@@ -221,10 +226,106 @@ ggplot(fdat,
    fig_theme()
 
 
-#-- 3c: Bottom DO sat --#
-bdo =
+#-- 1c: TP --# 
+tp = 
+ggplot(fdat %>% filter(!(is.na(tp))),
+       aes(x = doy, y = tp)) %>%
+   # add events 
+   fig_events() +
+   # zero line
+   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
+   # pond data
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
+   # treatment mean (loess smooth)
+   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
+   # geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(tp, na.rm=T)) %>% ungroup(),
+   #           aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
+   #
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
+   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_y_continuous(name = expression(TP~(mu*g~L^-1)), breaks = seq(0, 250, 50)) +
+   coord_cartesian(ylim = c(0, 270), clip = "off") +
+   # event labels
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 270 + ((270)*0.1), size=3) +
+   #
+   theme_classic() +
+   theme(# legend.position = c(0.82, 0.87),
+         legend.position = "none",
+         plot.margin = unit(mar_bot, "lines")) %>%
+   fig_theme()
+
+
+#-- Build the complete Figure 1A-C --# 
+windows(height=7, width=3.25) 
+plot_grid(sbt, sbdo, tp, ncol=1, align='v', labels="AUTO", label_size=11, label_y=0.99, label_x=0.02)
+
+# ggsave(file = "physicochemical.png", height=7, width=3.25, units='in')
+
+
+
+#---
+# Figure 1: Metabolism
+#---
+
+#-- 1d: GPP --#
+gpp =
 ggplot(fdat,
-       aes(x = doy, y = bottom_do_sat)) %>%
+       aes(x = doy, y = GPP)) %>%
+   # add events 
+   fig_events() +
+   # zero line
+   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
+   # pond data
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
+   # treatment mean
+   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, alpha=0.9, span=0.1) +
+   #
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
+   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_y_continuous(name = expression(GPP~(mg~O[2]~L^-1~d^-1)), breaks = seq(0, 20, 5)) +
+   coord_cartesian(ylim = c(0, 20), clip = "off") +
+   # event labels
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 20 + ((20)*0.1), size=3) +
+   #
+   theme_classic() +
+   theme(legend.position = c(0.17, 0.88),
+         legend.background = element_blank(), 
+         legend.text = element_text(size=8),
+         legend.key.size = unit(0.8, "lines"),
+         plot.margin = unit(mar_top, "lines")) %>%
+   fig_theme()
+
+
+#-- 1e: R --#
+re =
+ggplot(fdat,
+       aes(x = doy, y = R)) %>%
+   # add events 
+   fig_events() +
+   # zero line
+   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
+   # pond data
+   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
+   # treatment mean
+   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, alpha=0.9, span=0.1) +
+   #
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
+   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_y_continuous(name = expression(R~(mg~O[2]~L^-1~d^-1)), breaks = seq(-20, 0, 5)) +
+   coord_cartesian(ylim = c(-20, 0), clip = "off") +
+   # event labels
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 0 + ((20)*0.1), size=3) +
+   #
+   theme_classic() +
+   theme(legend.position = "none", 
+         plot.margin = unit(mar_mid, "lines")) %>%
+   fig_theme()
+
+
+#-- 1f: NEP --# 
+nep =
+ggplot(fdat,
+       aes(x = doy, y = NEP)) %>%
    # add events 
    fig_events() +
    # zero line
@@ -232,30 +333,35 @@ ggplot(fdat,
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean 
-   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
+   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, alpha=0.9, span=0.1) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
-   scale_y_continuous(name = expression(Bottom~DO~('%'~sat.)), breaks = seq(0, 250, 50)) +
-   coord_cartesian(ylim = c(0, 250), clip = "off") +
+   scale_y_continuous(name = expression(NEP~(mg~O[2]~L^-1~d^-1)), breaks = seq(-8, 8, 2)) +
+   coord_cartesian(ylim = c(-8, 8), clip = "off") +
    # event labels
-   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 250 + ((250)*0.1), size=3) +
-   # white box beneath legend
-   annotate(geom = "rect", xmin = 205, xmax = 241, ymin = 180, ymax = 250, fill="white", color="white") +
+   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 8 + ((8+8)*0.1), size=3) +
    #
    theme_classic() +
-   theme(legend.position = c(0.79, 0.85),
-         legend.background = element_blank(),
-         legend.key.size = unit(0.8, "lines"),
+   theme(legend.position = "none",
          plot.margin = unit(mar_bot, "lines")) %>%
    fig_theme()
 
 
-#-- Build the complete Figure 3 --# 
-windows(height=7, width=3.25) 
-plot_grid(st, bt, bdo, ncol=1, align='v', labels="AUTO", label_size=11, label_y=0.99, label_x=0.02)
+#-- Build the complete Figure 1D-F --#
+windows(height=7, width=3.25)
+plot_grid(gpp, re, nep, ncol=1, align='v', labels="AUTO", label_size=11, label_y=0.99, label_x=0.02)
 
-# ggsave(file = "temperature_and_bottom-DO.png", height=7, width=3.25, units='in')
+# ggsave(file = "metabolism.png", height=7, width=3.25, units = "in")
+
+
+
+#-- Build the complete Figure 1 (6 panel) --# 
+windows(height=7, width=6.5)
+plot_grid(sbt, sbdo, tp, gpp, re, nep, ncol=2, align="v", byrow=FALSE, 
+          labels=c('A','D','B','E','C','F'), label_size=11, label_y=c(0.99, 0.99, 1.02, 1.02, 1.04, 1.04), label_x=0.02)
+
+# ggsave(file = "ms_physico-metab.png", height=7, width=6.5, units = "in")
 
 
 
@@ -346,101 +452,8 @@ ggplot(fdat %>%
 
 #-- Build the complete Figure 4 --#
 windows(height = 7/3*2, width = 3.25)
-plot_grid(p, e, ncol=1, align='v', labels="AUTO", label_size=11, label_y=0.99, label_x=0.04)
+plot_grid(p, e, ncol=1, align='v', labels="AUTO", label_size=11, label_y=c(0.99, 1.04), label_x=0.04)
 
-# ggsave(file = "GHG_process_measurements.png", height = 7/3*2, width = 3.25, units = "in")
-
-
-
-#---
-# Figure 5: Metabolism
-#---
-
-#-- 1a: GPP --#
-gpp =
-ggplot(fdat,
-       aes(x = doy, y = GPP)) %>%
-   # add events 
-   fig_events() +
-   # zero line
-   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
-   # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
-   # treatment mean
-   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, alpha=0.9, span=0.1) +
-   #
-   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
-   scale_y_continuous(name = expression(GPP~(mg~O[2]~L^-1~d^-1)), breaks = seq(0, 20, 5)) +
-   coord_cartesian(ylim = c(0, 20), clip = "off") +
-   # event labels
-   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 20 + ((20)*0.1), size=3) +
-   #
-   theme_classic() +
-   theme(legend.position = c(0.17, 0.88),
-         legend.background = element_blank(), 
-         legend.text = element_text(size=8),
-         legend.key.size = unit(0.8, "lines"),
-         plot.margin = unit(mar_top, "lines")) %>%
-   fig_theme()
-
-
-#-- 1b: R --#
-re =
-ggplot(fdat,
-       aes(x = doy, y = R)) %>%
-   # add events 
-   fig_events() +
-   # zero line
-   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
-   # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
-   # treatment mean
-   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, alpha=0.9, span=0.1) +
-   #
-   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
-   scale_y_continuous(name = expression(R~(mg~O[2]~L^-1~d^-1)), breaks = seq(-20, 0, 5)) +
-   coord_cartesian(ylim = c(-20, 0), clip = "off") +
-   # event labels
-   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 0 + ((20)*0.1), size=3) +
-   #
-   theme_classic() +
-   theme(legend.position = "none", 
-         plot.margin = unit(mar_mid, "lines")) %>%
-   fig_theme()
-
-
-#-- 1c: NEP --# 
-nep =
-ggplot(fdat,
-       aes(x = doy, y = NEP)) %>%
-   # add events 
-   fig_events() +
-   # zero line
-   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
-   # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
-   # treatment mean 
-   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, alpha=0.9, span=0.1) +
-   #
-   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
-   scale_y_continuous(name = expression(NEP~(mg~O[2]~L^-1~d^-1)), breaks = seq(-8, 8, 2)) +
-   coord_cartesian(ylim = c(-8, 8), clip = "off") +
-   # event labels
-   annotate(geom = "text", label = event_labs, x = event_lab.x, y = 8 + ((8+8)*0.1), size=3) +
-   #
-   theme_classic() +
-   theme(legend.position = "none",
-         plot.margin = unit(mar_bot, "lines")) %>%
-   fig_theme()
-
-
-#-- Build the complete Figure 5 --#
-windows(height=7, width=3.25)
-plot_grid(gpp, re, nep, ncol=1, align='v', labels="AUTO", label_size=11, label_y=0.99, label_x=0.02)
-
-# ggsave(file = "metabolism.png", height=7, width=3.25, units = "in")
+# ggsave(file = "ms_ch4-production.png", height = 7/3*2, width = 3.25, units = "in")
 
 
