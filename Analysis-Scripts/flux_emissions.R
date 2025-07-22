@@ -3,20 +3,6 @@
 #  using the difference accounts for the heat event, which affected all ponds)
 
 
-# Function to calculate the mean difference between treatment and propagated standard error 
-flux_diff = function(.dat, .var) {
-   
-   .dat %>%
-      filter(!(is.na({{.var}}))) %>%  # enclose within {{}} to specify the argument supports <tidy-select>
-      summarize(mean = mean({{.var}}), sd = sd({{.var}}), .by = c(trt_nutrients, doy)) %>%
-      pivot_longer(cols = c(mean, sd), names_to = "stat", values_to = "value") %>%
-      pivot_wider(id_cols = doy, names_from = c(trt_nutrients, stat), values_from = value) %>%
-      mutate(diff = pulsed_mean - reference_mean,
-             # propagated standard error
-             diff_se = sqrt((pulsed_sd^2 + reference_sd^2) / 3))
-}
-
-
 # Standard error
 se = function(.x) { sd(.x) / sqrt(length(.x)) }
 
@@ -28,32 +14,6 @@ p1 = 176
 p2 = 211
 H = 185:190
 D = 223
-
-
-# methane difference
-mdiff = flux_diff(fdat, ch4_flux) %>%
-  # filter to days between P1 and P2
-  filter(doy %in% p1.days) %>%
-  # add days GHG wasn't measured
-  right_join(tibble('doy' = c(p1.days)) %>% mutate(doy = as.numeric(doy))) %>% 
-  arrange(doy) %>%
-  mutate(across(pulsed_mean:diff_se, ~zoo::na.approx(.)))
-
-# methane emission from pulsed ponds above that from reference between P1 and P2
-mdiff %>% summarize(sum(diff))
-
-
-# co2 difference
-cdiff = flux_diff(fdat, co2_flux) %>%
-  # filter to days between P1 and P2
-  filter(doy %in% p1.days) %>%
-  # add days GHG wasn't measured
-  right_join(tibble('doy' = c(p1.days)) %>% mutate(doy = as.numeric(doy))) %>% 
-  arrange(doy) %>%
-  mutate(across(pulsed_mean:diff_se, ~zoo::na.approx(.)))
-
-# co2 emission from pulsed ponds above that from reference between P1 and P2
-cdiff %>% summarize(sum(diff))
 
 
 
@@ -157,7 +117,5 @@ emissions = bind_rows(emit.tot, emit.p1p2, emit.hspike, emit.afterp1, emit.after
 fdat %>% 
   filter(!if_any(c(ch4_flux, co2_flux), is.na)) %>%
   summarize(across(c(ch4_flux, co2_flux), list(min=min, max=max)), .by=pond_id)
-
-
 
 
