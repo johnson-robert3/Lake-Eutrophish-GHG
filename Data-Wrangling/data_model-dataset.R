@@ -29,14 +29,18 @@ m10 = lake_flux %>%
 # Daily metabolism estimates 
 m11 = metabolism %>%
    # filter(!(GPP < 0 | R > 0)) %>%
-   filter(!(if_all(.cols = c(GPP, R, NEP), .fns = is.na)))
+   filter(!(if_all(.cols = c(GPP, R, NEP), .fns = is.na))) %>%
+   # remove columns unnecessary for manuscript submission
+   select(-flag)  # all erroneous days already excluded with previous line, flag no longer needed
 
 
 # Surface water limno samples 
 m12 = limno_field_data %>%
    select(pond_id, doy, period, tn, tp, nox, srp) %>%
    # align dates of nutrient samples with GHG samples (became offset after DOY 220; nutrients were sampled the day after GHGs)
-   mutate(doy = if_else(doy > 221, doy - 1, doy))
+   mutate(doy = if_else(doy > 221, doy - 1, doy)) %>%
+   # remove columns unnecessary for manuscript submission
+   select(-nox, -srp)
 
 
 # Surface water values from sonde profiles 
@@ -54,7 +58,9 @@ m13 = sonde_profiles %>%
    arrange(doy, .by_group=TRUE) %>%
    mutate(across(temp:salinity, ~zoo::na.approx(.))) %>%
    ungroup() %>%
-   select(-contains("_rfu"))
+   select(-contains("_rfu")) %>%
+   # remove columns unnecessary for manuscript submission
+   select(pond_id:do)
 
 
 #--
@@ -106,7 +112,9 @@ m14 = sonde_int %>%
    mutate(across(temp:salinity, ~zoo::na.approx(.))) %>%
    ungroup() %>%
    select(-contains("_rfu")) %>%
-   rename_with(.fn = ~paste("bottom", ., sep="_"), .cols = temp:last_col())
+   rename_with(.fn = ~paste("bottom", ., sep="_"), .cols = temp:last_col()) %>%
+   # remove columns unnecessary for manuscript submission
+   select(pond_id:bottom_do)
 
 
 # Weather 
@@ -122,7 +130,9 @@ m15 = weather_data %>%
 # Methanogenesis and DEA 
 m16 = methano_dea %>%
    rename(methanogenesis = ch4_rate, DEA = n2o_rate) %>%
-   select(-week)
+   select(-week) %>%
+   # remove columns unnecessary for manuscript submission
+   select(-DEA)
 
 
 # Sonde profile stratification 
@@ -161,7 +171,7 @@ test = m10 %>%          # GHG dissolved conc. and diffusive flux
    full_join(m14) %>%   # sonde bottom
    full_join(m15) %>%   # weather
    full_join(m16) %>%   # DEA and Methanogenesis
-   full_join(m21) %>%   # sonde stratification
+   # full_join(m21) %>%   # sonde stratification
    full_join(m22)       # Ebullition
 
 
@@ -190,7 +200,11 @@ model_dataset = test %>%
 
 
 # output the complete model dataset
-write_csv(model_dataset, file = "Data/ghg-model-dataset_2024-07-26.csv")
+# write_csv(model_dataset, file = "Data/ghg-model-dataset_2024-07-26.csv")
+
+# output the dataset with just variables used in analyses/figures for the manuscript
+write_csv(model_dataset, file = "Data/ghg-model-dataset_ms-data.csv")
+
 
 
    ## remove temporary individual data sets

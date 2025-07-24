@@ -9,7 +9,7 @@
 rm(list=ls())
 
 # data
-dat.raw <- read.csv("Data/ghg-model-dataset_2024-07-26.csv")
+dat.raw <- read.csv("Data/ghg-model-dataset_ms-data.csv")
 
 
 # absolute value of ecosystem respiration values (lower values of R denote higher rates of respiration)
