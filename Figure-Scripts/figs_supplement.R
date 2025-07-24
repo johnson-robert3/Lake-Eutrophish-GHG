@@ -27,6 +27,7 @@ tn =
 ggplot(fdat %>% filter(!(is.na(tn))),
        aes(x = doy, y = tn)) %>%
    # add events 
+   fig_windows() %>%
    fig_events() +
    # zero line
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
@@ -34,9 +35,9 @@ ggplot(fdat %>% filter(!(is.na(tn))),
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean (loess smooth)
-   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
-   # geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(tn, na.rm=T)) %>% ungroup(),
-   #           aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
+   # stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
+   geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(tn, na.rm=T)) %>% ungroup(),
+             aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
@@ -59,6 +60,7 @@ tp =
 ggplot(fdat %>% filter(!(is.na(tp))),
        aes(x = doy, y = tp)) %>%
    # add events 
+   fig_windows() %>%
    fig_events() +
    # zero line
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
@@ -66,9 +68,9 @@ ggplot(fdat %>% filter(!(is.na(tp))),
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean (loess smooth)
-   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
-   # geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(tp, na.rm=T)) %>% ungroup(),
-   #           aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
+   # stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
+   geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(tp, na.rm=T)) %>% ungroup(),
+             aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
@@ -141,13 +143,16 @@ sdo =
 ggplot(fdat,
        aes(x = doy, y = do_sat)) %>%
    # add events 
+   fig_windows() %>%
    fig_events() +
    # zero line
    geom_hline(yintercept=100, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean
-   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
+   # stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
+   geom_line(data = ~.x %>% summarize(mean = mean(do_sat, na.rm=T), .by=c(trt_nutrients, doy)),
+             aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.8) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140, 240, 20)) +
@@ -169,13 +174,16 @@ bdo =
 ggplot(fdat,
        aes(x = doy, y = bottom_do_sat)) %>%
    # add events 
+   fig_windows() %>%
    fig_events() +
    # zero line
    geom_hline(yintercept=100, linetype=3, color="gray50", linewidth=0.8) +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean 
-   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
+   # stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
+   geom_line(data = ~.x %>% summarize(mean = mean(bottom_do_sat, na.rm=T), .by=c(trt_nutrients, doy)),
+             aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.8) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
@@ -184,7 +192,7 @@ ggplot(fdat,
    # event labels
    annotate(geom = "text", label = event_labs, x = event_lab.x, y = 250 + ((250)*0.1), size=3) +
    # white box beneath legend
-   annotate(geom = "rect", xmin = 205, xmax = 241, ymin = 180, ymax = 250, fill="white", color="white") +
+   annotate(geom = "rect", xmin = 205, xmax = 241, ymin = 190, ymax = 250, fill="white", color="white") +
    #
    theme_classic() +
    theme(legend.position = c(0.79, 0.85),
@@ -211,11 +219,14 @@ st =
 ggplot(fdat,
        aes(x = doy, y = temp)) %>%
    # add events 
+   fig_windows() %>%
    fig_events() +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean
-   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
+   # stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
+   geom_line(data = ~.x %>% summarize(mean = mean(temp, na.rm=T), .by=c(trt_nutrients, doy)),
+             aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.8) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140, 240, 20)) +
@@ -235,11 +246,14 @@ bt =
 ggplot(fdat,
        aes(x = doy, y = bottom_temp)) %>%
    # add events 
+   fig_windows() %>%
    fig_events() +
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean
-   stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
+   # stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
+   geom_line(data = ~.x %>% summarize(mean = mean(bottom_temp, na.rm=T), .by=c(trt_nutrients, doy)),
+             aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.8) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
