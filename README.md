@@ -1,6 +1,12 @@
 # 2020 Hort Farm Pond Experiment
 
-Greenhouse Gas Dynamics in Shallow Aquatic Ecosystems in Response to a Pulse Nutrient Addition
+This Github repository contains the data and code files needed to recreate all results and figures from the following manuscript: 
+
+Title: "*Immediate and lagged effects of nutrient and extreme weather disturbances on pond greenhouse gas emissions*"
+
+Authors: Johnson, RA, TJ Butts, EA Albright, SJ Hall, JA Walter, and GM Wilkinson.
+
+Data used in the manuscript are currently available in this Github repository (Data/ghg-model-dataset_ms-data.csv), with accompanying metadata (Data/ghg-model-dataset_ms-metadata.xlsx). Individual datasets will be archived in the Environmental Data Initiative repository prior to manuscript acceptance.
 
 
 ## Modeling Notes
@@ -22,8 +28,9 @@ To recreate the full model dataset from all individual datasets, run scripts in 
 **'data_model-dataset'**: Use this script to recreate the full, combined dataset to use in statistical models. 
 
 **'stats_distro-comparison2_rj'**: Use this script to run the window comparison analysis created by Jon used in the manuscript. 
+**'distro_comparison_fig_update'**: Use this script to create the window comparison analysis figure used in the manuscript. 
 
-**'stats_foodwebOrder_rj'**: Script for creating the foodweb treatment Pearson correlation figure. 
+**'stats_foodwebOrder_rj'**: Script for creating the foodweb treatment Spearman rank correlation figure. 
 
 
 
@@ -37,10 +44,6 @@ To recreate the full model dataset from all individual datasets, run scripts in 
 
 **Metabolism functions:** currently, the corrected/interpolated DO concentration data (as above) are used to calculate metabolism
 
-**Z-mix:** currently the mixed-layer depth is set as the depth of the thermocline (from t-chains in ponds B and F), but during times of mixing/turnover or when the function couldn't correctly calculate a thermocline depth, Z-mix is set to 1.5 m
-
-**DOC data:** sample values were corrected by subtracting the mean value of the blanks within the corresponding run. the first blank in each run was excluded (carryover from flushing) from this mean, as well as two blanks that were outliers (one had TOC > 1000 ppb, one had TOC < 10 ppb) 
-
-**GHG Model Dataset:** days with erroneous metabolism values (i.e, negative GPP, positive R) are currently excluded from the total compiled dataset for use with GHG models; pond surface values of temperature and chlorophyll are calculated from sonde profiles and are each the mean of all values between 5 & 50 cm (0.05 - 0.50 m)
+**GHG Model Dataset:** days with erroneous metabolism values (i.e, negative GPP, positive R) are currently excluded from the total compiled dataset for use with GHG models
 
 
