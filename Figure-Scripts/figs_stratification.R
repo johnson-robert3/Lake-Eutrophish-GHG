@@ -89,8 +89,8 @@ ggplot(tdat %>% filter(pond_id=="B")) +
    #
    scale_fill_gradientn(name = "Temp", 
                         colors = mycolors) +
-   scale_x_discrete(name = "Day of year",
-                    breaks = seq(140, 240, 10)) +
+   scale_x_continuous(name = "Day of year",
+                      breaks = seq(140, 240, 10)) +
    scale_y_reverse(name = "Depth (m)") +
    labs(title = "Pond B",
         subtitle = "daily means") +
@@ -120,8 +120,8 @@ ggplot(tdat %>% filter(pond_id=="F")) +
    #
    scale_fill_gradientn(name = "Temp", 
                         colors = mycolors) +
-   scale_x_discrete(name = "Day of year",
-                    breaks = seq(140, 240, 10)) +
+   scale_x_continuous(name = "Day of year",
+                      breaks = seq(140, 240, 10)) +
    scale_y_reverse(name = "Depth (m)") +
    labs(title = "Pond F",
         subtitle = "daily means") +
