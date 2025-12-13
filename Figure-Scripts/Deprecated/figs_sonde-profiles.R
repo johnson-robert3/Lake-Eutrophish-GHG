@@ -7,7 +7,10 @@
 library(viridis)
 library(slider)
 
+source("Data-Wrangling/data_import_EDI.R")
 source("Figure-Scripts/figs_functions.R")
+
+# create sonde_int data set from 'data_model-dataset' script
 
 
 #---
@@ -82,7 +85,6 @@ ggplot(sonde_int) +
 # Viewing individual daily profiles
 #---
 
-
 # data - adjust pond, depth, and day
 
 sdat = sonde_profiles %>%
@@ -92,7 +94,6 @@ sdat = sonde_profiles %>%
 
 
 # temperature over depth
-
 windows()
 ggplot(sdat) +
    geom_point(aes(x = temp, 
@@ -102,8 +103,24 @@ ggplot(sdat) +
    theme_classic()
 
 
-# depth over time
+# all temp profiles in one pond
+windows()
+ggplot(sonde_int %>%
+          filter(pond_id=="B")) +
+   geom_point(aes(x = temp, 
+                  y = depth_int,
+                  color = as.character(doy))) +
+   geom_line(aes(x = temp, 
+                  y = depth_int,
+                  color = as.character(doy),
+                 group = as.character(doy))) +
+   scale_y_reverse() +
+   theme_classic() +
+   theme(legend.position = "none")
 
+
+
+# depth over time
 windows()
 ggplot(sdat) +
    geom_point(aes(x = date_time, 
@@ -113,7 +130,6 @@ ggplot(sdat) +
 
 
 # do sat over depth
-
 windows()
 ggplot(sdat) +
    geom_point(aes(x = do_sat, 
@@ -124,7 +140,6 @@ ggplot(sdat) +
 
 
 # chlorophyll over depth
-
 windows()
 ggplot(sdat) +
    geom_point(aes(x = chla, 
@@ -135,7 +150,6 @@ ggplot(sdat) +
 
 
 # ph over depth
-
 windows()
 ggplot(sdat) +
    geom_point(aes(x = ph, 
@@ -146,7 +160,6 @@ ggplot(sdat) +
 
 
 # conductivity over depth
-
 windows()
 ggplot(sdat) +
    geom_point(aes(x = sp_cond, 
@@ -162,7 +175,6 @@ ggplot(sdat) +
 
 
 # pH
-
 windows(height=6, width=10)
 ggplot(sonde_surface) +
    geom_line(aes(x = doy, y = ph)) +
@@ -171,7 +183,6 @@ ggplot(sonde_surface) +
 
 
 # chla
-
 windows(height=6, width=10)
 ggplot(sonde_surface) +
    geom_line(aes(x = doy, y = chla)) +
@@ -180,7 +191,6 @@ ggplot(sonde_surface) +
 
 
 # DO saturation
-
 windows(height=6, width=10)
 ggplot(sonde_surface) +
    geom_line(aes(x = doy, y = do_sat)) +
