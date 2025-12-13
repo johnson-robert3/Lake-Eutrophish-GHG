@@ -17,17 +17,19 @@
 #  (to view Derecho compared to summer)
 #--
 
-windows(height=3, width=4)
+windows(height=7/3, width=3.25)
 ggplot(weather_data %>%
           summarise(max_wind = max(gust_speed)*3.6, .by=doy),  # convert from m/s to km/h (*3.6)
        aes(x = doy, y = max_wind)) +
    geom_line() +
    geom_point() +
-   labs(y = expression(Maximum~wind~speed~(km~h^-1)),
+   labs(y = expression(Max.~wind~speed~(km~h^-1)),
         x = "Day of year") +
-   theme_bw()
+   theme_classic() +
+   theme(legend.position = "none") %>%
+   fig_theme()
 
-# ggsave(filename = "daily-max-wind-speed.png")
+# ggsave(filename = "daily-max-wind-speed.png", height=7/3, width=3.25, units='in')
 
 
 
@@ -137,19 +139,21 @@ ggplot(weather_data %>%
 #--
 
 # mean daily k600 values
-windows(height=3, width=4)
+windows(height=7/3, width=3.25)
 ggplot(weather_data %>%
           mutate(U10 = wind_speed * ((10 / wind_z)^(1/7)),
-                 k_cole = rLakeAnalyzer::k.cole.base(U10)) %>%
+                 k_cole = LakeMetabolizer::k.cole.base(U10)) %>%
           summarise(k600 = mean(k_cole), .by=doy),
        aes(x = doy, y = k600)) +
    geom_line() +
    geom_point() +
    labs(y = expression(k[600]~(m~d^-1)),
         x = "Day of year") +
-   theme_bw()
+   theme_classic() +
+   theme(legend.position = "none") %>%
+   fig_theme()
 
-# ggsave(filename = "k600.png")
+# ggsave(filename = "k600.png", height=7/3, width=3.25, units='in')
 
 
 
