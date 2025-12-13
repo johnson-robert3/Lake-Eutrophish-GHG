@@ -280,6 +280,75 @@ plot_grid(st, bt, ncol=1, align='v', labels="AUTO", label_size=11, label_y=c(0.9
 # ggsave(file = "si_temperature.png", height=7/3*2, width=3.25, units='in')
 
 
+#---
+# Figure S.W - Max daily wind speed
+#---
+
+windows(height=7/3, width=3.25)
+ggplot(weather_data %>%
+          summarise(max_wind = max(gust_speed)*3.6, .by=doy),  # convert from m/s to km/h (*3.6)
+       aes(x = doy, y = max_wind)) +
+   geom_line() +
+   geom_point() +
+   labs(y = expression(Max.~wind~speed~(km~h^-1)),
+        x = "Day of year") +
+   theme_classic() +
+   theme(legend.position = "none") %>%
+   fig_theme()
+
+# ggsave(filename = "daily-max-wind-speed.png", height=7/3, width=3.25, units='in')
+
+
+
+#---
+# Figure S.K - Daily k600
+#---
+
+windows(height=7/3, width=3.25)
+ggplot(weather_data %>%
+          mutate(U10 = wind_speed * ((10 / wind_z)^(1/7)),
+                 k_cole = LakeMetabolizer::k.cole.base(U10)) %>%
+          summarise(k600 = mean(k_cole), .by=doy),
+       aes(x = doy, y = k600)) +
+   geom_line() +
+   geom_point() +
+   labs(y = expression(k[600]~(m~d^-1)),
+        x = "Day of year") +
+   theme_classic() +
+   theme(legend.position = "none") %>%
+   fig_theme()
+
+# ggsave(filename = "k600.png", height=7/3, width=3.25, units='in')
+
+
+
+#---
+# Figure S.P - Vertical temperature profiles
+#---
+
+# using mean temperature between 10:00 - 12:00 (to match sonde time)
+windows(height=7/3, width=3.25)
+ggplot(hobo_temp %>%
+          mutate(hour = hour(date_time)) %>%
+          # filter(pond_id=="B") %>%
+          filter(doy %in% c(189, 224)) %>%  # DOY 189: heat event; DOY 224: day after derecho
+          filter(hour %in% c(10:12)) %>%
+          group_by(pond_id, doy, depth) %>%
+          summarize(temp = mean(temp, na.rm=T)) %>%
+          ungroup() %>%
+          left_join(fdat %>% select(pond_id, treatment) %>% unique),
+       aes(x = temp, y = depth, color = treatment)) +
+   geom_point(aes(shape = as.character(doy)), alpha=0.9) +
+   geom_path(aes(linetype = as.character(doy),
+                 group = interaction(treatment, as.character(doy))), alpha=0.9) +
+   scale_x_continuous(name = expression(Temperature~(degree*C))) +
+   scale_y_reverse(name = expression(Depth~(m))) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
+   theme_classic() +
+   theme(legend.position = "none") %>%
+   fig_theme()
+
+# ggsave(filename = "temp-profiles_doy-189-224.png", height=7/3, width=3.25, units='in')
 
 
 
