@@ -3,11 +3,32 @@
 # By: R. Johnson
 #~~~
 
+# create weather_data df from the 'data_import_EDI' script
+
 
 #--
  # Derecho, Aug. 10, 2020
  weather_data %>% filter(wind_speed == max(wind_speed)) %>% View
 #--
+
+
+#--
+# Max wind speed 
+#  (to view Derecho compared to summer)
+#--
+
+windows(height=3, width=4)
+ggplot(weather_data %>%
+          summarise(max_wind = max(gust_speed)*3.6, .by=doy),  # convert from m/s to km/h (*3.6)
+       aes(x = doy, y = max_wind)) +
+   geom_line() +
+   geom_point() +
+   labs(y = expression(Maximum~wind~speed~(km~h^-1)),
+        x = "Day of year") +
+   theme_bw()
+
+# ggsave(filename = "daily-max-wind-speed.png")
+
 
 
 #--
@@ -56,7 +77,7 @@ ggplot(weather_data %>%
    theme_classic() +
    theme(legend.position = c(0.1, 0.85))
 
-ggsave(filename = "daily-wind-speed.png")
+# ggsave(filename = "daily-wind-speed.png")
 
 
 
@@ -108,4 +129,27 @@ ggplot(weather_data %>%
    theme_classic()
 
 # ggsave(filename = "daily-PAR.png")
+
+
+
+#--
+# k600
+#--
+
+# mean daily k600 values
+windows(height=3, width=4)
+ggplot(weather_data %>%
+          mutate(U10 = wind_speed * ((10 / wind_z)^(1/7)),
+                 k_cole = rLakeAnalyzer::k.cole.base(U10)) %>%
+          summarise(k600 = mean(k_cole), .by=doy),
+       aes(x = doy, y = k600)) +
+   geom_line() +
+   geom_point() +
+   labs(y = expression(k[600]~(m~d^-1)),
+        x = "Day of year") +
+   theme_bw()
+
+# ggsave(filename = "k600.png")
+
+
 
