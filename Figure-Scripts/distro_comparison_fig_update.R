@@ -1,3 +1,8 @@
+#--
+# Update arrangement of comparison figure. Group by event type (nutrient pulses vs meteorological events) instead of by comparison (1 vs 2)
+#  (easier to visually evaluate comparison results for a given variable and event)
+#--
+
 
 
 #- Nutrient pulses (comp 1 and 2)
