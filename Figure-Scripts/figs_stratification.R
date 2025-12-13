@@ -425,3 +425,77 @@ ggplot(sonde_strat,
 
 # ggsave(filename = "thermoclines-and-pond-depth.png")
 
+
+
+#---
+# Viewing vertical temp profiles
+#--
+
+#- Using daily sonde profiles
+
+# vertical temperature profiles for two representative days (one stratified, one mixed)
+windows()
+ggplot(sonde_int %>%
+          filter(pond_id=="B") %>%
+          filter(doy %in% c(189, 224)) %>%
+          group_by(doy) %>%
+          arrange(depth_int, .by_group=TRUE) %>%
+          ungroup()) +
+   geom_point(aes(x = temp, 
+                  y = depth_int,
+                  color = as.character(doy))) +
+   geom_path(aes(x = temp,
+                 y = depth_int,
+                 color = as.character(doy),
+                 group = as.character(doy))) +
+   scale_y_reverse() +
+   # coord_flip() +
+   theme_classic() +
+   theme(legend.position = "none")
+
+
+#- Using Hobo t-chain data
+
+# daily mean temperatures for two representative days (one stratified, one mixed)
+windows()
+ggplot(tdat %>%
+          filter(pond_id=="B") %>%
+          filter(doy %in% c(189, 224))) +
+   geom_point(aes(x = temp, 
+                  y = depth,
+                  color = as.character(doy))) +
+   geom_path(aes(x = temp,
+                 y = depth,
+                 color = as.character(doy),
+                 group = as.character(doy))) +
+   scale_y_reverse() +
+   # coord_flip() +
+   theme_classic() +
+   theme(legend.position = "none")
+
+
+# using mean temperature between 10:00 - 12:00 (to match sonde time)
+windows(height=7/3, width=3.25)
+ggplot(hobo_temp %>%
+          mutate(hour = hour(date_time)) %>%
+          # filter(pond_id=="B") %>%
+          filter(doy %in% c(189, 224)) %>%
+          filter(hour %in% c(10:12)) %>%
+          group_by(pond_id, doy, depth) %>%
+          summarize(temp = mean(temp, na.rm=T)) %>%
+          ungroup() %>%
+          left_join(fdat %>% select(pond_id, treatment) %>% unique),
+       aes(x = temp, y = depth, color = treatment)) +
+   geom_point(aes(shape = as.character(doy)), alpha=0.9) +
+   geom_path(aes(linetype = as.character(doy),
+                 group = interaction(treatment, as.character(doy))), alpha=0.9) +
+   scale_x_continuous(name = expression(Temperature~(degree*C))) +
+   scale_y_reverse(name = expression(Depth~(m))) +
+   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
+   theme_classic() +
+   theme(legend.position = "none") %>%
+   fig_theme()
+
+# ggsave(filename = "temp-profiles_doy-189-224.png")
+
+
