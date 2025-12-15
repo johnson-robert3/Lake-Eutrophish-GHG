@@ -290,10 +290,11 @@ ggplot(weather_data %>%
        aes(x = doy, y = max_wind)) +
    geom_line() +
    geom_point() +
-   labs(y = expression(Max.~wind~speed~(km~h^-1)),
-        x = "Day of year") +
+   labs(y = expression(Max.~wind~speed~(km~h^-1))) +
+   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
    theme_classic() +
-   theme(legend.position = "none") %>%
+   theme(legend.position = "none",
+         plot.margin = unit(mar_ind, "lines")) %>%
    fig_theme()
 
 # ggsave(filename = "daily-max-wind-speed.png", height=7/3, width=3.25, units='in')
@@ -312,10 +313,11 @@ ggplot(weather_data %>%
        aes(x = doy, y = k600)) +
    geom_line() +
    geom_point() +
-   labs(y = expression(k[600]~(m~d^-1)),
-        x = "Day of year") +
+   labs(y = expression(k[600]~(m~d^-1))) +
+   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
    theme_classic() +
-   theme(legend.position = "none") %>%
+   theme(legend.position = "none",
+         plot.margin = unit(mar_ind, "lines")) %>%
    fig_theme()
 
 # ggsave(filename = "k600.png", height=7/3, width=3.25, units='in')
@@ -341,11 +343,12 @@ ggplot(hobo_temp %>%
    geom_point(aes(shape = as.character(doy)), alpha=0.9) +
    geom_path(aes(linetype = as.character(doy),
                  group = interaction(treatment, as.character(doy))), alpha=0.9) +
-   scale_x_continuous(name = expression(Temperature~(degree*C))) +
+   scale_x_continuous(name = expression(Temperature~(degree*C)), limits = c(19.5, 30.5)) +
    scale_y_reverse(name = expression(Depth~(m))) +
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    theme_classic() +
-   theme(legend.position = "none") %>%
+   theme(legend.position = "none",
+         plot.margin = unit(mar_ind, "lines")) %>%
    fig_theme()
 
 # ggsave(filename = "temp-profiles_doy-189-224.png", height=7/3, width=3.25, units='in')
