@@ -23,14 +23,16 @@ To recreate the full model dataset from all individual datasets, run scripts in 
 
 **'data_import_EDI'**: Use this script to import any/all data into R. _Other scripts should no longer be used to import datasets._ 
 
-**'edi_data_output'**: Where all dfs created throughout other R scripts are output in their final form into the shared EDI Box folder. Contains notes about which scripts the OG dfs were created in. 
+**'edi_data_output'**: This script is where all dfs created throughout other R scripts are output in their final form into the shared EDI Box folder. Contains notes about which scripts the OG dfs were created in. 
 
-**'data_model-dataset'**: Use this script to recreate the full, combined dataset to use in statistical models. 
+**'data_model-dataset'**: This script recreates the full, combined dataset for use in analyses from the individual imported datasets.
+
+**'stats_model-data'**: This script renames and creates the dataset actually used for analyses. 
 
 **'stats_distro-comparison2_rj'**: Use this script to run the window comparison analysis created by Jon used in the manuscript. 
 **'distro_comparison_fig_update'**: Use this script to create the window comparison analysis figure used in the manuscript. 
 
-**'stats_foodwebOrder_rj'**: Script for creating the foodweb treatment Spearman rank correlation figure. 
+**'stats_foodwebOrder_rj'**: Script for creating the food web treatment Spearman rank correlation figure. 
 
 
 
