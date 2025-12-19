@@ -38,6 +38,7 @@ m11 = metabolism %>%
 m12 = limno_field_data %>%
    select(pond_id, doy, period, tn, tp, nox, srp) %>%
    # align dates of nutrient samples with GHG samples (became offset after DOY 220; nutrients were sampled the day after GHGs)
+   filter(!(doy==221)) %>%  # remove empty DOY 221 (otherwise the backwards shift creates two of doy 221)
    mutate(doy = if_else(doy > 221, doy - 1, doy)) %>%
    # remove columns unnecessary for manuscript submission
    select(-nox, -srp)
