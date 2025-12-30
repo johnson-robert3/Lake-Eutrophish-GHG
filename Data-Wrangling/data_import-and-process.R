@@ -9,7 +9,7 @@ library(janitor)
 
 
 # Pond/Site Data
-pond_data = read_csv("Data/R-Data/2020_pond-data.csv")
+pond_data = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_pond-data.csv")
 
 
 #---
@@ -59,13 +59,13 @@ read_profile = function(.dat, .skip) {
 # Profile Data
 
 # Files without extra header rows
-sonde_nohead = list.files(path = "./Data/R-Data/2020_sonde-profiles/without-extra-header-rows",
+sonde_nohead = list.files(path = "C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_sonde-profiles/without-extra-header-rows",
                          pattern = "hortsonde*",
                          full.names = T) %>%
    map_dfr(~read_profile(., .skip=0))
 
 # Files with extra header rows at top
-sonde_head = list.files(path = "./Data/R-Data/2020_sonde-profiles",
+sonde_head = list.files(path = "C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_sonde-profiles",
                         pattern = "hortsonde*",
                         full.names = T) %>%
    map_dfr(~read_profile(., .skip=5))
@@ -144,7 +144,7 @@ sonde_profiles = sonde_clean %>%
 
 
 # Output full sonde profile dataset to a CSV file, so individual files don't all need to be read in & processed each time
-write.csv(sonde_profiles, file = "Data/sonde-profiles_all-data_2022-07-20.csv", row.names=FALSE)
+write.csv(sonde_profiles, file = "C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/Processed Dataset Outputs from R/sonde-profiles_all-data_2022-07-20.csv", row.names=FALSE)
 
    ## remove temporary objects
    rm(sonde_nohead, sonde_head, sonde_clean)
@@ -245,7 +245,7 @@ read_hobo = function(.dat) {
 # Read in all Hobo t-chain files
 #  extract pond ID and depth from file name
 
-hobo_files = list.files(path = "./Data/R-Data/2020_hobo-tchains",
+hobo_files = list.files(path = "C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_hobo-tchains",
                         pattern = "*.csv",
                         full.names = T)
 
@@ -256,7 +256,7 @@ hobo_temp = tibble(file_name = hobo_files) %>%
    # unpack the files into a data frame
    unnest(cols = c(file_contents)) %>%
    # extract pond and depth from file name
-   mutate(file_name = str_remove(file_name, "./Data/R-Data/2020_hobo-tchains/"),
+   mutate(file_name = str_remove(file_name, "C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_hobo-tchains/"),
           file_name = str_remove(file_name, ".csv")) %>%
    separate(col = file_name, into = c("pond_id", "depth"), sep="_") %>%
    mutate(pond_id = str_remove(pond_id, "Pond")) %>%
@@ -267,7 +267,7 @@ hobo_temp = tibble(file_name = hobo_files) %>%
 
 
 # output processed t-chain data file, so raw files don't need to be read in and processed each time
-write.csv(hobo_temp, file = "Data/hobo_t-chain_profiles.csv", row.names=FALSE)
+write.csv(hobo_temp, file = "C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/Processed Dataset Outputs from R/hobo_t-chain_profiles.csv", row.names=FALSE)
 }
 
 
@@ -295,7 +295,7 @@ read_minidot = function(.dat, .skip=9) {
 
    
 # Pond A
-mini_a = list.files(path = "./Data/R-Data/2020_MiniDOTs",
+mini_a = list.files(path = "C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_MiniDOTs",
                     pattern = "*_A.csv",
                     full.names = T) %>%
    map_dfr(~read_minidot(.)) %>%
@@ -307,7 +307,7 @@ mini_a = list.files(path = "./Data/R-Data/2020_MiniDOTs",
    
 
 # Pond B
-mini_b = list.files(path = "./Data/R-Data/2020_MiniDOTs",
+mini_b = list.files(path = "C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_MiniDOTs",
                     pattern = "*_B.csv",
                     full.names = T) %>%
    map_dfr(~read_minidot(.)) %>%
@@ -318,7 +318,7 @@ mini_b = list.files(path = "./Data/R-Data/2020_MiniDOTs",
 
 
 # Pond C
-mini_c = list.files(path = "./Data/R-Data/2020_MiniDOTs",
+mini_c = list.files(path = "C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_MiniDOTs",
                     pattern = "*_C.csv",
                     full.names = T) %>%
    map_dfr(~read_minidot(.)) %>%
@@ -329,7 +329,7 @@ mini_c = list.files(path = "./Data/R-Data/2020_MiniDOTs",
 
 
 # Pond D
-mini_d = list.files(path = "./Data/R-Data/2020_MiniDOTs",
+mini_d = list.files(path = "C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_MiniDOTs",
                     pattern = "*_D.csv",
                     full.names = T) %>%
    map_dfr(~read_minidot(.)) %>%
@@ -340,7 +340,7 @@ mini_d = list.files(path = "./Data/R-Data/2020_MiniDOTs",
 
 
 # Pond E
-mini_e = list.files(path = "./Data/R-Data/2020_MiniDOTs",
+mini_e = list.files(path = "C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_MiniDOTs",
                     pattern = "*_E.csv",
                     full.names = T) %>%
    map_dfr(~read_minidot(.)) %>%
@@ -351,7 +351,7 @@ mini_e = list.files(path = "./Data/R-Data/2020_MiniDOTs",
 
 
 # Pond F
-mini_f = list.files(path = "./Data/R-Data/2020_MiniDOTs",
+mini_f = list.files(path = "C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_MiniDOTs",
                     pattern = "*_F.csv",
                     full.names = T) %>%
    map_dfr(~read_minidot(.)) %>%
@@ -397,7 +397,7 @@ minidot = minidot %>%
 
 
 # output processed miniDOT data, so raw files don't need to be read in and processed each time
-write.csv(minidot, file = "Data/miniDOT_total.csv", row.names=FALSE)
+write.csv(minidot, file = "C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/Processed Dataset Outputs from R/miniDOT_total.csv", row.names=FALSE)
 }
 
 
@@ -406,7 +406,7 @@ write.csv(minidot, file = "Data/miniDOT_total.csv", row.names=FALSE)
 #---
 
 # Data
-alk_data = read_csv("Data/R-Data/2020_alkalinity-data.csv") %>%
+alk_data = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_alkalinity-data.csv") %>%
    rename(sample_id = SampleID,
           doy = DOY,
           pond_id = Pond,
@@ -422,7 +422,7 @@ alk_data = read_csv("Data/R-Data/2020_alkalinity-data.csv") %>%
 
 
 # Field data
-limno_field_data = read_csv("Data/R-Data/2020_limno-field-data.csv") %>%
+limno_field_data = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_limno-field-data.csv") %>%
    rename(pond_id = pond,
           chla_rfu = chl,
           phyco_rfu = phyco,
@@ -438,7 +438,7 @@ limno_field_data = read_csv("Data/R-Data/2020_limno-field-data.csv") %>%
 
 
 # Data
-weather_data_raw = read.csv("Data/R-Data/2020_weather-data.csv", skip=1)
+weather_data_raw = read.csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_weather-data.csv", skip=1)
 
 
 # Clean up variable names
@@ -470,10 +470,10 @@ weather_data = weather_data %>%
 
 
 # GHG data
-ghg_lake_raw = read_csv("Data/R-Data/2020_ghg-data_lake-conc.csv")
+ghg_lake_raw = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_ghg-data_lake-conc.csv")
 
 # Sample meta data
-lake_sample_data = read_csv("Data/R-Data/2020_sample-data_lake-conc.csv") %>%
+lake_sample_data = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_sample-data_lake-conc.csv") %>%
    # convert volumes from ml to L
    mutate(across(starts_with("vol"), ~(./1000))) %>%
    # date and DOY
@@ -582,10 +582,10 @@ lake_samples = left_join(lake_sample_data, lake_ghg) %>%
 
 
 # GHG data
-ghg_methano_raw = read_csv("Data/R-Data/2020_ghg-data_methanogenesis.csv")
+ghg_methano_raw = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_ghg-data_methanogenesis.csv")
 
 # Sample data
-methano_sample_data = read_csv("Data/R-Data/2020_sample-data_methanogenesis.csv") %>%
+methano_sample_data = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_sample-data_methanogenesis.csv") %>%
    # add a variable for bottle headspace (units = ml) 
    mutate(vol_head = vol_bottle - (vol_sediment + vol_water)) %>%
    # convert volumes from ml to L
@@ -618,10 +618,10 @@ methano_samples = methano_samples %>%
 
 
 # GHG data
-ghg_dea_raw = read_csv("Data/R-Data/2020_ghg-data_DEA.csv")
+ghg_dea_raw = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_ghg-data_DEA.csv")
 
 # Sample data
-dea_sample_data = read_csv("Data/R-Data/2020_sample-data_DEA.csv") %>%
+dea_sample_data = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_sample-data_DEA.csv") %>%
    # add a variable for bottle headspace (units = ml) 
    mutate(vol_head = vol_bottle - (vol_sediment + vol_water + vol_media)) %>%
    # convert volumes from ml to L
@@ -654,10 +654,10 @@ dea_samples = dea_samples %>%
 
 
 # GHG data
-ghg_ebu_raw = read_csv("Data/R-Data/2020_ghg-data_ebullition.csv")
+ghg_ebu_raw = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_ghg-data_ebullition.csv")
 
 # Sample meta data
-ebu_sample_data = read_csv("Data/R-Data/2020_sample-data_ebullition.csv") %>%
+ebu_sample_data = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_sample-data_ebullition.csv") %>%
    # add a column for sample replicate
    mutate(replicate = str_sub(sample_id, -2, -1)) %>%
    relocate(replicate, .after = pond_id) %>%
@@ -692,9 +692,9 @@ ebu_samples = ebu_samples %>%
 
 
 # Data
-bulk_density_raw = read_csv("Data/R-Data/2020_sediment_bulk-density.csv")
+bulk_density_raw = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_sediment_bulk-density.csv")
 
-organic_matter_raw = read_csv("Data/R-Data/2020_sediment_om.csv")
+organic_matter_raw = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_sediment_om.csv")
 
 
 # Clean up bulk density file and calculate Dry Bulk Density (DBD) for each sample
