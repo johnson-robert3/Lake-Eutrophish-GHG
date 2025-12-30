@@ -2,6 +2,9 @@
 # Output data files for archiving in EDI
 #~~~
 
+# Processed datasets from various data wrangling scripts (each noted below)
+# Read in datasets from RAJ personal Box folder (Lake Eutrophish GHG -> Data -> R-Data -> Processed Dataset Outputs from R)
+
 
 library(tidyverse)
 
@@ -16,7 +19,7 @@ weather_data %>%
 
 #- GHG diffusive flux
 # processed dataset from "data_ghg-calculations" script
-read_csv("Data/ghg_concentration_flux_total.csv") %>%
+read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/Processed Dataset Outputs from R/ghg_concentration_flux_total.csv") %>%
    select(pond_id, doy, ends_with("flux"), ends_with("lake"), ch4_atmo:n2o_atmo, k_ch4:k_n2o) %>%
    relocate(n2o_lake, .after=co2_lake) %>%
    rename(ch4_concentration = ch4_lake, co2_concentration = co2_lake, n2o_concentration = n2o_lake,
@@ -29,10 +32,10 @@ read_csv("Data/ghg_concentration_flux_total.csv") %>%
 
 #- GHG process rate measurements
 # processed datasets from "data_ghg-calculations" script
-read_csv("Data/methanogenesis_rates_total.csv") %>%
+read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/Processed Dataset Outputs from R/methanogenesis_rates_total.csv") %>%
    select(pond_id, week, doy, methanogenesis_potential = ch4_rate) %>%
-   full_join(read_csv("Data/DEA_rates_total.csv") %>%
-                select(pond_id, week, doy, DEA = n2o_rate)) %>%
+   # full_join(read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/Processed Dataset Outputs from R/DEA_rates_total.csv") %>%
+   #              select(pond_id, week, doy, DEA = n2o_rate)) %>%
    # output directly to the shared EDI submission folder in Box
    write.csv(., file = "C:/Users/rajohnson6/Box/Hort Farm Experiment/EDI Data Submission/ghg_production_assays.csv", row.names=FALSE)
 
@@ -40,7 +43,7 @@ read_csv("Data/methanogenesis_rates_total.csv") %>%
 
 #- GHG methane ebullition
 # processed dataset from "data_ghg-calculations" script
-read_csv("Data/ebullition_total.csv") %>%
+read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/Processed Dataset Outputs from R/ebullition_total.csv") %>%
    rename(ch4_ebullitive_flux = ch4_ebu_flux) %>%
    # output directly to the shared EDI submission folder in Box
    write.csv(., file = "C:/Users/rajohnson6/Box/Hort Farm Experiment/EDI Data Submission/ghg_ebullition.csv", row.names=FALSE)
@@ -49,7 +52,7 @@ read_csv("Data/ebullition_total.csv") %>%
 
 #- Metabolism
 # processed dataset from "metabolism-calcs" script
-read_csv("Data/metabolism_total.csv") %>%
+read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/Processed Dataset Outputs from R/metabolism_total.csv") %>%
    # add data flag column to ID days with erroneous metabolism measurements
    mutate(flag = if_else(GPP < 0 | R > 0, "e", NULL)) %>%
    # replace metabolism estimates on days with erroneous estimates with NA (but leave the day in the data set)
@@ -62,7 +65,7 @@ read_csv("Data/metabolism_total.csv") %>%
 #- Sonde profiles
 # processed dataset from "data_import-and-process" script
 # just using file "Data/sonde-profiles_all-data_2022-07-20.csv", no further cleaning needed here
-read_csv("Data/sonde-profiles_all-data_2022-07-20.csv") %>%
+read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/Processed Dataset Outputs from R/sonde-profiles_all-data_2022-07-20.csv") %>%
    # output directly to the shared EDI submission folder in Box
    write.csv(., file = "C:/Users/rajohnson6/Box/Hort Farm Experiment/EDI Data Submission/profiles_daily_deepsite.csv", row.names=FALSE)
 
@@ -88,7 +91,7 @@ read_csv("C:/Users/rajohnson6/Box/Hort Farm Experiment/EDI Data Submission/profi
 #- High-frequency DO data (miniDOTs)
 # processed dataset from "data_import-and-process" script
 # just using file "Data/miniDOT_total.csv", no further cleaning needed here
-read_csv("Data/miniDOT_total.csv") %>%
+read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/Processed Dataset Outputs from R/miniDOT_total.csv") %>%
    # output directly to the shared EDI submission folder in Box
    write.csv(., file = "C:/Users/rajohnson6/Box/Hort Farm Experiment/EDI Data Submission/do_sensor_hf.csv", row.names=FALSE)
 
