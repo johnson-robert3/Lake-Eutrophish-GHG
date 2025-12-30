@@ -51,11 +51,10 @@ lake_flux = read_csv("C:/Users/rajohnson6/Box/Hort Farm Experiment/EDI Data Subm
           ch4_atmo = ch4_atmosphere, co2_atmo = co2_atmosphere, n2o_atmo = n2o_atmosphere)
 
 
-#-- GHG Methanogenesis and DEA --#
-methano_dea = read_csv("C:/Users/rajohnson6/Box/Hort Farm Experiment/EDI Data Submission/ghg_production_assays.csv") %>%
+#-- GHG Methanogenesis --#
+methano_dea = read_csv("C:/Users/rajohnson6/Box/Hort Farm Experiment/EDI Data Submission/ghg_methanogenesis.csv") %>%
    # change variable names back to originals, so they match and work across scripts
-   rename(ch4_rate = methanogenesis_potential,
-          n2o_rate = DEA)
+   rename(ch4_rate = methanogenesis_potential)
 
 
 #-- GHG Ebullition --#

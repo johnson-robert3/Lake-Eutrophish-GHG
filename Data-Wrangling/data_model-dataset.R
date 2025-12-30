@@ -130,10 +130,8 @@ m15 = weather_data %>%
 
 # Methanogenesis and DEA 
 m16 = methano_dea %>%
-   rename(methanogenesis = ch4_rate, DEA = n2o_rate) %>%
-   select(-week) %>%
-   # remove columns unnecessary for manuscript submission
-   select(-DEA)
+   rename(methanogenesis = ch4_rate) %>%
+   select(-week)
 
 
 # Sonde profile stratification 
