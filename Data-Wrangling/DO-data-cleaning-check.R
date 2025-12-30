@@ -124,7 +124,7 @@ do_cleaning_pts %>% filter(perc_interp > 25) %>% count(pond_id) # n = 20  # 3.5%
 
 ### STEP 2: Call in the metabolism dataset, if not already created through the 'metabolism-calcs' script
 
-   metabolism = read_csv("Data/metabolism_total.csv")
+   metabolism = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/Processed Dataset Outputs from R/metabolism_total.csv")
 
 
 # number of days per pond with erroneous metabolism estimates (metabolism calculated w/o removing any days beforehand due to DO cleaning >33%)

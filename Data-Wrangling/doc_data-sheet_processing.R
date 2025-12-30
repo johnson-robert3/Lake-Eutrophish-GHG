@@ -11,7 +11,7 @@ library(patchwork)
 
 
 # Run 0, December mini-run
-run0_raw = read_csv("Data/R-Data/2020_DOC/DOC_Run-0.csv", skip=6)
+run0_raw = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_DOC/DOC_Run-0.csv", skip=6)
 
 run0_dat = run0_raw %>%
    remove_empty(c("rows", "cols")) %>%
@@ -33,7 +33,7 @@ run0 = run0_dat %>%
 
 
 # Run 1
-run1_raw = read_csv("Data/R-Data/2020_DOC/DOC_Run-1.csv", skip=6)
+run1_raw = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_DOC/DOC_Run-1.csv", skip=6)
 
 run1_dat = run1_raw %>%
    remove_empty(c("rows", "cols")) %>%
@@ -55,8 +55,8 @@ run1 = run1_dat %>%
 
 
 # Run 2
-run2_raw = read_csv("Data/R-Data/2020_DOC/DOC_Run-2.csv", skip=6)
-run2_ids = read_csv("Data/R-Data/2020_DOC/doc_run-2_vial_IDs.csv")
+run2_raw = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_DOC/DOC_Run-2.csv", skip=6)
+run2_ids = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_DOC/doc_run-2_vial_IDs.csv")
 
 run2_dat = run2_raw %>%
    remove_empty(c("rows", "cols")) %>%
@@ -81,8 +81,8 @@ run2 = run2_dat %>%
 
 
 # Run 3
-run3_raw = read_csv("Data/R-Data/2020_DOC/DOC_Run-3.csv", skip=6)
-run3_ids = read_csv("Data/R-Data/2020_DOC/doc_run-3_vial_IDs.csv")
+run3_raw = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_DOC/DOC_Run-3.csv", skip=6)
+run3_ids = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_DOC/doc_run-3_vial_IDs.csv")
 
 run3_dat = run3_raw %>%
    remove_empty(c("rows", "cols")) %>%
@@ -109,8 +109,8 @@ run3 = run3_dat %>%
 
 
 # Run 4
-run4_raw = read_csv("Data/R-Data/2020_DOC/DOC_Run-4.csv", skip=6)
-run4_ids = read_csv("Data/R-Data/2020_DOC/doc_run-4_vial_IDs.csv")
+run4_raw = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_DOC/DOC_Run-4.csv", skip=6)
+run4_ids = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/2020_DOC/doc_run-4_vial_IDs.csv")
 
 run4_dat = run4_raw %>%
    remove_empty(c("rows", "cols")) %>%
@@ -180,7 +180,7 @@ doc_dat = doc_smpl %>%
 
 
 # output processed DOC data
-write.csv(doc_dat, file = "Data/doc_total.csv", row.names=F)
+write.csv(doc_dat, file = "C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/Processed Dataset Outputs from R/doc_total.csv", row.names=F)
 
 
 ## remove temporary objects
