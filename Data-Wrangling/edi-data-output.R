@@ -37,7 +37,7 @@ read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/Proce
    # full_join(read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/Processed Dataset Outputs from R/DEA_rates_total.csv") %>%
    #              select(pond_id, week, doy, DEA = n2o_rate)) %>%
    # output directly to the shared EDI submission folder in Box
-   write.csv(., file = "C:/Users/rajohnson6/Box/Hort Farm Experiment/EDI Data Submission/ghg_production_assays.csv", row.names=FALSE)
+   write.csv(., file = "C:/Users/rajohnson6/Box/Hort Farm Experiment/EDI Data Submission/ghg_methanogenesis.csv", row.names=FALSE)
 
 
 
