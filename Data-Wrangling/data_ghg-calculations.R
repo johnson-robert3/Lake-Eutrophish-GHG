@@ -223,7 +223,7 @@ lake_flux = lake_flux %>%
 
 
 # Output file of total GHG dissolved concentration and diffusive flux data, so raw data don't need to be re-processed each time 
-write.csv(lake_flux, file = "Data/ghg_concentration_flux_total.csv", row.names=FALSE)
+write.csv(lake_flux, file = "C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/Processed Dataset Outputs from R/ghg_concentration_flux_total.csv", row.names=FALSE)
 
 
 
@@ -299,7 +299,7 @@ methano_rates = methano_samples %>%
 
 
 # Output file of Methanogenesis rates, so raw data don't need to be re-processed each time 
-write.csv(methano_rates, file = "Data/methanogenesis_rates_total.csv", row.names=FALSE)
+write.csv(methano_rates, file = "C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/Processed Dataset Outputs from R/methanogenesis_rates_total.csv", row.names=FALSE)
 
 
 
@@ -375,7 +375,7 @@ dea_rates = dea_samples %>%
 
 
 # Output file of DEA rates, so raw data don't need to be re-processed each time 
-write.csv(dea_rates, file = "Data/DEA_rates_total.csv", row.names=FALSE)
+write.csv(dea_rates, file = "C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/Processed Dataset Outputs from R/DEA_rates_total.csv", row.names=FALSE)
 
 
 
@@ -441,7 +441,7 @@ ebu_data = ebu_end %>%
 # If ebullition data need to be worked with or re-calculated for anything, the 'lake_flux' data set from above - which was output and saved 
 #  as 'ghg_concentration_flux_total' - contains all the variables needed for ebullition calcs here, so can just read that file in as needed. 
 
-lake_flux = read_csv("Data/ghg_concentration_flux_total.csv")
+lake_flux = read_csv("C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/Processed Dataset Outputs from R/ghg_concentration_flux_total.csv")
 
 # Add lake surface water dissolved gas data to ebullition data set
 ebu_data = ebu_data %>%
@@ -825,7 +825,7 @@ ebu_flux_pond = ebu_flux_pond %>%
    ##
 
    
-write.csv(ebu_flux_pond, file="Data/ebullition_total.csv", row.names=FALSE)
+write.csv(ebu_flux_pond, file="C:/Users/rajohnson6/Box/Projects/Lake Eutrophish GHG/Data/R-Data/Processed Dataset Outputs from R/ebullition_total.csv", row.names=FALSE)
 
 
 
