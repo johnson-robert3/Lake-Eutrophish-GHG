@@ -7,12 +7,10 @@
 # lake_flux  [co2, ch4, and n2o flux]
 # metabolism  [GPP, R, NEP]
 # limno_field_data  [nutrients]
-# sonde_surface  [all vars - temp, do, chla, phyco, cond, salinity]
-# sonde_bottom  [all vars - temp, do, chla, phyco, cond, salinity]
+# sonde_profiles [temperature, DO]
 # weather_data  [wind speed]
-# sonde_strat [profile z_mix; profile mixed/stratified status]
-# methano_dea [methanogenesis potential, DEA rates]
-# ebu_flux_pond
+# methano_dea [methanogenesis potential]
+# ebu_flux_pond [ebullition]
 
 
 #- All datasets created using the 'data_import_EDI' script
@@ -28,7 +26,6 @@ m10 = lake_flux %>%
 
 # Daily metabolism estimates 
 m11 = metabolism %>%
-   # filter(!(GPP < 0 | R > 0)) %>%
    filter(!(if_all(.cols = c(GPP, R, NEP), .fns = is.na))) %>%
    # remove columns unnecessary for manuscript submission
    select(-flag)  # all erroneous days already excluded with previous line, flag no longer needed
@@ -128,34 +125,13 @@ m15 = weather_data %>%
    rename(wind_U10 = U10)
 
 
-# Methanogenesis and DEA 
+# Methanogenesis Potential 
 m16 = methano_dea %>%
    rename(methanogenesis = ch4_rate) %>%
    select(-week)
 
 
-# Sonde profile stratification 
-library(rLakeAnalyzer)
-
-m21 = sonde_int %>%
-   select(pond_id:temp) %>%
-   group_by(pond_id, doy) %>%
-   summarize(pond_depth = max(depth_int),
-             thermocline = thermo.depth(wtr = temp, depths = depth_int),
-             meta_top = meta.depths(wtr = temp, depths = depth_int)[[1]],
-             meta_bottom = meta.depths(wtr = temp, depths = depth_int)[[2]]) %>%
-   ungroup() %>%
-   # correct for when thermocline couldn't be calculated, or when meta was the whole water column
-   mutate(z_mix = case_when(thermocline == 'NaN' ~ pond_depth,
-                            meta_top < 0.3 & meta_bottom == pond_depth ~ pond_depth,
-                            TRUE ~ thermocline)) %>%
-   # add binary variable for if water column is mixed or stratified at time of profile
-   mutate(stratification = case_when(z_mix == pond_depth ~ 'mixed',
-                                     TRUE ~ 'stratified')) %>%
-   select(pond_id, doy, sonde_zmix = z_mix, sonde_strat = stratification)
-
-
-# Ebullition (from 'data_import_EDI' script)
+# Ebullition 
 m22 = ebu_flux_pond %>%
    select(-week, -flag)
 
@@ -169,8 +145,7 @@ test = m10 %>%          # GHG dissolved conc. and diffusive flux
    full_join(m13) %>%   # sonde surface
    full_join(m14) %>%   # sonde bottom
    full_join(m15) %>%   # weather
-   full_join(m16) %>%   # DEA and Methanogenesis
-   # full_join(m21) %>%   # sonde stratification
+   full_join(m16) %>%   # Methanogenesis
    full_join(m22)       # Ebullition
 
 
