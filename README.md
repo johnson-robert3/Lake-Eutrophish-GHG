@@ -23,6 +23,7 @@ To recreate the full model dataset from all individual datasets, run scripts in 
 ## Script Notes
 
 **'pull-data-from-EDI'**: Use this script to import any/all data into R directly from the EDI repository. _Other scripts should no longer be used to import datasets._ 
+
 **'data_import_EDI'**: Use this script to rename datasets and variables after pulling from EDI to match code used across other scripts.  
 
 **'data_model-dataset'**: This script uses individual imported datasets to recreate the full, combined dataset for use in analyses.
@@ -30,6 +31,7 @@ To recreate the full model dataset from all individual datasets, run scripts in 
 **'stats_model-data'**: This script renames and creates the dataset actually used for analyses. 
 
 **'stats_distro-comparison2_rj'**: Use this script to run the window comparison analysis created by Jon used in the manuscript. 
+
 **'distro_comparison_fig_update'**: Use this script to create the window comparison analysis figure used in the manuscript. 
 
 **'stats_foodwebOrder_rj'**: Script for creating the food web treatment Spearman Rank Correlation figure. 
