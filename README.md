@@ -1,6 +1,6 @@
 # 2020 Hort Farm Pond Experiment
 
-This Github repository contains the data and code files needed to recreate all results and figures from the following manuscript: 
+This Github repository contains the code needed to recreate results and figures from the following manuscript: 
 
 Title: "*Immediate and lagged effects of nutrient and extreme weather disturbances on pond greenhouse gas emissions*"
 
@@ -13,26 +13,28 @@ Data used in the manuscript are currently available in this Github repository (D
 
 To recreate the full model dataset from all individual datasets, run scripts in this order:
 
-   1. data_import_EDI
-   2. data_model-dataset
-   3. stats_model-data
+   1. pull-data-from-EDI
+   2. data_import_EDI
+   3. data_model-dataset
+   4. stats_model-data
 
 
 
 ## Script Notes
 
-**'data_import_EDI'**: Use this script to import any/all data into R. _Other scripts should no longer be used to import datasets._ 
+**'pull-data-from-EDI'**: Use this script to import any/all data into R directly from the EDI repository. _Other scripts should no longer be used to import datasets._ 
+**'data_import_EDI'**: Use this script to rename datasets and variables after pulling from EDI to match code used across other scripts.  
 
-**'edi_data_output'**: This script is where all dfs created throughout other R scripts are output in their final form into the shared EDI Box folder. Contains notes about which scripts the OG dfs were created in. 
-
-**'data_model-dataset'**: This script recreates the full, combined dataset for use in analyses from the individual imported datasets.
+**'data_model-dataset'**: This script uses individual imported datasets to recreate the full, combined dataset for use in analyses.
 
 **'stats_model-data'**: This script renames and creates the dataset actually used for analyses. 
 
 **'stats_distro-comparison2_rj'**: Use this script to run the window comparison analysis created by Jon used in the manuscript. 
 **'distro_comparison_fig_update'**: Use this script to create the window comparison analysis figure used in the manuscript. 
 
-**'stats_foodwebOrder_rj'**: Script for creating the food web treatment Spearman rank correlation figure. 
+**'stats_foodwebOrder_rj'**: Script for creating the food web treatment Spearman Rank Correlation figure. 
+
+**'edi_data_output'**: This script is where all dfs created throughout other R scripts were output in their final form into the shared EDI Box folder. Contains notes about which scripts the OG dfs were created in. 
 
 
 
