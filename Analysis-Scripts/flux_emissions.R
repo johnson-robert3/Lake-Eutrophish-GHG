@@ -4,7 +4,7 @@
 
 
 # Standard error
-se = function(.x) { sd(.x) / sqrt(length(.x)) }
+se = function(x) { sd(x, na.rm=TRUE) / sqrt(length(x)) }
 
 
 # days between P1 and P2
@@ -55,7 +55,7 @@ emit.p1p2 = flux %>%
   summarize(ch4 = sum(ch4_flux), co2=sum(co2_flux), .by = pond_id) %>%
   mutate(treatment = c('pulsed', 'pulsed', 'pulsed', 'reference', 'reference', 'reference')) %>%
   summarize(across(c(ch4, co2), list(mean=mean, se=se)), .by=treatment) %>%
-  mutate(emission_period = "P1 - P2")
+  mutate(emission_period = "P1 to P2")
 
 
 
