@@ -204,6 +204,16 @@ ggplot(fdat) %>%
    coord_cartesian(ylim = c(14, 30), clip = "off") +
    # event labels
    annotate(geom = "text", label = event_labs, x = event_lab.x, y = 30 + ((30-14)*0.1), size=3) +
+   # construct legend (for surface/bottom lines)
+   # white box beneath legend
+   annotate(geom = "rect", xmin = 205, xmax = 241, ymin = 14, ymax = 17.5, fill="white", color="white") +
+   # legend words
+   annotate(geom = "text", label = "Surface", x = 215, y = 16.5, hjust=0, size=2.75) +
+   annotate(geom = "text", label = "Bottom", x = 215, y = 15, hjust=0, size=2.75) +
+   # legend lines
+   annotate("segment", x=205, xend=212, y=16.5, color="gray20", linewidth=0.5) +  # surface solid
+   annotate("segment", x=205, xend=212, y=15, color="gray20", linetype=1, linewidth=0.5, alpha=0.25) +  # bottom pale
+   annotate("segment", x=205, xend=212, y=15, color="gray20", linetype=3, linewidth=0.5) +  # bottom dashed
    #
    theme_classic() +
    theme(legend.position = 'none',
