@@ -542,7 +542,7 @@ ellipse_coords <- ggplot_build(p)$data[[2]] %>%
 
 
 # PCA figure 
-windows(width=4, height=3.5)
+windows(width=5, height=3.5)
 ggplot(ind_coords) +
   geom_hline(yintercept = 0, linetype="dashed", color="gray20") +
   geom_vline(xintercept = 0, linetype="dashed", color="gray20") +
@@ -572,10 +572,10 @@ ggplot(ind_coords) +
   scale_fill_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
   lims(x = c(-5, 5), y = c(-5.5, 4.5)) +
   labs(x = "PC1 (26%)", y = "PC2 (21.3%)") +
-  theme_minimal() +
-  theme(legend.position = 'none')
+  theme_minimal() #+
+  # theme(legend.position = 'none')
 
-# ggsave(file = "PCA_post-P1.png", width=4, height=3.5, units="in", dpi=300)
+# ggsave(file = "PCA_post-P1.png", width=5, height=3.5, units="in", dpi=300)
 
 
 
