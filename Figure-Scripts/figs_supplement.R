@@ -34,8 +34,7 @@ ggplot(fdat %>% filter(!(is.na(tn))),
    #
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
-   # treatment mean (loess smooth)
-   # stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
+   # treatment mean 
    geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(tn, na.rm=T)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
    #
@@ -48,9 +47,10 @@ ggplot(fdat %>% filter(!(is.na(tn))),
    # ggtitle("Total Nitrogen") +
    #
    theme_classic() +
-   theme(# legend.position = c(0.18, 0.87),
-         # legend.background = element_blank(),
-         legend.position = 'none',
+   theme(legend.position = c(0.18, 0.87),
+         legend.background = element_blank(),
+         legend.key.size = unit(0.8, "lines"),
+         # legend.position = 'none',
          plot.margin = unit(mar_top, "lines")) %>%
    fig_theme()
 
@@ -67,8 +67,7 @@ ggplot(fdat %>% filter(!(is.na(tp))),
    #
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
-   # treatment mean (loess smooth)
-   # stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
+   # treatment mean
    geom_line(data = ~.x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(tp, na.rm=T)) %>% ungroup(),
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
    #
@@ -340,14 +339,18 @@ ggplot(hobo_temp %>%
           ungroup() %>%
           left_join(fdat %>% select(pond_id, treatment) %>% unique),
        aes(x = temp, y = depth, color = treatment)) +
-   geom_point(aes(shape = as.character(doy)), alpha=0.9) +
+   geom_point(aes(shape = as.character(doy)), alpha=0.9, show.legend=FALSE) +
    geom_path(aes(linetype = as.character(doy),
-                 group = interaction(treatment, as.character(doy))), alpha=0.9) +
+                 group = interaction(treatment, as.character(doy))), 
+             alpha=0.9, show.legend = c(color=TRUE, shape=FALSE, linetype=FALSE)) +
    scale_x_continuous(name = expression(Temperature~(degree*C)), limits = c(19.5, 30.5)) +
    scale_y_reverse(name = expression(Depth~(m))) +
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    theme_classic() +
-   theme(legend.position = "none",
+   theme(legend.position = c(0.79, 0.15),
+         # legend.position = 'none',
+         legend.background = element_blank(),
+         legend.key.size = unit(0.8, "lines"),
          plot.margin = unit(mar_ind, "lines")) %>%
    fig_theme()
 
