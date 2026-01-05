@@ -95,44 +95,6 @@ plot_grid(tn, tp, ncol=1, align='v', labels="AUTO", label_size=11, label_y=c(0.9
 
 
 #---
-# Figure S3: N2O flux
-#---
-
-ylim_n = c(-4, 3)
-windows(height=7/3, width=3.25)
-ggplot(fdat %>%
-          filter(!(is.na(n2o_flux))) %>%
-          # convert from mmol to umol
-          mutate(n2o_flux = n2o_flux * 1000), 
-       aes(x = doy, y = n2o_flux)) %>%
-   # add events and analysis windows
-   # fig_windows() %>%
-   fig_events() +
-   # zero line
-   geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
-   # pond data
-   geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
-   # treatment mean 
-   geom_line(data = ~ .x %>% group_by(trt_nutrients, doy) %>% summarize(mean = mean(n2o_flux)) %>% ungroup(),
-             aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
-   #
-   scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
-   scale_y_continuous(name = expression(N[2]*O~flux~(mu*mol~m^-2~d^-1)), breaks = seq(-4, 3, 1)) +
-   coord_cartesian(ylim = ylim_n, clip = "off") +
-   # event labels
-   annotate(geom = "text", label = event_labs, x = event_lab.x, y = (max(ylim_n) + (diff(ylim_n) * 0.1)), size=3) +
-   #
-   theme_classic() +
-   theme(legend.position = "none",
-         plot.margin = unit(mar_ind, "lines")) %>%
-   fig_theme()
-
-# ggsave(filename = "n2o-flux.png", height=7/3, width=3.25, units='in')
-
-
-
-#---
 # Figure S.DO: DO saturation
 #---
 
