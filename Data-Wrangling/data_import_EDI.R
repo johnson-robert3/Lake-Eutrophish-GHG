@@ -61,4 +61,8 @@ ebu_flux_pond = dt11 %>%
 metabolism = dt8
 
 
+#-- miniDOT DO --#
+minidot = dt9
+
+
 

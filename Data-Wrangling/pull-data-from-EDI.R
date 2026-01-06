@@ -563,63 +563,63 @@ detach(dt8)
         
 	      
 
-# inUrl9  <- "https://pasta.lternet.edu/package/data/eml/edi/2238/1/c7912a8ba25094f6b71df59ec9c40032" 
-# infile9 <- tempfile()
-# try(download.file(inUrl9,infile9,method="curl",extra=paste0(' -A "',getOption("HTTPUserAgent"),'"')))
-# if (is.na(file.size(infile9))) download.file(inUrl9,infile9,method="auto")
-# 
-#                    
-#  dt9 <-read.csv(infile9,header=F 
-#           ,skip=1
-#             ,sep=","  
-#                 ,quot='"' 
-#         , col.names=c(
-#                     "pond_id",     
-#                     "date_time",     
-#                     "doy",     
-#                     "temp",     
-#                     "do",     
-#                     "do_sat"    ), check.names=TRUE)
-#                
-# unlink(infile9)
-# 		    
-# # Fix any interval or ratio columns mistakenly read in as nominal and nominal columns read as numeric or dates read as strings
-#                 
-# if (class(dt9$pond_id)!="factor") dt9$pond_id<- as.factor(dt9$pond_id)                                   
-# # attempting to convert dt9$date_time dateTime string to R date structure (date or POSIXct)                                
-# tmpDateFormat<-"%Y-%m-%d %H:%M:%S" 
-# tmp9date_time<-as.POSIXct(dt9$date_time,format=tmpDateFormat)
-# # Keep the new dates only if they all converted correctly
-# if(nrow(dt9[dt9$date_time != "",]) == length(tmp9date_time[!is.na(tmp9date_time)])){dt9$date_time <- tmp9date_time } else {print("Date conversion failed for dt9$date_time. Please inspect the data and do the date conversion yourself.")}                                                                    
-#                                 
-# if (class(dt9$doy)=="factor") dt9$doy <-as.numeric(levels(dt9$doy))[as.integer(dt9$doy) ]               
-# if (class(dt9$doy)=="character") dt9$doy <-as.numeric(dt9$doy)
-# if (class(dt9$temp)=="factor") dt9$temp <-as.numeric(levels(dt9$temp))[as.integer(dt9$temp) ]               
-# if (class(dt9$temp)=="character") dt9$temp <-as.numeric(dt9$temp)
-# if (class(dt9$do)=="factor") dt9$do <-as.numeric(levels(dt9$do))[as.integer(dt9$do) ]               
-# if (class(dt9$do)=="character") dt9$do <-as.numeric(dt9$do)
-# if (class(dt9$do_sat)=="factor") dt9$do_sat <-as.numeric(levels(dt9$do_sat))[as.integer(dt9$do_sat) ]               
-# if (class(dt9$do_sat)=="character") dt9$do_sat <-as.numeric(dt9$do_sat)
-#                 
-# # Convert Missing Values to NA for non-dates
-#                 
-# 
-# 
-# # Here is the structure of the input data frame:
-# str(dt9)                            
-# attach(dt9)                            
-# # The analyses below are basic descriptions of the variables. After testing, they should be replaced.                 
-# 
-# summary(pond_id)
-# summary(date_time)
-# summary(doy)
-# summary(temp)
-# summary(do)
-# summary(do_sat) 
-#                 # Get more details on character variables
-#                  
-# summary(as.factor(dt9$pond_id))
-# detach(dt9)               
+inUrl9  <- "https://pasta.lternet.edu/package/data/eml/edi/2238/1/c7912a8ba25094f6b71df59ec9c40032"
+infile9 <- tempfile()
+try(download.file(inUrl9,infile9,method="curl",extra=paste0(' -A "',getOption("HTTPUserAgent"),'"')))
+if (is.na(file.size(infile9))) download.file(inUrl9,infile9,method="auto")
+
+
+ dt9 <-read.csv(infile9,header=F
+          ,skip=1
+            ,sep=","
+                ,quot='"'
+        , col.names=c(
+                    "pond_id",
+                    "date_time",
+                    "doy",
+                    "temp",
+                    "do",
+                    "do_sat"    ), check.names=TRUE)
+
+unlink(infile9)
+
+# Fix any interval or ratio columns mistakenly read in as nominal and nominal columns read as numeric or dates read as strings
+
+if (class(dt9$pond_id)!="factor") dt9$pond_id<- as.factor(dt9$pond_id)
+# attempting to convert dt9$date_time dateTime string to R date structure (date or POSIXct)
+tmpDateFormat<-"%Y-%m-%d %H:%M:%S"
+tmp9date_time<-as.POSIXct(dt9$date_time,format=tmpDateFormat)
+# Keep the new dates only if they all converted correctly
+if(nrow(dt9[dt9$date_time != "",]) == length(tmp9date_time[!is.na(tmp9date_time)])){dt9$date_time <- tmp9date_time } else {print("Date conversion failed for dt9$date_time. Please inspect the data and do the date conversion yourself.")}
+
+if (class(dt9$doy)=="factor") dt9$doy <-as.numeric(levels(dt9$doy))[as.integer(dt9$doy) ]
+if (class(dt9$doy)=="character") dt9$doy <-as.numeric(dt9$doy)
+if (class(dt9$temp)=="factor") dt9$temp <-as.numeric(levels(dt9$temp))[as.integer(dt9$temp) ]
+if (class(dt9$temp)=="character") dt9$temp <-as.numeric(dt9$temp)
+if (class(dt9$do)=="factor") dt9$do <-as.numeric(levels(dt9$do))[as.integer(dt9$do) ]
+if (class(dt9$do)=="character") dt9$do <-as.numeric(dt9$do)
+if (class(dt9$do_sat)=="factor") dt9$do_sat <-as.numeric(levels(dt9$do_sat))[as.integer(dt9$do_sat) ]
+if (class(dt9$do_sat)=="character") dt9$do_sat <-as.numeric(dt9$do_sat)
+
+# Convert Missing Values to NA for non-dates
+
+
+
+# Here is the structure of the input data frame:
+str(dt9)
+attach(dt9)
+# The analyses below are basic descriptions of the variables. After testing, they should be replaced.
+
+summary(pond_id)
+summary(date_time)
+summary(doy)
+summary(temp)
+summary(do)
+summary(do_sat)
+                # Get more details on character variables
+
+summary(as.factor(dt9$pond_id))
+detach(dt9)
         
 	      
 
