@@ -109,9 +109,12 @@ emit.afterp2 = flux %>%
 
 
 
-# 
+# Table of CH4 and CO2 emissions by treatment during different temporal periods
 emissions = bind_rows(emit.tot, emit.p1p2, emit.hspike, emit.afterp1, emit.afterp2)
 
+
+
+# Other helpful summary values for manuscript
 
 # magnitude difference in CH4 flux across experiment
 fdat %>% 
@@ -119,3 +122,16 @@ fdat %>%
   summarize(across(c(ch4_flux, co2_flux), list(min=min, max=max)), .by=pond_id)
 
 
+# maximum daily temperature across ponds during the heat event (from vertical sonde profiles measured daily)
+fdat %>%
+  filter(doy %in% H) %>%
+  summarize(max_temp = max(temp), .by=pond_id)
+
+
+  # maximum surface temperatures reached in ponds B and F during heat event (from high-frequency HOBO temp chains)
+  hobo_temp %>%
+    filter(doy %in% H,
+           depth=="0.25") %>%
+    summarize(max = max(temp, na.rm=T), .by=pond_id)
+
+  
