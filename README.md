@@ -1,12 +1,16 @@
 # 2020 Hort Farm Pond Experiment
 
-This Github repository contains the code needed to recreate results and figures from the following manuscript: 
+This repository contains the code needed to recreate results and figures from the following manuscript: 
 
-Title: "*Immediate and lagged effects of nutrient and extreme weather disturbances on pond greenhouse gas emissions*"
+Title: "*Immediate and cumulative effects of nutrient and extreme weather disturbances on pond greenhouse gas emissions*"
 
 Authors: Johnson, RA, TJ Butts, EA Albright, SJ Hall, JA Walter, and GM Wilkinson.
 
-Data used in the manuscript are currently available in this Github repository (Data/ghg-model-dataset_ms-data.csv), with accompanying metadata (Data/ghg-model-dataset_ms-metadata.xlsx). Individual datasets will be archived in the Environmental Data Initiative repository prior to manuscript acceptance.
+Data and metadata from this study are available in the Environmental Data Initiative repository and can be accessed [here](https://portal.edirepository.org/nis/mapbrowse?packageid=edi.2238.1). 
+
+The compiled dataset used for the manuscript is available in this Github repository (Data/ghg-model-dataset_ms-data.csv) with accompanying metadata (Data/ghg-model-dataset_ms-metadata.xlsx). 
+
+Repository maintained by RA Johnson (email: robert.a.johnson@wisc.edu).
 
 
 ## Modeling Notes
