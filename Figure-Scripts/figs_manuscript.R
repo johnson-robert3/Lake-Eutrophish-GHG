@@ -417,7 +417,7 @@ ggplot(fdat %>%
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140, 240, 20)) +
    # scale_y_continuous(name = expression(CH[4]~'potential'~(nmol~g^-1~h^-1)), breaks = seq(0, 15, 5)) +
-   scale_y_continuous(name = "Methanogenesis potential<br>(nmol CH<sub>4</sub> g<sup>-1</sup>h<sup>-1</sup>)", breaks = seq(0, 15, 5)) +
+   scale_y_continuous(name = "Methanogenesis potential<br>(nmol CH<sub>4</sub> g<sup>&minus;1</sup>h<sup>&minus;1</sup>)", breaks = seq(0, 15, 5)) +
    coord_cartesian(ylim = c(0, 15.5), clip = "off") +
    # event labels
    annotate(geom = "text", label = event_labs, x = event_lab.x, y = 15.5 + ((15.5)*0.1), size=3) +
@@ -455,7 +455,7 @@ ggplot(fdat %>%
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
    # scale_y_continuous(name = expression(Ebullition~(mmol~m^2~d^-1)), breaks = seq(0, 15, 5)) +
-   scale_y_continuous(name = "Ebullition<br>(mmol CH<sub>4</sub> m<sup>-2</sup>d<sup>-1</sup>)", breaks = seq(0, 15, 5)) +
+   scale_y_continuous(name = "Ebullition<br>(mmol CH<sub>4</sub> m<sup>&minus;2</sup>d<sup>&minus;1</sup>)", breaks = seq(0, 15, 5)) +
    coord_cartesian(ylim = c(-0.5, 15), clip = "off") +
    # event labels
    annotate(geom = "text", label = event_labs, x = event_lab.x, y = 15 + ((0.5+15)*0.1), size=3) +
