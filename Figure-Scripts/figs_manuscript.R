@@ -163,7 +163,7 @@ ggplot(fdat %>%
 
 #-- Build the complete Figure 2 --#
 windows(height = 7/3*2, width = 3.25*2)
-plot_grid(m, c, md, cd, ncol=2, align="v", byrow=FALSE, labels=c('A', 'C', 'B', 'D'), label_size=11, label_y=c(0.98, 0.98, 1.03, 1.03), label_x=0.02)
+plot_grid(m, c, md, cd, ncol=2, align="v", byrow=FALSE, labels=c('A', 'B', 'C', 'D'), label_size=11, label_y=c(0.98, 0.98, 1.03, 1.03), label_x=0.02)
 
 # ggsave(file = "ms_ghg-flux.png", height = 7/3*2, width = 3.25*2, units='in')
 
@@ -385,7 +385,7 @@ plot_grid(gpp, re, nep, ncol=1, align='v', labels="AUTO", label_size=11, label_y
 #-- Build the complete Figure 1 (6 panel) --# 
 windows(height=7, width=6.5)
 plot_grid(sbt, sbdo, tp, gpp, re, nep, ncol=2, align="v", byrow=FALSE, 
-          labels=c('A','D','B','E','C','F'), label_size=11, label_y=c(0.99, 0.99, 1.02, 1.02, 1.04, 1.04), label_x=0.02)
+          labels=c('A','B','C','D','E','F'), label_size=11, label_y=c(0.99, 0.99, 1.02, 1.02, 1.04, 1.04), label_x=0.02)
 
 # ggsave(file = "ms_physico-metab.png", height=7, width=6.5, units = "in")
 
