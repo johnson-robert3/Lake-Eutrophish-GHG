@@ -55,7 +55,8 @@ ggplot(fdat %>%
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
+   # scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_x_continuous(name = "", limits = c(142, 242), breaks = doy_breaks, labels = doy_labs) +
    scale_y_continuous(name = expression(CH[4]~flux~(mmol~m^-2~d^-1)), breaks = seq(0, 60, 10)) +
    coord_cartesian(ylim = ylim_m, clip = "off") +
    # event labels
@@ -85,7 +86,8 @@ ggplot(fdat %>%
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
+   # scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_x_continuous(name = "Date", limits = c(142, 242), breaks = doy_breaks, labels = doy_labs) +
    scale_y_continuous(name = expression(CO[2]~flux~(mmol~m^-2~d^-1)), breaks = seq(0, 250, 50)) +
    coord_cartesian(ylim = ylim_c, clip = "off") +
    # event labels
@@ -118,7 +120,8 @@ ggplot(fdat %>%
    geom_line() +
    geom_point(size=1) +
    #
-   scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
+   # scale_x_continuous(name = " ", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_x_continuous(name = "", limits = c(142, 242), breaks = doy_breaks, labels = doy_labs) +
    scale_y_continuous(name = expression(CH[4]~diff*'.'~(mmol~m^-2~d^-1)), breaks = seq(-10, 20, 10)) +
    coord_cartesian(ylim = ylim_md, clip = "off") +
    # event labels
@@ -147,7 +150,8 @@ ggplot(fdat %>%
    geom_line() +
    geom_point(size=1) +
    #
-   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
+   # scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_x_continuous(name = "Date", limits = c(142, 242), breaks = doy_breaks, labels = doy_labs) +
    scale_y_continuous(name = expression(CO[2]~diff*'.'~(mmol~m^-2~d^-1))) +
    coord_cartesian(ylim = ylim_cd, clip = "off") +
    # event labels
@@ -165,7 +169,7 @@ ggplot(fdat %>%
 windows(height = 7/3*2, width = 3.25*2)
 plot_grid(m, c, md, cd, ncol=2, align="v", byrow=FALSE, labels=c('A', 'B', 'C', 'D'), label_size=11, label_y=c(0.98, 0.98, 1.03, 1.03), label_x=0.02)
 
-# ggsave(file = "ms_ghg-flux.png", height = 7/3*2, width = 3.25*2, units='in')
+ggsave(file = "ms_ghg-flux.jpeg", height = 7/3*2, width = 3.25*2, units='in')
 
 
 
@@ -191,7 +195,8 @@ ggplot(fdat) %>%
              aes(x = doy, y = mean, color = trt_nutrients), linetype=3, linewidth=0.5, alpha=1) +  # dark, dashed
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   # scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   scale_x_continuous(name = "", limits = c(142, 242), breaks = doy_breaks, labels = doy_labs) +
    scale_y_continuous(name = expression(Temperature~(degree*C))) +
    coord_cartesian(ylim = c(14, 30), clip = "off") +
    # event labels
@@ -234,7 +239,8 @@ ggplot(fdat) %>%
              aes(x = doy, y = mean, color = trt_nutrients), linetype=3, linewidth=0.5, alpha=1) +  # dark, dashed
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   # scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   scale_x_continuous(name = "", limits = c(142, 242), breaks = doy_breaks, labels = doy_labs) +
    scale_y_continuous(name = expression(DO~saturation~('%'))) +
    coord_cartesian(ylim = c(0, 200), clip = "off") +
    # event labels
@@ -262,7 +268,8 @@ ggplot(fdat %>% filter(!(is.na(tp))),
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
+   # scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_x_continuous(name = "Date", limits = c(142, 242), breaks = doy_breaks, labels = doy_labs) +
    scale_y_continuous(name = expression(TP~(mu*g~L^-1)), breaks = seq(0, 250, 50)) +
    coord_cartesian(ylim = c(0, 270), clip = "off") +
    # event labels
@@ -303,7 +310,8 @@ ggplot(fdat,
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.6, alpha=1) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
+   # scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_x_continuous(name = "", limits = c(142, 242), breaks = doy_breaks, labels = doy_labs) +
    scale_y_continuous(name = expression(GPP~(mg~O[2]~L^-1~d^-1)), breaks = seq(0, 20, 5)) +
    coord_cartesian(ylim = c(0, 20), clip = "off") +
    # event labels
@@ -334,7 +342,8 @@ ggplot(fdat,
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.6, alpha=1) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
+   # scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_x_continuous(name = "", limits = c(142, 242), breaks = doy_breaks, labels = doy_labs) +
    scale_y_continuous(name = expression(R~(mg~O[2]~L^-1~d^-1)), breaks = seq(-20, 0, 5)) +
    coord_cartesian(ylim = c(-20, 0), clip = "off") +
    # event labels
@@ -362,7 +371,8 @@ ggplot(fdat,
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.6, alpha=1) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   # scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   scale_x_continuous(name = "Date", limits = c(142, 242), breaks = doy_breaks, labels = doy_labs) +
    scale_y_continuous(name = expression(NEP~(mg~O[2]~L^-1~d^-1)), breaks = seq(-8, 8, 2)) +
    coord_cartesian(ylim = c(-8, 8), clip = "off") +
    # event labels
@@ -387,7 +397,7 @@ windows(height=7, width=6.5)
 plot_grid(sbt, sbdo, tp, gpp, re, nep, ncol=2, align="v", byrow=FALSE, 
           labels=c('A','B','C','D','E','F'), label_size=11, label_y=c(0.99, 0.99, 1.02, 1.02, 1.04, 1.04), label_x=0.02)
 
-# ggsave(file = "ms_physico-metab.png", height=7, width=6.5, units = "in")
+ggsave(file = "ms_physico-metab.jpeg", height=7, width=6.5, units = "in")
 
 
 
@@ -415,7 +425,8 @@ ggplot(fdat %>%
                geom='line', linewidth=0.75, linetype=1, span=0.4, alpha = 0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   # scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   scale_x_continuous(name = "", limits = c(142, 242), breaks = doy_breaks, labels = doy_labs) +
    # scale_y_continuous(name = expression(CH[4]~'potential'~(nmol~g^-1~h^-1)), breaks = seq(0, 15, 5)) +
    scale_y_continuous(name = "Methanogenesis potential<br>(nmol CH<sub>4</sub> g<sup>&minus;1</sup>h<sup>&minus;1</sup>)", breaks = seq(0, 15, 5)) +
    coord_cartesian(ylim = c(0, 15.5), clip = "off") +
@@ -453,7 +464,8 @@ ggplot(fdat %>%
                geom='line', linewidth=0.75, linetype=1, span=0.4, alpha = 0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   # scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   scale_x_continuous(name = "Date", limits = c(142, 242), breaks = doy_breaks, labels = doy_labs) +
    # scale_y_continuous(name = expression(Ebullition~(mmol~m^2~d^-1)), breaks = seq(0, 15, 5)) +
    scale_y_continuous(name = "Ebullition<br>(mmol CH<sub>4</sub> m<sup>&minus;2</sup>d<sup>&minus;1</sup>)", breaks = seq(0, 15, 5)) +
    coord_cartesian(ylim = c(-0.5, 15), clip = "off") +
@@ -480,7 +492,7 @@ ggplot(fdat %>%
 windows(height = 7/3*2, width = 3.25)
 plot_grid(p, e, ncol=1, align='v', labels="AUTO", label_size=11, label_y=c(0.99, 1.04), label_x=0.04)
 
-# ggsave(file = "ms_ch4-production.png", height = 7/3*2, width = 3.25, units = "in")
+ggsave(file = "ms_ch4-production.jpeg", height = 7/3*2, width = 3.25, units = "in")
 
 
 

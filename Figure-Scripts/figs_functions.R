@@ -18,6 +18,14 @@ event_labs = c('P1', 'H', 'P2', 'D')
 event_lab.x = c(p1, mean(heatwave), p2, derecho)  # x values for event labels above plots
 
 
+# Date labels for day of year
+jun = 153
+jul = 183
+aug = 214
+doy_breaks = c(jun, jun+7, jun+14, jun+21, jul, jul+7, jul+14, jul+21, aug, aug+7, aug+14, aug+21)
+doy_labs = c('Jun 1', "", "", "", 'Jul 1', "", "", "", 'Aug 1', "", "", "")
+
+
 # Add Events to a figure
 fig_events = function(.fig) {
    

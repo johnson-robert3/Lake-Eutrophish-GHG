@@ -39,7 +39,7 @@ ggplot(fdat %>% filter(!(is.na(tn))),
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_x_continuous(name = "", limits = c(142, 242), breaks = doy_breaks, labels = doy_labs) +
    scale_y_continuous(name = expression(TN~(mg~L^-1)), breaks = seq(0, 1, 0.2)) +
    coord_cartesian(ylim = c(0, 1), clip = "off") +
    # event labels
@@ -72,7 +72,7 @@ ggplot(fdat %>% filter(!(is.na(tp))),
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.9) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_x_continuous(name = "Date", limits = c(142, 242), breaks = doy_breaks, labels = doy_labs) +
    scale_y_continuous(name = expression(TP~(mu*g~L^-1)), breaks = seq(0, 250, 50)) +
    coord_cartesian(ylim = c(0, 270), clip = "off") +
    # event labels
@@ -116,7 +116,7 @@ ggplot(fdat,
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.8) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   scale_x_continuous(name = "", limits = c(142, 242), breaks = doy_breaks, labels = doy_labs) +
    scale_y_continuous(name = expression(Surface~DO~('%'~sat.)), breaks = seq(0, 200, 50)) +
    coord_cartesian(ylim = c(0, 200), clip = "off") +
    # event labels
@@ -147,7 +147,7 @@ ggplot(fdat,
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.8) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   scale_x_continuous(name = "Date", limits = c(142, 242), breaks = doy_breaks, labels = doy_labs) +
    scale_y_continuous(name = expression(Bottom~DO~('%'~sat.)), breaks = seq(0, 250, 50)) +
    coord_cartesian(ylim = c(0, 250), clip = "off") +
    # event labels
@@ -190,7 +190,7 @@ ggplot(fdat,
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.8) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   scale_x_continuous(name = "", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   scale_x_continuous(name = "", limits = c(142, 242), breaks = doy_breaks, labels = doy_labs) +
    scale_y_continuous(name = expression(Surface~temp.~(degree*C))) +
    coord_cartesian(ylim = c(15, 30), clip = "off") +
    # event labels
@@ -217,7 +217,7 @@ ggplot(fdat,
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.8) +
    #
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
-   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140, 240, 20)) +
+   scale_x_continuous(name = "Date", limits = c(142, 242), breaks = doy_breaks, labels = doy_labs) +
    scale_y_continuous(name = expression(Bottom~temp.~(degree*C))) +
    coord_cartesian(ylim = c(14, 28), clip = "off") +
    # event labels
@@ -252,13 +252,13 @@ ggplot(weather_data %>%
    geom_line() +
    geom_point() +
    labs(y = expression(Max.~wind~speed~(km~h^-1))) +
-   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_x_continuous(name = "Date", limits = c(142, 242), breaks = doy_breaks, labels = doy_labs) +
    theme_classic() +
    theme(legend.position = "none",
          plot.margin = unit(mar_ind, "lines")) %>%
    fig_theme()
 
-# ggsave(filename = "daily-max-wind-speed.png", height=7/3, width=3.25, units='in')
+# ggsave(filename = "si_wind-speed.png", height=7/3, width=3.25, units='in')
 
 
 
@@ -275,13 +275,13 @@ ggplot(weather_data %>%
    geom_line() +
    geom_point() +
    labs(y = expression(k[600]~(m~d^-1))) +
-   scale_x_continuous(name = "Day of year", limits = c(142, 242), breaks = seq(140,240,20)) +
+   scale_x_continuous(name = "Date", limits = c(142, 242), breaks = doy_breaks, labels = doy_labs) +
    theme_classic() +
    theme(legend.position = "none",
          plot.margin = unit(mar_ind, "lines")) %>%
    fig_theme()
 
-# ggsave(filename = "k600.png", height=7/3, width=3.25, units='in')
+# ggsave(filename = "si_k600.png", height=7/3, width=3.25, units='in')
 
 
 
