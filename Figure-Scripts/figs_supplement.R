@@ -31,7 +31,6 @@ ggplot(fdat %>% filter(!(is.na(tn))),
    fig_events() +
    # zero line
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
-   #
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean 
@@ -44,13 +43,11 @@ ggplot(fdat %>% filter(!(is.na(tn))),
    coord_cartesian(ylim = c(0, 1), clip = "off") +
    # event labels
    annotate(geom = "text", label = event_labs, x = event_lab.x, y = 1 + ((1)*0.1), size=3) +
-   # ggtitle("Total Nitrogen") +
    #
    theme_classic() +
    theme(legend.position = c(0.18, 0.87),
          legend.background = element_blank(),
          legend.key.size = unit(0.8, "lines"),
-         # legend.position = 'none',
          plot.margin = unit(mar_top, "lines")) %>%
    fig_theme()
 
@@ -64,7 +61,6 @@ ggplot(fdat %>% filter(!(is.na(tp))),
    fig_events() +
    # zero line
    geom_hline(yintercept=0, linetype=3, color="gray50", linewidth=0.8) +
-   #
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean
@@ -77,11 +73,9 @@ ggplot(fdat %>% filter(!(is.na(tp))),
    coord_cartesian(ylim = c(0, 270), clip = "off") +
    # event labels
    annotate(geom = "text", label = event_labs, x = event_lab.x, y = 270 + ((270)*0.1), size=3) +
-   # ggtitle("Total Phosphorus") +
    #
    theme_classic() +
-   theme(# legend.position = c(0.82, 0.87),
-         legend.position = "none",
+   theme(legend.position = "none",
          plot.margin = unit(mar_bot, "lines")) %>%
    fig_theme()
 
@@ -111,7 +105,6 @@ ggplot(fdat,
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean
-   # stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
    geom_line(data = ~.x %>% summarize(mean = mean(do_sat, na.rm=T), .by=c(trt_nutrients, doy)),
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.8) +
    #
@@ -142,7 +135,6 @@ ggplot(fdat,
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean 
-   # stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
    geom_line(data = ~.x %>% summarize(mean = mean(bottom_do_sat, na.rm=T), .by=c(trt_nutrients, doy)),
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.8) +
    #
@@ -185,7 +177,6 @@ ggplot(fdat,
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean
-   # stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
    geom_line(data = ~.x %>% summarize(mean = mean(temp, na.rm=T), .by=c(trt_nutrients, doy)),
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.8) +
    #
@@ -212,7 +203,6 @@ ggplot(fdat,
    # pond data
    geom_line(aes(color = trt_nutrients, group = pond_id), alpha=0.4, linewidth=0.33) +
    # treatment mean
-   # stat_smooth(aes(color = trt_nutrients), geom="line", linewidth=0.75, span=0.1, alpha=0.9) +
    geom_line(data = ~.x %>% summarize(mean = mean(bottom_temp, na.rm=T), .by=c(trt_nutrients, doy)),
              aes(x = doy, y = mean, color = trt_nutrients), linewidth=0.75, alpha=0.8) +
    #
@@ -227,7 +217,6 @@ ggplot(fdat,
    #
    theme_classic() +
    theme(legend.position = c(0.79, 0.15),
-         # legend.position = 'none',
          legend.background = element_blank(),
          legend.key.size = unit(0.8, "lines"),
          plot.margin = unit(mar_bot, "lines")) %>%
@@ -239,6 +228,7 @@ windows(height=7/3*2, width=3.25)
 plot_grid(st, bt, ncol=1, align='v', labels="AUTO", label_size=11, label_y=c(0.99, 1.04), label_x=0.02)
 
 # ggsave(file = "si_temperature.png", height=7/3*2, width=3.25, units='in')
+
 
 
 #---
@@ -293,7 +283,6 @@ ggplot(weather_data %>%
 windows(height=7/3, width=3.25)
 ggplot(hobo_temp %>%
           mutate(hour = hour(date_time)) %>%
-          # filter(pond_id=="B") %>%
           filter(doy %in% c(189, 224)) %>%  # DOY 189: heat event; DOY 224: day after derecho
           filter(hour %in% c(10:12)) %>%
           group_by(pond_id, doy, depth) %>%
@@ -310,7 +299,6 @@ ggplot(hobo_temp %>%
    scale_color_manual(name = NULL, breaks = pulse_breaks, values = pulse_color, labels = pulse_labs) +
    theme_classic() +
    theme(legend.position = c(0.79, 0.15),
-         # legend.position = 'none',
          legend.background = element_blank(),
          legend.key.size = unit(0.8, "lines"),
          plot.margin = unit(mar_ind, "lines")) %>%

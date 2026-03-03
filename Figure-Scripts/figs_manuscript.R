@@ -178,7 +178,6 @@ ggsave(file = "ms_ghg-flux.jpeg", height = 7/3*2, width = 3.25*2, units='in')
 #---
 
 #-- 1a: Temp: treatment means only, surface/bottom together --#
-# windows(height=7/3, width=3.25)
 sbt =
 ggplot(fdat) %>%
    # add events 
@@ -220,7 +219,6 @@ ggplot(fdat) %>%
 
 
 #-- 1b: DO sat: treatment means only, surface/bottom together --#
-# windows(height=7/3, width=3.25)
 sbdo =
 ggplot(fdat) %>%
    # add events 
@@ -276,8 +274,7 @@ ggplot(fdat %>% filter(!(is.na(tp))),
    annotate(geom = "text", label = event_labs, x = event_lab.x, y = 270 + ((270)*0.1), size=3) +
    #
    theme_classic() +
-   theme(# legend.position = c(0.82, 0.87),
-         legend.position = "none",
+   theme(legend.position = "none",
          plot.margin = unit(mar_bot, "lines")) %>%
    fig_theme()
 
