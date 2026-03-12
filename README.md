@@ -26,22 +26,39 @@ To recreate the full model dataset from all individual datasets, run scripts in 
 
 ## Script Notes
 
+### Data
+
 **'pull-data-from-EDI'**: Import datasets directly from the EDI repository. _Other scripts should no longer be used to import datasets._ 
 
 **'data_import_EDI'**: Renames datasets and variables after pulling from EDI to match code used across other scripts.
 
 **'data_model-dataset'**: Recreate the full, combined dataset for use in analyses from the individual datasets pulled from EDI.
 
+**'edi_data_output'**: This script is where all dfs created throughout other R scripts were output in their final form into the shared EDI Box folder. Contains notes about which scripts the OG dfs were created in. 
+
+### Analyses
+
 **'stats_model-data'**: Slightly process the full, combined dataset to recreate the dataset actually used for analyses. 
 
 **'stats_distro-comparison2_rj'**: Run the window comparison analysis used in the manuscript. 
 
-**'distro_comparison_fig_update'**: Recreate the window comparison analysis figure from the manuscript. 
+**'flux_emissions'**: Calculate flux values for specific time intervals. 
 
-**'stats_foodwebOrder_rj'**: Recreate the Spearman Rank Correlation figure from the Supplement. 
+**'rate_comparisons'**: ANOVAs with pairwise comparisons for methanogenesis potential and ebullition. 
 
-**'edi_data_output'**: This script is where all dfs created throughout other R scripts were output in their final form into the shared EDI Box folder. Contains notes about which scripts the OG dfs were created in. 
+**'stats_event-windows-mean-se'**: Values from comparison analysis event windows to create Table S1 from the supplement. 
 
+**'stats_foodwebOrder_rj'**: Recreate the Spearman Rank Correlation analysis and figure from the Supplement. 
+
+### Figures
+
+**'figs_manuscript'**: Recreate figures 1, 2, and 4 from the manuscript. 
+
+**'figs_supplement'**: Recreate figures from the supplement. 
+
+**'distro_comparison_fig_update'**: Recreate the window comparison analysis figure from the manuscript (figure 3). 
+
+**'figs_functions'**: Functions and aesthetics used across multiple figure scripts.
 
 
 ## Data Processing Notes
