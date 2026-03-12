@@ -1,15 +1,14 @@
-## Explore hort farm pond GHG dataset from Robert Johnson & Grace Wilkinson 
-## and begin prototyping new analyses
-
-
-# Updated by RA Johnson
-# main update was to comparison 1 - only using windows prior to event to build ref distribution
+#~~~
+# Script to run the comparison analyses used in the manuscript
+#
+# By: JA Walter (w/ minor updates by R. Johnson)
+#~~~
 
 
 rm(list=ls())
 
 # data
-dat.raw <- read.csv("Data/ghg-model-dataset_ms-data.csv")
+dat.raw <- read.csv("Data/ghg-model-dataset_ms-data.csv")  # created from the 'data_model-dataset' script
 
 
 # absolute value of ecosystem respiration values (lower values of R denote higher rates of respiration)
@@ -28,8 +27,8 @@ unique(dat.raw$treatment)
 # Heat event was DOYs 185-190
 # Derecho on DOY 223 (Aug. 10, 2020)
 
-wwidth <- 5 #days: width of windows, e.g. following nutrient pulses
-pulse1 <- 177: (177 + wwidth - 1)#doy
+wwidth <- 5  # days: width of windows, e.g. following nutrient pulses
+pulse1 <- 177: (177 + wwidth - 1)  # doy
 pulse2 <- 212: (212 + wwidth - 1)
 derecho <- 224: (224 + wwidth - 1)
 heatwave <- 185:190
@@ -47,11 +46,11 @@ varlist.main <- c("ch4_flux","co2_flux",
                   "temp", "bottom_temp",
                   "tn","tp")
 
-# set the variable list used by the function to only the example variable
+# set the variable list used by the function to only the example variable (for creating visualization example (manuscript Fig. 3a))
 # varlist.main = c("ch4_flux")
 
 
-## turn data into matrices --  mostly because Jon likes things this way
+## turn data into matrices 
 
 # Create a matrix of all mean daily values for each pond for each focal variable
 data_matrices <- list()
@@ -228,9 +227,7 @@ for(var in varlist.main){
 pal <- colorRampPalette(colors=c('#009392', '#fdfbe4', '#d0587e')) 
 
 prettyNames <- c(expression('CH'['4']~'flux'),
-                 # expression('N'['2']*'O'~'flux'),
                  expression('CO'['2']~'flux'),
-                 #'Chlorophyll-a',
                  'GPP',
                  'R',
                  'NEP',
@@ -238,14 +235,8 @@ prettyNames <- c(expression('CH'['4']~'flux'),
                  'Bottom DO',
                  'Surface Temp.',
                  'Bottom Temp.',
-                 #'SRP',
-                 #expression('NO'['2']+'NO'['3']),
                  'Total N',
                  'Total P'
-                 #'DOC',
-                 # 'Temperature',
-                 #'Spec. cond.',
-                 # expression('Z'['mix'])
                  )
 
 
@@ -318,143 +309,5 @@ ggplot(comp1.p2 %>% as.data.frame() %>%
    theme(axis.text = element_text(color='black', size=unit(9, 'pt')),
          axis.title = element_text(color='black', size=unit(10, 'pt')))
 
-
-
-
-#---
-
-t_col <- function(color, percent = 50) {
-   #   color = color name
-   # percent = % transparency
-   #    name = an optional name for the color
-  
-  ## Get RGB values for named color
-  rgb.val <- col2rgb(color)
-  
-  ## Make new color using input color as base and alpha set by transparency
-  t.col <- rgb(rgb.val[1], rgb.val[2], rgb.val[3],
-               max = 255,
-               alpha = (100 - percent) * 255 / 100)
-  
-  return(t.col)
-}
-
-## plot time series of gas fluxes
-{
-png("flux_timeseries_rj.png", res=300, units="in", height=6.5/3, width=6.5)
-
-par(mfrow=c(1,3), mar=c(3.3,3.3,1.3,0.9), mgp=c(2,0.8,0))
-
-# CH4
-tmp <- data_matrices[["ch4_flux"]]
-tmppulsemean <- colMeans(tmp[pulse_ponds,])
-tmppulsemin <- apply(tmp[pulse_ponds,], 2, FUN="min")
-tmppulsemax <- apply(tmp[pulse_ponds,], 2, FUN="max")
-tmprefmean <- colMeans(tmp[ref_ponds,])
-tmprefmin <- apply(tmp[ref_ponds,], 2, FUN="min")
-tmprefmax <- apply(tmp[ref_ponds,], 2, FUN="max")
-
-plot(NA, NA, ylab=expression('CH'['4']~'flux'), xlab="DOY", col=NA, xlim=range(time_doy), ylim=range(tmp, na.rm=T))
-polygon(x=c(time_doy[!is.na(tmprefmin)], rev(time_doy[!is.na(tmprefmax)]), time_doy[!is.na(tmprefmin)][1]),
-        y=c(tmprefmin[!is.na(tmprefmin)], rev(tmprefmax[!is.na(tmprefmax)]), tmprefmin[!is.na(tmprefmin)][1]),
-        col=t_col("orange"), border=NA)
-lines(time_doy[!is.na(colMeans(tmp))], colMeans(tmp[ref_ponds,])[!is.na(colMeans(tmp))], lwd=2, col="orange")
-polygon(x=c(time_doy[!is.na(tmppulsemin)], rev(time_doy[!is.na(tmppulsemax)]), time_doy[!is.na(tmppulsemin)][1]),
-        y=c(tmppulsemin[!is.na(tmppulsemin)], rev(tmppulsemax[!is.na(tmppulsemax)]), tmppulsemin[!is.na(tmppulsemin)][1]),
-        col=t_col("purple"), border=NA)
-lines(time_doy[!is.na(colMeans(tmp))], colMeans(tmp[pulse_ponds,])[!is.na(colMeans(tmp))], lwd=2, col="purple")
-rect(xleft=min(pulse1), xright=max(pulse1), ybottom=par("usr")[3], ytop=par("usr")[4]) # pulse 1
-rect(xleft=min(heatwave), xright=max(heatwave), ybottom=par("usr")[3], ytop=par("usr")[4]) # heatwave
-rect(xleft=min(pulse2), xright=max(pulse2), ybottom=par("usr")[3], ytop=par("usr")[4]) # pulse 2
-rect(xleft=min(derecho), xright=max(derecho), ybottom=par("usr")[3], ytop=par("usr")[4]) # derecho
-axis(side=3, at=c(178,192.5,213,222), tick=FALSE, labels=c("P1","H","P2","D"), line=-0.7, cex.axis=0.9, gap.axis=0)
-
-# N2O
-tmp <- data_matrices[["n2o_flux"]]
-tmppulsemean <- colMeans(tmp[pulse_ponds,])
-tmppulsemin <- apply(tmp[pulse_ponds,], 2, FUN="min")
-tmppulsemax <- apply(tmp[pulse_ponds,], 2, FUN="max")
-tmprefmean <- colMeans(tmp[ref_ponds,])
-tmprefmin <- apply(tmp[ref_ponds,], 2, FUN="min")
-tmprefmax <- apply(tmp[ref_ponds,], 2, FUN="max")
-
-
-plot(NA, NA, ylab=expression('N'['2']*'O'~'flux'), xlab="DOY", col=NA, xlim=range(time_doy), ylim=range(tmp, na.rm=T))
-polygon(x=c(time_doy[!is.na(tmprefmin)], rev(time_doy[!is.na(tmprefmax)]), time_doy[!is.na(tmprefmin)][1]),
-        y=c(tmprefmin[!is.na(tmprefmin)], rev(tmprefmax[!is.na(tmprefmax)]), tmprefmin[!is.na(tmprefmin)][1]),
-        col=t_col("orange"), border=NA)
-lines(time_doy[!is.na(colMeans(tmp))], colMeans(tmp[ref_ponds,])[!is.na(colMeans(tmp))], lwd=2, col="orange")
-polygon(x=c(time_doy[!is.na(tmppulsemin)], rev(time_doy[!is.na(tmppulsemax)]), time_doy[!is.na(tmppulsemin)][1]),
-        y=c(tmppulsemin[!is.na(tmppulsemin)], rev(tmppulsemax[!is.na(tmppulsemax)]), tmppulsemin[!is.na(tmppulsemin)][1]),
-        col=t_col("purple"), border=NA)
-lines(time_doy[!is.na(colMeans(tmp))], colMeans(tmp[pulse_ponds,])[!is.na(colMeans(tmp))], lwd=2, col="purple")
-rect(xleft=min(pulse1), xright=max(pulse1), ybottom=par("usr")[3], ytop=par("usr")[4]) # pulse 1
-rect(xleft=min(heatwave), xright=max(heatwave), ybottom=par("usr")[3], ytop=par("usr")[4]) # heatwave
-rect(xleft=min(pulse2), xright=max(pulse2), ybottom=par("usr")[3], ytop=par("usr")[4]) # pulse 2
-rect(xleft=min(derecho), xright=max(derecho), ybottom=par("usr")[3], ytop=par("usr")[4]) # derecho
-axis(side=3, at=c(178,192.5,213,222), tick=FALSE, labels=c("P1","H","P2","D"), line=-0.7, cex.axis=0.9, gap.axis=0)
-
-# CO2
-tmp <- data_matrices[["co2_flux"]]
-tmppulsemean <- colMeans(tmp[pulse_ponds,])
-tmppulsemin <- apply(tmp[pulse_ponds,], 2, FUN="min")
-tmppulsemax <- apply(tmp[pulse_ponds,], 2, FUN="max")
-tmprefmean <- colMeans(tmp[ref_ponds,])
-tmprefmin <- apply(tmp[ref_ponds,], 2, FUN="min")
-tmprefmax <- apply(tmp[ref_ponds,], 2, FUN="max")
-
-plot(NA, NA, ylab=expression('CO'['2']~'flux'), xlab="DOY", col=NA, xlim=range(time_doy), ylim=range(tmp, na.rm=T))
-polygon(x=c(time_doy[!is.na(tmprefmin)], rev(time_doy[!is.na(tmprefmax)]), time_doy[!is.na(tmprefmin)][1]),
-        y=c(tmprefmin[!is.na(tmprefmin)], rev(tmprefmax[!is.na(tmprefmax)]), tmprefmin[!is.na(tmprefmin)][1]),
-        col=t_col("orange"), border=NA)
-lines(time_doy[!is.na(colMeans(tmp))], colMeans(tmp[ref_ponds,])[!is.na(colMeans(tmp))], lwd=2, col="orange")
-polygon(x=c(time_doy[!is.na(tmppulsemin)], rev(time_doy[!is.na(tmppulsemax)]), time_doy[!is.na(tmppulsemin)][1]),
-        y=c(tmppulsemin[!is.na(tmppulsemin)], rev(tmppulsemax[!is.na(tmppulsemax)]), tmppulsemin[!is.na(tmppulsemin)][1]),
-        col=t_col("purple"), border=NA)
-lines(time_doy[!is.na(colMeans(tmp))], colMeans(tmp[pulse_ponds,])[!is.na(colMeans(tmp))], lwd=2, col="purple")
-rect(xleft=min(pulse1), xright=max(pulse1), ybottom=par("usr")[3], ytop=par("usr")[4]) # pulse 1
-rect(xleft=min(heatwave), xright=max(heatwave), ybottom=par("usr")[3], ytop=par("usr")[4]) # heatwave
-rect(xleft=min(pulse2), xright=max(pulse2), ybottom=par("usr")[3], ytop=par("usr")[4]) # pulse 2
-rect(xleft=min(derecho), xright=max(derecho), ybottom=par("usr")[3], ytop=par("usr")[4]) # derecho
-axis(side=3, at=c(178,192.5,213,222), tick=FALSE, labels=c("P1","H","P2","D"), line=-0.7, cex.axis=0.9, gap.axis=0)
-legend("topleft", lwd=2, col=c("orange","purple"), legend=c("Reference","Pulsed"), box.lwd=0, seg.len=1.5, inset=0.01)
-
-dev.off()
-}
-
-
-
-## plot all time series
-# pdf("all_timeseries.pdf", onefile=TRUE)
-# 
-# for(var in varlist.main){
-#   
-#   tmp <- data_matrices[[var]]
-#   
-#   plot(NA, NA , xlim=range(time_doy), ylim=range(tmp, na.rm=T),
-#        xlab="doy", ylab=var)
-#   
-#   rect(xleft=min(pulse1), xright=max(pulse1), ybottom=par("usr")[3], ytop=par("usr")[4], col="grey", border=NA) # pulse 1
-#   rect(xleft=min(heatwave), xright=max(heatwave), ybottom=par("usr")[3], ytop=par("usr")[4], col="grey", border=NA) # heatwave
-#   rect(xleft=min(pulse2), xright=max(pulse2), ybottom=par("usr")[3], ytop=par("usr")[4], col="grey", border=NA) # pulse 2
-#   rect(xleft=min(derecho), xright=max(derecho), ybottom=par("usr")[3], ytop=par("usr")[4], col="grey", border=NA) # derecho
-#   axis(side=3, at=c(mean(pulse1),mean(heatwave),mean(pulse2),mean(derecho)), tick=FALSE, labels=c("P1","H","P2","D"), line=-0.7, cex.axis=0.9, gap.axis=0)
-#   
-#   
-#   lines(time_doy[!is.na(tmp[1,])], tmp[1,!is.na(tmp[1,])], col=t_col("purple"))
-#   lines(time_doy[!is.na(tmp[2,])], tmp[2,!is.na(tmp[2,])], col=t_col("purple"))
-#   lines(time_doy[!is.na(tmp[3,])], tmp[3,!is.na(tmp[3,])], col=t_col("purple"))
-#   lines(time_doy[!is.na(tmp[4,])], tmp[4,!is.na(tmp[4,])], col=t_col("orange"))
-#   lines(time_doy[!is.na(tmp[5,])], tmp[5,!is.na(tmp[5,])], col=t_col("orange"))
-#   lines(time_doy[!is.na(tmp[6,])], tmp[6,!is.na(tmp[6,])], col=t_col("orange"))
-#   lines(time_doy[!is.na(colMeans(tmp[pulse_ponds,]))], colMeans(tmp[pulse_ponds,])[!is.na(colMeans(tmp[pulse_ponds,]))], col="purple", lwd=2)
-#   lines(time_doy[!is.na(colMeans(tmp[ref_ponds,]))], colMeans(tmp[ref_ponds,])[!is.na(colMeans(tmp[ref_ponds,]))], col="orange", lwd=2)
-#   
-#   
-#   mtext(var, line=2)
-#   
-# }
-# 
-# dev.off()
 
 

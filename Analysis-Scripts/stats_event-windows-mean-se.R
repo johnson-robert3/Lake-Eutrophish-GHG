@@ -18,8 +18,8 @@ varlist.main <- c("ch4_flux","co2_flux",
                   "temp", "bottom_temp",
                   "tn","tp")
 
-wwidth <- 5 #days: width of windows, e.g. following nutrient pulses
-pulse1 <- 177: (177 + wwidth - 1)#doy
+wwidth <- 5  # days: width of windows, e.g. following nutrient pulses
+pulse1 <- 177: (177 + wwidth - 1)  # doy
 pulse2 <- 212: (212 + wwidth - 1)
 derecho <- 224: (224 + wwidth - 1)
 heatwave <- 185:190

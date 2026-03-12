@@ -1,12 +1,14 @@
-## Explore hort farm pond GHG dataset from Robert Johnson & Grace Wilkinson 
-## and begin prototyping new analyses
+#~~~
+# Script to check influence of food web treatment and create figure for the Supplement
+#
+# By: JA Walter (w/ minor updates by R. Johnson)
+#~~~
 
 rm(list=ls())
 
-# setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 # data
-dat.raw <- read.csv("Data/ghg-model-dataset_ms-data.csv")
+dat.raw <- read.csv("Data/ghg-model-dataset_ms-data.csv")  # created from the 'data_model-dataset' script
 
 # absolute value of ecosystem respiration values (lower values of R denote higher rates of respiration)
 dat.raw <- dat.raw |> dplyr::mutate(R = abs(R))
@@ -28,23 +30,15 @@ dat.raw = dat.raw |> dplyr::mutate(treatment = dplyr::case_when(treatment=="refe
                                                                 treatment=="pulsed" ~ "puls"))
 
 # define some time periods of interest
-wwidth <- 5 #days: width of windows, e.g. following nutrient pulses
-pulse1 <- 177: (177 + wwidth - 1)#doy
+wwidth <- 5  # days: width of windows, e.g. following nutrient pulses
+pulse1 <- 177: (177 + wwidth - 1) # doy
 pulse2 <- 212: (212 + wwidth - 1)
 derecho <- 224: (224 + wwidth - 1)
 heatwave <- 185:190
 
 
+# create list of variables to use
 varlist <- colnames(dat.raw)
-# varlist <- varlist[!varlist %in% c("pond_id","treatment","date","doy","period","week","flag","foodweb",
-#                                    "sonde_strat","sonde_strat","sonde_zmix","salinity", "bottom_salinity",
-#                                    "wind_speed","wind_U10","ph","bottom_ph","nox","phyco","bottom_phyco")]
-
-# varlist <- varlist[varlist %in% c("ch4_flux","co2_flux",
-#                                   "GPP","R","NEP",
-#                                   "do_sat","bottom_do_sat",
-#                                   "temp", "bottom_temp",
-#                                   "tn","tp")]
 
 varlist.main <- c("ch4_flux","co2_flux",
                   "GPP","R","NEP",
@@ -61,9 +55,7 @@ units <- c("(mmol CH4 m-2 d-1)", "(mmol CO2 m-2 d-1)",
 var.units = setNames(as.data.frame(as.list(units)), varlist.main)
 
 
-
-# cols <- c("green","yellow","red")
-# cols <- c("red","yellow","green")  # make green the highest (rank 3)
+# colors for figure
 cols <- c("#B9E5E8","#7AB2D3","#4A628A")  # blue ramp, light blue is lowest (rank 1) and dark blue is highest (rank 3)
 
 
@@ -127,3 +119,5 @@ for(ii in 1:nreps){
 hist(nMatched)
 
 quantile(nMatched, 0.95)
+
+

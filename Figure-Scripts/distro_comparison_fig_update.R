@@ -1,8 +1,9 @@
 #--
 # Update arrangement of comparison figure. Group by event type (nutrient pulses vs meteorological events) instead of by comparison (1 vs 2)
 #  (easier to visually evaluate comparison results for a given variable and event)
+#
+# By: R. Johnson
 #--
-
 
 
 #- Nutrient pulses (comp 1 and 2)
@@ -163,9 +164,7 @@ for(var in varlist.main){
 pal <- colorRampPalette(colors=c('#009392', '#fdfbe4', '#d0587e')) 
 
 prettyNames <- c(expression('CH'['4']~'flux'),
-                 # expression('N'['2']*'O'~'flux'),
                  expression('CO'['2']~'flux'),
-                 #'Chlorophyll-a',
                  'GPP',
                  'R',
                  'NEP',
@@ -173,14 +172,8 @@ prettyNames <- c(expression('CH'['4']~'flux'),
                  'Bottom DO',
                  'Surface Temp.',
                  'Bottom Temp.',
-                 #'SRP',
-                 #expression('NO'['2']+'NO'['3']),
                  'Total N',
                  'Total P'
-                 #'DOC',
-                 # 'Temperature',
-                 #'Spec. cond.',
-                 # expression('Z'['mix'])
                  )
 
 
@@ -225,6 +218,4 @@ mtext("Values < comparison", side=4, at=0.1, line=0.75, cex=3/4)
 dev.off()
 
 
-
- 
   

@@ -312,8 +312,27 @@ ggplot(hobo_temp %>%
 # PCA
 #---
 
-#- First, load data and packages, and create the 'pca_dat' df, from the 'stats_PCA' script
+#-- First, load data and packages, and create the 'pca_dat' df (originally from the 'stats_PCA' script)
 
+library(tidyverse)
+library(FactoMineR)
+library(factoextra)
+library(missMDA)
+
+set.seed(1234)
+
+#- Select data for PCA
+pca_dat = fdat %>%
+  select(pond_id, doy, treatment, 
+         ch4_flux, co2_flux,
+         GPP, R, NEP,
+         do_sat, bottom_do_sat,
+         temp, bottom_temp,
+         tn, tp) %>%
+  arrange(pond_id, doy)
+
+
+#--
 
 # after P1, but impute missing values
 dat_exp_imp = pca_dat %>%

@@ -29,12 +29,10 @@ flux = fdat %>%
 
 # by pond
 flux %>% 
-  # filter(doy %in% p1.days) %>%
   summarize(ch4 = sum(ch4_flux), co2=sum(co2_flux), .by = pond_id)
 
 # by treatment
 emit.tot = flux %>% 
-  # filter(doy %in% h.spike) %>% 
   summarize(ch4 = sum(ch4_flux), co2=sum(co2_flux), .by = pond_id) %>%
   mutate(treatment = c('pulsed', 'pulsed', 'pulsed', 'reference', 'reference', 'reference')) %>%
   summarize(across(c(ch4, co2), list(mean=mean, se=se)), .by=treatment) %>%

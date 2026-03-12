@@ -1,5 +1,11 @@
+#~~~
+# Script to create the full, large dataset of all variables/data for analyses
+#
+# By: R. Johnson
+#~~~
 
-# Large dataset of all variables/data for analyses
+
+#-- Run the 'pull-data-from-EDI' and 'data_import_EDI' scripts first to create all individual datasets
 
 
 #- Needed data sets
@@ -174,11 +180,7 @@ model_dataset = test %>%
 
 
 # output the complete model dataset
-# write_csv(model_dataset, file = "Data/ghg-model-dataset_2024-07-26.csv")
-
-# output the dataset with just variables used in analyses/figures for the manuscript
 write_csv(model_dataset, file = "Data/ghg-model-dataset_ms-data.csv")
-
 
 
    ## remove temporary individual data sets
