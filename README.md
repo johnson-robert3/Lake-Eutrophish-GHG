@@ -8,6 +8,8 @@ Authors: Johnson, RA, TJ Butts, EA Albright, SJ Hall, JA Walter, and GM Wilkinso
 
 Data and metadata from this study are available in the Environmental Data Initiative repository and can be accessed [here](https://portal.edirepository.org/nis/mapbrowse?packageid=edi.2238.1). 
 
+Copies of all scripts and files used for analyses and figures/tables at the time of manuscript acceptance have been archived in Zenodo. [![DOI](https://zenodo.org/badge/226179406.svg)](https://doi.org/10.5281/zenodo.18990039)
+
 The compiled dataset used for the manuscript is available in this Github repository (Data/ghg-model-dataset_ms-data.csv) with accompanying metadata (Data/ghg-model-dataset_ms-metadata.xlsx). 
 
 Repository maintained by RA Johnson (email: robert.a.johnson@wisc.edu).
