@@ -1,8 +1,8 @@
-# 2020 Hort Farm Pond Experiment
+# Pond GHG responses to nutrient and weather disturbances
 
 This repository contains the code needed to recreate results and figures from the following manuscript: 
 
-Title: "*Immediate and cumulative effects of nutrient and extreme weather disturbances on pond greenhouse gas emissions*"
+Title: **Immediate and cumulative effects of nutrient and extreme weather disturbances on pond greenhouse gas emissions**
 
 Authors: Johnson, RA, TJ Butts, EA Albright, SJ Hall, JA Walter, and GM Wilkinson.
 
@@ -10,7 +10,7 @@ Data and metadata from this study are available in the Environmental Data Initia
 
 Copies of all scripts and files used for analyses and figures/tables at the time of manuscript acceptance have been archived in Zenodo. [![DOI](https://zenodo.org/badge/226179406.svg)](https://doi.org/10.5281/zenodo.18990039)
 
-The compiled dataset used for the manuscript is available in this Github repository (Data/ghg-model-dataset_ms-data.csv) with accompanying metadata (Data/ghg-model-dataset_ms-metadata.xlsx). 
+The compiled dataset used for the manuscript is available in this Github repository (Data/ghg-model-dataset_ms-data.csv) with accompanying metadata (Data/ghg-model-dataset_ms-metadata.xlsx), and can also be recreated using the scripts listed below.
 
 Repository maintained by RA Johnson (email: robert.a.johnson@wisc.edu).
 
