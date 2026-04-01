@@ -1,16 +1,14 @@
 # Pond GHG responses to nutrient and weather disturbances
 
-This repository contains the code needed to recreate results and figures from the following manuscript: 
-
-Title: **Immediate and cumulative effects of nutrient and extreme weather disturbances on pond greenhouse gas emissions**
+This repository contains the code needed to recreate results and figures from the paper **Immediate and cumulative effects of nutrient and extreme weather disturbances on pond greenhouse gas emissions** published in [*Limnology and Oceanography Letters*](https://aslopubs.onlinelibrary.wiley.com/doi/full/10.1002/lol2.70121).
 
 Authors: Johnson, RA, TJ Butts, EA Albright, SJ Hall, JA Walter, and GM Wilkinson.
 
-Data and metadata from this study are available in the Environmental Data Initiative repository and can be accessed [here](https://portal.edirepository.org/nis/mapbrowse?packageid=edi.2238.1). 
+Data and metadata are available in the [Environmental Data Initiative](https://portal.edirepository.org/nis/mapbrowse?packageid=edi.2238.1) repository. 
 
 Copies of all scripts and files used for analyses and figures/tables at the time of manuscript acceptance have been archived in Zenodo. [![DOI](https://zenodo.org/badge/226179406.svg)](https://doi.org/10.5281/zenodo.18990039)
 
-The compiled dataset used for the manuscript is available in this Github repository (Data/ghg-model-dataset_ms-data.csv) with accompanying metadata (Data/ghg-model-dataset_ms-metadata.xlsx), and can also be recreated using the scripts listed below.
+The compiled dataset (w/ accompanying metadata) used for the manuscript is available in this repository within the "Data" folder, and can also be recreated using the scripts listed below.
 
 Repository maintained by RA Johnson (email: robert.a.johnson@wisc.edu).
 
